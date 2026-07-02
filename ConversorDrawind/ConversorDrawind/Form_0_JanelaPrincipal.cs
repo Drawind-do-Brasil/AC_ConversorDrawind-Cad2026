@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -21,15 +21,15 @@ namespace ConversorDrawind
         public static string LOGdirConvertidos = Path.Combine(Path.GetTempPath(), "ConversorDrawindTemp");
         public static string LOGarqConvertidos = Path.Combine(LOGdirConvertidos, "lastconvertedfiles.log");
         private ContextMenuStrip lBDesenhosContextMenu = new ContextMenuStrip();
-        private Class_Configuration configuration = new Class_Configuration();
-        private Class_Arranjos arranjos = new Class_Arranjos();
+        private Configuration configuration = new Configuration();
+        private Arranjos arranjos = new Arranjos();
         private string previousIndex;
         private bool NotLoop = true;
-        private Class_GetInfo myDrawing = null;
-        private Class_GetInfo myDrawingBlock = null;
-        private List<Class_BlockClass> listBlocks = new List<Class_BlockClass>();
-        private List<Class_BlockClass> listBlocksInv = new List<Class_BlockClass>();
-        private List<Class_BlockClass> listBlocksOrig = new List<Class_BlockClass>();
+        private GetInfo myDrawing = null;
+        private GetInfo myDrawingBlock = null;
+        private List<Block> listBlocks = new List<Block>();
+        private List<Block> listBlocksInv = new List<Block>();
+        private List<Block> listBlocksOrig = new List<Block>();
 
         public bool EXTDIMCorrigeSeta = false;
         public string EXTDIMCorrigeSetaTipoSeta = "Oblique";
@@ -53,7 +53,7 @@ namespace ConversorDrawind
                 StatusConversor.Items.Add(new StatusConversorItem("Obras Inativas", "TemplatesInativos"));
                 StatusConversor.SelectedIndex = 0;
 
-                Class_Configuration.SaveConfigDLL();
+                Configuration.SaveConfigDLL();
                 this.Show();
                 this.Activate();
                 CarregarTemplates();
@@ -138,19 +138,13 @@ namespace ConversorDrawind
                 rTBComentarios.Clear();
                 string itemSelecionado = lBConversores.SelectedItem.ToString();
                 string nomeTemplade = ConverterFileService.GetTxmlPath(itemSelecionado, (StatusConversorItem)StatusConversor.SelectedItem);
-                string nomeTemplade2 = ConverterFileService.GetTemplatePath(itemSelecionado, (StatusConversorItem)StatusConversor.SelectedItem);
-                Class_Configuration CT = new Class_Configuration();
+                Configuration CT = new Configuration();
 
               
                 if (File.Exists(nomeTemplade))
                 {
-                    CT.LoadXML(itemSelecionado, new Class_Arranjos(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
+                    CT.LoadXML(itemSelecionado, new Arranjos(), new List<Block>(), new List<Block>(), new List<Block>(), (StatusConversorItem)StatusConversor.SelectedItem);
                     rTBComentarios.AppendText(CT.EXTCONFComments);
-                }
-
-                else if (File.Exists(nomeTemplade2))
-                {
-                    return;
                 }
 
                 else
@@ -158,7 +152,7 @@ namespace ConversorDrawind
                     CarregarTemplates();
                     CarregarTemplatesCBListaDeConversores();
                     CarregarComentarioNoTemplate();
-                    MessageBox.Show("O template selecionado foi excluído ou renomeado, a lista de templates foi atualizada.",
+                    MessageBox.Show("O template selecionado foi excluÃ­do ou renomeado, a lista de templates foi atualizada.",
                  "Error",
                  MessageBoxButtons.OK,
                  MessageBoxIcon.Warning,
@@ -273,7 +267,7 @@ namespace ConversorDrawind
             cBDeleteTekla.Checked = configuration.EXTCONFIsDeleteTeklaStructures;
             tBDiretorioFormatoAtributado.Text = configuration.PROGRAMblockFormatoCaminho;
             listBoxBlock.Items.Clear();
-            foreach (Class_BlockClass item in listBlocks)
+            foreach (Block item in listBlocks)
             {
                 listBoxBlock.Items.Add(item.blockName);
             }
@@ -322,19 +316,19 @@ namespace ConversorDrawind
 
 
             LBNEW_BlocosInventor.Items.Clear();
-            foreach (Class_BlockClass item in listBlocksInv)
+            foreach (Block item in listBlocksInv)
             {
                 LBNEW_BlocosInventor.Items.Add(item.blockName);
             }
 
             LBNEW_BlocosOriginais.Items.Clear();
-            foreach (Class_BlockClass item in listBlocksOrig)
+            foreach (Block item in listBlocksOrig)
             {
                 LBNEW_BlocosOriginais.Items.Add(item.blockName);
             }
 
             LBNEW_Relacoes.Items.Clear();
-            foreach (Class_BlockClass item in listBlocksOrig)
+            foreach (Block item in listBlocksOrig)
             {
                if( item.blockNameRelacao != "")
                {
@@ -355,7 +349,7 @@ namespace ConversorDrawind
         {
             EstiloTexto.Items.Clear();
             if (arranjos.allTextSyles.Count() == 0)
-                arranjos.allTextSyles.Add(Class_Arranjos.defaultTextStyle);
+                arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
             EstiloTexto.Items.AddRange(arranjos.allTextSyles.Select(a => a.Split(':').First()).ToArray());
 
             if (EstiloTexto.Items.Cast<string>().Where(a => a.ToUpper() == configuration.EXTTEXTStyleName.ToUpper()).Count() > 0)
@@ -432,7 +426,7 @@ namespace ConversorDrawind
             arranjos.layerRemove.Clear();
             for (int i = 0; i < dataGridViewLayer.Rows.Count; i++)
             {
-                Class_Filter f = new Class_Filter(arranjos);
+                Filter f = new Filter(arranjos);
                 f.layerBase = dataGridViewLayer.Rows[i].Cells[0].Value.ToString();
                 f.SetConjunto(dataGridViewLayer.Rows[i].Cells[1].Value.ToString());
                 arranjos.layerRemove.Add(f);
@@ -471,7 +465,7 @@ namespace ConversorDrawind
             configuration.LayerBlockAttribute = LayerBlocosAtt.Text;
         }
 
-        private ConversionPreflightResult ValidateConversionConfiguration(Class_Configuration configurationToValidate)
+        private ConversionPreflightResult ValidateConversionConfiguration(Configuration configurationToValidate)
         {
             return ConversionPreflightValidator.ValidateFormatPath(configurationToValidate);
         }
@@ -510,10 +504,10 @@ namespace ConversorDrawind
                             {
                                 temp.Add(item);
                             }
-                            Class_Configuration conf = new Class_Configuration();
+                            Configuration conf = new Configuration();
 
-                            Class_Arranjos arr = new Class_Arranjos();
-                            ConverterFileService.LoadConverter(conf, lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
+                            Arranjos arr = new Arranjos();
+                            ConverterFileService.LoadConverter(conf, lBConversores.Text, arr, new List<Block>(), new List<Block>(), new List<Block>(), (StatusConversorItem)StatusConversor.SelectedItem);
                             p1.desenhosName = temp.ToArray();
                             p1.conversorName = lBConversores.Text;
                             p1.closedesenhos = cBManterArquivosAbertos.Checked;
@@ -523,13 +517,13 @@ namespace ConversorDrawind
                             ConversionPreflightResult preflightResult = ValidateConversionConfiguration(p1.configuration);
                             if (!preflightResult.CanConvert)
                             {
-                                MessageBox.Show(new Form() { TopMost = true }, "Não é possível prosseguir com a conversão porque não foi possível localizar o formato para substituição.\nCaminho do formado: " + preflightResult.MissingFormatPath,
+                                MessageBox.Show(new Form() { TopMost = true }, "NÃ£o Ã© possÃ­vel prosseguir com a conversÃ£o porque nÃ£o foi possÃ­vel localizar o formato para substituiÃ§Ã£o.\nCaminho do formado: " + preflightResult.MissingFormatPath,
                                              "Error",
                                              MessageBoxButtons.OK,
                                              MessageBoxIcon.Warning,
                                              MessageBoxDefaultButton.Button1);
-                                MessageBox.Show("          A conversão falhou!          ",
-                                         "Informação",
+                                MessageBox.Show("          A conversÃ£o falhou!          ",
+                                         "InformaÃ§Ã£o",
                                           MessageBoxButtons.OK,
                                           MessageBoxIcon.Warning,
                                           MessageBoxDefaultButton.Button1);
@@ -543,7 +537,7 @@ namespace ConversorDrawind
                             catch (Exception e2)
                             {
                                 Form_0_JanelaPrincipal.ControladorT = false;
-                                MessageBox.Show(new Form() { TopMost = true }, "A conversão não pode ser feita em todos os desenhos devido ao seguinte erro: \n" + e2.Message,
+                                MessageBox.Show(new Form() { TopMost = true }, "A conversÃ£o nÃ£o pode ser feita em todos os desenhos devido ao seguinte erro: \n" + e2.Message,
                                                  "Error",
                                                  MessageBoxButtons.OK,
                                                  MessageBoxIcon.Warning,
@@ -554,8 +548,8 @@ namespace ConversorDrawind
                             this.SetTopLevel(true);
                             this.Activate();
                             if (Form_2_Processo.IsCanceled)
-                                MessageBox.Show("       Conversão cancelada pelo usuário!       ",
-                                     "Informação",
+                                MessageBox.Show("       ConversÃ£o cancelada pelo usuÃ¡rio!       ",
+                                     "InformaÃ§Ã£o",
                                       MessageBoxButtons.OK,
                                       MessageBoxIcon.Information,
                                       MessageBoxDefaultButton.Button1);
@@ -568,7 +562,7 @@ namespace ConversorDrawind
                         }
                         else
                         {
-                            MessageBox.Show("Não existe nenhum conversor selecionado.",
+                            MessageBox.Show("NÃ£o existe nenhum conversor selecionado.",
                                              "Error",
                                              MessageBoxButtons.OK,
                                              MessageBoxIcon.Warning,
@@ -577,7 +571,7 @@ namespace ConversorDrawind
                     }
                     else
                     {
-                        MessageBox.Show("Não existe desenhos na lista para serem convertidos.",
+                        MessageBox.Show("NÃ£o existe desenhos na lista para serem convertidos.",
                                          "Error",
                                          MessageBoxButtons.OK,
                                          MessageBoxIcon.Warning,
@@ -589,7 +583,7 @@ namespace ConversorDrawind
                     CarregarTemplates();
                     CarregarTemplatesCBListaDeConversores();
                     CarregarComentarioNoTemplate();
-                    MessageBox.Show("O template selecionado foi excluído ou renomeado, a lista de templates foi atualizada.",
+                    MessageBox.Show("O template selecionado foi excluÃ­do ou renomeado, a lista de templates foi atualizada.",
                  "Error",
                  MessageBoxButtons.OK,
                  MessageBoxIcon.Warning,
@@ -770,7 +764,7 @@ namespace ConversorDrawind
 
         private void salar3()
         {
-            Regex regex = new Regex(@"^[a-z|0-9|_|\-ãõâêîôûáéíóúàèìòùç& ]*$", RegexOptions.IgnoreCase);
+            Regex regex = new Regex(@"^[a-z|0-9|_|\-Ã£ÃµÃ¢ÃªÃ®Ã´Ã»Ã¡Ã©Ã­Ã³ÃºÃ Ã¨Ã¬Ã²Ã¹Ã§& ]*$", RegexOptions.IgnoreCase);
             String s = tbListaDeConversores.Text;
             Match match = regex.Match(s);
             string t = s.Trim();
@@ -783,9 +777,9 @@ namespace ConversorDrawind
                     string filetemp = ConverterFileService.GetTxmlPath(tbListaDeConversores.Text, (StatusConversorItem)StatusConversor.Items[0]);
                     if (File.Exists(filetemp))
                     {
-                        if (MessageBox.Show("Já existe um arquivo com esse nome." +
+                        if (MessageBox.Show("JÃ¡ existe um arquivo com esse nome." +
                        "\nDeseja substituir?",
-                       "Atenção",
+                       "AtenÃ§Ã£o",
                        MessageBoxButtons.YesNo,
                        MessageBoxIcon.Exclamation,
                        MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -815,8 +809,8 @@ namespace ConversorDrawind
             }
             else
             {
-                MessageBox.Show("Nome inválido!",
-                          "Atenção",
+                MessageBox.Show("Nome invÃ¡lido!",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.OK,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1);
@@ -852,9 +846,9 @@ namespace ConversorDrawind
                     if (IsModify())
                     {
                         
-                        if (MessageBox.Show("Houve alterações no templade." +
+                        if (MessageBox.Show("Houve alteraÃ§Ãµes no templade." +
                                   "\nDeseja realmente selecionar outro templade?",
-                                  "Atenção",
+                                  "AtenÃ§Ã£o",
                                   MessageBoxButtons.YesNo,
                                   MessageBoxIcon.Exclamation,
                                   MessageBoxDefaultButton.Button2) == DialogResult.Yes)
@@ -910,9 +904,9 @@ namespace ConversorDrawind
         {
             if (dGVLayer.Rows.Count == 0)
             {
-                Class_Filter filtro = new Class_Filter(this.arranjos);
+                Filter filtro = new Filter(this.arranjos);
                 filtro.SetConjunto();
-                Class_NewLayer novoLayer = new Class_NewLayer(this.arranjos);
+                NewLayer novoLayer = new NewLayer(this.arranjos);
                 novoLayer.SetConjunto();
                 dGVLayer.Rows.Add("", filtro.GetConjunto(), novoLayer.GetConjunto());
                 dGVLayer.CurrentCell = dGVLayer.Rows[dGVLayer.Rows.Count - 1].Cells[0];
@@ -934,7 +928,7 @@ namespace ConversorDrawind
             if (dGVLayer.SelectedRows.Count > 0 && dGVLayer.CurrentRow.Index != -1)
             {
                 if (MessageBox.Show("Deseja realmente excluir todas as linhas selecionadas?",
-                          "Atenção",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.YesNo,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1) == DialogResult.Yes)
@@ -1109,16 +1103,16 @@ namespace ConversorDrawind
         {
             if (IsModify())
             {
-                if (MessageBox.Show("Houve alterações no templade." +
+                if (MessageBox.Show("Houve alteraÃ§Ãµes no templade." +
                           "\nDeseja realmente criar um novo templade?",
-                          "Atenção",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.YesNo,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1) == DialogResult.Yes)
                 {
 
-                    configuration = new Class_Configuration();
-                    arranjos = new Class_Arranjos();
+                    configuration = new Configuration();
+                    arranjos = new Arranjos();
                     CarregarTemplateDeConfiguracaoPTela();
 
                     tbListaDeConversores.Text = "";
@@ -1135,8 +1129,8 @@ namespace ConversorDrawind
             }
             else
             {
-                configuration = new Class_Configuration();
-                arranjos = new Class_Arranjos();
+                configuration = new Configuration();
+                arranjos = new Arranjos();
                 CarregarTemplateDeConfiguracaoPTela();
                 tbListaDeConversores.Text = "";
                 cBListaDeConversores.Text = "";
@@ -1167,16 +1161,8 @@ namespace ConversorDrawind
 
             string file1 = ConverterFileService.GetTxmlPath("TEMPORARYFile1NFJDWI00012", (StatusConversorItem)StatusConversor.Items[0]);
             string filexml = ConverterFileService.GetTxmlPath(tbListaDeConversores.Text, (StatusConversorItem)StatusConversor.Items[0]);
-            string file2 = ConverterFileService.GetTemplatePath(tbListaDeConversores.Text, (StatusConversorItem)StatusConversor.Items[0]);
 
             configuration.SaveXML("TEMPORARYFile1NFJDWI00012", arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-
-            if (!File.Exists(filexml) && File.Exists(file2))
-            {
-                MigrateTemplateToTxml(tbListaDeConversores.Text);
-            }
-
-         
 
             if (File.Exists(filexml))
             {
@@ -1192,8 +1178,8 @@ namespace ConversorDrawind
 
             else
             {
-                Class_Configuration tempconf = new Class_Configuration();
-                Class_Arranjos temparray = new Class_Arranjos();
+                Configuration tempconf = new Configuration();
+                Arranjos temparray = new Arranjos();
                 tempconf.SaveXML("TEMPORARYFile2NFJDWI00012", temparray, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
                 string file3 = ConverterFileService.GetTxmlPath("TEMPORARYFile2NFJDWI00012", (StatusConversorItem)StatusConversor.Items[0]);
 
@@ -1211,18 +1197,13 @@ namespace ConversorDrawind
             return isModify;
         }
 
-        private void MigrateTemplateToTxml(string converterName)
-        {
-            ConverterFileService.MigrateTemplateToTxml(configuration, converterName, this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-        }
-
         private void JanelaPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (IsModify())
             {
-                if (MessageBox.Show("Houve alterações no templade." +
-                          "\nDeseja realmente sair sem salvar as alterações?",
-                          "Atenção",
+                if (MessageBox.Show("Houve alteraÃ§Ãµes no templade." +
+                          "\nDeseja realmente sair sem salvar as alteraÃ§Ãµes?",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.YesNo,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button2) == DialogResult.No)
@@ -1604,8 +1585,8 @@ namespace ConversorDrawind
             {  
                 if (myDrawing != null)
                 {
-                    Class_PointEspecial p1 = new Class_PointEspecial();
-                    Class_PointEspecial p2 = new Class_PointEspecial();
+                    PointEspecial p1 = new PointEspecial();
+                    PointEspecial p2 = new PointEspecial();
                     myDrawing.Get2Point(ref p1, ref p2);
 
                     ap1x.Text = Convert.ToString(p1.X);
@@ -1638,8 +1619,8 @@ namespace ConversorDrawind
             {
                 if (myDrawing != null)
                 {
-                    Class_PointEspecial p1 = new Class_PointEspecial();
-                    Class_PointEspecial p2 = new Class_PointEspecial();
+                    PointEspecial p1 = new PointEspecial();
+                    PointEspecial p2 = new PointEspecial();
                     myDrawing.Get2Point(ref p1, ref p2);
 
                     ap1x.Text = Convert.ToString(p1.X);
@@ -1677,7 +1658,7 @@ namespace ConversorDrawind
                         Thread newThread2 = new Thread(new ThreadStart(Form_0_JanelaPrincipal.ThreadMethodAbrindoCad));
                         newThread2.SetApartmentState(ApartmentState.STA);
                         newThread2.Start();
-                        myDrawing = new Class_GetInfo(openFileDialog.FileName);
+                        myDrawing = new GetInfo(openFileDialog.FileName);
                         StopStatusThread(newThread2);
                         IsContinueOp1 = true;
                     }
@@ -1704,7 +1685,7 @@ namespace ConversorDrawind
                         newThread2.SetApartmentState(ApartmentState.STA);
                         newThread2.Start();
                         tBDiretorioFormatoAtributado.Text = openFileDialog.FileName;
-                        myDrawingBlock = new Class_GetInfo(openFileDialog.FileName);
+                        myDrawingBlock = new GetInfo(openFileDialog.FileName);
                         StopStatusThread(newThread2);
                         IsContinueOp1 = true;
                     }
@@ -1724,7 +1705,7 @@ namespace ConversorDrawind
                         newThread2.SetApartmentState(ApartmentState.STA);
                         newThread2.Start();
                         tBDiretorioFormatoAtributado.Text = openFileDialog.FileName;
-                        myDrawingBlock = new Class_GetInfo(openFileDialog.FileName);
+                        myDrawingBlock = new GetInfo(openFileDialog.FileName);
                         StopStatusThread(newThread2);
                         IsContinueOp1 = true;
                     }
@@ -1746,8 +1727,8 @@ namespace ConversorDrawind
             }
             else
             {
-                string status = Form_5_ChangeFormat.Show("Deseja atualizar os blocos?\nEssa operação anulará qualquer modificação feita sobre eles.",
-                                                  "Atenção");
+                string status = Form_5_ChangeFormat.Show("Deseja atualizar os blocos?\nEssa operaÃ§Ã£o anularÃ¡ qualquer modificaÃ§Ã£o feita sobre eles.",
+                                                  "AtenÃ§Ã£o");
                 if (status == "2")
                 {
                     CarregarBlocos();
@@ -1778,7 +1759,7 @@ namespace ConversorDrawind
                 }
                 listBlocks = listBlocks.Distinct(new BlockClassComparer((x, y) => x.blockName == y.blockName, f => f.blockName.GetHashCode())).ToList();
                 listBoxBlock.Items.Clear();
-                foreach (Class_BlockClass item in listBlocks)
+                foreach (Block item in listBlocks)
                 {
                     listBoxBlock.Items.Add(item.blockName);
                 }
@@ -1795,7 +1776,7 @@ namespace ConversorDrawind
 
         private void bAdd_Click(object sender, EventArgs e)
         {
-            Class_Filter filtro = new Class_Filter(this.arranjos);
+            Filter filtro = new Filter(this.arranjos);
             filtro.SetConjunto2();
 
 
@@ -1982,8 +1963,8 @@ namespace ConversorDrawind
                 }
                 else
                 {
-                    MessageBox.Show("Comando inválido",
-                              "Atenção",
+                    MessageBox.Show("Comando invÃ¡lido",
+                              "AtenÃ§Ã£o",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Exclamation,
                               MessageBoxDefaultButton.Button1);
@@ -1992,8 +1973,8 @@ namespace ConversorDrawind
 
             else
             {
-                MessageBox.Show("Arquivo inválido",
-                          "Atenção",
+                MessageBox.Show("Arquivo invÃ¡lido",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.OK,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1);
@@ -2044,9 +2025,9 @@ namespace ConversorDrawind
         {
             if (IsModify())
             {
-                if (MessageBox.Show("Houve alterações no templade." +
+                if (MessageBox.Show("Houve alteraÃ§Ãµes no templade." +
                           "\nDeseja realmente criar um novo templade?",
-                          "Atenção",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.YesNo,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1) == DialogResult.Yes)
@@ -2065,8 +2046,8 @@ namespace ConversorDrawind
         {
             if (openFileDialogCC.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                configuration = new Class_Configuration();
-                arranjos = new Class_Arranjos();
+                configuration = new Configuration();
+                arranjos = new Arranjos();
 
                 StreamReader sr = new StreamReader(openFileDialogCC.FileName);
                 string ponteiro = "";
@@ -2234,8 +2215,8 @@ namespace ConversorDrawind
                 tbListaDeConversores.Text = name;
                 previousIndex = name;
 
-                MessageBox.Show("Importação realizada com sucesso!",
-                           "Informação",
+                MessageBox.Show("ImportaÃ§Ã£o realizada com sucesso!",
+                           "InformaÃ§Ã£o",
                            MessageBoxButtons.OK,
                            MessageBoxIcon.Information,
                            MessageBoxDefaultButton.Button1);
@@ -2405,10 +2386,10 @@ namespace ConversorDrawind
         {
             CarregarComentarioNoTemplate();
         
-            Class_Configuration conf = new Class_Configuration();
+            Configuration conf = new Configuration();
 
-            Class_Arranjos arr = new Class_Arranjos();
-            ConverterFileService.LoadConverter(conf, lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
+            Arranjos arr = new Arranjos();
+            ConverterFileService.LoadConverter(conf, lBConversores.Text, arr, new List<Block>(), new List<Block>(), new List<Block>(), (StatusConversorItem)StatusConversor.SelectedItem);
 
            
         }
@@ -2548,7 +2529,7 @@ namespace ConversorDrawind
             this.BringToFront();
             this.Activate();
             LBNEW_Relacoes.Items.Clear();
-            foreach (Class_BlockClass item in listBlocksOrig)
+            foreach (Block item in listBlocksOrig)
             {
                 item.cor = Color.Black;
                 item.blockNameRelacao = "";
@@ -2573,7 +2554,7 @@ namespace ConversorDrawind
             this.BringToFront();
             this.Activate();
             LBNEW_Relacoes.Items.Clear();
-            foreach (Class_BlockClass item in listBlocksInv)
+            foreach (Block item in listBlocksInv)
             {
                 item.cor = Color.Black;
                 item.blockNameRelacao = "";
@@ -2602,11 +2583,11 @@ namespace ConversorDrawind
                 }
                 listBlocksInv = listBlocksInv.Distinct(new BlockClassComparer((x, y) => x.blockName == y.blockName, f => f.blockName.GetHashCode())).ToList();
                 LBNEW_BlocosInventor.Items.Clear();
-                foreach (Class_BlockClass item in listBlocksInv)
+                foreach (Block item in listBlocksInv)
                 {
                     LBNEW_BlocosInventor.Items.Add(item.blockName);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     myDrawingBlock.Dispose();
                 }
@@ -2628,12 +2609,12 @@ namespace ConversorDrawind
                 }
                 listBlocksOrig = listBlocksOrig.Distinct(new BlockClassComparer((x, y) => x.blockName == y.blockName, f => f.blockName.GetHashCode())).ToList();
                 LBNEW_BlocosOriginais.Items.Clear();
-                foreach (Class_BlockClass item in listBlocksOrig)
+                foreach (Block item in listBlocksOrig)
                 {
                     LBNEW_BlocosOriginais.Items.Add(item.blockName);
                 }
                 TBNEW_BlocosOriginais.Text = openFileDialog.FileName;
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     myDrawingBlock.Dispose();
                 }
@@ -2656,7 +2637,7 @@ namespace ConversorDrawind
                 listBlocksInv[LBNEW_BlocosInventor.SelectedIndex].cor = Color.LightGray;
 
                 LBNEW_BlocosInventor_SelectedValueChanged(null, null);
-                foreach (Class_BlockClass item in listBlocksOrig)
+                foreach (Block item in listBlocksOrig)
                 {
                     if (item.blockName == LBNEW_BlocosOriginais.Items[LBNEW_BlocosOriginais.SelectedIndex].ToString())
                     {
@@ -2677,7 +2658,7 @@ namespace ConversorDrawind
                 LBNEW_Relacoes.Items.RemoveAt(LBNEW_Relacoes.SelectedIndex);
                 LBNEW_BlocosInventor_SelectedValueChanged(null, null);
                 int i = 0;
-                foreach (Class_BlockClass item in listBlocksInv)
+                foreach (Block item in listBlocksInv)
                 {
                     if (item.blockName == relacoesSplit.First())
                     {
@@ -2689,7 +2670,7 @@ namespace ConversorDrawind
                     i++;
                 }
                  i = 0;
-                foreach (Class_BlockClass item in listBlocksOrig)
+                foreach (Block item in listBlocksOrig)
                 {
                     if (item.blockName == relacoesSplit.Last())
                     {
@@ -2803,8 +2784,8 @@ namespace ConversorDrawind
 
                 else
                 {
-                    MessageBox.Show("Comando inválido",
-                              "Atenção",
+                    MessageBox.Show("Comando invÃ¡lido",
+                              "AtenÃ§Ã£o",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Exclamation,
                               MessageBoxDefaultButton.Button1);
@@ -2813,8 +2794,8 @@ namespace ConversorDrawind
 
             else
             {
-                MessageBox.Show("Arquivo inválido",
-                          "Atenção",
+                MessageBox.Show("Arquivo invÃ¡lido",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.OK,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1);
@@ -2844,8 +2825,8 @@ namespace ConversorDrawind
 
                 else
                 {
-                    MessageBox.Show("Comando inválido",
-                              "Atenção",
+                    MessageBox.Show("Comando invÃ¡lido",
+                              "AtenÃ§Ã£o",
                               MessageBoxButtons.OK,
                               MessageBoxIcon.Exclamation,
                               MessageBoxDefaultButton.Button1);
@@ -2854,8 +2835,8 @@ namespace ConversorDrawind
 
             else
             {
-                MessageBox.Show("Arquivo inválido",
-                          "Atenção",
+                MessageBox.Show("Arquivo invÃ¡lido",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.OK,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1);
@@ -2926,9 +2907,9 @@ namespace ConversorDrawind
             File.Delete(LOGarqConvertidos);
             if (!retorno)
             {
-                Form_1_Relatorio log = new Form_1_Relatorio(arquivos, "Não foi possível restaurar todos os arquivos!");
-                MessageBox.Show("Não foi possível restaurar todos os arquivos",
-                          "Atenção",
+                Form_1_Relatorio log = new Form_1_Relatorio(arquivos, "NÃ£o foi possÃ­vel restaurar todos os arquivos!");
+                MessageBox.Show("NÃ£o foi possÃ­vel restaurar todos os arquivos",
+                          "AtenÃ§Ã£o",
                           MessageBoxButtons.OK,
                           MessageBoxIcon.Exclamation,
                           MessageBoxDefaultButton.Button1);
@@ -2964,8 +2945,11 @@ namespace ConversorDrawind
         public string conversorName;
         public string[] desenhosName;
         public bool closedesenhos;
-        public Class_Configuration configuration;
-        public Class_Arranjos arranjos;
+        public Configuration configuration;
+        public Arranjos arranjos;
         public StatusConversorItem StatusConversorItem;
     }
 }
+
+
+

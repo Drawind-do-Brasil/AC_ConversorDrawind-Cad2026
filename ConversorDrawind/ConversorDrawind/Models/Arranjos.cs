@@ -4,7 +4,7 @@ using System.IO;
 
 namespace ConversorDrawind
 {
-    public class Class_Arranjos
+    public class Arranjos
     {
         private static string[] colors = new string[] { "ALL", "BYLAYER", "BYBLOCK", "BLUE", "CYAN", "GREEN", "MAGENTA", "RED", "WHITE", "YELLOW" };
         private static string[] objects = new string[] { "ALL", "TEXT", "LINE", "ARC", "CIRCLE", "HATCH", "DIMENSION", "MTEXT", "LWPOLYLINE", "SPLINE", "ATTDEF" , "SOLID", "POINT"};
@@ -61,19 +61,19 @@ namespace ConversorDrawind
         public List<string> allNewLayer = new List<string>();
         public List<string> allNewLayerComposition = new List<string>();
         public List<string> conversor = new List<string>();
-        public List<Class_Filter> layerRemove = new List<Class_Filter>();
+        public List<Filter> layerRemove = new List<Filter>();
         public List<string> listLISPCommand = new List<string>();
         public List<string> listDLLCommand = new List<string>();
         public List<string> allExplodeLayers = new List<string>();
         public List<string> allTextSyles = new List<string>();
 
-        public Class_Arranjos()
+        public Arranjos()
         {
             Carregar();
             allBaseLayer.AddRange(linesTekla);
             allLineType2.AddRange(lineType2);
 
-            Class_Configuration configuration = new Class_Configuration();
+            Configuration configuration = new Configuration();
         
             string directory = AppDomain.CurrentDomain.BaseDirectory + "LinPack.nfj";
 
@@ -117,3 +117,5 @@ namespace ConversorDrawind
         }
     }
 }
+
+

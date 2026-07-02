@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ConversorDrawind
 {
-    public class Class_NewLayer
+    public class NewLayer
     {
         private Arranjos arranjos = new Arranjos();
         public string layer;
@@ -13,7 +13,7 @@ namespace ConversorDrawind
         public string larguraTexto;
         public string estiloTexto;
 
-        public Class_NewLayer(Arranjos arranjos)
+        public NewLayer(Arranjos arranjos)
         {
             this.arranjos = arranjos;
         }
@@ -86,3 +86,4 @@ namespace ConversorDrawind
         }
     }
 }
+

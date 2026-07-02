@@ -5,7 +5,7 @@ namespace ConversorDrawind.Tests;
 public sealed class FrontConfigurationServiceTests
 {
     [Fact]
-    public void ConverterFileService_ListConverterNames_DeveListarTemplateETxml()
+    public void ConverterFileService_ListConverterNames_DeveListarApenasTxml()
     {
         using var workspace = TestWorkspace.Create();
         File.WriteAllText(workspace.GetFile("A.template"), string.Empty);
@@ -13,7 +13,7 @@ public sealed class FrontConfigurationServiceTests
 
         var names = ConverterFileService.ListConverterNames(workspace.Status);
 
-        Assert.Contains("A", names);
+        Assert.DoesNotContain("A", names);
         Assert.Contains("B", names);
     }
 

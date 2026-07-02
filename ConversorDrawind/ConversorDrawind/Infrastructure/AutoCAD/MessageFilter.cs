@@ -6,7 +6,7 @@ namespace ConversorDrawind
     /// <summary>
     /// http://msdn.microsoft.com/pt-br/library/ms228772.aspx
     /// </summary>
-    public class Class_MessageFilter : IOleMessageFilter
+    public class MessageFilter : IOleMessageFilter
     {
         private const int SERVERCALL_RETRYLATER = 2;
         private const int RETRY_TIMEOUT_MS = 15000;
@@ -23,7 +23,7 @@ namespace ConversorDrawind
         {
             if (_registerCounter == 0)
             {
-                IOleMessageFilter newFilter = new Class_MessageFilter();
+                IOleMessageFilter newFilter = new MessageFilter();
                 IOleMessageFilter oldFilter = null;
                 CoRegisterMessageFilter(newFilter, out oldFilter);
             }
@@ -131,4 +131,5 @@ namespace ConversorDrawind
             int dwPendingType);
     }
 }
+
 

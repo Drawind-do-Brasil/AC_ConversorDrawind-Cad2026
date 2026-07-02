@@ -120,17 +120,6 @@ namespace ConversorDrawind
         {
             return Path.Combine(EnsureFolder(statusConversorItem), file + ".txml");
         }
-
-        public static string TemplatePath(string file, StatusConversorItem statusConversorItem)
-        {
-            return Path.Combine(EnsureFolder(statusConversorItem), file + ".Template");
-        }
-
-        public static string TemplatesPath(string file, StatusConversorItem statusConversorItem)
-        {
-            return Path.Combine(EnsureFolder(statusConversorItem), file + ".Templates");
-        }
-
         public static XElement Element(XElement xml, string elementName)
         {
             return xml.Element(elementName);

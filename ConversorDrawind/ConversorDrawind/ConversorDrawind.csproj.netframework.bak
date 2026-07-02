@@ -123,7 +123,7 @@
     <Compile Include="Form_8_GenericNewColor.Designer.cs">
       <DependentUpon>Form_8_GenericNewColor.cs</DependentUpon>
     </Compile>
-    <Compile Include="Class_Configuration.cs" />
+    <Compile Include="Configuration.cs" />
     <Compile Include="Form_4_LayersFilter.cs">
       <SubType>Form</SubType>
     </Compile>

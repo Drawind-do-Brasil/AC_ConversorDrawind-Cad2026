@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConversorDrawind
 {
-    public class Class_CorrecaoLinhas
+    public class CorrecaoLinhas
     {
         public bool status = false;
         public string linha = "";
@@ -21,3 +21,4 @@ namespace ConversorDrawind
         }
     }
 }
+

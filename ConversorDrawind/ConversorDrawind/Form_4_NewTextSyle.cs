@@ -8,13 +8,13 @@ namespace ConversorDrawind
 {
     public partial class Form_4_NewTextSyle : Form
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
-        public Class_NewLayer novoLayer;
+        private Arranjos arranjos = new Arranjos();
+        public NewLayer novoLayer;
         DataGridViewRow row = null;
         public string[] valores = new string[7];
         public bool createNew = false;
 
-        public Form_4_NewTextSyle(DataGridViewRow row, Class_Arranjos arranjos)
+        public Form_4_NewTextSyle(DataGridViewRow row, Arranjos arranjos)
         {
             InitializeComponent();
             this.arranjos = arranjos;
@@ -39,7 +39,7 @@ namespace ConversorDrawind
             Angulo.Text = row.Cells[6].Value.ToString();
 
         }
-        public Form_4_NewTextSyle(string line, Class_Arranjos arranjos)
+        public Form_4_NewTextSyle(string line, Arranjos arranjos)
         {
             InitializeComponent();
             this.arranjos = arranjos;
@@ -185,3 +185,4 @@ namespace ConversorDrawind
         }
     }
 }
+

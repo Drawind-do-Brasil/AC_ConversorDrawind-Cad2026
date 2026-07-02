@@ -11,15 +11,5 @@ namespace ConversorDrawind
         {
             return ConfigurationXmlContract.TxmlPath(file, statusConversorItem);
         }
-
-        public static string TemplatePath(string file, StatusConversorItem statusConversorItem)
-        {
-            return ConfigurationXmlContract.TemplatePath(file, statusConversorItem);
-        }
-
-        public static string TemplatesPath(string file, StatusConversorItem statusConversorItem)
-        {
-            return ConfigurationXmlContract.TemplatesPath(file, statusConversorItem);
-        }
     }
 }

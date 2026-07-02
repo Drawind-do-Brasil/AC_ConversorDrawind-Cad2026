@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.IO;
 using System.Drawing;
-using System.Xml;
 using System.Xml.Linq;
 
 namespace ConversorDrawind
 {
-    public class Class_Configuration
+    public class Configuration
     {
         /// <summary>
         /// INT CONVERT DIMENSION
@@ -102,7 +100,7 @@ namespace ConversorDrawind
 
         public bool ExplodeBlocks = false;
 
-        public Class_Configuration()
+        public Configuration()
         { 
             var t = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             PROGRAMDbLin = Path.Combine(t, @"Autodesk\AutoCAD 2026\R25.1\enu\support\") + @"acad.lin";
@@ -113,381 +111,15 @@ namespace ConversorDrawind
             return PROGRAMDirectoryTemp;
         }
 
-        public bool CheckFileTemplateExist(string file, StatusConversorItem statusConversorItem)
-        {
-            return File.Exists(ConfigurationPaths.TemplatesPath(file, statusConversorItem));
-        }
-
         public bool CheckFileTxmlExist(string file, StatusConversorItem statusConversorItem)
         {
             return File.Exists(ConfigurationPaths.TxmlPath(file, statusConversorItem));
         }
 
-
         public void Load(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
-            LegacyTemplateReader.Load(this, file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
+            LoadXML(file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
         }
-
-        internal void LoadTemplateCore(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
-        {
-            List<string> listLineBase = new List<string>();
-            string type = "Coments:";
-            string line = string.Empty;
-            string location = ConfigurationPaths.TemplatePath(file, statusConversorItem);
-            StreamReader streamReader = new StreamReader(location, Encoding.UTF8, true);
-
-            EXTCONFComments = string.Empty;
-            while (!streamReader.EndOfStream && type == "Coments:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "Coments:")
-                    EXTCONFComments += treatment.Last() + "\n";
-            }
-
-            EXTCONFComments = EXTCONFComments.Remove(EXTCONFComments.Length - 1, 1);
-            EXTCONFIsConvertDimension = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsConvertLayer = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsExchangeFormat = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsExchangeLM = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsPutOnTheScaleDrawing = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsExecuteLISP = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsExecuteDLL = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            EXTCONFIsFirstRum = streamReader.ReadLine().Remove(0, 12);
-            EXTCONFIsPurge = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 12));
-            streamReader.ReadLine();
-
-            arranjos.allBaseLayer.Clear();
-            type = "BaseLayer:";
-            while (!streamReader.EndOfStream && type == "BaseLayer:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "BaseLayer:")
-                    arranjos.allBaseLayer.Add(treatment.Last());
-            }
-
-            arranjos.allLineType1.Clear();
-            type = "BaseLineType:";
-            while (!streamReader.EndOfStream && type == "BaseLineType:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "BaseLineType:")
-                    arranjos.allLineType1.Add(treatment.Last());
-            }
-
-            if (arranjos.allLineType1.Count == 0)
-            {
-                arranjos.allLineType1.AddRange(arranjos.lineType1);
-            }
-
-            arranjos.allNewLayerComposition.Clear();
-            type = "NewLayer:";
-            while (!streamReader.EndOfStream && type == "NewLayer:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "NewLayer:")
-                    arranjos.allNewLayerComposition.Add(treatment.Last());
-            }
-
-            arranjos.allNewLayer.Clear();
-            for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
-            {
-                arranjos.allNewLayer.Add(arranjos.allNewLayerComposition[i].Split(':').First());
-            }
-
-            arranjos.conversor.Clear();
-            type = "Converter:";
-            while (!streamReader.EndOfStream && type == "Converter:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "Converter:")
-                    arranjos.conversor.Add(treatment.Last());
-            }
-
-
-            EXTDIMGERALHabilit = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMlayer = streamReader.ReadLine().Remove(0, 15);
-            EXTDIMColorLine = streamReader.ReadLine().Remove(0, 15);
-            EXTDIMColorText = streamReader.ReadLine().Remove(0, 15);
-            EXTDIMStyleName = streamReader.ReadLine().Remove(0, 15);
-            EXTTEXTStyleName = streamReader.ReadLine().Remove(0, 15);
-            EXTDIMSeta = streamReader.ReadLine().Remove(0, 15);
-            
-            EXTDIMScale = Convert.ToDouble(streamReader.ReadLine().Remove(0, 15).Replace('.', ','));
-            EXTDIMPrecision = Convert.ToInt32(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMAngularPrecision = Convert.ToInt32(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMUnit = Convert.ToInt32(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMAngularUnit = Convert.ToInt32(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMSizeSeta = Convert.ToDouble(streamReader.ReadLine().Remove(0, 15).Replace('.', ','));
-            EXTDIMOffsetLineFromRefPoint = Convert.ToDouble(streamReader.ReadLine().Remove(0, 15).Replace('.', ','));
-            EXTDIMOutsideAlign = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMTad = Convert.ToInt32(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMDimensionPosition = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMTextForced = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMLineForced = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 15));
-            EXTDIMDIMEX = Convert.ToDouble(streamReader.ReadLine().Remove(0, 15).Replace('.', ','));
-            EXTDIMBaseLayer = streamReader.ReadLine().Remove(0, 15);
-
-            streamReader.ReadLine();
-            EXTLINELtscale = Convert.ToDouble(streamReader.ReadLine().Remove(0, 10));
-
-            streamReader.ReadLine();
-            PROGRAMMessage = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 13));
-
-
-            streamReader.ReadLine();
-            EXTSCALEManual = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 11));
-            string[] mp1 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEMp1 = new PointEspecial(Convert.ToDouble(mp1[0].Replace('.', ',')),
-                                     Convert.ToDouble(mp1[1].Replace('.', ',')),
-                                     Convert.ToDouble(mp1[2].Replace('.', ',')));
-            string[] mp2 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEMp2 = new PointEspecial(Convert.ToDouble(mp2[0].Replace('.', ',')),
-                                     Convert.ToDouble(mp2[1].Replace('.', ',')),
-                                     Convert.ToDouble(mp2[2].Replace('.', ',')));
-            string[] mp3 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEAp1 = new PointEspecial(Convert.ToDouble(mp3[0].Replace('.', ',')),
-                                     Convert.ToDouble(mp3[1].Replace('.', ',')),
-                                     Convert.ToDouble(mp3[2].Replace('.', ',')));
-            string[] mp4 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEAp2 = new PointEspecial(Convert.ToDouble(mp4[0].Replace('.', ',')),
-                                     Convert.ToDouble(mp4[1].Replace('.', ',')),
-                                     Convert.ToDouble(mp4[2].Replace('.', ',')));
-            EXTSCALELayer = streamReader.ReadLine().Remove(0, 11);
-            EXTSCALETextSize = Convert.ToDouble(streamReader.ReadLine().Remove(0, 11).Replace('.', ','));
-
-            streamReader.ReadLine();
-            EXTCONFIsDeleteTeklaStructures = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 23));
-
-            streamReader.ReadLine();
-            PROGRAMblockFormatoCaminho = streamReader.ReadLine().Remove(0, 11);
-
-            streamReader.ReadLine();
-            arranjos.layerRemove.Clear();
-            type = "BlockLayerRemove:";
-            while (!streamReader.EndOfStream && type == "BlockLayerRemove:")
-            {
-                Filter f = new Filter(arranjos);
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "BlockLayerRemove:")
-                {
-                    string[] st = treatment.Last().Split(';');
-                    f.layerBase = st[0];
-                    f.SetConjunto(st[1]);
-                    arranjos.layerRemove.Add(f);
-                }
-            }
-
-            arranjos.listLISPCommand.Clear();
-            type = "DLLCommand:";
-            while (!streamReader.EndOfStream && type == "DLLCommand:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "DLLCommand:")
-                    arranjos.listLISPCommand.Add(line.Substring(12));
-            }
-
-
-            type = "LISPCommand:";
-            while (!streamReader.EndOfStream && type == "LISPCommand:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "LISPCommand:")
-                    arranjos.listLISPCommand.Add(line.Substring(13));
-            }
-
-            blocks.Clear();
-            blocosi.Clear();
-            blocoso.Clear();
-            type = "BlockName:";
-            while (!streamReader.EndOfStream && type == "BlockName:")
-            {
-                line = streamReader.ReadLine();
-                string[] treatment = line.Split('$');
-                type = treatment.First();
-                if (type == "BlockName:")
-                {
-                    Block blockClass = new Block();
-                    if (line.Length > 11)
-                        blockClass.blockName = line.Substring(11);
-
-                    type = "BlockTag:";
-                    while (!streamReader.EndOfStream && type == "BlockTag:")
-                    {
-                        line = streamReader.ReadLine();
-                        string[] treatment2 = line.Split('$');
-                        type = treatment2.First();
-
-                        if (type == "BlockTag:")
-                        {
-                            TagBlock tagTemp = new TagBlock();
-                            tagTemp.SetConjunto(line.Substring(10));
-                            blockClass.listTags.Add(tagTemp);
-                        }
-                        else
-                        {
-                            type = "BlockName:";
-                        }
-
-                    }
-                    blocks.Add(blockClass);
-                }
-            }
-            type = "ConfDimension:";
-            string teste = streamReader.ReadLine().Remove(0, 15);
-            EXTDIMCorrigeSeta = Convert.ToBoolean(teste);
-            EXTDIMCorrigeSetaTipoSeta = streamReader.ReadLine().Remove(0, 15);
-            EXTDIMCorrigeSetaFactor = Convert.ToDouble(streamReader.ReadLine().Remove(0, 15).Replace('.', ','));
-            //EXTTEXTObliqueAngle = Convert.ToDouble(streamReader.ReadLine().Remove(0, 15).Replace('.', ','));
-            try
-            {
-                arranjos.allExplodeLayers.Clear();
-                streamReader.ReadLine();
-                EXTCONFInventorExplode = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 11));
-                EXTCONFOrigem = Convert.ToInt32(streamReader.ReadLine().Remove(0, 11));
-           
-                string[] allexplodelayers = streamReader.ReadLine().Remove(0, 11).Split(';');
-                arranjos.allExplodeLayers.AddRange(allexplodelayers);
-                EXTCONFCaminhoBlocoInv = streamReader.ReadLine().Remove(0, 11);
-
-
-
-                type = "BlockName:";
-                streamReader.ReadLine();
-                while (!streamReader.EndOfStream && type == "BlockName:")
-                {
-                    line = streamReader.ReadLine();
-                    string[] treatment = line.Split('$');
-                    type = treatment.First();
-                    if (type == "BlockName:")
-                    {
-                        Block blockClass = new Block();
-
-                        if (line.Length > 11)
-                        {
-                            string[] linesplit = line.Substring(11).Split(';');
-                            blockClass.blockName = linesplit[0];
-                            blockClass.blockNameRelacao = linesplit[1];
-                            blockClass.cor = Color.FromArgb(Convert.ToInt32(linesplit[2]));
-                        }
-
-                        type = "BlockTag:";
-                        while (!streamReader.EndOfStream && type == "BlockTag:")
-                        {
-                            line = streamReader.ReadLine();
-                            string[] treatment2 = line.Split('$');
-                            type = treatment2.First();
-
-                            if (type == "BlockTag:")
-                            {
-                                TagBlock tagTemp = new TagBlock();
-                                tagTemp.SetConjunto(line.Substring(10));
-                                string[] linetemp = line.Substring(10).Split('@');
-                                tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
-                                tagTemp.isSociate = Convert.ToBoolean(linetemp[linetemp.Count() - 1]);
-                                blockClass.listTags.Add(tagTemp);
-                            }
-                            else
-                            {
-                                type = "BlockName:";
-                            }
-
-                        }
-                        blocosi.Add(blockClass);
-                    }
-                }
-                streamReader.ReadLine();
-                type = "BlockName:";
-                while (!streamReader.EndOfStream && type == "BlockName:")
-                {
-                    line = streamReader.ReadLine();
-                    string[] treatment = line.Split('$');
-                    type = treatment.First();
-                    if (type == "BlockName:")
-                    {
-                        Block blockClass = new Block();
-
-                        if (line.Length > 11)
-                        {
-                            string[] linesplit = line.Substring(11).Split(';');
-                            blockClass.blockName = linesplit[0];
-                            blockClass.blockNameRelacao = linesplit[1];
-                            blockClass.cor = Color.FromArgb(Convert.ToInt32(linesplit[2]));
-                        }
-
-                        type = "BlockTag:";
-                        while (!streamReader.EndOfStream && type == "BlockTag:")
-                        {
-                            line = streamReader.ReadLine();
-                            string[] treatment2 = line.Split('$');
-                            type = treatment2.First();
-
-                            if (type == "BlockTag:")
-                            {
-                                TagBlock tagTemp = new TagBlock();
-                                tagTemp.SetConjunto(line.Substring(10));
-                                string[] linetemp = line.Substring(10).Split('@');
-                                tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
-                                tagTemp.isSociate = Convert.ToBoolean(linetemp[linetemp.Count() - 1]);
-                                blockClass.listTags.Add(tagTemp);
-                            }
-                            else
-                            {
-                                type = "BlockName:";
-                            }
-
-                        }
-                        blocoso.Add(blockClass);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-
-            }
-            streamReader.ReadLine();
-            bool erroLoad = false;
-            try
-            {
-                ExplodeBlocks = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 11));
-                LayerTeklaString = streamReader.ReadLine().Remove(0, 11);
-                LayerBlockAttribute = streamReader.ReadLine().Remove(0, 11);
-            }
-            catch (Exception)
-            {
-
-                erroLoad = true;
-              
-            }
-            streamReader.Close();
-            if (erroLoad)
-            {
-                string space = "*************************************************************";
-                StreamWriter sw = File.AppendText(location);
-                sw.WriteLine(space);
-                sw.WriteLine("ConfExtra:$" + ExplodeBlocks);
-                sw.WriteLine("ConfExtra:$" + LayerTeklaString);
-                sw.WriteLine("ConfExtra:$" + LayerBlockAttribute);
-                sw.Close();
-            }
-        }
-
         public void LoadXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso , StatusConversorItem statusConversorItem)
         {
             ConfigurationXmlReader.Load(this, file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
@@ -733,16 +365,7 @@ namespace ConversorDrawind
         {
             string arquivo = ConfigurationPaths.TxmlPath(file, statusConversorItem);
 
-            if (File.Exists(arquivo))
-                File.Delete(arquivo);
-            var escritor = new XmlTextWriter(arquivo, Encoding.UTF8) { Formatting = Formatting.Indented };
-            escritor.WriteStartDocument();
-            escritor.WriteStartElement(ConfigurationXmlContract.Root);
-            escritor.WriteEndElement();
-            escritor.WriteEndDocument();
-            escritor.Close();
-
-            XElement xml = XElement.Load(arquivo);
+            XElement xml = new XElement(ConfigurationXmlContract.Root);
             //COMENTARIO
             {
                 XElement x = new XElement(ConfigurationXmlContract.Comments);
@@ -961,3 +584,4 @@ namespace ConversorDrawind
         }
     }
 }
+

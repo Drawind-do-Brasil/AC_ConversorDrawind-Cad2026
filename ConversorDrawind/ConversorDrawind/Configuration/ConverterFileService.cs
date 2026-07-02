@@ -11,9 +11,10 @@ namespace ConversorDrawind
             try
             {
                 DirectoryInfo directoryInfo = new DirectoryInfo(ConfigurationPaths.EnsureFolder(statusConversorItem));
-                List<FileInfo> allFiles = directoryInfo.GetFiles("*.template").ToList();
-                allFiles.AddRange(directoryInfo.GetFiles("*.txml"));
-                return allFiles.Select(file => Path.GetFileNameWithoutExtension(file.Name)).ToList();
+                return directoryInfo
+                    .GetFiles("*.txml")
+                    .Select(file => Path.GetFileNameWithoutExtension(file.Name))
+                    .ToList();
             }
             catch
             {
@@ -26,11 +27,6 @@ namespace ConversorDrawind
             return ConfigurationPaths.TxmlPath(converterName, statusConversorItem);
         }
 
-        public static string GetTemplatePath(string converterName, StatusConversorItem statusConversorItem)
-        {
-            return ConfigurationPaths.TemplatePath(converterName, statusConversorItem);
-        }
-
         public static void LoadConverter(
             Configuration configuration,
             string converterName,
@@ -40,10 +36,7 @@ namespace ConversorDrawind
             List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
-            if (configuration.CheckFileTxmlExist(converterName, statusConversorItem))
-                configuration.LoadXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
-            else
-                configuration.Load(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
+            configuration.LoadXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
         }
 
         public static void SaveConverter(
@@ -58,24 +51,5 @@ namespace ConversorDrawind
             configuration.SaveXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
         }
 
-        public static void MigrateTemplateToTxml(
-            Configuration configuration,
-            string converterName,
-            Arranjos arranjos,
-            List<Block> blocks,
-            List<Block> blocksInv,
-            List<Block> blocksOrig,
-            StatusConversorItem statusConversorItem)
-        {
-            string txmlPath = GetTxmlPath(converterName, statusConversorItem);
-            string templatePath = GetTemplatePath(converterName, statusConversorItem);
-
-            if (!File.Exists(txmlPath) && File.Exists(templatePath))
-            {
-                configuration.Load(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
-                configuration.SaveXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
-                File.Delete(templatePath);
-            }
-        }
     }
 }

@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
 using ConversorDrawind;
@@ -10,7 +10,7 @@ namespace ConversorDrawind.Tests;
 public sealed class ConfigurationCharacterizationTests
 {
     [Fact]
-    public void Class_Configuration_LoadXML_DeveLerTodosOsCamposBasicos()
+    public void Configuration_LoadXML_DeveLerTodosOsCamposBasicos()
     {
         using var workspace = TestWorkspace.Create();
         var state = ConfigurationFixture.CreatePopulatedState();
@@ -36,7 +36,7 @@ public sealed class ConfigurationCharacterizationTests
     }
 
     [Fact]
-    public void Class_Configuration_SaveXML_DeveGerarMesmoContratoXml()
+    public void Configuration_SaveXML_DeveGerarMesmoContratoXml()
     {
         using var workspace = TestWorkspace.Create();
         var state = ConfigurationFixture.CreatePopulatedState();
@@ -57,10 +57,11 @@ public sealed class ConfigurationCharacterizationTests
     }
 
     [Fact]
-    public void Class_Configuration_LoadTemplate_DeveMigrarParaTxmlSemPerderDados()
+    public void Configuration_LoadXML_DeveLerTemplateAtivoReal()
     {
+        const string source = @"C:\0_Programas\Converter Framework para NET\AC_ConversorDrawind\AC_ConversorDrawind-Cad2026\ConversorDrawind\ConversorDrawind\bin\Debug\TemplatesAtivos\AMG_003_A1.txml";
         using var workspace = TestWorkspace.Create();
-        File.WriteAllText(workspace.GetFile("LEGACY.Template"), ConfigurationFixture.LegacyTemplateText(), Encoding.UTF8);
+        File.Copy(source, workspace.GetFile("AMG_003_A1.txml"), overwrite: true);
 
         var configuration = new Configuration();
         var arranjos = new Arranjos();
@@ -68,22 +69,19 @@ public sealed class ConfigurationCharacterizationTests
         var blocksInv = new List<Block>();
         var blocksOrig = new List<Block>();
 
-        configuration.Load("LEGACY", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
-        configuration.SaveXML("MIGRATED", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
+        configuration.LoadXML("AMG_003_A1", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
 
-        Assert.Equal("Comentario legado", configuration.EXTCONFComments);
-        Assert.True(configuration.EXTCONFIsConvertDimension);
-        Assert.False(configuration.EXTCONFIsConvertLayer);
-        Assert.Equal("DIM_LEGACY", configuration.EXTDIMlayer);
-        Assert.Equal("LAYER_BASE", arranjos.allBaseLayer.Single());
-        Assert.Equal("CONTINUOUS", arranjos.allLineType1.Single());
-        Assert.Equal("NEW_LAYER:WHITE:CONTINUOUS", arranjos.allNewLayerComposition.Single());
-        Assert.Equal("OLD:NEW:TEXT:ALL:ALL::ALL", arranjos.conversor.Single());
-        Assert.True(File.Exists(workspace.GetFile("MIGRATED.txml")));
+        Assert.Equal(0, configuration.EXTCONFOrigem);
+        Assert.True(configuration.EXTCONFIsExchangeFormat);
+        Assert.Equal("DWI-DIM", configuration.EXTDIMlayer);
+        Assert.Equal("DWI-100", configuration.EXTTEXTStyleName);
+        Assert.Contains("DWI01:RED:CONTINUOUS", arranjos.allNewLayerComposition);
+        Assert.NotEmpty(arranjos.allBaseLayer);
+        Assert.NotEmpty(arranjos.allLineType1);
     }
 
     [Fact]
-    public void Class_Configuration_SaveConfigDLL_DeveCriarArquivoEsperadoNoTemp()
+    public void Configuration_SaveConfigDLL_DeveCriarArquivoEsperadoNoTemp()
     {
         string arquivo = Path.Combine(Path.GetTempPath(), "ConversorDrawind.dll.config");
         string? backup = File.Exists(arquivo) ? File.ReadAllText(arquivo, Encoding.UTF8) : null;
@@ -120,7 +118,7 @@ public sealed class ConfigurationCharacterizationTests
     }
 
     [Fact]
-    public void Class_Configuration_CheckFileTxmlExist_DeveUsarPastaDoStatus()
+    public void Configuration_CheckFileTxmlExist_DeveUsarPastaDoStatus()
     {
         using var workspace = TestWorkspace.Create();
         File.WriteAllText(workspace.GetFile("EXISTS.txml"), "<CONVERSOR />", Encoding.UTF8);
@@ -279,82 +277,6 @@ internal sealed class ConfigurationFixture
             BlocksOrig = new List<Block> { CreateRelatedBlock("BLOCK_ORIG", "BLOCK_INV", -16776961, 1, false) }
         };
     }
-
-    public static string LegacyTemplateText()
-    {
-        return string.Join(Environment.NewLine, new[]
-        {
-            "Coments:$Comentario legado",
-            "EndComments:$",
-            "ConfigBool:$True",
-            "ConfigBool:$False",
-            "ConfigBool:$True",
-            "ConfigBool:$False",
-            "ConfigBool:$True",
-            "ConfigBool:$False",
-            "ConfigBool:$True",
-            "ConfigBool:$LISP",
-            "ConfigBool:$True",
-            "**********",
-            "BaseLayer:$LAYER_BASE",
-            "BaseLineType:$",
-            "BaseLineType:$CONTINUOUS",
-            "NewLayer:$",
-            "NewLayer:$NEW_LAYER:WHITE:CONTINUOUS",
-            "Converter:$",
-            "Converter:$OLD:NEW:TEXT:ALL:ALL::ALL",
-            "ConfDimension:$",
-            "ConfDimension:$True",
-            "ConfDimension:$DIM_LEGACY",
-            "ConfDimension:$RED",
-            "ConfDimension:$GREEN",
-            "ConfDimension:$COTAS_LEGACY",
-            "ConfDimension:$TEXTO_LEGACY",
-            "ConfDimension:$Oblique",
-            "ConfDimension:$1.5",
-            "ConfDimension:$0",
-            "ConfDimension:$1",
-            "ConfDimension:$2",
-            "ConfDimension:$2",
-            "ConfDimension:$1.25",
-            "ConfDimension:$0.5",
-            "ConfDimension:$False",
-            "ConfDimension:$1",
-            "ConfDimension:$False",
-            "ConfDimension:$True",
-            "ConfDimension:$True",
-            "ConfDimension:$1.25",
-            "ConfDimension:$DIMENSION",
-            "LineConf:$",
-            "LineConf:$10",
-            "ProgramConf:$",
-            "ProgMessage:$True",
-            "ScaleBlock:$",
-            "ScaleConf:$True",
-            "ScaleConf:$0;0;0",
-            "ScaleConf:$1;1;0",
-            "ScaleConf:$2;2;0",
-            "ScaleConf:$3;3;0",
-            "ScaleConf:$SCALE_LAYER",
-            "ScaleConf:$2.5",
-            "DeleteTeklaHeader:$",
-            "DeleteTeklaStructures:$True",
-            "BlockPathHeader:$",
-            "BlockPath:$C:\\Formato\\Tekla.dwg",
-            "BlockLayerRemove:$",
-            "BlockLayerRemove:$REMOVE_BASE;TEXT:RED:HIDDEN:ABC:2.5:ALL",
-            "DLLCommand:$",
-            "DLLCommand:$(command \"zoom\" \"e\")",
-            "LISPCommand:$",
-            "LISPCommand:$(command \"purge\" \"all\" \"\" \"n\")",
-            "EndLISP:$",
-            "NoBlocks:$",
-            "ConfDimension:$False",
-            "ConfDimension:$Oblique",
-            "ConfDimension:$7.23"
-        }) + Environment.NewLine;
-    }
-
     private static Block CreateBlock(string name)
     {
         return new Block
@@ -511,3 +433,5 @@ internal static class XmlAssert
         return XDocument.Load(file).ToString(SaveOptions.DisableFormatting);
     }
 }
+
+

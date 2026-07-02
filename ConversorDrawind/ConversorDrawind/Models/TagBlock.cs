@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ConversorDrawind
 {
-    public class Class_TagBlockClass
+    public class TagBlock
     {
         public string widthfactor = "1";
         public string tag;
@@ -15,15 +15,15 @@ namespace ConversorDrawind
         public Filter filtro;
         public int indiceRelacao = -1;
         public bool isSociate = false;
-        public Class_TagBlockClass()
+        public TagBlock()
         {
             filtro = new Filter(new Arranjos());
             filtro.SetConjunto3();
         }
 
-        public Class_TagBlockClass DeepCopy()
+        public TagBlock DeepCopy()
         {
-            Class_TagBlockClass other = (Class_TagBlockClass)this.MemberwiseClone();
+            TagBlock other = (TagBlock)this.MemberwiseClone();
             other.p1 = new PointEspecial(this.p1);
             other.p2 = new PointEspecial(this.p2);
             other.filtro = new Filter(this.filtro);
@@ -62,3 +62,4 @@ namespace ConversorDrawind
         }
     }
 }
+

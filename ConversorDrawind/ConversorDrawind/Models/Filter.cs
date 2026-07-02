@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ConversorDrawind
 {
-    public class Class_Filter
+    public class Filter
     {
         private Arranjos arranjos = new Arranjos();
         public string layerBase;
@@ -14,12 +14,12 @@ namespace ConversorDrawind
         public string alturaTexto;
         public string orientacao = "ALL";
 
-        public Class_Filter(Arranjos arranjos)
+        public Filter(Arranjos arranjos)
         {
             this.arranjos = arranjos;
         }
 
-        public Class_Filter(Class_Filter filter)
+        public Filter(Filter filter)
         {
             this.arranjos = filter.arranjos;
             this.layerBase = filter.layerBase;
@@ -96,3 +96,4 @@ namespace ConversorDrawind
         }
     }
 }
+

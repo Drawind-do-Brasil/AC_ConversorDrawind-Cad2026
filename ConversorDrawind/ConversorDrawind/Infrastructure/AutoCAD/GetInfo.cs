@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
-    public class Class_GetInfo
+    public class GetInfo
     {
         private static ACAD.AcadApplication acadApplication = null;
         private static ACAD.AcadDocument acadDocument = null;
@@ -37,7 +37,7 @@ namespace ConversorDrawind
        
 
 
-        public Class_GetInfo(string fileArq)
+        public GetInfo(string fileArq)
         {
             if (fileArq != "")
             {
@@ -66,13 +66,13 @@ namespace ConversorDrawind
 
                     }
 
-                    LoadFiles.LoadFile(Class_DrawingProcess.DLLPath1, acadDocument);
+                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                     status = "OK";
                 }
                 catch (Exception)
                 {
                     FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
-                                     "Não fopossível abrir o desenho selecionado!",
+                                     "NÃ£o fopossÃ­vel abrir o desenho selecionado!",
                                      "Error",
                                      FORMS.MessageBoxButtons.OK,
                                      FORMS.MessageBoxIcon.Warning,
@@ -243,3 +243,5 @@ namespace ConversorDrawind
         }
     }
 }
+
+
