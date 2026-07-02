@@ -20,7 +20,7 @@ namespace ConversorDrawind
             return ConverterFileService.GetTxmlPath(parametros.conversorName, parametros.StatusConversorItem);
         }
 
-        public static string GetExchangeFormatPath(Class_Configuration configuration)
+        public static string GetExchangeFormatPath(Configuration configuration)
         {
             return configuration.EXTCONFOrigem == 0
                 ? configuration.PROGRAMblockFormatoCaminho

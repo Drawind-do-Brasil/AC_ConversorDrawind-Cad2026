@@ -5,12 +5,12 @@ namespace ConversorDrawind
     internal static class ConfigurationXmlReader
     {
         public static void Load(
-            Class_Configuration configuration,
+            Configuration configuration,
             string file,
-            Class_Arranjos arranjos,
-            List<Class_BlockClass> blocks,
-            List<Class_BlockClass> blocosi,
-            List<Class_BlockClass> blocoso,
+            Arranjos arranjos,
+            List<Block> blocks,
+            List<Block> blocosi,
+            List<Block> blocoso,
             StatusConversorItem statusConversorItem)
         {
             configuration.LoadXMLCore(file, arranjos, blocks, blocosi, blocoso, statusConversorItem);

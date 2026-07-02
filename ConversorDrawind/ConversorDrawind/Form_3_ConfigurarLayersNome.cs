@@ -6,8 +6,8 @@ namespace ConversorDrawind
     public partial class Form_3_ConfigurarLayersNome : Form
     {
         public string nome;
-        private Class_Arranjos arranjos;
-        public Form_3_ConfigurarLayersNome(string nome, Class_Arranjos arranjos)
+        private Arranjos arranjos;
+        public Form_3_ConfigurarLayersNome(string nome, Arranjos arranjos)
         {
             InitializeComponent();
             this.nome = nome;

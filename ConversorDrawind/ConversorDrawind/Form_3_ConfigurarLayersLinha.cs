@@ -7,9 +7,9 @@ namespace ConversorDrawind
     public partial class Form_3_ConfigurarLayersLinha : Form
     {
         public string linha;
-        private Class_Arranjos arranjos = new Class_Arranjos();
+        private Arranjos arranjos = new Arranjos();
 
-        public Form_3_ConfigurarLayersLinha(string valor, Class_Arranjos arranjos)
+        public Form_3_ConfigurarLayersLinha(string valor, Arranjos arranjos)
         {
             InitializeComponent();
             NLCCBLinhas.Items.AddRange(arranjos.allLineType2.ToArray());

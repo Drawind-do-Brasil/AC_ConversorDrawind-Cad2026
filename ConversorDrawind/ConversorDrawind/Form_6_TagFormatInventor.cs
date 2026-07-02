@@ -13,15 +13,15 @@ namespace ConversorDrawind
     {
         List<Color> cores = new List<Color>();
         public int indice = -1;
-        List<Class_TagBlockClass> tags = new List<Class_TagBlockClass>();
-        List<Class_TagBlockClass> tagsCopy = new List<Class_TagBlockClass>();
-        Class_TagBlockClass original = new Class_TagBlockClass();
-        public Form_6_TagFormatInventor(List<Class_TagBlockClass> tags, Class_TagBlockClass original)
+        List<TagBlock> tags = new List<TagBlock>();
+        List<TagBlock> tagsCopy = new List<TagBlock>();
+        TagBlock original = new TagBlock();
+        public Form_6_TagFormatInventor(List<TagBlock> tags, TagBlock original)
         {
             InitializeComponent();
             comboBox1.Items.Add(" ");
             int index = 0;
-            foreach (Class_TagBlockClass item in tags)
+            foreach (TagBlock item in tags)
             {
                 comboBox1.Items.Add(index + "  -  " + item.tag);
                 if (item.isSociate)
@@ -31,7 +31,7 @@ namespace ConversorDrawind
                 index++;
             }
             this.tagsCopy = tags;
-            foreach (Class_TagBlockClass item in tags)
+            foreach (TagBlock item in tags)
             {
                 this.tags.Add(item.DeepCopy());
             }
@@ -117,7 +117,7 @@ namespace ConversorDrawind
             {
                 original.indiceRelacao = indice;
                 this.tagsCopy.Clear();
-                foreach (Class_TagBlockClass item in this.tags)
+                foreach (TagBlock item in this.tags)
                 {
                     this.tagsCopy.Add(item.DeepCopy());
                 }

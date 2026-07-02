@@ -12,13 +12,13 @@ namespace ConversorDrawind
 {
     public partial class Form_4_LayersFilter : Form
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
-        public Class_Filter filtro;
+        private Arranjos arranjos = new Arranjos();
+        public Filter filtro;
 
-        public Form_4_LayersFilter(string valor, Class_Arranjos arranjos)
+        public Form_4_LayersFilter(string valor, Arranjos arranjos)
         {
             this.arranjos = arranjos;
-            filtro = new Class_Filter(arranjos);
+            filtro = new Filter(arranjos);
             InitializeComponent();
             CarregarControlFilterCBCor();
             CarregarControlFilterCBTipo();
@@ -48,7 +48,7 @@ namespace ConversorDrawind
             ControlFilterCBLinha.Items.Add("ALL");
             ControlFilterCBLinha.Items.AddRange(arranjos.allLineType2.ToArray());
 
-            Class_Filter filtro = new Class_Filter(arranjos);
+            Filter filtro = new Filter(arranjos);
             filtro.SetConjunto(line);
             for (int i = 0; i < ControlFilterCBLinha.Items.Count; i++)
             {
@@ -142,7 +142,7 @@ namespace ConversorDrawind
                     newThread.Join();
                     Form_0_JanelaPrincipal.StopStatusThread(newThread2);
 
-                    string filetxt = new Class_Configuration().GetPROGRAMDirectoryTemp() + "TempImporLineType.Temp";
+                    string filetxt = new Configuration().GetPROGRAMDirectoryTemp() + "TempImporLineType.Temp";
                     if (File.Exists(filetxt))
                     {
                         StreamReader streamReader = new StreamReader(filetxt, Encoding.UTF8, true);
@@ -180,17 +180,17 @@ namespace ConversorDrawind
                 string file = (string)fileName;
                 ACAD.AcadApplication acadApplication;
                 ACAD.AcadDocument acadDocument;
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     acadApplication = new ACAD.AcadApplication();
 
                     acadDocument = acadApplication.Documents.Open(file, false);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.LoadFile(Class_DrawingProcess.DLLPath1, acadDocument);
+                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_LoadLineType\n", acadDocument);
 

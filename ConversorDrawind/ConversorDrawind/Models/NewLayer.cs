@@ -5,7 +5,7 @@ namespace ConversorDrawind
 {
     public class Class_NewLayer
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
+        private Arranjos arranjos = new Arranjos();
         public string layer;
         public string cor;
         public string tipoLinha;
@@ -13,7 +13,7 @@ namespace ConversorDrawind
         public string larguraTexto;
         public string estiloTexto;
 
-        public Class_NewLayer(Class_Arranjos arranjos)
+        public Class_NewLayer(Arranjos arranjos)
         {
             this.arranjos = arranjos;
         }

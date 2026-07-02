@@ -23,7 +23,7 @@ public sealed class DrawingProcessServiceTests
     [Fact]
     public void DrawingProcessPaths_DeveResolverFormatoPelaOrigem()
     {
-        var configuration = new Class_Configuration
+        var configuration = new Configuration
         {
             EXTCONFOrigem = 0,
             PROGRAMblockFormatoCaminho = "tekla.dwg",

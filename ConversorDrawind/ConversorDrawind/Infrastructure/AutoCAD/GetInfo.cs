@@ -23,7 +23,7 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     string name = acadDocument.Name;
                 }
@@ -43,7 +43,7 @@ namespace ConversorDrawind
             {
                 try 
                 {
-                    using (Class_MessageFilter.ScopedRegistration())
+                    using (MessageFilter.ScopedRegistration())
                     {
 
                         try
@@ -93,11 +93,11 @@ namespace ConversorDrawind
         private static extern bool SetForegroundWindow(IntPtr hWnd);
         private IntPtr _hWnd;
 
-        public void Get2Point(ref Class_PointEspecial p1, ref Class_PointEspecial p2)
+        public void Get2Point(ref PointEspecial p1, ref PointEspecial p2)
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
 
                     _hWnd = (IntPtr)acadApplication.HWND;
@@ -117,11 +117,11 @@ namespace ConversorDrawind
                     {
                         StreamReader sr = new StreamReader(arq);
                         string[] myPointS = sr.ReadLine().Split(';');
-                        p1 = new Class_PointEspecial(Math.Round(Convert.ToDouble(myPointS[0].Replace('.', ',')), 2),
+                        p1 = new PointEspecial(Math.Round(Convert.ToDouble(myPointS[0].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPointS[1].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPointS[2].Replace('.', ',')), 2));
                         string[] myPoint2S = sr.ReadLine().Split(';');
-                        p2 = new Class_PointEspecial(Math.Round(Convert.ToDouble(myPoint2S[0].Replace('.', ',')), 2),
+                        p2 = new PointEspecial(Math.Round(Convert.ToDouble(myPoint2S[0].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPoint2S[1].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPoint2S[2].Replace('.', ',')), 2));
 
@@ -139,12 +139,12 @@ namespace ConversorDrawind
 
 
 
-        public List<Class_BlockClass> GetListBlocks()
+        public List<Block> GetListBlocks()
         {
-            List<Class_BlockClass> myListBlock = new List<Class_BlockClass>();
+            List<Block> myListBlock = new List<Block>();
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_GetBlocks\n", acadDocument);
 
@@ -159,7 +159,7 @@ namespace ConversorDrawind
                             temp = sr.ReadLine();
                         while (!sr.EndOfStream)
                         {
-                            Class_BlockClass blockClass = new Class_BlockClass();
+                            Block blockClass = new Block();
                             if (temp.Substring(0, 3) == "***")
                             {
                                 if (temp.Length > 3)
@@ -169,7 +169,7 @@ namespace ConversorDrawind
 
                             while (temp.Substring(0, 3) != "***")
                             {
-                                Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                                TagBlock tagTemp = new TagBlock();
                                 string[] stringtemp = temp.Substring(3).Split(';');
                                 tagTemp.tag = stringtemp[0];
                                 tagTemp.widthfactor = stringtemp[1];
@@ -182,7 +182,7 @@ namespace ConversorDrawind
                             myListBlock.Add(blockClass);
                         }
                         {
-                            Class_BlockClass blockClass = new Class_BlockClass();
+                            Block blockClass = new Block();
                             if (temp.Substring(0, 3) == "***")
                             {
                                 if (temp.Length > 3)

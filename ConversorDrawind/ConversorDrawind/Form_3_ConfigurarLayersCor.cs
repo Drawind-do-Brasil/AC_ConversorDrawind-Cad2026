@@ -6,10 +6,10 @@ namespace ConversorDrawind
 {
     public partial class Form_3_ConfigurarLayersCor : Form
     {
-        Class_Arranjos arranjos = new Class_Arranjos();
+        Arranjos arranjos = new Arranjos();
         public string cor;
 
-        public Form_3_ConfigurarLayersCor(string valor, Class_Arranjos arranjos)
+        public Form_3_ConfigurarLayersCor(string valor, Arranjos arranjos)
         {
             InitializeComponent();
             NLCCBCor.Text = cor = valor;

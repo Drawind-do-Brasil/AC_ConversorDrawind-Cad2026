@@ -11,13 +11,13 @@ namespace ConversorDrawind
 {
     public partial class Form_5_AttFormatFilter : Form
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
-        public Class_Filter filtro;
+        private Arranjos arranjos = new Arranjos();
+        public Filter filtro;
 
-        public Form_5_AttFormatFilter(string valor, Class_Arranjos arranjos, string layer)
+        public Form_5_AttFormatFilter(string valor, Arranjos arranjos, string layer)
         {
             this.arranjos = arranjos;
-            filtro = new Class_Filter(arranjos);
+            filtro = new Filter(arranjos);
             InitializeComponent();
             CarregarControlFilterCBCor();
             CarregarControlFilterCBLayer();
@@ -92,16 +92,16 @@ namespace ConversorDrawind
                 string file = (string)fileName;
                 ACAD.AcadApplication acadApplication;
                 ACAD.AcadDocument acadDocument;
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     acadApplication = new ACAD.AcadApplication();
                     acadDocument = acadApplication.Documents.Open(file, false);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.LoadFile(Class_DrawingProcess.DLLPath1, acadDocument);
+                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_LoadLineType\n", acadDocument);
 

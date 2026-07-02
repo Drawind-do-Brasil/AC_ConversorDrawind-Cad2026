@@ -11,9 +11,9 @@ namespace ConversorDrawind
 {
     public partial class Form_3_LinhasErradas : Form
     {
-        List<Class_CorrecaoLinhas> LinhasErradas = new List<Class_CorrecaoLinhas>();
-        Class_Arranjos Arranjos = new Class_Arranjos();
-        public Form_3_LinhasErradas(List<Class_CorrecaoLinhas> linhasErradas, Class_Arranjos arranjos)
+        List<CorrecaoLinhas> LinhasErradas = new List<CorrecaoLinhas>();
+        Arranjos Arranjos = new Arranjos();
+        public Form_3_LinhasErradas(List<CorrecaoLinhas> linhasErradas, Arranjos arranjos)
         {
             InitializeComponent();
             LinhasErradas = linhasErradas;
@@ -82,7 +82,7 @@ namespace ConversorDrawind
 
         private void button1_Click(object sender, EventArgs e)
         {
-            foreach (Class_CorrecaoLinhas item in LinhasErradas)
+            foreach (CorrecaoLinhas item in LinhasErradas)
             {
                 Arranjos.allNewLayerComposition[item.posLinha] = item.GetNewLinha();
             }

@@ -18,7 +18,7 @@ namespace ConversorDrawind
 
     internal static class ConversionPreflightValidator
     {
-        public static ConversionPreflightResult ValidateFormatPath(Class_Configuration configuration)
+        public static ConversionPreflightResult ValidateFormatPath(Configuration configuration)
         {
             if (!configuration.EXTCONFIsExchangeFormat)
                 return ConversionPreflightResult.Success;

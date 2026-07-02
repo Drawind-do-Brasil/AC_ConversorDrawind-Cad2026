@@ -152,13 +152,13 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     myClass._desenhoAtual = new List<ACAD.AcadDocument>();
 
-                    myClass.acadApplication = Class_ComRetry.Invoke(() => CreateAutoCADApplication(), 180, 250);
+                    myClass.acadApplication = ComRetry.Invoke(() => CreateAutoCADApplication(), 180, 250);
 
-                    Process processo = Process.GetProcessById(GetWindowProcessID(Class_ComRetry.Invoke(() => (int)myClass.acadApplication.HWND)));
+                    Process processo = Process.GetProcessById(GetWindowProcessID(ComRetry.Invoke(() => (int)myClass.acadApplication.HWND)));
 
                     IntPtr hWnd = FindWindowInProcess(processo, s => s.EndsWith("acad"));
 
@@ -171,12 +171,12 @@ namespace ConversorDrawind
                     myClass.acadApplication.EndCommand += AcadApplication_EndCommand;
 
                     IsACADOpen = true;
-                    Class_ComRetry.Invoke(() => myClass.acadApplication.WindowState = ACCOMMON.AcWindowState.acMax);
+                    ComRetry.Invoke(() => myClass.acadApplication.WindowState = ACCOMMON.AcWindowState.acMax);
 
-                    myClass._desenhoAtual.Add(Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Add("Novo Desenho 1"), 120, 100));
+                    myClass._desenhoAtual.Add(ComRetry.Invoke(() => myClass.acadApplication.Documents.Add("Novo Desenho 1"), 120, 100));
 
                     myClass.acadDocument = myClass._desenhoAtual.First();
-                    Class_ComRetry.Invoke(() => myClass.acadDocument.WindowState = ACCOMMON.AcWindowState.acMax);
+                    ComRetry.Invoke(() => myClass.acadDocument.WindowState = ACCOMMON.AcWindowState.acMax);
 
                     if (parametros.configuration.EXTCONFIsExchangeFormat)
                     {
@@ -184,8 +184,8 @@ namespace ConversorDrawind
                         {
                             string formatoPath = DrawingProcessPaths.GetExchangeFormatPath(parametros.configuration);
 
-                            myClass.acadDocument = Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(formatoPath, false), 120, 100);
-                            Class_ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
+                            myClass.acadDocument = ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(formatoPath, false), 120, 100);
+                            ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
                             myClass._desenhoAtributado = myClass.acadDocument;
                         }
                         catch (Exception)
@@ -219,7 +219,7 @@ namespace ConversorDrawind
                 if (myClass.acadDocument == null)
                     return 0;
 
-                object cmdActive = Class_ComRetry.Invoke(() => myClass.acadDocument.GetVariable("CMDACTIVE"));
+                object cmdActive = ComRetry.Invoke(() => myClass.acadDocument.GetVariable("CMDACTIVE"));
                 return Convert.ToInt32(cmdActive);
             }
             catch (Exception)
@@ -261,9 +261,9 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
-                    Class_ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
+                    ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
                     try
                     {
                         if (!String.IsNullOrEmpty(file))
@@ -273,7 +273,7 @@ namespace ConversorDrawind
                     }
                     finally
                     {
-                        Class_ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 1));
+                        ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 1));
                     }
                 }
             }
@@ -288,12 +288,12 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     _RunCommand = true;
 
-                    Class_ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
-                    Class_ComRetry.Invoke(() => myClass.acadDocument.SendCommand(CommandName));
+                    ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                    ComRetry.Invoke(() => myClass.acadDocument.SendCommand(CommandName));
                     WaitCommandFinished(CommandName);
 
                 }
@@ -324,7 +324,7 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     if (myClass.acadApplication == null)
                         return;
@@ -332,14 +332,14 @@ namespace ConversorDrawind
                     if (parametros.configuration.EXTCONFIsExchangeFormat && myClass._desenhoAtributado != null)
                     {
                         myClass.acadDocument = myClass._desenhoAtributado;
-                        Class_ComRetry.Invoke(() => myClass.acadDocument.Close(false));
+                        ComRetry.Invoke(() => myClass.acadDocument.Close(false));
                     }
 
                     if (myClass._desenhoAtual.Count > 0)
                     {
                         myClass.acadDocument = myClass._desenhoAtual.First();
-                        Class_ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
-                        Class_ComRetry.Invoke(() => myClass.acadDocument.Close(false));
+                        ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                        ComRetry.Invoke(() => myClass.acadDocument.Close(false));
                         myClass._desenhoAtual.RemoveAt(0);
                     }
 
@@ -347,8 +347,8 @@ namespace ConversorDrawind
                     {
                         try
                         {
-                            if (Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Count) == 0)
-                                Class_ComRetry.Invoke(() => myClass.acadApplication.Quit(), 120, 100);
+                            if (ComRetry.Invoke(() => myClass.acadApplication.Documents.Count) == 0)
+                                ComRetry.Invoke(() => myClass.acadApplication.Quit(), 120, 100);
                         }
                         catch (Exception e)
                         {
@@ -381,9 +381,9 @@ namespace ConversorDrawind
 
                 }
 
-                myClass.acadDocument = Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(file, false), 120, 100);
+                myClass.acadDocument = ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(file, false), 120, 100);
                 myClass._desenhoAtual.Add(myClass.acadDocument);
-                Class_ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
 
                 try
                 {
@@ -394,12 +394,12 @@ namespace ConversorDrawind
                         myClass.SendCommand("DRAWINDCAD_GetAttributeText\n");
 
                         myClass.acadDocument = myClass._desenhoAtributado;
-                        Class_ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                        ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
 
                         myClass.SendCommand("COPYBASE 0,0,0 all \n");
 
                         myClass.acadDocument = myClass._desenhoAtual.Last();
-                        Class_ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                        ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
 
                         myClass.SendCommand("ZOOM E\n");
                         myClass.SendCommand("REGEN\n");
@@ -408,11 +408,11 @@ namespace ConversorDrawind
                         if (parametros.configuration.EXTCONFOrigem == 1)
                         {
 
-                            List<Class_BlockClass> listAnterior = GetListBlocksS();
+                            List<Block> listAnterior = GetListBlocksS();
 
                             myClass.SendCommand("PASTECLIP " + pasteClipPoint + "\n");
 
-                            List<Class_BlockClass> listPosterior = GetListBlocksS();
+                            List<Block> listPosterior = GetListBlocksS();
 
                             for (int j = 0; j < listPosterior.Count; j++)
                             {
@@ -464,7 +464,7 @@ namespace ConversorDrawind
 
                     if (parametros.configuration.EXTCONFIsExecuteLISP)
                     {
-                        Class_ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
+                        ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
                         try
                         {
                             foreach (string item in parametros.arranjos.listLISPCommand)
@@ -491,12 +491,12 @@ namespace ConversorDrawind
                         }
                         finally
                         {
-                            Class_ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 1));
+                            ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 1));
                         }
                     }
 
                     myClass.SendCommand("DRAWINDCAD_Finalize\n");
-                    Class_ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
+                    ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
 
                 }
                 catch (Exception ex)
@@ -516,7 +516,7 @@ namespace ConversorDrawind
                     try
                     {
                         if (Form_0_JanelaPrincipal.extensaoGeral == "DWG")
-                            Class_ComRetry.Invoke(() => myClass.acadDocument.Save());
+                            ComRetry.Invoke(() => myClass.acadDocument.Save());
 
                         else
                         {
@@ -538,14 +538,14 @@ namespace ConversorDrawind
 
                     if (!parametros.closedesenhos)
                     {
-                        int cont = Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Count);
+                        int cont = ComRetry.Invoke(() => myClass.acadApplication.Documents.Count);
 
-                        Class_ComRetry.Invoke(() => myClass.acadDocument.Close());
+                        ComRetry.Invoke(() => myClass.acadDocument.Close());
 
                         Stopwatch waitClose = Stopwatch.StartNew();
                         while (waitClose.ElapsedMilliseconds < 30000)
                         {
-                            if (Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Count) < cont)
+                            if (ComRetry.Invoke(() => myClass.acadApplication.Documents.Count) < cont)
                                 break;
 
                             Thread.Sleep(50);
@@ -610,7 +610,7 @@ namespace ConversorDrawind
                 {
                     IsACADOpen = false;
 
-                    using (Class_MessageFilter.ScopedRegistration())
+                    using (MessageFilter.ScopedRegistration())
                     {
                         OpenACAD();
                         myClass.LoadFile(DLLPath1);
@@ -703,9 +703,9 @@ namespace ConversorDrawind
             set { isACADOpen = value; }
         }
 
-        public static List<Class_BlockClass> GetListBlocksS()
+        public static List<Block> GetListBlocksS()
         {
-            List<Class_BlockClass> myListBlock = new List<Class_BlockClass>();
+            List<Block> myListBlock = new List<Block>();
             try
             {
 
@@ -724,7 +724,7 @@ namespace ConversorDrawind
                         temp = sr.ReadLine();
                     while (!sr.EndOfStream)
                     {
-                        Class_BlockClass blockClass = new Class_BlockClass();
+                        Block blockClass = new Block();
                         if (temp.Substring(0, 3) == "***")
                         {
                             if (temp.Length > 3)
@@ -734,7 +734,7 @@ namespace ConversorDrawind
 
                         while (temp.Substring(0, 3) != "***")
                         {
-                            Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                            TagBlock tagTemp = new TagBlock();
                             string[] stringtemp = temp.Substring(3).Split(';');
                             tagTemp.tag = stringtemp[0];
                             tagTemp.widthfactor = stringtemp[1];
@@ -747,7 +747,7 @@ namespace ConversorDrawind
                         myListBlock.Add(blockClass);
                     }
                     {
-                        Class_BlockClass blockClass = new Class_BlockClass();
+                        Block blockClass = new Block();
                         if (temp.Substring(0, 3) == "***")
                         {
                             if (temp.Length > 3)
@@ -795,7 +795,7 @@ namespace ConversorDrawind
 
             try
             {
-                object ptMin = Class_ComRetry.Invoke(() => myClass.acadDocument.GetVariable("EXTMIN"));
+                object ptMin = ComRetry.Invoke(() => myClass.acadDocument.GetVariable("EXTMIN"));
                 return TryGetPointCoordinates(ptMin, out x, out y, out z);
             }
             catch (Exception)

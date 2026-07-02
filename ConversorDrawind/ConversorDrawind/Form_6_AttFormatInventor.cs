@@ -11,22 +11,22 @@ namespace ConversorDrawind
 {
     public partial class Form_6_AttFormatInventor : Form
     {
-        Class_BlockClass inventor = new Class_BlockClass();
-        Class_BlockClass original = new Class_BlockClass();
-        Class_BlockClass inventorCopy = new Class_BlockClass();
-        Class_BlockClass originalrCopy = new Class_BlockClass();
+        Block inventor = new Block();
+        Block original = new Block();
+        Block inventorCopy = new Block();
+        Block originalrCopy = new Block();
 
-        public Class_BlockClass Original
+        public Block Original
         {
             get { return originalrCopy; }
         }
 
-        public Class_BlockClass Inventor
+        public Block Inventor
         {
             get { return inventorCopy; }
         }
 
-        public Form_6_AttFormatInventor(Class_BlockClass inventor, Class_BlockClass original)
+        public Form_6_AttFormatInventor(Block inventor, Block original)
         {
             InitializeComponent();
             this.inventor = inventor;
@@ -34,7 +34,7 @@ namespace ConversorDrawind
             this.inventorCopy = inventor.DeepCopy();
             this.originalrCopy = original.DeepCopy();
 
-            foreach (Class_TagBlockClass item in original.listTags)
+            foreach (TagBlock item in original.listTags)
             {
                 if (item.indiceRelacao != -1)
                 {

@@ -32,12 +32,12 @@ namespace ConversorDrawind
         }
 
         public static void LoadConverter(
-            Class_Configuration configuration,
+            Configuration configuration,
             string converterName,
-            Class_Arranjos arranjos,
-            List<Class_BlockClass> blocks,
-            List<Class_BlockClass> blocksInv,
-            List<Class_BlockClass> blocksOrig,
+            Arranjos arranjos,
+            List<Block> blocks,
+            List<Block> blocksInv,
+            List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
             if (configuration.CheckFileTxmlExist(converterName, statusConversorItem))
@@ -47,24 +47,24 @@ namespace ConversorDrawind
         }
 
         public static void SaveConverter(
-            Class_Configuration configuration,
+            Configuration configuration,
             string converterName,
-            Class_Arranjos arranjos,
-            List<Class_BlockClass> blocks,
-            List<Class_BlockClass> blocksInv,
-            List<Class_BlockClass> blocksOrig,
+            Arranjos arranjos,
+            List<Block> blocks,
+            List<Block> blocksInv,
+            List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
             configuration.SaveXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
         }
 
         public static void MigrateTemplateToTxml(
-            Class_Configuration configuration,
+            Configuration configuration,
             string converterName,
-            Class_Arranjos arranjos,
-            List<Class_BlockClass> blocks,
-            List<Class_BlockClass> blocksInv,
-            List<Class_BlockClass> blocksOrig,
+            Arranjos arranjos,
+            List<Block> blocks,
+            List<Block> blocksInv,
+            List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
             string txmlPath = GetTxmlPath(converterName, statusConversorItem);

@@ -6,14 +6,14 @@ namespace ConversorDrawind
 {
     public partial class Form_4_LayersNewLayer : Form
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
-        public Class_NewLayer novoLayer;
+        private Arranjos arranjos = new Arranjos();
+        public NewLayer novoLayer;
 
-        public Form_4_LayersNewLayer( string line, Class_Arranjos arranjos)
+        public Form_4_LayersNewLayer( string line, Arranjos arranjos)
         {
             InitializeComponent();
             this.arranjos = arranjos;
-            novoLayer = new Class_NewLayer(this.arranjos);
+            novoLayer = new NewLayer(this.arranjos);
             ControlNewLayerCBLayer.Items.AddRange(this.arranjos.allNewLayer.ToArray());
             ControlNewLayerCBCor.Items.AddRange(this.arranjos.allcolor.ToArray());
             ControlNewLayerCBCor.Items.Remove(this.arranjos.allcolor.First());

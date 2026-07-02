@@ -5,7 +5,7 @@ namespace ConversorDrawind
 {
     public class Class_Filter
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
+        private Arranjos arranjos = new Arranjos();
         public string layerBase;
         public string tipoObjeto;
         public string cor;
@@ -14,7 +14,7 @@ namespace ConversorDrawind
         public string alturaTexto;
         public string orientacao = "ALL";
 
-        public Class_Filter(Class_Arranjos arranjos)
+        public Class_Filter(Arranjos arranjos)
         {
             this.arranjos = arranjos;
         }

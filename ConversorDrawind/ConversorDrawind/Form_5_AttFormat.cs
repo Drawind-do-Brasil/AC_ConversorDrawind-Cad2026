@@ -14,11 +14,11 @@ namespace ConversorDrawind
 {
     public partial class Form_5_AttFormat : Form
     {
-        Class_BlockClass Block = null;
-        Class_Arranjos arranjos = null;
-        public Class_GetInfo myDrawingBlock = null;
+        Block Block = null;
+        Arranjos arranjos = null;
+        public GetInfo myDrawingBlock = null;
 
-        public Form_5_AttFormat(Class_BlockClass BlockTemp, Class_Arranjos ArranjosTemp, Class_GetInfo DrawingBlock)
+        public Form_5_AttFormat(Block BlockTemp, Arranjos ArranjosTemp, GetInfo DrawingBlock)
         {
             InitializeComponent();
             Block = BlockTemp;
@@ -29,7 +29,7 @@ namespace ConversorDrawind
         private void BlockConf_Load(object sender, EventArgs e)
         {
             // TODO: This line of code loads data into the 'dbBlocksDataSet.blocks' table. You can move, or remove it, as needed.
-            foreach (Class_TagBlockClass item in Block.listTags)
+            foreach (TagBlock item in Block.listTags)
             {
                 dataGridView.Rows.Add(item.tag,
                                       item.modify,
@@ -65,7 +65,7 @@ namespace ConversorDrawind
                         Thread newThread2 = new Thread(new ThreadStart(Form_0_JanelaPrincipal.ThreadMethodAbrindoCad));
                         newThread2.SetApartmentState(ApartmentState.STA);
                         newThread2.Start();;
-                        myDrawingBlock = new Class_GetInfo(openFileDialog.FileName);
+                        myDrawingBlock = new GetInfo(openFileDialog.FileName);
                         Form_0_JanelaPrincipal.StopStatusThread(newThread2);
                         IsContinueOp1 = true;
                     }
@@ -98,8 +98,8 @@ namespace ConversorDrawind
                     {
                         if (myDrawingBlock != null)
                         {
-                            Class_PointEspecial p1 = new Class_PointEspecial();
-                            Class_PointEspecial p2 = new Class_PointEspecial();
+                            PointEspecial p1 = new PointEspecial();
+                            PointEspecial p2 = new PointEspecial();
                             myDrawingBlock.Get2Point(ref p1, ref p2);
                             foreach (DataGridViewRow row in dataGridView.SelectedRows)
                             {
@@ -147,14 +147,14 @@ namespace ConversorDrawind
             Block.listTags.Clear();
             for (int i = 0; i < dataGridView.Rows.Count; i++)
 			{
-                Class_TagBlockClass Tag = new Class_TagBlockClass();
+                TagBlock Tag = new TagBlock();
 			    Tag.tag = dataGridView.Rows[i].Cells[0].Value.ToString();
                 Tag.modify = Convert.ToBoolean(dataGridView.Rows[i].Cells[1].Value.ToString());
                 string[] pts = dataGridView.Rows[i].Cells[2].Value.ToString().Split(';');
                 string[] pts1 = pts[0].Split(',');
                 string[] pts2 = pts[1].Split(',');
-                Tag.p1 = new Class_PointEspecial(Convert.ToDouble(pts1[0].Replace('.', ',')), Convert.ToDouble(pts1[1].Replace('.', ',')), Convert.ToDouble(pts1[2].Replace('.', ',')));
-                Tag.p2 = new Class_PointEspecial(Convert.ToDouble(pts2[0].Replace('.', ',')), Convert.ToDouble(pts2[1].Replace('.', ',')), Convert.ToDouble(pts2[2].Replace('.', ',')));
+                Tag.p1 = new PointEspecial(Convert.ToDouble(pts1[0].Replace('.', ',')), Convert.ToDouble(pts1[1].Replace('.', ',')), Convert.ToDouble(pts1[2].Replace('.', ',')));
+                Tag.p2 = new PointEspecial(Convert.ToDouble(pts2[0].Replace('.', ',')), Convert.ToDouble(pts2[1].Replace('.', ',')), Convert.ToDouble(pts2[2].Replace('.', ',')));
                 string[] layer = dataGridView.Rows[i].Cells[3].Value.ToString().Split(';');
                 Tag.filtro.SetConjunto(layer[1]);
                 Tag.filtro.layerBase = layer[0];

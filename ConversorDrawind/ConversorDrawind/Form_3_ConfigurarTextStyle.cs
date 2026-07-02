@@ -11,9 +11,9 @@ namespace ConversorDrawind
 {
     public partial class Form_3_ConfigurarTextStyle : Form
     {
-        public Class_Arranjos arranjos = new Class_Arranjos();
+        public Arranjos arranjos = new Arranjos();
 
-        public Form_3_ConfigurarTextStyle(Class_Arranjos arranjos)
+        public Form_3_ConfigurarTextStyle(Arranjos arranjos)
         {
             InitializeComponent();
             this.arranjos = arranjos;

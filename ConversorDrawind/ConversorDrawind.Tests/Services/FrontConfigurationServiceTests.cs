@@ -20,7 +20,7 @@ public sealed class FrontConfigurationServiceTests
     [Fact]
     public void ConversionPreflightValidator_DeveBloquearFormatoAusenteQuandoTrocaFormato()
     {
-        var configuration = new Class_Configuration
+        var configuration = new Configuration
         {
             EXTCONFIsExchangeFormat = true,
             EXTCONFOrigem = 0,
@@ -36,7 +36,7 @@ public sealed class FrontConfigurationServiceTests
     [Fact]
     public void ConversionPreflightValidator_DevePermitirQuandoNaoTrocaFormato()
     {
-        var configuration = new Class_Configuration
+        var configuration = new Configuration
         {
             EXTCONFIsExchangeFormat = false,
             PROGRAMblockFormatoCaminho = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N") + ".dwg")

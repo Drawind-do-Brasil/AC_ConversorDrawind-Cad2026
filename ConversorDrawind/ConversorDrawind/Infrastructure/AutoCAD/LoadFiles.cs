@@ -19,9 +19,9 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
-                    Class_ComRetry.Invoke(() => acadDocument.SetVariable("FILEDIA", 0));
+                    ComRetry.Invoke(() => acadDocument.SetVariable("FILEDIA", 0));
                     try
                     {
                         string ext = "";
@@ -36,7 +36,7 @@ namespace ConversorDrawind
                     }
                     finally
                     {
-                        Class_ComRetry.Invoke(() => acadDocument.SetVariable("FILEDIA", 1));
+                        ComRetry.Invoke(() => acadDocument.SetVariable("FILEDIA", 1));
                     }
                 }
             }
@@ -51,11 +51,11 @@ namespace ConversorDrawind
         {
             try
             {
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     _RunCommand = true;
 
-                    Class_ComRetry.Invoke(() => acadDocument.SendCommand(CommandName));
+                    ComRetry.Invoke(() => acadDocument.SendCommand(CommandName));
                     WaitCommandFinished(CommandName, acadDocument);
 
                 }
@@ -102,7 +102,7 @@ namespace ConversorDrawind
                 if (acadDocument == null)
                     return 0;
 
-                object cmdActive = Class_ComRetry.Invoke(() => acadDocument.GetVariable("CMDACTIVE"));
+                object cmdActive = ComRetry.Invoke(() => acadDocument.GetVariable("CMDACTIVE"));
                 return Convert.ToInt32(cmdActive);
             }
             catch (Exception)

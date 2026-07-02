@@ -40,18 +40,18 @@ namespace ConversorDrawind
             if (parametros.desenhosName.Count() > 0)
             {
                 ad = 0;
-                Class_DrawingProcess.Valor = 0;
-                Class_DrawingProcess.Index = 0;
+                DrawingProcess.Valor = 0;
+                DrawingProcess.Index = 0;
 
                 
-                acadThreadRun = new Thread(new ParameterizedThreadStart(Class_DrawingProcess.GoProcess));
+                acadThreadRun = new Thread(new ParameterizedThreadStart(DrawingProcess.GoProcess));
                 acadThreadRun.IsBackground = true;
                 acadThreadRun.SetApartmentState(ApartmentState.STA);
                 acadThreadRun.Start(parametros);
                 
-                while (Class_DrawingProcess.Valor < 100)
+                while (DrawingProcess.Valor < 100)
                 {
-                    BackgroundWorker1.ReportProgress(Class_DrawingProcess.Valor);
+                    BackgroundWorker1.ReportProgress(DrawingProcess.Valor);
                     Thread.Sleep(50);
                 }
                 acadThreadRun.Join();
@@ -69,11 +69,11 @@ namespace ConversorDrawind
                 //ProgressBar1.CreateGraphics().DrawString(e.ProgressPercentage + "%", new Font("Arial", (float)8.25, FontStyle.Regular), Brushes.Black, new PointF(ProgressBar1.Width / 2 - 10, ProgressBar1.Height / 2 - 7));
                
             }
-            if (Class_DrawingProcess.IsACADOpen && !Button_Cancel.Enabled)
+            if (DrawingProcess.IsACADOpen && !Button_Cancel.Enabled)
                 Button_Cancel.Enabled = true;
             Label_TempDecorrido.Text = "Tempo Decorrido: " + Time();
-            if (!String.IsNullOrWhiteSpace(Class_DrawingProcess.FileOpen))
-                Label_Processo.Text = "Convertendo o desenho: " + Class_DrawingProcess.FileOpen;
+            if (!String.IsNullOrWhiteSpace(DrawingProcess.FileOpen))
+                Label_Processo.Text = "Convertendo o desenho: " + DrawingProcess.FileOpen;
 
             if (ad == 0)
             {
@@ -136,7 +136,7 @@ namespace ConversorDrawind
         
         public  string TimeRemaining()
         {
-            TimeSpan timeRemaining = TimeSpan.FromTicks(DateTime.Now.Subtract(startTime).Ticks * (parametros.desenhosName.Count() - (Class_DrawingProcess.Index + 1)) / (Class_DrawingProcess.Index + 1));
+            TimeSpan timeRemaining = TimeSpan.FromTicks(DateTime.Now.Subtract(startTime).Ticks * (parametros.desenhosName.Count() - (DrawingProcess.Index + 1)) / (DrawingProcess.Index + 1));
             return new DateTime(timeRemaining.Ticks).ToString("HH:mm:ss");
     
         }

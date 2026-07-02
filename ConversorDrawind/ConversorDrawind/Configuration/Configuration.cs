@@ -53,10 +53,10 @@ namespace ConversorDrawind
         /// EXT SCALE
         /// </summary>
         public bool EXTSCALEManual = true;
-        public Class_PointEspecial EXTSCALEMp1 = new Class_PointEspecial(0, 0, 0);
-        public Class_PointEspecial EXTSCALEMp2 = new Class_PointEspecial(0, 0, 0);
-        public Class_PointEspecial EXTSCALEAp1 = new Class_PointEspecial(0, 0, 0);
-        public Class_PointEspecial EXTSCALEAp2 = new Class_PointEspecial(0, 0, 0);
+        public PointEspecial EXTSCALEMp1 = new PointEspecial(0, 0, 0);
+        public PointEspecial EXTSCALEMp2 = new PointEspecial(0, 0, 0);
+        public PointEspecial EXTSCALEAp1 = new PointEspecial(0, 0, 0);
+        public PointEspecial EXTSCALEAp2 = new PointEspecial(0, 0, 0);
         public string EXTSCALELayer = "0";
         public double EXTSCALETextSize = 2.5;
 
@@ -124,12 +124,12 @@ namespace ConversorDrawind
         }
 
 
-        public void Load(string file, Class_Arranjos arranjos, List<Class_BlockClass> blocks, List<Class_BlockClass> blocosi, List<Class_BlockClass> blocoso, StatusConversorItem statusConversorItem)
+        public void Load(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
             LegacyTemplateReader.Load(this, file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
         }
 
-        internal void LoadTemplateCore(string file, Class_Arranjos arranjos, List<Class_BlockClass> blocks, List<Class_BlockClass> blocosi, List<Class_BlockClass> blocoso, StatusConversorItem statusConversorItem)
+        internal void LoadTemplateCore(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
             List<string> listLineBase = new List<string>();
             string type = "Coments:";
@@ -248,19 +248,19 @@ namespace ConversorDrawind
             streamReader.ReadLine();
             EXTSCALEManual = Convert.ToBoolean(streamReader.ReadLine().Remove(0, 11));
             string[] mp1 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEMp1 = new Class_PointEspecial(Convert.ToDouble(mp1[0].Replace('.', ',')),
+            EXTSCALEMp1 = new PointEspecial(Convert.ToDouble(mp1[0].Replace('.', ',')),
                                      Convert.ToDouble(mp1[1].Replace('.', ',')),
                                      Convert.ToDouble(mp1[2].Replace('.', ',')));
             string[] mp2 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEMp2 = new Class_PointEspecial(Convert.ToDouble(mp2[0].Replace('.', ',')),
+            EXTSCALEMp2 = new PointEspecial(Convert.ToDouble(mp2[0].Replace('.', ',')),
                                      Convert.ToDouble(mp2[1].Replace('.', ',')),
                                      Convert.ToDouble(mp2[2].Replace('.', ',')));
             string[] mp3 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEAp1 = new Class_PointEspecial(Convert.ToDouble(mp3[0].Replace('.', ',')),
+            EXTSCALEAp1 = new PointEspecial(Convert.ToDouble(mp3[0].Replace('.', ',')),
                                      Convert.ToDouble(mp3[1].Replace('.', ',')),
                                      Convert.ToDouble(mp3[2].Replace('.', ',')));
             string[] mp4 = streamReader.ReadLine().Remove(0, 11).Split(';');
-            EXTSCALEAp2 = new Class_PointEspecial(Convert.ToDouble(mp4[0].Replace('.', ',')),
+            EXTSCALEAp2 = new PointEspecial(Convert.ToDouble(mp4[0].Replace('.', ',')),
                                      Convert.ToDouble(mp4[1].Replace('.', ',')),
                                      Convert.ToDouble(mp4[2].Replace('.', ',')));
             EXTSCALELayer = streamReader.ReadLine().Remove(0, 11);
@@ -277,7 +277,7 @@ namespace ConversorDrawind
             type = "BlockLayerRemove:";
             while (!streamReader.EndOfStream && type == "BlockLayerRemove:")
             {
-                Class_Filter f = new Class_Filter(arranjos);
+                Filter f = new Filter(arranjos);
                 line = streamReader.ReadLine();
                 string[] treatment = line.Split('$');
                 type = treatment.First();
@@ -323,7 +323,7 @@ namespace ConversorDrawind
                 type = treatment.First();
                 if (type == "BlockName:")
                 {
-                    Class_BlockClass blockClass = new Class_BlockClass();
+                    Block blockClass = new Block();
                     if (line.Length > 11)
                         blockClass.blockName = line.Substring(11);
 
@@ -336,7 +336,7 @@ namespace ConversorDrawind
 
                         if (type == "BlockTag:")
                         {
-                            Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                            TagBlock tagTemp = new TagBlock();
                             tagTemp.SetConjunto(line.Substring(10));
                             blockClass.listTags.Add(tagTemp);
                         }
@@ -377,7 +377,7 @@ namespace ConversorDrawind
                     type = treatment.First();
                     if (type == "BlockName:")
                     {
-                        Class_BlockClass blockClass = new Class_BlockClass();
+                        Block blockClass = new Block();
 
                         if (line.Length > 11)
                         {
@@ -396,7 +396,7 @@ namespace ConversorDrawind
 
                             if (type == "BlockTag:")
                             {
-                                Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                                TagBlock tagTemp = new TagBlock();
                                 tagTemp.SetConjunto(line.Substring(10));
                                 string[] linetemp = line.Substring(10).Split('@');
                                 tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
@@ -421,7 +421,7 @@ namespace ConversorDrawind
                     type = treatment.First();
                     if (type == "BlockName:")
                     {
-                        Class_BlockClass blockClass = new Class_BlockClass();
+                        Block blockClass = new Block();
 
                         if (line.Length > 11)
                         {
@@ -440,7 +440,7 @@ namespace ConversorDrawind
 
                             if (type == "BlockTag:")
                             {
-                                Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                                TagBlock tagTemp = new TagBlock();
                                 tagTemp.SetConjunto(line.Substring(10));
                                 string[] linetemp = line.Substring(10).Split('@');
                                 tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
@@ -488,12 +488,12 @@ namespace ConversorDrawind
             }
         }
 
-        public void LoadXML(string file, Class_Arranjos arranjos, List<Class_BlockClass> blocks, List<Class_BlockClass> blocosi, List<Class_BlockClass> blocoso , StatusConversorItem statusConversorItem)
+        public void LoadXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso , StatusConversorItem statusConversorItem)
         {
             ConfigurationXmlReader.Load(this, file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
         }
 
-        internal void LoadXMLCore(string file, Class_Arranjos arranjos, List<Class_BlockClass> blocks, List<Class_BlockClass> blocosi, List<Class_BlockClass> blocoso, StatusConversorItem statusConversorItem)
+        internal void LoadXMLCore(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
             arranjos.allBaseLayer.Clear();
             arranjos.allLineType1.Clear();
@@ -620,7 +620,7 @@ namespace ConversorDrawind
                 }
                 catch (Exception)
                 {
-                    arranjos.allTextSyles.Add(Class_Arranjos.defaultTextStyle);
+                    arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
                 }
         
             }
@@ -635,7 +635,7 @@ namespace ConversorDrawind
             string line;
             foreach (var item in importXML.Element(ConfigurationXmlContract.RemoveLayers).Elements(ConfigurationXmlContract.RemoveLayer))
             {
-                Class_Filter f = new Class_Filter(arranjos);
+                Filter f = new Filter(arranjos);
                 line = item.Value;
                 string[] treatment = line.Split('$');
                 string[] st = treatment.Last().Split(';');
@@ -662,11 +662,11 @@ namespace ConversorDrawind
 
             foreach (var item in importXML.Element(ConfigurationXmlContract.BlockConfig).Elements(ConfigurationXmlContract.BlockAtt))
             {
-                Class_BlockClass blockClass = new Class_BlockClass();
+                Block blockClass = new Block();
                 blockClass.blockName = item.Attribute(ConfigurationXmlContract.Nome).Value;
                 foreach (var tag in item.Elements(ConfigurationXmlContract.Tag))
                 {
-                    Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                    TagBlock tagTemp = new TagBlock();
                     tagTemp.SetConjunto(tag.Value);
                     blockClass.listTags.Add(tagTemp);
                 }
@@ -674,7 +674,7 @@ namespace ConversorDrawind
             }
             foreach (var item in importXML.Element(ConfigurationXmlContract.BlockConfig).Elements(ConfigurationXmlContract.BlockAttCad))
             {
-                Class_BlockClass blockClass = new Class_BlockClass();
+                Block blockClass = new Block();
 
                 string[] linesplit = item.Attribute(ConfigurationXmlContract.Nome).Value.Split(';');
                 blockClass.blockName = linesplit[0];
@@ -683,7 +683,7 @@ namespace ConversorDrawind
 
                 foreach (var tag in item.Elements(ConfigurationXmlContract.Tag))
                 {
-                    Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                    TagBlock tagTemp = new TagBlock();
                     tagTemp.SetConjunto(tag.Value);
                     string[] linetemp = tag.Value.Split('@');
                     tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
@@ -694,7 +694,7 @@ namespace ConversorDrawind
             }
             foreach (var item in importXML.Element(ConfigurationXmlContract.BlockConfig).Elements(ConfigurationXmlContract.BlockAttOrig))
             {
-                Class_BlockClass blockClass = new Class_BlockClass();
+                Block blockClass = new Block();
 
                 string[] linesplit = item.Attribute(ConfigurationXmlContract.Nome).Value.Split(';');
                 blockClass.blockName = linesplit[0];
@@ -703,7 +703,7 @@ namespace ConversorDrawind
 
                 foreach (var tag in item.Elements(ConfigurationXmlContract.Tag))
                 {
-                    Class_TagBlockClass tagTemp = new Class_TagBlockClass();
+                    TagBlock tagTemp = new TagBlock();
                     tagTemp.SetConjunto(tag.Value);
                     string[] linetemp = tag.Value.Split('@');
                     tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
@@ -724,12 +724,12 @@ namespace ConversorDrawind
            
         }
         
-        public void SaveXML(string file, Class_Arranjos arranjos, List<Class_BlockClass> blocks, List<Class_BlockClass> blocosi, List<Class_BlockClass> blocoso, StatusConversorItem statusConversorItem)
+        public void SaveXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
             ConfigurationXmlWriter.Save(this, file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
         }
 
-        internal void SaveXMLCore(string file, Class_Arranjos arranjos, List<Class_BlockClass> blocks, List<Class_BlockClass> blocosi, List<Class_BlockClass> blocoso, StatusConversorItem statusConversorItem)
+        internal void SaveXMLCore(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
             string arquivo = ConfigurationPaths.TxmlPath(file, statusConversorItem);
 
@@ -908,36 +908,36 @@ namespace ConversorDrawind
 
                 x.Add(new XAttribute(ConfigurationXmlContract.DirectoryCadConversion, EXTCONFCaminhoBlocoInv));
                 x.Add(new XAttribute(ConfigurationXmlContract.LayerExplode, removelayer));
-                foreach (Class_BlockClass item in blocks)
+                foreach (Block item in blocks)
                 {
                     XElement x1 = new XElement(ConfigurationXmlContract.BlockAtt);
                     x1.Add(new XAttribute(ConfigurationXmlContract.Nome, item.blockName));
 
-                    foreach (Class_TagBlockClass tag in item.listTags)
+                    foreach (TagBlock tag in item.listTags)
                     {
                         x1.Add(new XElement(ConfigurationXmlContract.Tag, tag.GetConjuntoString()));
                     }
                     x.Add(x1);
                 }
 
-                foreach (Class_BlockClass item in blocosi)
+                foreach (Block item in blocosi)
                 {
                     XElement x1 = new XElement(ConfigurationXmlContract.BlockAttCad);
                     x1.Add(new XAttribute(ConfigurationXmlContract.Nome, item.blockName + ";" + item.blockNameRelacao + ";" + item.cor.ToArgb()));
 
-                    foreach (Class_TagBlockClass tag in item.listTags)
+                    foreach (TagBlock tag in item.listTags)
                     {
                         x1.Add(new XElement(ConfigurationXmlContract.Tag, tag.GetConjuntoString() + "@" + tag.indiceRelacao + "@" + tag.isSociate));
                     }
                     x.Add(x1);
                 }
 
-                foreach (Class_BlockClass item in blocoso)
+                foreach (Block item in blocoso)
                 {
                     XElement x1 = new XElement(ConfigurationXmlContract.BlockAttOrig);
                     x1.Add(new XAttribute(ConfigurationXmlContract.Nome, item.blockName + ";" + item.blockNameRelacao + ";" + item.cor.ToArgb()));
 
-                    foreach (Class_TagBlockClass tag in item.listTags)
+                    foreach (TagBlock tag in item.listTags)
                     {
                         x1.Add(new XElement(ConfigurationXmlContract.Tag, tag.GetConjuntoString() + "@" + tag.indiceRelacao + "@" + tag.isSociate));
 

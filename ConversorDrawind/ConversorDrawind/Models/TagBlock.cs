@@ -10,23 +10,23 @@ namespace ConversorDrawind
         public string widthfactor = "1";
         public string tag;
         public bool modify = false;
-        public Class_PointEspecial p1 = new Class_PointEspecial();
-        public Class_PointEspecial p2 = new Class_PointEspecial();
-        public Class_Filter filtro;
+        public PointEspecial p1 = new PointEspecial();
+        public PointEspecial p2 = new PointEspecial();
+        public Filter filtro;
         public int indiceRelacao = -1;
         public bool isSociate = false;
         public Class_TagBlockClass()
         {
-            filtro = new Class_Filter(new Class_Arranjos());
+            filtro = new Filter(new Arranjos());
             filtro.SetConjunto3();
         }
 
         public Class_TagBlockClass DeepCopy()
         {
             Class_TagBlockClass other = (Class_TagBlockClass)this.MemberwiseClone();
-            other.p1 = new Class_PointEspecial(this.p1);
-            other.p2 = new Class_PointEspecial(this.p2);
-            other.filtro = new Class_Filter(this.filtro);
+            other.p1 = new PointEspecial(this.p1);
+            other.p2 = new PointEspecial(this.p2);
+            other.filtro = new Filter(this.filtro);
             return other;
         }
 
@@ -38,8 +38,8 @@ namespace ConversorDrawind
             string[] pts = conj[2].Split(';');
             string[] pts1 = pts[0].Split(',');
             string[] pts2 = pts[1].Split(',');
-            p1 = new Class_PointEspecial(NumericTextParser.ToDouble(pts1[0]), NumericTextParser.ToDouble(pts1[1]), NumericTextParser.ToDouble(pts1[2]));
-            p2 = new Class_PointEspecial(NumericTextParser.ToDouble(pts2[0]), NumericTextParser.ToDouble(pts2[1]), NumericTextParser.ToDouble(pts2[2]));
+            p1 = new PointEspecial(NumericTextParser.ToDouble(pts1[0]), NumericTextParser.ToDouble(pts1[1]), NumericTextParser.ToDouble(pts1[2]));
+            p2 = new PointEspecial(NumericTextParser.ToDouble(pts2[0]), NumericTextParser.ToDouble(pts2[1]), NumericTextParser.ToDouble(pts2[2]));
             string[] subconj = conj[3].Split(';');
             filtro.layerBase = subconj[0];
             filtro.SetConjunto(subconj[1]);

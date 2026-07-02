@@ -10,10 +10,10 @@ namespace ConversorDrawind
 {
     public partial class Form_4_LayersLayerBase : Form
     {
-        private Class_Arranjos arranjos = new Class_Arranjos();
+        private Arranjos arranjos = new Arranjos();
         public string layerBase;
 
-        public Form_4_LayersLayerBase(string valor, Class_Arranjos arranjos)
+        public Form_4_LayersLayerBase(string valor, Arranjos arranjos)
         {
             this.arranjos = arranjos;
             layerBase = valor;
@@ -37,7 +37,7 @@ namespace ConversorDrawind
             {
                 ACAD.AcadApplication acadApplication;
                 ACAD.AcadDocument acadDocument;
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     string file = (string)fileName;
 
@@ -45,11 +45,11 @@ namespace ConversorDrawind
 
                     acadDocument = acadApplication.Documents.Open(file, false);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.LoadFile(Class_DrawingProcess.DLLPath1, acadDocument);
+                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_LoadLayer\n", acadDocument);
 
@@ -90,7 +90,7 @@ namespace ConversorDrawind
                     newThread.Join();
                     Form_0_JanelaPrincipal.StopStatusThread(newThread2);
 
-                    string filetxt = new Class_Configuration().GetPROGRAMDirectoryTemp() + "TempImporLayer.Temp";
+                    string filetxt = new Configuration().GetPROGRAMDirectoryTemp() + "TempImporLayer.Temp";
                     if (File.Exists(filetxt))
                     {
                         StreamReader streamReader = new StreamReader(filetxt, Encoding.UTF8, true);

@@ -23,11 +23,11 @@ public sealed class ConfigurationCharacterizationTests
             state.BlocksOrig,
             workspace.Status);
 
-        var loaded = new Class_Configuration();
-        var arranjos = new Class_Arranjos();
-        var blocks = new List<Class_BlockClass>();
-        var blocksInv = new List<Class_BlockClass>();
-        var blocksOrig = new List<Class_BlockClass>();
+        var loaded = new Configuration();
+        var arranjos = new Arranjos();
+        var blocks = new List<Block>();
+        var blocksInv = new List<Block>();
+        var blocksOrig = new List<Block>();
 
         loaded.LoadXML("COMPLETE", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
 
@@ -43,11 +43,11 @@ public sealed class ConfigurationCharacterizationTests
 
         state.Configuration.SaveXML("BASELINE", state.Arranjos, state.Blocks, state.BlocksInv, state.BlocksOrig, workspace.Status);
 
-        var loaded = new Class_Configuration();
-        var arranjos = new Class_Arranjos();
-        var blocks = new List<Class_BlockClass>();
-        var blocksInv = new List<Class_BlockClass>();
-        var blocksOrig = new List<Class_BlockClass>();
+        var loaded = new Configuration();
+        var arranjos = new Arranjos();
+        var blocks = new List<Block>();
+        var blocksInv = new List<Block>();
+        var blocksOrig = new List<Block>();
         loaded.LoadXML("BASELINE", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
         loaded.SaveXML("ROUNDTRIP", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
 
@@ -62,11 +62,11 @@ public sealed class ConfigurationCharacterizationTests
         using var workspace = TestWorkspace.Create();
         File.WriteAllText(workspace.GetFile("LEGACY.Template"), ConfigurationFixture.LegacyTemplateText(), Encoding.UTF8);
 
-        var configuration = new Class_Configuration();
-        var arranjos = new Class_Arranjos();
-        var blocks = new List<Class_BlockClass>();
-        var blocksInv = new List<Class_BlockClass>();
-        var blocksOrig = new List<Class_BlockClass>();
+        var configuration = new Configuration();
+        var arranjos = new Arranjos();
+        var blocks = new List<Block>();
+        var blocksInv = new List<Block>();
+        var blocksOrig = new List<Block>();
 
         configuration.Load("LEGACY", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
         configuration.SaveXML("MIGRATED", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
@@ -95,13 +95,13 @@ public sealed class ConfigurationCharacterizationTests
                 File.Delete(arquivo);
             }
 
-            Class_Configuration.SaveConfigDLL();
+            Configuration.SaveConfigDLL();
 
             Assert.True(File.Exists(arquivo));
             var xml = XDocument.Load(arquivo);
             string expected = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Quadro_DrawindDM.dwg");
             Assert.Equal(expected, xml.Root!.Element("configurations")!.Attribute("BlocoDM")!.Value);
-            Assert.Equal(expected, Class_Configuration.LoadConfigDLL());
+            Assert.Equal(expected, Configuration.LoadConfigDLL());
         }
         finally
         {
@@ -125,7 +125,7 @@ public sealed class ConfigurationCharacterizationTests
         using var workspace = TestWorkspace.Create();
         File.WriteAllText(workspace.GetFile("EXISTS.txml"), "<CONVERSOR />", Encoding.UTF8);
 
-        var configuration = new Class_Configuration();
+        var configuration = new Configuration();
 
         Assert.True(configuration.CheckFileTxmlExist("EXISTS", workspace.Status));
         Assert.False(configuration.CheckFileTxmlExist("MISSING", workspace.Status));
@@ -185,15 +185,15 @@ internal sealed class TestWorkspace : IDisposable
 
 internal sealed class ConfigurationFixture
 {
-    public required Class_Configuration Configuration { get; init; }
-    public required Class_Arranjos Arranjos { get; init; }
-    public required List<Class_BlockClass> Blocks { get; init; }
-    public required List<Class_BlockClass> BlocksInv { get; init; }
-    public required List<Class_BlockClass> BlocksOrig { get; init; }
+    public required Configuration Configuration { get; init; }
+    public required Arranjos Arranjos { get; init; }
+    public required List<Block> Blocks { get; init; }
+    public required List<Block> BlocksInv { get; init; }
+    public required List<Block> BlocksOrig { get; init; }
 
     public static ConfigurationFixture CreatePopulatedState()
     {
-        var configuration = new Class_Configuration
+        var configuration = new Configuration
         {
             EXTCONFComments = "Comentario de teste",
             EXTCONFOrigem = 1,
@@ -234,10 +234,10 @@ internal sealed class ConfigurationFixture
             EXTDIMCorrigeSetaFactor = 8.5,
             EXTTEXTStyleName = "TEXTO_TESTE",
             EXTSCALEManual = false,
-            EXTSCALEMp1 = new Class_PointEspecial(1, 2, 3),
-            EXTSCALEMp2 = new Class_PointEspecial(4, 5, 6),
-            EXTSCALEAp1 = new Class_PointEspecial(7, 8, 9),
-            EXTSCALEAp2 = new Class_PointEspecial(10, 11, 12),
+            EXTSCALEMp1 = new PointEspecial(1, 2, 3),
+            EXTSCALEMp2 = new PointEspecial(4, 5, 6),
+            EXTSCALEAp1 = new PointEspecial(7, 8, 9),
+            EXTSCALEAp2 = new PointEspecial(10, 11, 12),
             EXTSCALELayer = "SCALE_LAYER",
             EXTSCALETextSize = 4.5,
             EXTLINELtscale = 12.5,
@@ -246,7 +246,7 @@ internal sealed class ConfigurationFixture
             DMBlock = false
         };
 
-        var arranjos = new Class_Arranjos();
+        var arranjos = new Arranjos();
         arranjos.allBaseLayer.Clear();
         arranjos.allLineType1.Clear();
         arranjos.allNewLayer.Clear();
@@ -266,7 +266,7 @@ internal sealed class ConfigurationFixture
         arranjos.listLISPCommand.Add("(command \"zoom\" \"e\")");
         arranjos.allExplodeLayers.AddRange(new[] { "EXPLODE_A", "EXPLODE_B" });
 
-        var remove = new Class_Filter(arranjos) { layerBase = "REMOVE_BASE" };
+        var remove = new Filter(arranjos) { layerBase = "REMOVE_BASE" };
         remove.SetConjunto("TEXT:RED:HIDDEN:ABC:2.5:ALL");
         arranjos.layerRemove.Add(remove);
 
@@ -274,9 +274,9 @@ internal sealed class ConfigurationFixture
         {
             Configuration = configuration,
             Arranjos = arranjos,
-            Blocks = new List<Class_BlockClass> { CreateBlock("BLOCK_A") },
-            BlocksInv = new List<Class_BlockClass> { CreateRelatedBlock("BLOCK_INV", "BLOCK_ORIG", -65536, 0, true) },
-            BlocksOrig = new List<Class_BlockClass> { CreateRelatedBlock("BLOCK_ORIG", "BLOCK_INV", -16776961, 1, false) }
+            Blocks = new List<Block> { CreateBlock("BLOCK_A") },
+            BlocksInv = new List<Block> { CreateRelatedBlock("BLOCK_INV", "BLOCK_ORIG", -65536, 0, true) },
+            BlocksOrig = new List<Block> { CreateRelatedBlock("BLOCK_ORIG", "BLOCK_INV", -16776961, 1, false) }
         };
     }
 
@@ -355,29 +355,29 @@ internal sealed class ConfigurationFixture
         }) + Environment.NewLine;
     }
 
-    private static Class_BlockClass CreateBlock(string name)
+    private static Block CreateBlock(string name)
     {
-        return new Class_BlockClass
+        return new Block
         {
             blockName = name,
-            listTags = new List<Class_TagBlockClass> { CreateTag(-1, false) }
+            listTags = new List<TagBlock> { CreateTag(-1, false) }
         };
     }
 
-    private static Class_BlockClass CreateRelatedBlock(string name, string relatedName, int argb, int index, bool isSociate)
+    private static Block CreateRelatedBlock(string name, string relatedName, int argb, int index, bool isSociate)
     {
-        return new Class_BlockClass
+        return new Block
         {
             blockName = name,
             blockNameRelacao = relatedName,
             cor = System.Drawing.Color.FromArgb(argb),
-            listTags = new List<Class_TagBlockClass> { CreateTag(index, isSociate) }
+            listTags = new List<TagBlock> { CreateTag(index, isSociate) }
         };
     }
 
-    private static Class_TagBlockClass CreateTag(int index, bool isSociate)
+    private static TagBlock CreateTag(int index, bool isSociate)
     {
-        var tag = new Class_TagBlockClass();
+        var tag = new TagBlock();
         tag.SetConjunto("TAG_A@True@1.1,2.2,3.3;4.4,5.5,6.6@BASE;TEXT:RED:HIDDEN:ABC:2.5:ALL@0.8");
         tag.indiceRelacao = index;
         tag.isSociate = isSociate;
@@ -388,11 +388,11 @@ internal sealed class ConfigurationFixture
 internal static class ConfigurationSnapshot
 {
     public static string Create(
-        Class_Configuration configuration,
-        Class_Arranjos arranjos,
-        IReadOnlyList<Class_BlockClass> blocks,
-        IReadOnlyList<Class_BlockClass> blocksInv,
-        IReadOnlyList<Class_BlockClass> blocksOrig)
+        Configuration configuration,
+        Arranjos arranjos,
+        IReadOnlyList<Block> blocks,
+        IReadOnlyList<Block> blocksInv,
+        IReadOnlyList<Block> blocksOrig)
     {
         var lines = new List<string>
         {
@@ -462,7 +462,7 @@ internal static class ConfigurationSnapshot
         return string.Join(Environment.NewLine, lines);
     }
 
-    private static string Block(Class_BlockClass block)
+    private static string Block(Block block)
     {
         return string.Join(",", new[]
         {
@@ -473,7 +473,7 @@ internal static class ConfigurationSnapshot
         });
     }
 
-    private static string Tag(Class_TagBlockClass tag)
+    private static string Tag(TagBlock tag)
     {
         return string.Join(",", new[]
         {
@@ -483,12 +483,12 @@ internal static class ConfigurationSnapshot
         });
     }
 
-    private static string Filter(Class_Filter filter)
+    private static string Filter(Filter filter)
     {
         return filter.layerBase + ";" + filter.GetConjunto();
     }
 
-    private static string Point(Class_PointEspecial point)
+    private static string Point(PointEspecial point)
     {
         return Format(point.X) + ";" + Format(point.Y) + ";" + Format(point.Z);
     }

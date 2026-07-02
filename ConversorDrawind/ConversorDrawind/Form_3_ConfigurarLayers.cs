@@ -15,9 +15,9 @@ namespace ConversorDrawind
 {
     public partial class Form_3_ConfigurarLayers : Form
     {
-        public Class_Arranjos arranjos = new Class_Arranjos();
+        public Arranjos arranjos = new Arranjos();
 
-        public Form_3_ConfigurarLayers(Class_Arranjos arranjos)
+        public Form_3_ConfigurarLayers(Arranjos arranjos)
         {
             InitializeComponent();
             this.arranjos = arranjos;
@@ -44,7 +44,7 @@ namespace ConversorDrawind
             }
             if (dGVNewLayers.Rows.Count == 0)
             {
-                Class_NewLayer novoLayer = new Class_NewLayer(this.arranjos);
+                NewLayer novoLayer = new NewLayer(this.arranjos);
                 novoLayer.SetConjuntoEspecial();
 
                 dGVNewLayers.Rows.Add(novoLayer.layer, novoLayer.cor, novoLayer.tipoLinha.Split(',').First().ToUpper());
@@ -59,16 +59,16 @@ namespace ConversorDrawind
                 string file = (string)fileName;
                 ACAD.AcadApplication acadApplication;
                 ACAD.AcadDocument acadDocument;
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     acadApplication = new ACAD.AcadApplication();
-                    acadDocument = Class_ComRetry.Invoke(() => acadApplication.Documents.Open(file, false), 120, 100);
+                    acadDocument = ComRetry.Invoke(() => acadApplication.Documents.Open(file, false), 120, 100);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.LoadFile(Class_DrawingProcess.DLLPath1, acadDocument);
+                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                 }
-                using (Class_MessageFilter.ScopedRegistration())
+                using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_NewLayer\n", acadDocument);
 
@@ -92,7 +92,7 @@ namespace ConversorDrawind
 
         public void CheckLines()
         {
-            List<Class_CorrecaoLinhas> linhasErradas = new List<Class_CorrecaoLinhas>();
+            List<CorrecaoLinhas> linhasErradas = new List<CorrecaoLinhas>();
             for (int i = 0; i <  arranjos.allNewLayerComposition.Count; i++)
             {
                 string[] listTemp = arranjos.allNewLayerComposition[i].Split(':');
@@ -105,7 +105,7 @@ namespace ConversorDrawind
                 }
                 if (!lineOK)
                 {
-                    Class_CorrecaoLinhas linhaerrada = new Class_CorrecaoLinhas();
+                    CorrecaoLinhas linhaerrada = new CorrecaoLinhas();
                     linhaerrada.linha = arranjos.allNewLayerComposition[i];
                     linhaerrada.nomeLayer = listTemp[0];
                     linhaerrada.oldLinha = listTemp[2];
@@ -145,7 +145,7 @@ namespace ConversorDrawind
                     newThread.Join();
                     Form_0_JanelaPrincipal.StopStatusThread(newThread2);
 
-                    string filetxt = new Class_Configuration().GetPROGRAMDirectoryTemp() + "TempImporNewLayer.Temp";
+                    string filetxt = new Configuration().GetPROGRAMDirectoryTemp() + "TempImporNewLayer.Temp";
                     if (File.Exists(filetxt))
                     {
                         StreamReader streamReader = new StreamReader(filetxt, Encoding.UTF8, true);
@@ -254,7 +254,7 @@ namespace ConversorDrawind
                     newThread.Join();
                     Form_0_JanelaPrincipal.StopStatusThread(newThread2);
 
-                    string filetxt = new Class_Configuration().GetPROGRAMDirectoryTemp() + "TempImporNewLayer.Temp";
+                    string filetxt = new Configuration().GetPROGRAMDirectoryTemp() + "TempImporNewLayer.Temp";
                     if (File.Exists(filetxt))
                     {
                         StreamReader streamReader = new StreamReader(filetxt, Encoding.UTF8, true);
@@ -416,7 +416,7 @@ namespace ConversorDrawind
             }
             if (!this.arranjos.allNewLayer.Contains("0"))
             {
-                Class_NewLayer novoLayer = new Class_NewLayer(this.arranjos);
+                NewLayer novoLayer = new NewLayer(this.arranjos);
                 novoLayer.SetConjuntoEspecial();
                 arranjos.allNewLayerComposition.Add(novoLayer.layer + ":" +
                                                     novoLayer.cor + ":" +
@@ -490,7 +490,7 @@ namespace ConversorDrawind
 
             if (dGVNewLayers.Rows.Count == 0)
             {
-                Class_NewLayer novoLayer = new Class_NewLayer(this.arranjos);
+                NewLayer novoLayer = new NewLayer(this.arranjos);
                 novoLayer.SetConjuntoEspecial();
                 dGVNewLayers.Rows.Add(name, novoLayer.cor, novoLayer.tipoLinha.Split(',').First().ToUpper());
     
