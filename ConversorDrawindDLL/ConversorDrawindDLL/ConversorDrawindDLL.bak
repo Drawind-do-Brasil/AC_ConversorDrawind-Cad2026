@@ -1,0 +1,886 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using System.Text;
+using HostMgd.ApplicationServices;
+using Teigha.DatabaseServices;
+using HostMgd.EditorInput;
+using Teigha.Geometry;
+using FORMS = System.Windows.Forms;
+using Teigha.Runtime;
+namespace ConvertTo
+{
+    public class ConvertTo
+    {
+        public static ObjectId idLayer = ObjectId.Null;
+        private static Configuration configurationS = new Configuration();
+        private static Arranjos arranjosS = new Arranjos();
+        private static List<BlockClass> blocksS = new List<BlockClass>();
+        private static double scaleS = -1;
+        private static double escalaReal = 1;
+        private static List<BlockClass> listBlocksInv = new List<BlockClass>();
+        private static List<BlockClass> listBlocksOrig = new List<BlockClass>();
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ConvertTo()
+        {
+
+        }
+
+        /// <summary>
+        /// Main Control
+        /// </summary>
+        [CommandMethod("DRAWINDCAD_Convert")]
+        public static void DRAWINDCAD_ConvertToDimension()
+        {
+            //Main Instances
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+            configurationS = new Configuration();
+            arranjosS = new Arranjos();
+            blocksS = new List<BlockClass>();
+            scaleS = -1;
+
+            string arqtemp = Path.GetTempPath();
+            if (!Directory.Exists(arqtemp))
+                Directory.CreateDirectory(arqtemp);
+            arqtemp = Path.Combine(arqtemp, "ConversorDrawind.Temp");
+
+            //string arqtemp = "C:\\ConversorDrawind.Temp";
+
+
+            if (File.Exists(arqtemp))
+            {
+
+                try
+                {
+                    StreamReader sr = new StreamReader(arqtemp);
+
+                    string file = sr.ReadLine();
+                    sr.Close();
+                    configurationS.Load(file, arranjosS, blocksS, listBlocksInv, listBlocksOrig);
+                }
+                catch (System.Exception)
+                {
+                }
+            }
+            idLayer = ConvertToLayer.CreateAndAssignALayer(arranjosS, configurationS.EXTDIMlayer);
+            editor.WriteMessage("Conversor Drawind - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.\n");
+            editor.WriteMessage("Desenvolvido por Nayara Ferreira de Jesus.\n");
+            editor.WriteMessage("Compatível com AutoCAD 2012.\n");
+
+            object ptMax = Application.GetSystemVariable("EXTMAX");
+            object ptMin = Application.GetSystemVariable("EXTMIN");
+            ConvertToLayer.Zoom((Point3d)ptMax, (Point3d)ptMin);
+
+            Application.SetSystemVariable("DWGCHECK", 1);
+
+            try
+            {
+                if (configurationS.EXTCONFIsConvertLayer)
+                {
+                    editor.WriteMessage("Criando novos layers ");
+                    if (configurationS.EXTCONFOrigem == 0)
+                        Application.SetSystemVariable("LTSCALE", configurationS.EXTLINELtscale);
+                    ConvertToLayer.CreateAndAssignALayer(arranjosS);
+                    editor.WriteMessage("... completado.\n");
+                }
+            }
+            catch (System.Exception)
+            {
+                if (configurationS.PROGRAMMessage)
+                    FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                                      "Não foi possível criar os novos layers.\nVerifique se a conversão ocorreu normalmente.",
+                                      "Erro",
+                                      FORMS.MessageBoxButtons.OK,
+                                      FORMS.MessageBoxIcon.Warning,
+                                      FORMS.MessageBoxDefaultButton.Button1);
+                editor.WriteMessage("... Erro. \n" +
+                                    "Descrição: Erro ao criar os novos layers...\n");
+            }
+
+            try
+            {
+                if (configurationS.EXTCONFIsConvertDimension)
+                {
+                    editor.WriteMessage("Extraindo os blocos ");
+                    InitialConversionLayer();
+                    editor.WriteMessage("... completado.\n");
+                }
+            }
+            catch (System.Exception)
+            {
+                if (configurationS.PROGRAMMessage)
+                    FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                        "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.",
+                                      "Erro",
+                                      FORMS.MessageBoxButtons.OK,
+                                      FORMS.MessageBoxIcon.Warning,
+                                      FORMS.MessageBoxDefaultButton.Button1);
+                editor.WriteMessage("... Erro. \n" +
+                                    "Descrição: Erro ao extrair os layers dos blocos...\n");
+            }
+
+            if (configurationS.EXTCONFIsConvertDimension && configurationS.EXTCONFOrigem == 0)
+            {
+                try
+                {
+                    editor.WriteMessage("Convertendo as dimensões ");
+                    Application.SetSystemVariable("DIMSCALE", configurationS.EXTDIMScale);
+                    new ConvertToDimension(configurationS).ConvertD();
+                    editor.WriteMessage("... completado.\n");
+                }
+                catch (System.Exception)
+                {
+                    if (configurationS.PROGRAMMessage)
+                        FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                            "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.",
+                                          "Erro",
+                                          FORMS.MessageBoxButtons.OK,
+                                          FORMS.MessageBoxIcon.Warning,
+                                          FORMS.MessageBoxDefaultButton.Button1);
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao convertar as dimensões...\n");
+                }
+
+            }
+            if (configurationS.EXTCONFOrigem == 1)
+            {
+                try
+                {
+                    editor.WriteMessage("Convertendo as dimensões ");
+                    //Application.SetSystemVariable("DIMSCALE", configurationS.EXTDIMScale);
+                    new ConvertToDimension(configurationS).ConvertDInv();
+                    editor.WriteMessage("... completado.\n");
+                }
+                catch (System.Exception)
+                {
+                    if (configurationS.PROGRAMMessage)
+                        FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                            "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.",
+                                          "Erro",
+                                          FORMS.MessageBoxButtons.OK,
+                                          FORMS.MessageBoxIcon.Warning,
+                                          FORMS.MessageBoxDefaultButton.Button1);
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao convertar as dimensões...\n");
+                }
+            }
+
+            if (configurationS.EXTCONFIsDeleteTeklaStructures ||
+                configurationS.EXTCONFIsConvertLayer ||
+                configurationS.EXTCONFIsPutOnTheScaleDrawing)
+            {
+                if (configurationS.EXTCONFOrigem == 0)
+                {
+                    try
+                    {
+                        editor.WriteMessage("Explodindo os blocos ");
+                        ConvertToLayer.ExplodeObjects();
+                        editor.WriteMessage("... completado.\n");
+                    }
+                    catch (System.Exception)
+                    {
+                        if (configurationS.PROGRAMMessage)
+                            FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                                "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.",
+                                              "Erro",
+                                              FORMS.MessageBoxButtons.OK,
+                                              FORMS.MessageBoxIcon.Warning,
+                                              FORMS.MessageBoxDefaultButton.Button1);
+                        editor.WriteMessage("... Erro. \n" +
+                                            "Descrição: Erro ao explodir os blocos...\n");
+                    }
+                }
+                else
+                {
+                    try
+                    {
+                        editor.WriteMessage("Explodindo os blocos ");
+                        ConvertToLayer.ExplodeObjectsInv(arranjosS);
+                        editor.WriteMessage("... completado.\n");
+                    }
+                    catch (System.Exception)
+                    {
+                        if (configurationS.PROGRAMMessage)
+                            FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                                "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.",
+                                              "Erro",
+                                              FORMS.MessageBoxButtons.OK,
+                                              FORMS.MessageBoxIcon.Warning,
+                                              FORMS.MessageBoxDefaultButton.Button1);
+                        editor.WriteMessage("... Erro. \n" +
+                                            "Descrição: Erro ao explodir os blocos...\n");
+                    }
+                }
+            }
+            if (configurationS.EXTCONFIsDeleteTeklaStructures && configurationS.EXTCONFOrigem == 0)
+            {
+                try
+                {
+                    editor.WriteMessage("Excluindo a palavra \"Tekla structures\" ");
+                    ConvertToLayer.DeletingTekla();
+                    editor.WriteMessage("... completado.\n");
+                }
+                catch (System.Exception)
+                {
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao excluir a palavra \"Tekla structures\"...\n");
+                }
+            }
+
+            if (configurationS.EXTCONFIsConvertLayer)
+            {
+                try
+                {
+                    editor.WriteMessage("Convertendo os layers ");
+                    ConvertToLayer.ConvertL(arranjosS, configurationS);
+                    editor.WriteMessage("... completado.\n");
+                }
+                catch (System.Exception)
+                {
+                    if (configurationS.PROGRAMMessage)
+                        FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                            "Não foi possível converter os layers.\nVerifique se a conversão ocorreu normalmente.",
+                                          "Erro",
+                                          FORMS.MessageBoxButtons.OK,
+                                          FORMS.MessageBoxIcon.Warning,
+                                          FORMS.MessageBoxDefaultButton.Button1);
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao converter os layers...\n");
+                }
+            }
+            Application.DocumentManager.MdiActiveDocument.Editor.Regen();
+
+
+        }
+
+        [CommandMethod("DRAWINDCAD_CaptureScale")]
+        public static void DRAWINDCAD_CaptureScale()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+            if (configurationS.EXTCONFIsPutOnTheScaleDrawing && configurationS.EXTCONFOrigem == 0)
+            {
+                editor.WriteMessage("Capturando a escala ");
+                scaleS = ConvertToLayer.ScaleDrawingCapture(configurationS);
+                editor.WriteMessage("... completado.\n");
+            }
+
+            else if (configurationS.EXTCONFOrigem == 1)
+                scaleS = Convert.ToDouble(Application.GetSystemVariable("LTSCALE"));
+
+            Application.DocumentManager.MdiActiveDocument.Editor.Regen();
+        }
+
+        [CommandMethod("DRAWINDCAD_Scale")]
+        public static void DRAWINDCAD_ConvertToScale()
+        {
+            if (configurationS.EXTCONFOrigem == 0)
+            {
+                Document document = Application.DocumentManager.MdiActiveDocument;
+                Database database = document.Database;
+                Editor editor = document.Editor;
+                try
+                {
+                    editor.WriteMessage("Colocando o desenho na escala real... ");
+                    double scale = escalaReal = ConvertToLayer.ScaleDrawing(configurationS, scaleS);
+
+                    Application.SetSystemVariable("LTSCALE", configurationS.EXTLINELtscale * scale);
+                    Application.SetSystemVariable("DIMSCALE", configurationS.EXTDIMScale * scale);
+                    Point3d ptMax = (Point3d)Application.GetSystemVariable("EXTMAX");
+                    Point3d ptMin = (Point3d)Application.GetSystemVariable("EXTMIN");
+                    database.Limmax = new Point2d(ptMax.X * scale, ptMax.Y * scale);
+                    database.Limmin = new Point2d(ptMin.X, ptMin.Y);
+
+                    using (Transaction acTrans = database.TransactionManager.StartTransaction())
+                    {
+                        try
+                        {
+                            ViewportTableRecord acVportTblRec = acTrans.GetObject(document.Editor.ActiveViewportId, OpenMode.ForWrite) as ViewportTableRecord;
+                            acVportTblRec.GridEnabled = true;
+                            acVportTblRec.GridIncrements = new Point2d(scale * 10, scale * 10);
+                            document.Editor.UpdateTiledViewportsFromDatabase();
+
+                            DimStyleTable dimStyleTable = (DimStyleTable)acTrans.GetObject(database.DimStyleTableId, OpenMode.ForWrite);
+                            DimStyleTableRecord dimStyleTableRecord = null;
+                            if (dimStyleTable.Has(configurationS.EXTDIMStyleName) == true)
+                            {
+                                dimStyleTableRecord = acTrans.GetObject(dimStyleTable[configurationS.EXTDIMStyleName],
+                                                      OpenMode.ForWrite) as DimStyleTableRecord;
+                                dimStyleTableRecord.Dimscale = configurationS.EXTDIMScale * scale;
+                            }
+                        }
+                        catch (System.Exception)
+                        {
+
+                        }
+                        acTrans.Commit();
+                    }
+
+                    ConvertToLayer.Zoom(ptMin, new Point3d(ptMax.X * scale, ptMax.Y * scale, ptMax.Z * scale));
+                    editor.WriteMessage("... Completado.\n");
+                }
+                catch (System.Exception)
+                {
+                    if (configurationS.PROGRAMMessage)
+                        FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                            "Não foi possível colocar o desenho na escala real!",
+                                             "Erro",
+                                             FORMS.MessageBoxButtons.OK,
+                                             FORMS.MessageBoxIcon.Warning,
+                                             FORMS.MessageBoxDefaultButton.Button1);
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao tentar colocar o desenho na escala real...\n");
+                }
+            }
+        }
+
+        [CommandMethod("DRAWINDCAD_ScaleBlock")]
+        public static void DRAWINDCAD_ConvertToScaleInv()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+
+
+            try
+            {
+                string newdate = editor.GetString("Digite o nome do bloco: ").StringResult.Replace("*******", " ");
+                editor.WriteMessage("Colocando o formato na escala real... ");
+                double scale = escalaReal = Convert.ToDouble(Application.GetSystemVariable("LTSCALE"));
+                ConvertToLayer.ScaleDrawingInv(configurationS, scale, new List<BlockClass>() { new BlockClass(newdate) });
+                object ptMax2 = Application.GetSystemVariable("EXTMAX");
+                object ptMin2 = Application.GetSystemVariable("EXTMIN");
+                ConvertToLayer.Zoom((Point3d)ptMin2, (Point3d)ptMax2);
+                editor.WriteMessage("... Completado.\n");
+            }
+            catch (System.Exception)
+            {
+                if (configurationS.PROGRAMMessage)
+                    FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                        "Não foi possível colocar o formato na escala real!",
+                                         "Erro",
+                                         FORMS.MessageBoxButtons.OK,
+                                         FORMS.MessageBoxIcon.Warning,
+                                         FORMS.MessageBoxDefaultButton.Button1);
+                editor.WriteMessage("... Erro. \n" +
+                                    "Descrição: Erro ao tentar colocar o formato na escala real...\n");
+            }
+        }
+
+
+        public static void DRAWINDCAD_ConvertToFixDimension()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database dataBase = document.Database;
+            Editor editor = document.Editor;
+
+
+            using (Transaction transaction = dataBase.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    ObjectId[] objectsID = new ObjectId[0];
+                    PromptSelectionResult promptSelectionResult = editor.SelectAll(ConsertaSetaSeta.FilterByType(new string[] { "DIMENSION" }));
+                    if (promptSelectionResult.Status == PromptStatus.OK)
+                        objectsID = promptSelectionResult.Value.GetObjectIds();
+
+                    foreach (ObjectId id in objectsID)
+                    {
+                        Entity entity = transaction.GetObject(id, OpenMode.ForWrite) as Entity;
+                        if (entity.GetType() == typeof(RotatedDimension))
+                        {
+                            RotatedDimension rotatedDimension = entity as RotatedDimension;
+                            rotatedDimension.DimensionText = rotatedDimension.DimensionText.Replace("\\P", "\\X");
+
+                        }
+                    }
+                    editor.Regen();
+                }
+                catch (System.Exception)
+                {
+
+                }
+                transaction.Commit();
+            }
+        }
+
+
+
+        [CommandMethod("DRAWINDCAD_Finalize")]
+        public static void DRAWINDCAD_Message()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Editor editor = document.Editor;
+            ConvertToLayer.Zoom();
+            if (configurationS.EXTDIMCorrigeSeta)
+            {
+                try
+                {
+                    editor.WriteMessage("Consertando setas das dimensões... ");
+                    DRAWINDCAD_ConsertarSetaSeta();
+                    editor.WriteMessage("... Completado.\n");
+
+                }
+                catch (System.Exception)
+                {
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao tentar consertar as setas das dimensões...\n");
+                }
+            }
+
+            if (configurationS.EXTCONFOrigem == 1)
+            {
+                try
+                {
+                    editor.WriteMessage("Consertando dimensões sobrepostas dos inventor... ");
+                    DRAWINDCAD_ConvertToFixDimension();
+                    editor.WriteMessage("... Completado.\n");
+
+                }
+                catch (System.Exception)
+                {
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao tentar consertar sobreposições de textos nas dimensões...\n");
+                }
+            }
+
+            if (configurationS.EXTCONFIsPurge)
+            {
+                try
+                {
+                    editor.WriteMessage("Purgando desenho... ");
+                    ConvertToLayer.PurgeUnreferencedBlocks();
+                    ConvertToLayer.PurgeUnreferencedLineTypes();
+                    ConvertToLayer.PurgeUnreferencedLayers();
+                    editor.WriteMessage("... Completado.\n");
+                }
+                catch (System.Exception)
+                {
+                    if (configurationS.PROGRAMMessage)
+                        FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                            "Não foi possível remover layers, blocos e tipo de linhas desnessessario .nVerifique se a conversão ocorreu normalmente.",
+                                             "Erro",
+                                             FORMS.MessageBoxButtons.OK,
+                                             FORMS.MessageBoxIcon.Warning,
+                                             FORMS.MessageBoxDefaultButton.Button1);
+                    editor.WriteMessage("... Erro. \n" +
+                                        "Descrição: Erro ao tentar purgar o desenho...\n");
+                }
+            }
+            try
+            {
+                document.Database.SaveAs(document.Name, DwgVersion.AC1021);
+            }
+            catch (System.Exception)
+            {
+
+            }
+
+
+            editor.WriteMessage("Conversor Drawind - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.\n");
+            editor.WriteMessage("Desenvolvido por Nayara Ferreira de Jesus.\n");
+            editor.WriteMessage("Conversão finalizada.\n");
+        }
+
+        /// <summary>
+        /// Initial Conversion Layer
+        /// </summary>
+        private static void InitialConversionLayer()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Editor editor = document.Editor;
+            Database acCurDb = document.Database;
+
+            TypedValue[] typedValue = new TypedValue[1];
+            typedValue.SetValue(new TypedValue((int)DxfCode.Start, "INSERT"), 0);
+
+            SelectionFilter selectionFilter = new SelectionFilter(typedValue);
+            PromptSelectionResult promptSelectionResult = editor.SelectAll(selectionFilter);
+            ObjectId[] objectIdList = null;
+            if (promptSelectionResult.Status.ToString() == "OK")
+                objectIdList = promptSelectionResult.Value.GetObjectIds();
+            if (objectIdList != null)
+            {
+
+                try
+                {
+                    foreach (var item in objectIdList)
+                    {
+                        changeLayers((BlockReference)item.GetObject(OpenMode.ForWrite));
+                    }
+                }
+                catch (System.Exception)
+                {
+
+                }
+
+            }
+
+        }
+
+        private static void changeLayers(BlockReference bref)
+        {
+            var block = (BlockTableRecord)bref.BlockTableRecord.GetObject(OpenMode.ForWrite);
+            var benum = block.GetEnumerator();
+            if (benum.MoveNext() == false) return;
+            var obj = (Entity)benum.Current.GetObject(OpenMode.ForWrite);
+            bref.Layer = obj.Layer;
+        }
+
+
+        [CommandMethod("DRAWINDCAD_GetPoint")]
+        public static void DRAWINDCAD_GetPoint()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+            PromptPointOptions promptPointOptions = new PromptPointOptions("Selecione um ponto: ");
+            promptPointOptions.AllowNone = false;
+
+            PromptPointResult promptPointResult = editor.GetPoint(promptPointOptions);
+
+            if (promptPointResult.Status.ToString() == "OK")
+            {
+                Point3d myPoint = promptPointResult.Value;
+
+                string arq = Path.GetTempPath();
+                if (!Directory.Exists(arq))
+                    Directory.CreateDirectory(arq);
+                arq = Path.Combine(arq, "ConvertTo.PointInfo");
+
+                //string arq = "C:\\ConvertTo.PointInfo";
+                if (File.Exists(arq))
+                    File.Delete(arq);
+
+                StreamWriter sw = new StreamWriter(arq);
+                sw.WriteLine(myPoint.X + ";" + myPoint.Y + ";" + myPoint.Z);
+                sw.Close();
+            }
+
+        }
+
+        [CommandMethod("DRAWINDCAD_Get2Point")]
+        public static void DRAWINDCAD_Get2Point()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+            Point3d PTa;
+            Point3d PTb;
+
+            PTa = editor.GetPoint("Selecione o primeiro ponto: ").Value;
+            PTb = editor.GetCorner("\nSelecione o segundo ponto: ", PTa).Value;
+
+            //string arq = "C:\\ConvertTo.Point2Info";
+            string arq = Path.GetTempPath();
+            if (!Directory.Exists(arq))
+                Directory.CreateDirectory(arq);
+            arq = Path.Combine(arq, "ConvertTo.Point2Info");
+
+            if (File.Exists(arq))
+                File.Delete(arq);
+
+            StreamWriter sw = new StreamWriter(arq);
+            sw.WriteLine(PTa.X + ";" + PTa.Y + ";" + PTa.Z);
+            sw.WriteLine(PTb.X + ";" + PTb.Y + ";" + PTb.Z);
+            sw.Close();
+
+
+        }
+
+
+        [CommandMethod("DRAWINDCAD_GetLayer")]
+        public static void DRAWINDCAD_GetLayer()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+
+            using (Transaction acTrans = database.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PromptEntityOptions promptEntityOptions = new PromptEntityOptions("Selecione um objeto: ");
+                    promptEntityOptions.AllowNone = false;
+                    promptEntityOptions.SetRejectMessage("");
+                    PromptEntityResult promptEntityResult = editor.GetEntity(promptEntityOptions);
+                    Entity dBObject = acTrans.GetObject(promptEntityResult.ObjectId, OpenMode.ForWrite) as Entity;
+                    if (dBObject.Layer != "")
+                    {
+                        //string arq = "C:\\ConvertTo.LayerInfo";
+
+                        string arq = Path.GetTempPath();
+                        if (!Directory.Exists(arq))
+                            Directory.CreateDirectory(arq);
+                        arq = Path.Combine(arq, "ConvertTo.LayerInfo");
+
+                        if (File.Exists(arq))
+                            File.Delete(arq);
+
+                        StreamWriter sw = new StreamWriter(arq);
+                        sw.WriteLine(dBObject.Layer);
+                        sw.Close();
+                    }
+                }
+                catch (System.Exception)
+                {
+
+                }
+                acTrans.Commit();
+            }
+        }
+
+        [CommandMethod("DRAWINDCAD_TextHeight")]
+        public static void DRAWINDCAD_TextHeight()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+
+            using (Transaction acTrans = database.TransactionManager.StartTransaction())
+            {
+                try
+                {
+                    PromptEntityOptions promptEntityOptions = new PromptEntityOptions("Selecione um objeto: ");
+                    promptEntityOptions.AllowNone = false;
+                    promptEntityOptions.SetRejectMessage("");
+                    PromptEntityResult promptEntityResult = editor.GetEntity(promptEntityOptions);
+                    Entity dBObject = acTrans.GetObject(promptEntityResult.ObjectId, OpenMode.ForWrite) as Entity;
+                    if (dBObject.GetType() == typeof(DBText))
+                    {
+                        DBText myText = dBObject as DBText;
+
+                        //string arq = "C:\\ConvertTo.TextHeightInfo";
+                        string arq = Path.GetTempPath();
+                        if (!Directory.Exists(arq))
+                            Directory.CreateDirectory(arq);
+                        arq = Path.Combine(arq, "ConvertTo.TextHeightInfo");
+
+
+                        if (File.Exists(arq))
+                            File.Delete(arq);
+
+                        StreamWriter sw = new StreamWriter(arq);
+                        sw.WriteLine(myText.Height);
+                        sw.Close();
+
+                    }
+                }
+                catch (System.Exception)
+                {
+
+
+                }
+
+                acTrans.Commit();
+            }
+        }
+
+
+        [CommandMethod("DRAWINDCAD_GetDistHorizontal")]
+        public static void DRAWINDCAD_GetDistHorizontal()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+
+            PromptPointOptions promptPointOptions = new PromptPointOptions("Selecione o 1° ponto: ");
+            promptPointOptions.AllowNone = false;
+
+            PromptPointResult promptPointResult = editor.GetPoint(promptPointOptions);
+
+            PromptPointOptions promptPointOptions2 = new PromptPointOptions("Selecione o 2° ponto: ");
+            promptPointOptions2.AllowNone = false;
+
+            PromptPointResult promptPointResult2 = editor.GetPoint(promptPointOptions2);
+
+            if (promptPointResult.Status.ToString() == "OK" && promptPointResult2.Status.ToString() == "OK")
+            {
+                Point3d myPoint = promptPointResult.Value;
+                Point3d myPoint2 = promptPointResult2.Value;
+
+                //string arq = "C:\\ConvertTo.DistInfo";
+
+                string arq = Path.GetTempPath();
+                if (!Directory.Exists(arq))
+                    Directory.CreateDirectory(arq);
+                arq = Path.Combine(arq, "ConvertTo.DistInfo");
+
+                if (File.Exists(arq))
+                    File.Delete(arq);
+
+                StreamWriter sw = new StreamWriter(arq);
+                double dist;
+
+                if (myPoint.X < myPoint2.X)
+                    dist = myPoint2.X - myPoint.X;
+                else
+                    dist = myPoint.X - myPoint2.X;
+
+                sw.WriteLine(dist);
+                sw.Close();
+            }
+
+        }
+
+        [CommandMethod("DRAWINDCAD_GetDistVertical")]
+        public static void DRAWINDCAD_GetDistVertical()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+
+            PromptPointOptions promptPointOptions = new PromptPointOptions("Selecione o 1° ponto: ");
+            promptPointOptions.AllowNone = false;
+
+            PromptPointResult promptPointResult = editor.GetPoint(promptPointOptions);
+
+            PromptPointOptions promptPointOptions2 = new PromptPointOptions("Selecione o 2° ponto: ");
+            promptPointOptions2.AllowNone = false;
+
+            PromptPointResult promptPointResult2 = editor.GetPoint(promptPointOptions2);
+
+            if (promptPointResult.Status.ToString() == "OK" && promptPointResult2.Status.ToString() == "OK")
+            {
+                Point3d myPoint = promptPointResult.Value;
+                Point3d myPoint2 = promptPointResult2.Value;
+                //string arq = "C:\\ConvertTo.DistInfo";
+
+                string arq = Path.GetTempPath();
+                if (!Directory.Exists(arq))
+                    Directory.CreateDirectory(arq);
+                arq = Path.Combine(arq, "ConvertTo.DistInfo");
+
+                if (File.Exists(arq))
+                    File.Delete(arq);
+
+                StreamWriter sw = new StreamWriter(arq);
+                double dist;
+
+                if (myPoint.Y < myPoint2.Y)
+                    dist = myPoint2.Y - myPoint.Y;
+                else
+                    dist = myPoint.Y - myPoint2.Y;
+
+                sw.WriteLine(dist);
+                sw.Close();
+            }
+
+        }
+
+        [CommandMethod("DRAWINDCAD_GetAttributeText")]
+        public static void DRAWINDCAD_GetAttributeText()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Editor editor = document.Editor;
+
+            //editor.WriteMessage("TESTE" + document.Name);
+            try
+            {
+                editor.WriteMessage("Capturando textos do formato ");
+                if (configurationS.EXTCONFOrigem == 0)
+                    AttClass.GeTText(blocksS);
+                else
+                    AttClass.GeTText2(listBlocksInv);
+                editor.WriteMessage("... Completado.\n");
+            }
+            catch (System.Exception)
+            {
+                editor.WriteMessage("... Erro. \n" +
+                            "Descrição: Erro ao capturar os textos no formato...\n");
+            }
+
+        }
+
+        [CommandMethod("DRAWINDCAD_DeleteLayers")]
+        public static void DRAWINDCAD_DeleteLayers()
+        {
+            if (arranjosS.layerRemove.Count > 0)
+            {
+                Document document = Application.DocumentManager.MdiActiveDocument;
+                Database database = document.Database;
+                Editor editor = document.Editor;
+                editor.WriteMessage("Removendo layers desnecessários... ");
+                AttClass.DeleteLayer(arranjosS.layerRemove);
+                editor.WriteMessage("... Completado.\n");
+            }
+        }
+
+        [CommandMethod("DRAWINDCAD_DeleteBlocks")]
+        public static void DRAWINDCAD_DeleteBlocks()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+            editor.WriteMessage("Removendo blocos antigo.... ");
+            AttClass.DeleteBlocks(listBlocksOrig);
+            editor.WriteMessage("... Completado.\n");
+        }
+
+        [CommandMethod("DRAWINDCAD_AttributeBlock")]
+        public static void DRAWINDCAD_AttributeBlock()
+        {
+            Document document = Application.DocumentManager.MdiActiveDocument;
+            Database database = document.Database;
+            Editor editor = document.Editor;
+
+            try
+            {
+                if (configurationS.EXTCONFOrigem == 0)
+                    AttClass.SetText(blocksS);
+                else
+                    AttClass.SetText2(listBlocksInv, listBlocksOrig);
+
+                editor.WriteMessage("Editando o novo bloco ... Completado.\n");
+            }
+            catch (System.Exception)
+            {
+                editor.WriteMessage("Editando o novo bloco ... Erro. \n" +
+                                "Descrição: Erro ao editar o novo bloco...\n");
+                if (configurationS.PROGRAMMessage)
+                {
+                    string nomeBlocos = "";
+                    foreach (var item in blocksS)
+                    {
+                        nomeBlocos = nomeBlocos + item.blockName + ", ";
+                    }
+                    nomeBlocos = nomeBlocos.Trim();
+                    nomeBlocos = nomeBlocos.Trim(',');
+                    FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
+                        "Não foi possível atributar o formato. \nOs blocos ou atributos dentro dos blocos não correspondem ao especificado.\nNomes dos blocos especificados: " + nomeBlocos + ".",
+                                         "Erro",
+                                         FORMS.MessageBoxButtons.OK,
+                                         FORMS.MessageBoxIcon.Warning,
+                                         FORMS.MessageBoxDefaultButton.Button1);
+                }
+
+            }
+        }
+
+        public static void DRAWINDCAD_ConsertarSetaSeta()
+        {
+            try
+            {
+                ConsertaSetaSeta.ConsetaSetaSeta(configurationS.EXTDIMCorrigeSetaTipoSeta, escalaReal, configurationS.EXTDIMCorrigeSetaFactor);
+            }
+
+            catch (System.Exception)
+            {
+
+            }
+        }
+    }
+}

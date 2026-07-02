@@ -1,0 +1,449 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{4C6862B1-3437-47AD-99F8-E9F156082937}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ConversorDrawind</RootNamespace>
+    <AssemblyName>Conversor Drawind</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>ico1.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>
+    </StartupObject>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CadInteropPaths.cs" />
+    <Compile Include="Class_Arranjos.cs" />
+    <Compile Include="Class_BlockClass.cs" />
+    <Compile Include="Form_2_ProcessoEnd.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_2_ProcessoEnd.Designer.cs">
+      <DependentUpon>Form_2_ProcessoEnd.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarTextStyle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarTextStyle.Designer.cs">
+      <DependentUpon>Form_3_ConfigurarTextStyle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_4_NewTextSyle.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_4_NewTextSyle.Designer.cs">
+      <DependentUpon>Form_4_NewTextSyle.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_5_AttFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_5_AttFormat.Designer.cs">
+      <DependentUpon>Form_5_AttFormat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_1_CaminhoLin.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_1_CaminhoLin.Designer.cs">
+      <DependentUpon>Form_1_CaminhoLin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_CorrecaoLinhas.cs" />
+    <Compile Include="Class_DrawingProcess.cs" />
+    <Compile Include="Form_8_GenericNewColor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_8_GenericNewColor.Designer.cs">
+      <DependentUpon>Form_8_GenericNewColor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_Configuration.cs" />
+    <Compile Include="Form_4_LayersFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_4_LayersFilter.Designer.cs">
+      <DependentUpon>Form_4_LayersFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_5_AttFormatFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_5_AttFormatFilter.Designer.cs">
+      <DependentUpon>Form_5_AttFormatFilter.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_4_LayersLayerBase.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_4_LayersLayerBase.Designer.cs">
+      <DependentUpon>Form_4_LayersLayerBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_4_LayersNewLayer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_4_LayersNewLayer.Designer.cs">
+      <DependentUpon>Form_4_LayersNewLayer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_1_Relatorio.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_1_Relatorio.designer.cs">
+      <DependentUpon>Form_1_Relatorio.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_Filter.cs" />
+    <Compile Include="Form_7_ConfAvancadaDeCota.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_7_ConfAvancadaDeCota.Designer.cs">
+      <DependentUpon>Form_7_ConfAvancadaDeCota.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_3_LinhasErradas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_3_LinhasErradas.Designer.cs">
+      <DependentUpon>Form_3_LinhasErradas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_6_TagFormatInventor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_6_TagFormatInventor.Designer.cs">
+      <DependentUpon>Form_6_TagFormatInventor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_6_AttFormatInventor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_6_AttFormatInventor.Designer.cs">
+      <DependentUpon>Form_6_AttFormatInventor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_2_Processo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_2_Processo.designer.cs">
+      <DependentUpon>Form_2_Processo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_GetInfo.cs" />
+    <Compile Include="Form_1_Informacao.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_1_Informacao.Designer.cs">
+      <DependentUpon>Form_1_Informacao.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_0_JanelaPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_0_JanelaPrincipal.Designer.cs">
+      <DependentUpon>Form_0_JanelaPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_ComRetry.cs" />
+    <Compile Include="Class_MessageFilter.cs" />
+    <Compile Include="Form_5_AttFormatChangeCheckBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_5_AttFormatChangeCheckBox.Designer.cs">
+      <DependentUpon>Form_5_AttFormatChangeCheckBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_5_ChangeFormat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_5_ChangeFormat.Designer.cs">
+      <DependentUpon>Form_5_ChangeFormat.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_4_LayersNewEntity.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_4_LayersNewEntity.Designer.cs">
+      <DependentUpon>Form_4_LayersNewEntity.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_NewLayer.cs" />
+    <Compile Include="Form_3_ConfigurarLayers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayers.Designer.cs">
+      <DependentUpon>Form_3_ConfigurarLayers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayersCor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayersCor.Designer.cs">
+      <DependentUpon>Form_3_ConfigurarLayersCor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayersLinha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayersLinha.Designer.cs">
+      <DependentUpon>Form_3_ConfigurarLayersLinha.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayersNome.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_3_ConfigurarLayersNome.Designer.cs">
+      <DependentUpon>Form_3_ConfigurarLayersNome.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_PointEspecial.cs" />
+    <Compile Include="Class_Program.cs" />
+    <Compile Include="LoadFiles.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Form_1_Senha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_1_Senha.Designer.cs">
+      <DependentUpon>Form_1_Senha.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Class_TagBlockClass.cs" />
+    <Compile Include="Form_5_AttFormatWidthFactor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form_5_AttFormatWidthFactor.Designer.cs">
+      <DependentUpon>Form_5_AttFormatWidthFactor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Settings.cs" />
+    <Compile Include="StatusConversorItem.cs" />
+    <EmbeddedResource Include="Form_2_ProcessoEnd.resx">
+      <DependentUpon>Form_2_ProcessoEnd.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_3_ConfigurarTextStyle.resx">
+      <DependentUpon>Form_3_ConfigurarTextStyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_4_NewTextSyle.resx">
+      <DependentUpon>Form_4_NewTextSyle.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_5_AttFormat.resx">
+      <DependentUpon>Form_5_AttFormat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_1_CaminhoLin.resx">
+      <DependentUpon>Form_1_CaminhoLin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_8_GenericNewColor.resx">
+      <DependentUpon>Form_8_GenericNewColor.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_4_LayersFilter.resx">
+      <DependentUpon>Form_4_LayersFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_5_AttFormatFilter.resx">
+      <DependentUpon>Form_5_AttFormatFilter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_4_LayersLayerBase.resx">
+      <DependentUpon>Form_4_LayersLayerBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_4_LayersNewLayer.resx">
+      <DependentUpon>Form_4_LayersNewLayer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_1_Relatorio.resx">
+      <DependentUpon>Form_1_Relatorio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_7_ConfAvancadaDeCota.resx">
+      <DependentUpon>Form_7_ConfAvancadaDeCota.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_3_LinhasErradas.resx">
+      <DependentUpon>Form_3_LinhasErradas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_6_TagFormatInventor.resx">
+      <DependentUpon>Form_6_TagFormatInventor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_6_AttFormatInventor.resx">
+      <DependentUpon>Form_6_AttFormatInventor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_2_Processo.resx">
+      <DependentUpon>Form_2_Processo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_1_Informacao.resx">
+      <DependentUpon>Form_1_Informacao.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_0_JanelaPrincipal.resx">
+      <DependentUpon>Form_0_JanelaPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_5_AttFormatChangeCheckBox.resx">
+      <DependentUpon>Form_5_AttFormatChangeCheckBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_5_ChangeFormat.resx">
+      <DependentUpon>Form_5_ChangeFormat.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_4_LayersNewEntity.resx">
+      <DependentUpon>Form_4_LayersNewEntity.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_3_ConfigurarLayers.resx">
+      <DependentUpon>Form_3_ConfigurarLayers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_3_ConfigurarLayersCor.resx">
+      <DependentUpon>Form_3_ConfigurarLayersCor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_3_ConfigurarLayersLinha.resx">
+      <DependentUpon>Form_3_ConfigurarLayersLinha.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_3_ConfigurarLayersNome.resx">
+      <DependentUpon>Form_3_ConfigurarLayersNome.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_1_Senha.resx">
+      <DependentUpon>Form_1_Senha.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Form_5_AttFormatWidthFactor.resx">
+      <DependentUpon>Form_5_AttFormatWidthFactor.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\app.manifest">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <COMReference Include="AutoCAD">
+      <Guid>{AA9A2205-75AA-43AD-9138-1767F1BB5E0C}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="AXDBLib">
+      <Guid>{39FFAA00-8623-488F-8C53-DD3B0B7A464F}</Guid>
+      <VersionMajor>1</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="OdaX">
+      <Guid>{B51C79A0-B8BC-4904-8125-1ACBE8B55D46}</Guid>
+      <VersionMajor>3</VersionMajor>
+      <VersionMinor>8</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>tlbimp</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+    <COMReference Include="stdole">
+      <Guid>{00020430-0000-0000-C000-000000000046}</Guid>
+      <VersionMajor>2</VersionMajor>
+      <VersionMinor>0</VersionMinor>
+      <Lcid>0</Lcid>
+      <WrapperTool>primary</WrapperTool>
+      <Isolated>False</Isolated>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="ico1.ico" />
+    <None Include="Resources\bg-pessoas.png" />
+    <None Include="Resources\Logo.png" />
+    <None Include="Resources\DRAWIND_PEQUENA.png" />
+    <None Include="Resources\CONVERSOR.png" />
+    <None Include="Resources\Icon1.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
