@@ -36,7 +36,7 @@ namespace ConversorDrawind
             "OTHER OBJECT TYPE", 
             "PART", 
             "PART MARK",
-             "REINFORCEMENT MARK",
+            "REINFORCEMENT MARK",
             "REINFORCING BAR",
             "REVISION TEXT",
             "SECTION",
