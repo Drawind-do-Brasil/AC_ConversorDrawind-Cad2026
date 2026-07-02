@@ -1880,7 +1880,7 @@ namespace ConversorDrawind
 
         private void bPesquisar1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog oFD = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog oFD = new System.Windows.Forms.OpenFileDialog();
             oFD.Filter = "Autocad Apps File|*.arx;*.lsp;*.dvb;*.dbx;*.vlx;*.fas;*.dll";
             oFD.Multiselect = false;
             if (oFD.ShowDialog() == DialogResult.OK)
@@ -1931,7 +1931,7 @@ namespace ConversorDrawind
 
         private void bPesquisar2_Click(object sender, EventArgs e)
         {
-            OpenFileDialog oFD = new OpenFileDialog();
+            System.Windows.Forms.OpenFileDialog oFD = new System.Windows.Forms.OpenFileDialog();
             oFD.Filter = "DLL (*.dll)|*.dll";
             oFD.Multiselect = false;
             if (oFD.ShowDialog() == DialogResult.OK)

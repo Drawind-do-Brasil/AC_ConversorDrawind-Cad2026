@@ -3,6 +3,7 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
     <RootNamespace>ConversorDrawind</RootNamespace>
     <AssemblyName>Conversor Drawind</AssemblyName>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
