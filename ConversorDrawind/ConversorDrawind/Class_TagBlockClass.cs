@@ -38,8 +38,8 @@ namespace ConversorDrawind
             string[] pts = conj[2].Split(';');
             string[] pts1 = pts[0].Split(',');
             string[] pts2 = pts[1].Split(',');
-            p1 = new Class_PointEspecial(Convert.ToDouble(pts1[0].Replace('.', ',')), Convert.ToDouble(pts1[1].Replace('.', ',')), Convert.ToDouble(pts1[2].Replace('.', ',')));
-            p2 = new Class_PointEspecial(Convert.ToDouble(pts2[0].Replace('.', ',')), Convert.ToDouble(pts2[1].Replace('.', ',')), Convert.ToDouble(pts2[2].Replace('.', ',')));
+            p1 = new Class_PointEspecial(NumericTextParser.ToDouble(pts1[0]), NumericTextParser.ToDouble(pts1[1]), NumericTextParser.ToDouble(pts1[2]));
+            p2 = new Class_PointEspecial(NumericTextParser.ToDouble(pts2[0]), NumericTextParser.ToDouble(pts2[1]), NumericTextParser.ToDouble(pts2[2]));
             string[] subconj = conj[3].Split(';');
             filtro.layerBase = subconj[0];
             filtro.SetConjunto(subconj[1]);

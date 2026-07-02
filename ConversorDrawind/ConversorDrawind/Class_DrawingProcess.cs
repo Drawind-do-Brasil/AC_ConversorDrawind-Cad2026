@@ -15,7 +15,7 @@ namespace ConversorDrawind
 {
     class Class_DrawingProcess
     {
-        public static readonly string DLLPath1 = AppDomain.CurrentDomain.BaseDirectory + "ConversorDrawind.dll";
+        public static readonly string DLLPath1 = DrawingProcessPaths.DllPath;
         private static int valor;
         private static int index;
         private static string fileOpen;
@@ -182,9 +182,7 @@ namespace ConversorDrawind
                     {
                         try
                         {
-                            string formatoPath = parametros.configuration.EXTCONFOrigem == 0
-                                ? parametros.configuration.PROGRAMblockFormatoCaminho
-                                : parametros.configuration.EXTCONFCaminhoBlocoInv;
+                            string formatoPath = DrawingProcessPaths.GetExchangeFormatPath(parametros.configuration);
 
                             myClass.acadDocument = Class_ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(formatoPath, false), 120, 100);
                             Class_ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
@@ -268,14 +266,9 @@ namespace ConversorDrawind
                     Class_ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
                     try
                     {
-                        string ext = "";
                         if (!String.IsNullOrEmpty(file))
                         {
-                            ext = Path.GetExtension(file);
-                            if (ext.ToUpper() == ".DLL")
-                                myClass.SendCommand("NETLOAD " + file + "\n");
-                            else
-                                myClass.SendCommand("(load  \"" + file.Replace("\\", "\\\\") + "\")\n");
+                            myClass.SendCommand(DrawingCommandBuilder.BuildLoadFileCommand(file));
                         }
                     }
                     finally
@@ -319,7 +312,7 @@ namespace ConversorDrawind
                 if (myClass.acadApplication == null || myClass.acadDocument == null)
                     return;
 
-                myClass.SendCommand("._COMMANDLINE\n");
+                myClass.SendCommand(DrawingCommandBuilder.BuildCommandLineCommand());
             }
             catch (Exception ex)
             {
@@ -381,7 +374,7 @@ namespace ConversorDrawind
             {
                 try
                 {
-                    File.Copy(file, Path.Combine(Path.GetDirectoryName(file), Path.GetFileNameWithoutExtension(file) + ".dwg.bak"), true);
+                    File.Copy(file, DrawingProcessPaths.GetBackupPath(file), true);
                 }
                 catch (Exception)
                 {
@@ -588,8 +581,7 @@ namespace ConversorDrawind
 
             try
             {
-                if (!Directory.Exists(Form_0_JanelaPrincipal.LOGdirConvertidos))
-                    Directory.CreateDirectory(Form_0_JanelaPrincipal.LOGdirConvertidos);
+                DrawingProcessPaths.EnsureConvertedLogDirectory();
                 if (File.Exists(Form_0_JanelaPrincipal.LOGarqConvertidos))
                     TryDeleteFile(Form_0_JanelaPrincipal.LOGarqConvertidos);
             }
@@ -599,17 +591,14 @@ namespace ConversorDrawind
 
             }
             parametros = p as Param1;
-            string arqtemp = Path.GetTempPath();
-            if (!Directory.Exists(arqtemp))
-                Directory.CreateDirectory(arqtemp);
-            arqtemp = Path.Combine(arqtemp, "ConversorDrawind.Temp");
+            string arqtemp = DrawingProcessPaths.TempCommandFile;
 
             if (File.Exists(arqtemp))
                 TryDeleteFile(arqtemp);
 
             using (StreamWriter sw = new StreamWriter(arqtemp))
             {
-                sw.WriteLine(AppDomain.CurrentDomain.BaseDirectory + parametros.StatusConversorItem.Pasta + "\\" + parametros.conversorName + ".txml");
+                sw.WriteLine(DrawingProcessPaths.GetConverterTxmlPath(parametros));
             }
 
             bool converted = false;

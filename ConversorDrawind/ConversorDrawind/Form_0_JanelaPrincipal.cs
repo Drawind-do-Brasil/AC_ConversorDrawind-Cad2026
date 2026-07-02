@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -118,13 +118,8 @@ namespace ConversorDrawind
             lBConversores.Items.Clear();
             try
             {
-                DirectoryInfo DirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem) StatusConversor.SelectedItem).Pasta);
-
-                List<FileInfo> AllFiles = DirInfo.GetFiles("*.template").ToList();
-                AllFiles.AddRange(DirInfo.GetFiles("*.txml"));
-
-                foreach (FileInfo FileTxt in AllFiles)
-                    lBConversores.Items.Add(Path.GetFileNameWithoutExtension(FileTxt.Name));
+                foreach (string converterName in LoadConverterList((StatusConversorItem)StatusConversor.SelectedItem))
+                    lBConversores.Items.Add(converterName);
                 if (lBConversores.Items.Count > 0)
                 {
                     lBConversores.SelectedIndex = 0;
@@ -142,14 +137,8 @@ namespace ConversorDrawind
             {
                 rTBComentarios.Clear();
                 string itemSelecionado = lBConversores.SelectedItem.ToString();
-                string nomeTemplade = AppDomain.CurrentDomain.BaseDirectory +
-                                                ((StatusConversorItem)StatusConversor.SelectedItem).Pasta + "\\" +
-                                                itemSelecionado +
-                                                ".txml";
-                string nomeTemplade2 =  AppDomain.CurrentDomain.BaseDirectory +
-                                          ((StatusConversorItem)StatusConversor.SelectedItem).Pasta +"\\" +
-                                          itemSelecionado +
-                                          ".Template";
+                string nomeTemplade = ConverterFileService.GetTxmlPath(itemSelecionado, (StatusConversorItem)StatusConversor.SelectedItem);
+                string nomeTemplade2 = ConverterFileService.GetTemplatePath(itemSelecionado, (StatusConversorItem)StatusConversor.SelectedItem);
                 Class_Configuration CT = new Class_Configuration();
 
               
@@ -184,11 +173,8 @@ namespace ConversorDrawind
             cBListaDeConversores.Items.Clear();
             try
             {
-                DirectoryInfo DirInfo = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem)StatusConversor.Items[0]).Pasta);
-                List<FileInfo> AllFiles = DirInfo.GetFiles("*.template").ToList();
-                AllFiles.AddRange(DirInfo.GetFiles("*.txml"));
-                foreach (FileInfo FileTxt in AllFiles)
-                    cBListaDeConversores.Items.Add(Path.GetFileNameWithoutExtension(FileTxt.Name));
+                foreach (string converterName in LoadConverterList((StatusConversorItem)StatusConversor.Items[0]))
+                    cBListaDeConversores.Items.Add(converterName);
             }
             catch (Exception)
             {
@@ -196,7 +182,17 @@ namespace ConversorDrawind
             }
         }
 
+        private List<string> LoadConverterList(StatusConversorItem statusConversorItem)
+        {
+            return ConverterFileService.ListConverterNames(statusConversorItem);
+        }
+
         private void CarregarTemplateDeConfiguracaoPTela()
+        {
+            LoadConfigurationToControls();
+        }
+
+        private void LoadConfigurationToControls()
         {
             rTBAddComentarios.Text = configuration.EXTCONFComments;
             cBConverterCotas.Checked = configuration.EXTCONFIsConvertDimension;
@@ -370,6 +366,11 @@ namespace ConversorDrawind
 
         private void CarregarTemplateDeTelaPConviguracao()
         {
+            ReadConfigurationFromControls();
+        }
+
+        private void ReadConfigurationFromControls()
+        {
             configuration.DMBlock = cBDMblock.Checked;
             configuration.EXTCONFComments = rTBAddComentarios.Text;
             configuration.EXTCONFIsConvertDimension = cBConverterCotas.Checked;
@@ -388,42 +389,42 @@ namespace ConversorDrawind
             configuration.EXTDIMStyleName = CCTB_DimStyle.Text;
             configuration.EXTTEXTStyleName = EstiloTexto.Text;
             configuration.EXTDIMSeta = CCTB_TypeArrow.Text;
-            configuration.EXTDIMScale = Convert.ToDouble(CCTB_DimScale.Text.Replace('.', ','));
+            configuration.EXTDIMScale = NumericTextParser.ToDouble(CCTB_DimScale.Text);
             configuration.EXTDIMPrecision = Convert.ToInt32(CCTB_DimLinearPrecision.Text);
             configuration.EXTDIMAngularPrecision = Convert.ToInt32(CCTB_DimAngularPresicion.Text);
             configuration.EXTDIMUnit = Convert.ToInt32(CCTB_DimLinearFormatUnit.Text);
             configuration.EXTDIMAngularUnit = Convert.ToInt32(CCTB_DimAngularFormatUnit.Text);
-            configuration.EXTDIMSizeSeta = Convert.ToDouble(CCTB_DimArrowSize.Text.Replace('.', ','));
-            configuration.EXTDIMOffsetLineFromRefPoint = Convert.ToDouble(CCTB_DimOffset.Text.Replace('.', ','));
+            configuration.EXTDIMSizeSeta = NumericTextParser.ToDouble(CCTB_DimArrowSize.Text);
+            configuration.EXTDIMOffsetLineFromRefPoint = NumericTextParser.ToDouble(CCTB_DimOffset.Text);
             configuration.EXTDIMOutsideAlign = Convert.ToBoolean(CCTB_DimOutsideAling.Text);
             configuration.EXTDIMTad = Convert.ToInt32(CCTB_TextPlacementVertical.Text);
             configuration.EXTDIMDimensionPosition = Convert.ToBoolean(CCTB_TextAlignment.Text);
             configuration.EXTDIMTextForced = Convert.ToBoolean(CCTB_TextInside.Text);
             configuration.EXTDIMLineForced = Convert.ToBoolean(CCTB_LineForced.Text);
-            configuration.EXTDIMDIMEX = Convert.ToDouble(CCTB_LineExt.Text.Replace('.', ','));
-            configuration.EXTLINELtscale = Convert.ToDouble(TB_Ltscale.Text.Replace('.', ','));
+            configuration.EXTDIMDIMEX = NumericTextParser.ToDouble(CCTB_LineExt.Text);
+            configuration.EXTLINELtscale = NumericTextParser.ToDouble(TB_Ltscale.Text);
             configuration.EXTDIMBaseLayer = CCTB_LayerBase.Text;
             configuration.EXTCONFIsPurge = cBPurge.Checked;
 
-            configuration.EXTSCALEMp1.X = Convert.ToDouble(p1x.Text.Replace('.', ','));
-            configuration.EXTSCALEMp1.Y = Convert.ToDouble(p1y.Text.Replace('.', ','));
-            configuration.EXTSCALEMp1.Z = Convert.ToDouble(p1z.Text.Replace('.', ','));
+            configuration.EXTSCALEMp1.X = NumericTextParser.ToDouble(p1x.Text);
+            configuration.EXTSCALEMp1.Y = NumericTextParser.ToDouble(p1y.Text);
+            configuration.EXTSCALEMp1.Z = NumericTextParser.ToDouble(p1z.Text);
 
-            configuration.EXTSCALEMp2.X = Convert.ToDouble(p2x.Text.Replace('.', ','));
-            configuration.EXTSCALEMp2.Y = Convert.ToDouble(p2y.Text.Replace('.', ','));
-            configuration.EXTSCALEMp2.Z = Convert.ToDouble(p2z.Text.Replace('.', ','));
+            configuration.EXTSCALEMp2.X = NumericTextParser.ToDouble(p2x.Text);
+            configuration.EXTSCALEMp2.Y = NumericTextParser.ToDouble(p2y.Text);
+            configuration.EXTSCALEMp2.Z = NumericTextParser.ToDouble(p2z.Text);
 
-            configuration.EXTSCALEAp1.X = Convert.ToDouble(ap1x.Text.Replace('.', ','));
-            configuration.EXTSCALEAp1.Y = Convert.ToDouble(ap1y.Text.Replace('.', ','));
-            configuration.EXTSCALEAp1.Z = Convert.ToDouble(ap1z.Text.Replace('.', ','));
+            configuration.EXTSCALEAp1.X = NumericTextParser.ToDouble(ap1x.Text);
+            configuration.EXTSCALEAp1.Y = NumericTextParser.ToDouble(ap1y.Text);
+            configuration.EXTSCALEAp1.Z = NumericTextParser.ToDouble(ap1z.Text);
 
-            configuration.EXTSCALEAp2.X = Convert.ToDouble(ap2x.Text.Replace('.', ','));
-            configuration.EXTSCALEAp2.Y = Convert.ToDouble(ap2y.Text.Replace('.', ','));
-            configuration.EXTSCALEAp2.Z = Convert.ToDouble(ap2z.Text.Replace('.', ','));
+            configuration.EXTSCALEAp2.X = NumericTextParser.ToDouble(ap2x.Text);
+            configuration.EXTSCALEAp2.Y = NumericTextParser.ToDouble(ap2y.Text);
+            configuration.EXTSCALEAp2.Z = NumericTextParser.ToDouble(ap2z.Text);
 
             configuration.EXTSCALEManual = rBScaleManual.Checked;
             configuration.EXTSCALELayer = zoomLayerFilter.Text;
-            configuration.EXTSCALETextSize = Convert.ToDouble(zoomTextSize.Text.Replace('.', ','));
+            configuration.EXTSCALETextSize = NumericTextParser.ToDouble(zoomTextSize.Text);
 
             configuration.EXTCONFIsDeleteTeklaStructures = cBDeleteTekla.Checked;
             configuration.PROGRAMblockFormatoCaminho = tBDiretorioFormatoAtributado.Text;
@@ -470,6 +471,11 @@ namespace ConversorDrawind
             configuration.LayerBlockAttribute = LayerBlocosAtt.Text;
         }
 
+        private ConversionPreflightResult ValidateConversionConfiguration(Class_Configuration configurationToValidate)
+        {
+            return ConversionPreflightValidator.ValidateFormatPath(configurationToValidate);
+        }
+
         private void lBDesenhosContextMenu_Opening(object sender, CancelEventArgs e)
         {
             if (lBDesenhos.SelectedIndex != -1)
@@ -491,10 +497,7 @@ namespace ConversorDrawind
             extensaoGeral = extensao.Text;
             try
             {
-                string nomeTemplate = AppDomain.CurrentDomain.BaseDirectory +
-                                                            ((StatusConversorItem)StatusConversor.SelectedItem).Pasta + "\\" +
-                                                            lBConversores.Text +
-                                                            ".txml";
+                string nomeTemplate = ConverterFileService.GetTxmlPath(lBConversores.Text, (StatusConversorItem)StatusConversor.SelectedItem);
                 if (File.Exists(nomeTemplate))
                 {
                     if (lBDesenhos.Items.Count != 0)
@@ -510,33 +513,17 @@ namespace ConversorDrawind
                             Class_Configuration conf = new Class_Configuration();
 
                             Class_Arranjos arr = new Class_Arranjos();
-                            if (conf.CheckFileTxmlExist(lBConversores.Text, (StatusConversorItem)StatusConversor.SelectedItem))
-                                conf.LoadXML(lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
-                            else
-                                conf.Load(lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
+                            ConverterFileService.LoadConverter(conf, lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
                             p1.desenhosName = temp.ToArray();
                             p1.conversorName = lBConversores.Text;
                             p1.closedesenhos = cBManterArquivosAbertos.Checked;
                             p1.configuration = conf;
                             p1.arranjos = arr;
                             p1.StatusConversorItem = (StatusConversorItem)StatusConversor.SelectedItem;
-                            if (p1.configuration.EXTCONFOrigem == 1 && p1.configuration.EXTCONFIsExchangeFormat && !File.Exists(p1.configuration.EXTCONFCaminhoBlocoInv))
+                            ConversionPreflightResult preflightResult = ValidateConversionConfiguration(p1.configuration);
+                            if (!preflightResult.CanConvert)
                             {
-                                MessageBox.Show(new Form() { TopMost = true }, "Não é possível prosseguir com a conversão porque não foi possível localizar o formato para substituição.\nCaminho do formado: " + p1.configuration.EXTCONFCaminhoBlocoInv,
-                                             "Error",
-                                             MessageBoxButtons.OK,
-                                             MessageBoxIcon.Warning,
-                                             MessageBoxDefaultButton.Button1);
-                                MessageBox.Show("          A conversão falhou!          ",
-                                         "Informação",
-                                          MessageBoxButtons.OK,
-                                          MessageBoxIcon.Warning,
-                                          MessageBoxDefaultButton.Button1);
-                                return;
-                            }
-                            if (p1.configuration.EXTCONFOrigem == 0 && p1.configuration.EXTCONFIsExchangeFormat && !File.Exists(p1.configuration.PROGRAMblockFormatoCaminho))
-                            {
-                                MessageBox.Show(new Form() { TopMost = true }, "Não é possível prosseguir com a conversão porque não foi possível localizar o formato para substituição.\nCaminho do formado: " + p1.configuration.PROGRAMblockFormatoCaminho,
+                                MessageBox.Show(new Form() { TopMost = true }, "Não é possível prosseguir com a conversão porque não foi possível localizar o formato para substituição.\nCaminho do formado: " + preflightResult.MissingFormatPath,
                                              "Error",
                                              MessageBoxButtons.OK,
                                              MessageBoxIcon.Warning,
@@ -793,7 +780,7 @@ namespace ConversorDrawind
                 bool isSave = true;
                 if (cBListaDeConversores.Text.ToUpper() != tbListaDeConversores.Text.ToUpper())
                 {
-                    string filetemp = AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem)StatusConversor.Items[0]).Pasta + "\\" + tbListaDeConversores.Text + ".txml";
+                    string filetemp = ConverterFileService.GetTxmlPath(tbListaDeConversores.Text, (StatusConversorItem)StatusConversor.Items[0]);
                     if (File.Exists(filetemp))
                     {
                         if (MessageBox.Show("Já existe um arquivo com esse nome." +
@@ -819,7 +806,7 @@ namespace ConversorDrawind
                     }
 
                     CarregarTemplateDeTelaPConviguracao();
-                    configuration.SaveXML(tbListaDeConversores.Text.ToUpper(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
+                    SaveSelectedConverter(tbListaDeConversores.Text.ToUpper());
 
                     CarregarTemplates();
                     CarregarTemplatesCBListaDeConversores();
@@ -851,6 +838,11 @@ namespace ConversorDrawind
                 lBConversores.SelectedIndex = indexTab2;
         }
 
+        private void SaveSelectedConverter(string converterName)
+        {
+            ConverterFileService.SaveConverter(configuration, converterName, this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
+        }
+
         private void cBListaDeConversores_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (cBListaDeConversores.SelectedItem != null)
@@ -869,10 +861,7 @@ namespace ConversorDrawind
                         {
                             tbListaDeConversores.Text = cBListaDeConversores.SelectedItem.ToString();
                             previousIndex = cBListaDeConversores.Text;
-                            if (configuration.CheckFileTxmlExist(cBListaDeConversores.SelectedItem.ToString(), (StatusConversorItem)StatusConversor.Items[0]))
-                            configuration.LoadXML(cBListaDeConversores.SelectedItem.ToString(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-                            else
-                                configuration.Load(cBListaDeConversores.SelectedItem.ToString(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
+                            ConverterFileService.LoadConverter(configuration, cBListaDeConversores.SelectedItem.ToString(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
                             CarregarTemplateDeConfiguracaoPTela();
                             loadDimensionTab();
                             loadScaleTab();
@@ -890,10 +879,7 @@ namespace ConversorDrawind
                     {
                         tbListaDeConversores.Text = cBListaDeConversores.SelectedItem.ToString();
                         previousIndex = cBListaDeConversores.Text;
-                        if (configuration.CheckFileTxmlExist(cBListaDeConversores.SelectedItem.ToString(), (StatusConversorItem)StatusConversor.Items[0]))
-                        configuration.LoadXML(cBListaDeConversores.SelectedItem.ToString(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-                        else
-                            configuration.Load(cBListaDeConversores.SelectedItem.ToString(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
+                        ConverterFileService.LoadConverter(configuration, cBListaDeConversores.SelectedItem.ToString(), this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
                         CarregarTemplateDeConfiguracaoPTela();
                         loadDimensionTab();
                         loadScaleTab();
@@ -1099,18 +1085,7 @@ namespace ConversorDrawind
         {
             if (e.TabPageIndex == 1)
             {
-                string directory = AppDomain.CurrentDomain.BaseDirectory  + "LinPack.nfj";
-
-                if (!File.Exists(directory))
-                {
-                    StreamWriter sw = new StreamWriter(directory);
-                    sw.WriteLine(configuration.PROGRAMDbLin);
-                    sw.Close();
-                }
-
-                StreamReader sr = new StreamReader(directory);
-                configuration.PROGRAMDbLin = sr.ReadLine();
-                sr.Close();
+                configuration.PROGRAMDbLin = UserSettingsService.EnsureAndReadProgramDbLin(configuration.PROGRAMDbLin);
 
                 if (!File.Exists(configuration.PROGRAMDbLin))
                 {
@@ -1124,11 +1099,7 @@ namespace ConversorDrawind
                     {
                         configuration.PROGRAMDbLin = caminhoLin.file;
                         caminhoLin.Dispose();
-                        if (File.Exists(directory))
-                            File.Delete(directory);
-                        StreamWriter sw = new StreamWriter(directory);
-                        sw.WriteLine(configuration.PROGRAMDbLin);
-                        sw.Close();
+                        UserSettingsService.SaveProgramDbLin(configuration.PROGRAMDbLin);
                     }
                 }
             }
@@ -1194,17 +1165,15 @@ namespace ConversorDrawind
             }
             CarregarTemplateDeTelaPConviguracao();
 
-            string file1 = AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem)StatusConversor.Items[0]).Pasta + "\\TEMPORARYFile1NFJDWI00012.txml";
-            string filexml = AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem)StatusConversor.Items[0]).Pasta + "\\" + tbListaDeConversores.Text + ".txml";
-            string file2 = AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem)StatusConversor.Items[0]).Pasta +"\\" + tbListaDeConversores.Text + ".Template";
+            string file1 = ConverterFileService.GetTxmlPath("TEMPORARYFile1NFJDWI00012", (StatusConversorItem)StatusConversor.Items[0]);
+            string filexml = ConverterFileService.GetTxmlPath(tbListaDeConversores.Text, (StatusConversorItem)StatusConversor.Items[0]);
+            string file2 = ConverterFileService.GetTemplatePath(tbListaDeConversores.Text, (StatusConversorItem)StatusConversor.Items[0]);
 
             configuration.SaveXML("TEMPORARYFile1NFJDWI00012", arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
 
             if (!File.Exists(filexml) && File.Exists(file2))
             {
-                configuration.Load(tbListaDeConversores.Text, this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-                configuration.SaveXML(tbListaDeConversores.Text, arranjos, listBlocks, listBlocksInv, listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-                File.Delete(file2);
+                MigrateTemplateToTxml(tbListaDeConversores.Text);
             }
 
          
@@ -1226,7 +1195,7 @@ namespace ConversorDrawind
                 Class_Configuration tempconf = new Class_Configuration();
                 Class_Arranjos temparray = new Class_Arranjos();
                 tempconf.SaveXML("TEMPORARYFile2NFJDWI00012", temparray, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
-                string file3 = AppDomain.CurrentDomain.BaseDirectory + ((StatusConversorItem)StatusConversor.Items[0]).Pasta + "\\TEMPORARYFile2NFJDWI00012.txml";
+                string file3 = ConverterFileService.GetTxmlPath("TEMPORARYFile2NFJDWI00012", (StatusConversorItem)StatusConversor.Items[0]);
 
                 StreamReader sr1 = new StreamReader(file1, Encoding.UTF8, true);
                 StreamReader sr2 = new StreamReader(file3, Encoding.UTF8, true);
@@ -1240,6 +1209,11 @@ namespace ConversorDrawind
             }
             File.Delete(file1);
             return isModify;
+        }
+
+        private void MigrateTemplateToTxml(string converterName)
+        {
+            ConverterFileService.MigrateTemplateToTxml(configuration, converterName, this.arranjos, this.listBlocks, this.listBlocksInv, this.listBlocksOrig, (StatusConversorItem)StatusConversor.Items[0]);
         }
 
         private void JanelaPrincipal_FormClosing(object sender, FormClosingEventArgs e)
@@ -2434,10 +2408,7 @@ namespace ConversorDrawind
             Class_Configuration conf = new Class_Configuration();
 
             Class_Arranjos arr = new Class_Arranjos();
-            if (conf.CheckFileTxmlExist(lBConversores.Text, (StatusConversorItem)StatusConversor.SelectedItem))
-            conf.LoadXML(lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
-            else
-                conf.Load(lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
+            ConverterFileService.LoadConverter(conf, lBConversores.Text, arr, new List<Class_BlockClass>(), new List<Class_BlockClass>(), new List<Class_BlockClass>(), (StatusConversorItem)StatusConversor.SelectedItem);
 
            
         }
