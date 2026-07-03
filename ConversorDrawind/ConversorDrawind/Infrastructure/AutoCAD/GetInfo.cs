@@ -1,13 +1,12 @@
-﻿using System;
-using System.IO;
+using ConversorDrawind;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
-using FORMS = System.Windows.Forms;
+using System.Threading;
 using ACAD = Autodesk.AutoCAD.Interop;
 using ACCOMMON = Autodesk.AutoCAD.Interop.Common;
-using System.Threading;
-using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
@@ -17,8 +16,6 @@ namespace ConversorDrawind
         private static ACAD.AcadDocument acadDocument = null;
         private string status = "ERROR";
 
-
-
         public void UpdateStatus()
         {
             try
@@ -27,43 +24,32 @@ namespace ConversorDrawind
                 {
                     string name = acadDocument.Name;
                 }
-
             }
             catch (Exception)
             {
                 status = "ERROR";
             }
         }
-       
-
 
         public GetInfo(string fileArq)
         {
             if (fileArq != "")
             {
-                try 
+                try
                 {
                     using (MessageFilter.ScopedRegistration())
                     {
-
                         try
                         {
                             acadDocument = acadApplication.Documents.Item(0);
-                         
                         }
                         catch (Exception)
                         {
                             acadApplication = new ACAD.AcadApplication();
-
                             acadApplication.WindowState = ACCOMMON.AcWindowState.acMax;
-
-
-
                         }
 
                         acadDocument = acadApplication.Documents.Open(fileArq, false);
-
-
                     }
 
                     LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
@@ -71,18 +57,15 @@ namespace ConversorDrawind
                 }
                 catch (Exception)
                 {
-                    FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
-                                     "Não fopossível abrir o desenho selecionado!",
-                                     "Error",
-                                     FORMS.MessageBoxButtons.OK,
-                                     FORMS.MessageBoxIcon.Warning,
-                                     FORMS.MessageBoxDefaultButton.Button1);
+                    System.Windows.MessageBox.Show(
+                        Localization.MessageCouldNotOpenSelectedDrawing,
+                        Localization.TitleWarningNoExclamation,
+                        System.Windows.MessageBoxButton.OK,
+                        System.Windows.MessageBoxImage.Warning);
                     status = "ERROR";
                 }
             }
         }
-
-
 
         public string Status()
         {
@@ -99,19 +82,16 @@ namespace ConversorDrawind
             {
                 using (MessageFilter.ScopedRegistration())
                 {
-
                     _hWnd = (IntPtr)acadApplication.HWND;
                     SetForegroundWindow(_hWnd);
                     acadApplication.WindowState = ACCOMMON.AcWindowState.acMax;
 
                     LoadFiles.SendCommand("DRAWINDCAD_Get2Point\n", acadDocument);
 
-
                     string arq = Path.GetTempPath();
                     if (!Directory.Exists(arq))
                         Directory.CreateDirectory(arq);
                     arq = Path.Combine(arq, "ConvertTo.Point2Info");
-
 
                     if (File.Exists(arq))
                     {
@@ -135,9 +115,6 @@ namespace ConversorDrawind
                 status = "ERROR";
             }
         }
-
-
-
 
         public List<Block> GetListBlocks()
         {
@@ -193,7 +170,6 @@ namespace ConversorDrawind
                         sr.Close();
                         File.Delete(arq);
                     }
-
                 }
             }
             catch (Exception)
@@ -201,24 +177,17 @@ namespace ConversorDrawind
                 status = "ERROR";
             }
             return myListBlock;
-
         }
-
-
-     
-
 
         public void CloseDrawing()
         {
             try
             {
                 acadDocument = acadApplication.Documents.Item(1);
-
                 acadDocument.Close(false);
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -227,21 +196,14 @@ namespace ConversorDrawind
             try
             {
                 acadDocument = acadApplication.Documents.Item(1);
-
-
                 acadDocument.Close(false);
-
                 acadDocument = acadApplication.Documents.Item(0);
-
                 acadDocument.Close(false);
                 acadApplication.Quit();
             }
             catch (Exception)
             {
-
             }
         }
     }
 }
-
-

@@ -1,6 +1,7 @@
+using ConversorDrawind;
+using Microsoft.Win32;
 using System.IO;
 using System.Windows;
-using Microsoft.Win32;
 
 namespace ConversorDrawind.UI.Wpf.Configuration
 {
@@ -20,7 +21,7 @@ namespace ConversorDrawind.UI.Wpf.Configuration
             OpenFileDialog dialog = new OpenFileDialog
             {
                 FileName = "acad.lin",
-                Filter = "Arquivo Lin (*.lin)|*.lin",
+                Filter = Localization.FilterLin,
                 Multiselect = false
             };
 
@@ -41,10 +42,10 @@ namespace ConversorDrawind.UI.Wpf.Configuration
                 return;
             }
 
-            MessageBox.Show(
+            System.Windows.MessageBox.Show(
                 this,
-                "Por favor, especifique o arquivo correto.",
-                "Atencao",
+                Localization.MessageSpecifyCorrectLinFile,
+                Localization.TitleAttentionPlain,
                 MessageBoxButton.OK,
                 MessageBoxImage.Exclamation);
         }

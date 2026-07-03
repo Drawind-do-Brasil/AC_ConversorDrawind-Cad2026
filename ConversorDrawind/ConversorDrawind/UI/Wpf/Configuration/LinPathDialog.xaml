@@ -1,7 +1,8 @@
 <Window x:Class="ConversorDrawind.UI.Wpf.Configuration.LinPathDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Atencao!"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleAttention}"
         Width="620"
         Height="150"
         ResizeMode="NoResize"
@@ -13,7 +14,7 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBlock Grid.Row="0"
-                   Text="O caminho especificado para o arquivo (&quot;acad.lin&quot;) do Autocad 2026 nao existe. Por favor, especifique o arquivo correto."
+                   Text="O caminho especificado para o arquivo (&quot;acad.lin&quot;) do AutoCAD 2026 não existe. Por favor, especifique o arquivo correto."
                    TextWrapping="Wrap" />
         <Grid Grid.Row="1" Margin="0,18,0,0">
             <Grid.ColumnDefinitions>
@@ -21,7 +22,7 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
             <Button Grid.Column="0"
-                    Content="Procurar"
+                    Content="{x:Static local:Localization.ButtonBrowse}"
                     Height="24"
                     Click="Browse_Click" />
             <TextBox x:Name="PathTextBox"
@@ -33,12 +34,12 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom">
-            <Button Content="Continuar"
+            <Button Content="{x:Static local:Localization.ButtonContinue}"
                     Width="101"
                     Height="24"
                     IsDefault="True"
                     Click="Continue_Click" />
-            <Button Content="Cancelar"
+            <Button Content="{x:Static local:Localization.ButtonCancel}"
                     Width="101"
                     Height="24"
                     Margin="8,0,0,0"

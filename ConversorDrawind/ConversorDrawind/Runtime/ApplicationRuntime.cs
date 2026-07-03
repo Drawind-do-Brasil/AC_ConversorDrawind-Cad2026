@@ -55,7 +55,7 @@ namespace ConversorDrawind
 
         public static void ThreadMethodAnalisando()
         {
-            Form_1_Informacao info = new Form_1_Informacao();
+            Informacao info = new Informacao();
             info.AtualizarStatus("Analisando");
             info.SetTopLevelInfUser(true);
             info.Show();
@@ -69,7 +69,7 @@ namespace ConversorDrawind
 
         public static void ThreadMethodAbrindoCad()
         {
-            Form_1_Informacao info = new Form_1_Informacao();
+            Informacao info = new Informacao();
             info.AtualizarStatus("Abrindo CAD");
             info.SetTopLevelInfUser(true);
             info.Show();
@@ -82,4 +82,7 @@ namespace ConversorDrawind
         }
     }
 }
+
+
+
 

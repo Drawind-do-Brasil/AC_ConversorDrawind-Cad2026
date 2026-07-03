@@ -1,7 +1,8 @@
 <Window x:Class="ConversorDrawind.UI.Wpf.Status.StatusWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Conversor Drawind"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.AppTitle}"
         Width="506"
         Height="161"
         ResizeMode="NoResize"
@@ -15,20 +16,20 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Text="Conversor Drawind"
+                   Text="{x:Static local:Localization.AppTitle}"
                    FontSize="22"
                    FontWeight="SemiBold"
                    HorizontalAlignment="Center" />
 
         <TextBlock x:Name="StatusText"
                    Grid.Row="1"
-                   Text="Convertendo"
+                   Text="{x:Static local:Localization.LabelConverting}"
                    FontSize="40"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Center" />
 
         <DockPanel Grid.Row="2">
-            <TextBlock Text="Aguarde ate que o processo termine."
+            <TextBlock Text="{x:Static local:Localization.LabelWaitForProcess}"
                        HorizontalAlignment="Center"
                        DockPanel.Dock="Left" />
             <TextBlock x:Name="VersionText"

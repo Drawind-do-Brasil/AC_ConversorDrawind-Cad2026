@@ -1,4 +1,4 @@
-using ConversorDrawind.UI.Wpf.Common;
+﻿using ConversorDrawind.UI.Wpf.Common;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -135,3 +135,6 @@ namespace ConversorDrawind.UI.Wpf.Layers
         }
     }
 }
+
+
+

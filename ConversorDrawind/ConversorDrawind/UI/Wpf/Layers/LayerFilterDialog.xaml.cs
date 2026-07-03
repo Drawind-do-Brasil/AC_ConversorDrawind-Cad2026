@@ -1,4 +1,4 @@
-﻿using ConversorDrawind.UI.Wpf.Common;
+using ConversorDrawind;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ConversorDrawind.UI.Wpf.Common;
 using ACAD = Autodesk.AutoCAD.Interop;
 
 namespace ConversorDrawind.UI.Wpf.Layers
@@ -17,68 +18,52 @@ namespace ConversorDrawind.UI.Wpf.Layers
     {
         private readonly Arranjos arranjos;
         private readonly Filter filter;
-        private List<string> lineTypes;
+        private List<string> lineTypes = new List<string>();
 
         public LayerFilterDialog(Filter filter, Arranjos arranjos)
         {
             InitializeComponent();
-            this.arranjos = arranjos;
             this.filter = filter;
-            lineTypes = arranjos.allLineType1.ToList();
-
-            LoadComboItems();
-            LoadFilterValues();
+            this.arranjos = arranjos;
+            LoadValues();
         }
 
         public Filter Filter => filter;
 
+        private void LoadValues()
+        {
+            ObjectTypeComboBox.Text = filter.tipoObjeto;
+            ColorComboBox.Text = filter.cor;
+            LineTypeComboBox.Text = filter.tipoLinha;
+            TextHeightTextBox.Text = filter.alturaTexto;
+            TextContentTextBox.Text = filter.conteudoTexto;
+            OrientationComboBox.Text = filter.orientacao;
+        }
+
         public void LoadLineTypes2(string line)
         {
-            lineTypes = new List<string> { "ALL" };
-            lineTypes.AddRange(arranjos.allLineType2);
-            LineTypeComboBox.ItemsSource = lineTypes;
-            LineTypeComboBox.Text = "ALL";
-
-            Filter currentFilter = new Filter(arranjos);
-            currentFilter.SetConjunto(line);
-            foreach (string lineType in lineTypes)
+            arranjos.allLineType2.Clear();
+            foreach (string item in line.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                if (lineType.Split(',').First().ToUpper() == currentFilter.tipoLinha)
-                {
-                    LineTypeComboBox.Text = lineType;
-                    break;
-                }
+                arranjos.allLineType2.Add(item);
+            }
+
+            lineTypes = arranjos.allLineType2.ToList();
+            LineTypeComboBox.ItemsSource = lineTypes;
+            if (lineTypes.Count > 0 && string.IsNullOrWhiteSpace(LineTypeComboBox.Text))
+            {
+                LineTypeComboBox.Text = lineTypes[0];
             }
         }
 
         public void DisableText()
         {
-            ObjectTypeComboBox.Text = "TEXT";
-            ObjectTypeGroupBox.IsEnabled = false;
-            LineTypeGroupBox.IsEnabled = false;
+            TextGroupBox.Visibility = Visibility.Collapsed;
         }
 
         public void DisableOrientation()
         {
-            OrientationGroupBox.IsEnabled = false;
-        }
-
-        private void LoadComboItems()
-        {
-            ObjectTypeComboBox.ItemsSource = arranjos.allobjects;
-            ColorComboBox.ItemsSource = arranjos.allcolor;
-            LineTypeComboBox.ItemsSource = lineTypes;
-            OrientationComboBox.ItemsSource = new[] { "ALL", "HORIZONTAL", "VERTICAL" };
-        }
-
-        private void LoadFilterValues()
-        {
-            ColorComboBox.Text = filter.cor;
-            ObjectTypeComboBox.Text = filter.tipoObjeto;
-            LineTypeComboBox.Text = filter.tipoLinha;
-            TextHeightTextBox.Text = filter.alturaTexto;
-            TextContentTextBox.Text = filter.conteudoTexto;
-            OrientationComboBox.Text = filter.orientacao;
+            OrientationGroupBox.Visibility = Visibility.Collapsed;
         }
 
         private void OtherColorButtonClick(object sender, RoutedEventArgs e)
@@ -87,7 +72,6 @@ namespace ConversorDrawind.UI.Wpf.Layers
             {
                 Owner = this
             };
-
             if (dialog.ShowDialog() != true)
             {
                 return;
@@ -122,7 +106,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog
                 {
-                    Filter = "Drawing (*.dwg)|*.dwg"
+                    Filter = Localization.FilterDrawing
                 };
 
                 if (openFileDialog.ShowDialog(this) != true)
@@ -163,12 +147,10 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     acadApplication = new ACAD.AcadApplication();
                     acadDocument = acadApplication.Documents.Open(file, false);
                 }
-
                 using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                 }
-
                 using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_LoadLineType\n", acadDocument);
@@ -179,7 +161,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             catch (Exception e)
             {
                 ApplicationRuntime.ControladorT = false;
-                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show(e.Message, Localization.TitleWarningNoExclamation, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -204,21 +186,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         private void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (arranjos.allcolor.Contains(ColorComboBox.Text))
-            {
-                filter.cor = ColorComboBox.Text;
-            }
-
-            if (lineTypes.Contains(LineTypeComboBox.Text))
-            {
-                filter.tipoLinha = LineTypeComboBox.Text.Split(',').First().ToUpper();
-            }
-
-            if (arranjos.allobjects.Contains(ObjectTypeComboBox.Text))
-            {
-                filter.tipoObjeto = ObjectTypeComboBox.Text;
-            }
-
+            filter.tipoObjeto = ObjectTypeComboBox.Text;
+            filter.cor = ColorComboBox.Text;
+            filter.tipoLinha = LineTypeComboBox.Text;
             filter.alturaTexto = TextHeightTextBox.Text;
             filter.conteudoTexto = TextContentTextBox.Text;
             filter.orientacao = GetSelectedOrientation();
@@ -235,7 +205,6 @@ namespace ConversorDrawind.UI.Wpf.Layers
             TextBox textBox = (TextBox)sender;
             string proposed = textBox.Text.Remove(textBox.SelectionStart, textBox.SelectionLength)
                 .Insert(textBox.SelectionStart, e.Text);
-
             e.Handled = !proposed.All(character => char.IsDigit(character) || character == ',')
                 || proposed.Count(character => character == ',') > 1;
         }
@@ -258,4 +227,3 @@ namespace ConversorDrawind.UI.Wpf.Layers
         }
     }
 }
-

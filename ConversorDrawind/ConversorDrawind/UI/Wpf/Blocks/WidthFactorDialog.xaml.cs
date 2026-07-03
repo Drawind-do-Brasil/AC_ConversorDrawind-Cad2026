@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
 namespace ConversorDrawind.UI.Wpf.Blocks
@@ -82,3 +82,6 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         }
     }
 }
+
+
+

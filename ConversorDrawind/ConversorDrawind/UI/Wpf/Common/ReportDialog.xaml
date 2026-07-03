@@ -1,7 +1,8 @@
 <Window x:Class="ConversorDrawind.UI.Wpf.Common.ReportDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Atenção!"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleAttention}"
         Width="555"
         Height="405"
         ResizeMode="NoResize"
@@ -27,11 +28,11 @@
                     Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0,6,0,0">
-            <Button Content="Salvar"
+            <Button Content="{x:Static local:Localization.ButtonSave}"
                     Width="75"
                     Margin="0,0,6,0"
                     Click="SaveButtonClick" />
-            <Button Content="OK"
+            <Button Content="{x:Static local:Localization.ButtonOk}"
                     Width="75"
                     IsDefault="True"
                     Click="OkButtonClick" />

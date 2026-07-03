@@ -7,7 +7,6 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 using ACAD = Autodesk.AutoCAD.Interop;
 using ACCOMMON = Autodesk.AutoCAD.Interop.Common;
 
@@ -38,6 +37,11 @@ namespace ConversorDrawind
         [DllImport("user32.dll")]
         public static extern int SetForegroundWindow(IntPtr hWnd);
 
+        private const uint KEYEVENTF_KEYUP = 0x0002;
+
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern void KeybdEvent(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
         [DllImport("user32.dll", SetLastError = true)]
         private static extern UInt32 GetWindowThreadProcessId(Int32 hWnd, out Int32 lpdwProcessId);
 
@@ -55,7 +59,8 @@ namespace ConversorDrawind
         {
             SetForegroundWindow(mwh);
             Thread.Sleep(100);
-            SendKeys.SendWait("{ENTER}");
+            KeybdEvent((byte)VK_ENTER, 0, 0, UIntPtr.Zero);
+            KeybdEvent((byte)VK_ENTER, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
 
         }
 
@@ -250,7 +255,7 @@ namespace ConversorDrawind
                     idleReadCount = 0;
                 }
 
-                Application.DoEvents();
+                
                 Thread.Sleep(CommandPollMs);
             }
 
@@ -352,11 +357,10 @@ namespace ConversorDrawind
                         }
                         catch (Exception e)
                         {
-                            MessageBox.Show(e.Message,
-                                             "Error",
-                                             MessageBoxButtons.OK,
-                                             MessageBoxIcon.Warning,
-                                             MessageBoxDefaultButton.Button1);
+                            System.Windows.MessageBox.Show(e.Message,
+                                             Localization.TitleWarningNoExclamation,
+                                             System.Windows.MessageBoxButton.OK,
+                                             System.Windows.MessageBoxImage.Warning);
                         }
                     }
                 }
@@ -527,12 +531,11 @@ namespace ConversorDrawind
                     catch (Exception)
                     {
                         ApplicationRuntime.ControladorT2 = false;
-                        MessageBox.Show(new Form() { TopMost = true },
-                                    "Não foi possível salvar o arquivo, ele pode estar sendo usado por outro programa.",
-                                    "Error",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning,
-                                    MessageBoxDefaultButton.Button1);
+                        System.Windows.MessageBox.Show(
+                                    Localization.MessageCouldNotSaveFile,
+                                    Localization.TitleWarningNoExclamation,
+                                    System.Windows.MessageBoxButton.OK,
+                                    System.Windows.MessageBoxImage.Warning);
                         ApplicationRuntime.ControladorT2 = true;
                     }
 
@@ -556,22 +559,20 @@ namespace ConversorDrawind
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(new Form() { TopMost = true },
+                    System.Windows.MessageBox.Show(
                                      e.Message,
-                                     "Error",
-                                     MessageBoxButtons.OK,
-                                     MessageBoxIcon.Warning,
-                                     MessageBoxDefaultButton.Button1);
+                                     Localization.TitleWarningNoExclamation,
+                                     System.Windows.MessageBoxButton.OK,
+                                     System.Windows.MessageBoxImage.Warning);
                 }
 
             }
             else
             {
-                MessageBox.Show("O desenho " + file + " não existe!",
-                                   "Atenção!",
-                                   MessageBoxButtons.OK,
-                                   MessageBoxIcon.Exclamation,
-                                   MessageBoxDefaultButton.Button1);
+                System.Windows.MessageBox.Show(Localization.FormatDrawingDoesNotExist(file),
+                                   Localization.TitleAttentionPlain,
+                                   System.Windows.MessageBoxButton.OK,
+                                   System.Windows.MessageBoxImage.Exclamation);
             }
         }
 
@@ -619,7 +620,7 @@ namespace ConversorDrawind
                     int index = 1;
                     foreach (string file in parametros.desenhosName)
                     {
-                        if (Form_2_Processo.IsCanceled)
+                        if (Processo.IsCanceled)
                             break;
 
                         FileOpen = Path.GetFileName(file);
@@ -906,5 +907,10 @@ namespace ConversorDrawind
         }
     }
 }
+
+
+
+
+
 
 

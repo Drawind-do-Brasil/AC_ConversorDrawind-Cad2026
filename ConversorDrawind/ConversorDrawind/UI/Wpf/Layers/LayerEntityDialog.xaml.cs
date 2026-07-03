@@ -1,4 +1,4 @@
-using System.Globalization;
+﻿using System.Globalization;
 using System.Windows;
 
 namespace ConversorDrawind.UI.Wpf.Layers
@@ -26,3 +26,6 @@ namespace ConversorDrawind.UI.Wpf.Layers
         }
     }
 }
+
+
+

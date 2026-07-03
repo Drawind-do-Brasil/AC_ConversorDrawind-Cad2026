@@ -1,4 +1,4 @@
-namespace ConversorDrawind
+﻿namespace ConversorDrawind
 {
     internal static class ConfigurationPaths
     {
@@ -13,3 +13,6 @@ namespace ConversorDrawind
         }
     }
 }
+
+
+

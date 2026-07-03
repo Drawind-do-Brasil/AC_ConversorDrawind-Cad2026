@@ -1,3 +1,4 @@
+using ConversorDrawind;
 using System.Collections.Generic;
 using System.Windows;
 
@@ -31,8 +32,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 return;
             }
 
-            MessageBox.Show("O layer já existe!",
-                "Error",
+            System.Windows.MessageBox.Show(
+                Localization.MessageLayerAlreadyExists,
+                Localization.TitleWarningNoExclamation,
                 MessageBoxButton.OK,
                 MessageBoxImage.Warning);
         }

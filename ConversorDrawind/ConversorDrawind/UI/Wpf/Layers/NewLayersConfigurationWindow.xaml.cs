@@ -1,6 +1,6 @@
-﻿using Microsoft.Win32;
+using ConversorDrawind;
+using Microsoft.Win32;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
@@ -70,18 +70,13 @@ namespace ConversorDrawind.UI.Wpf.Layers
             catch (Exception e)
             {
                 ApplicationRuntime.ControladorT = false;
-                System.Windows.Forms.MessageBox.Show(new System.Windows.Forms.Form() { TopMost = true },
-                    e.Message,
-                    "Error",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Warning,
-                    System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                System.Windows.MessageBox.Show(e.Message, Localization.TitleWarningNoExclamation, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
             }
         }
 
         public static void CheckLines(Arranjos arranjos)
         {
-            List<CorrecaoLinhas> linhasErradas = new List<CorrecaoLinhas>();
+            var linhasErradas = new System.Collections.Generic.List<CorrecaoLinhas>();
             for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
             {
                 string[] listTemp = arranjos.allNewLayerComposition[i].Split(':');
@@ -108,7 +103,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
             if (linhasErradas.Count > 0)
             {
-                Form_3_LinhasErradas formLinhasErradas = new Form_3_LinhasErradas(linhasErradas, arranjos);
+                LinhasErradas formLinhasErradas = new LinhasErradas(linhasErradas, arranjos);
                 formLinhasErradas.ShowDialog();
             }
         }
@@ -132,7 +127,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             bool isUpdate = false;
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog { Filter = "Drawing (*.dwg)|*.dwg" };
+                OpenFileDialog openFileDialog = new OpenFileDialog { Filter = Localization.FilterDrawing };
                 if (openFileDialog.ShowDialog() == true)
                 {
                     Thread loadThread = new Thread(new ParameterizedThreadStart(LoadNewLayerFromAcad));
@@ -186,11 +181,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
                                 {
                                     if (!isCheck)
                                     {
-                                        if (System.Windows.Forms.MessageBox.Show("Deseja atualizar os layer que jÃ¡ existem?\nObservaÃ§Ã£o: O layer '0' sempre Ã© atualizado.",
-                                            "AtenÃ§Ã£o",
-                                            System.Windows.Forms.MessageBoxButtons.YesNo,
-                                            System.Windows.Forms.MessageBoxIcon.Exclamation,
-                                            System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                                        if (System.Windows.MessageBox.Show(
+                                                Localization.MessageUpdateExistingLayers,
+                                                Localization.TitleAttentionPlain,
+                                                System.Windows.MessageBoxButton.YesNo,
+                                                System.Windows.MessageBoxImage.Exclamation) == System.Windows.MessageBoxResult.Yes)
                                         {
                                             isUpdate = true;
                                         }
@@ -230,11 +225,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
             LoadRows();
             if (!isAddAll)
             {
-                System.Windows.Forms.MessageBox.Show("Alguns layers nÃ£o foram adicionados, porque existem layers com o mesmo nome na lista.",
-                    "Error",
-                    System.Windows.Forms.MessageBoxButtons.OK,
-                    System.Windows.Forms.MessageBoxIcon.Warning,
-                    System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                System.Windows.MessageBox.Show(
+                    Localization.MessageSomeLayersNotAdded,
+                    Localization.TitleWarningNoExclamation,
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Warning);
             }
         }
 
@@ -265,7 +260,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
         {
             if (Rows.Count > 0 && LayersGrid.SelectedIndex != -1)
             {
-                if (System.Windows.Forms.MessageBox.Show("Deseja realmente limpar tudo?", "AtenÃ§Ã£o", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                if (System.Windows.MessageBox.Show(
+                        Localization.MessageClearAll,
+                        Localization.TitleAttentionPlain,
+                        System.Windows.MessageBoxButton.YesNo,
+                        System.Windows.MessageBoxImage.Exclamation) == System.Windows.MessageBoxResult.Yes)
                 {
                     arranjos.allNewLayerComposition.Clear();
                     arranjos.allNewLayer.Clear();
@@ -299,12 +298,20 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 novoLayer.SetConjuntoEspecial();
                 arranjos.allNewLayerComposition.Add(novoLayer.layer + ":" + novoLayer.cor + ":" + novoLayer.tipoLinha.Split(',').First().ToUpper());
                 arranjos.allNewLayer.Add(novoLayer.layer);
-                System.Windows.Forms.MessageBox.Show("O layer 0 deve sempre existir, portanto ele foi adicionado a lista.", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                System.Windows.MessageBox.Show(
+                    Localization.MessageLayerZeroAdded,
+                    Localization.TitleWarningNoExclamation,
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Warning);
             }
 
             if (isRemove)
             {
-                System.Windows.Forms.MessageBox.Show("Alguns layers repetidos ou sem nome foram removidos da lista", "Error", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Warning, System.Windows.Forms.MessageBoxDefaultButton.Button1);
+                System.Windows.MessageBox.Show(
+                    Localization.MessageDuplicateOrUnnamedLayersRemoved,
+                    Localization.TitleWarningNoExclamation,
+                    System.Windows.MessageBoxButton.OK,
+                    System.Windows.MessageBoxImage.Warning);
             }
 
             arranjos.allNewLayer.Sort();
@@ -321,7 +328,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
         {
             if (Rows.Count > 0 && LayersGrid.SelectedItem is LayerRow row)
             {
-                if (System.Windows.Forms.MessageBox.Show("Deseja realmente excluir a linha selecionada?", "AtenÃ§Ã£o", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                if (System.Windows.MessageBox.Show(
+                        Localization.MessageDeleteSelectedRow,
+                        Localization.TitleAttentionPlain,
+                        System.Windows.MessageBoxButton.YesNo,
+                        System.Windows.MessageBoxImage.Exclamation) == System.Windows.MessageBoxResult.Yes)
                 {
                     Rows.Remove(row);
                 }
@@ -374,7 +385,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             int columnIndex = LayersGrid.Columns.IndexOf(LayersGrid.CurrentColumn);
             if (columnIndex == 0)
             {
-                Form_3_ConfigurarLayersNome dialog = new Form_3_ConfigurarLayersNome(row.Layer, arranjos);
+                ConfigurarLayersNome dialog = new ConfigurarLayersNome(row.Layer, arranjos);
                 dialog.ShowDialog();
                 row.Layer = dialog.nome;
                 UpdateAllNewLayer();
@@ -382,14 +393,14 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
             else if (columnIndex == 1)
             {
-                Form_3_ConfigurarLayersCor dialog = new Form_3_ConfigurarLayersCor(row.Color, arranjos);
+                ConfigurarLayersCor dialog = new ConfigurarLayersCor(row.Color, arranjos);
                 dialog.ShowDialog();
                 row.Color = dialog.cor;
                 dialog.Dispose();
             }
             else if (columnIndex == 2)
             {
-                Form_3_ConfigurarLayersLinha dialog = new Form_3_ConfigurarLayersLinha(row.Line, arranjos);
+                ConfigurarLayersLinha dialog = new ConfigurarLayersLinha(row.Line, arranjos);
                 dialog.ShowDialog();
                 row.Line = dialog.linha.Split(',').First().ToUpper();
                 dialog.Dispose();
@@ -436,4 +447,3 @@ namespace ConversorDrawind.UI.Wpf.Layers
         }
     }
 }
-

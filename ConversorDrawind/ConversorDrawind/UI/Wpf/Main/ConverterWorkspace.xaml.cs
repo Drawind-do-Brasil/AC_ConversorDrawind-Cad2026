@@ -24,3 +24,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void ConvertClick(object sender, RoutedEventArgs e) => Forward(nameof(ConvertClick), sender, e);
     }
 }
+
+
+

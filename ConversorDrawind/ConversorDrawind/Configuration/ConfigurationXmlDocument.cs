@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -639,3 +639,6 @@ namespace ConversorDrawind
         public List<string> Tags { get; set; } = new List<string>();
     }
 }
+
+
+

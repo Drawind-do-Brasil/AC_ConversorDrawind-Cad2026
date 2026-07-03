@@ -1,3 +1,4 @@
+using ConversorDrawind;
 using Microsoft.Win32;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +27,7 @@ namespace ConversorDrawind.UI.Wpf.Common
         {
             SaveFileDialog saveFileDialog = new SaveFileDialog
             {
-                Filter = "Texto (*.txt)|*.txt"
+                Filter = Localization.FilterTextFiles
             };
 
             if (saveFileDialog.ShowDialog(this) != true || saveFileDialog.FileName == string.Empty)

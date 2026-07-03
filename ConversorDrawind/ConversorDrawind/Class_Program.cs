@@ -1,6 +1,5 @@
-using System;
+﻿using System;
 using System.Threading;
-using System.Windows.Forms;
 using ConversorDrawind.UI.Wpf.Main;
 
 namespace ConversorDrawind
@@ -17,10 +16,10 @@ namespace ConversorDrawind
 
         static void ThreadMethod()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
             System.Windows.Application application = new System.Windows.Application();
             application.Run(new MainWindow());
         }
     }
 }
+
+

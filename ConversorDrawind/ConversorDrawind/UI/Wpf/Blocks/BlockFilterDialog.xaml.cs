@@ -1,4 +1,4 @@
-using System.Linq;
+﻿using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 
@@ -46,7 +46,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
 
         private void OtherColorClick(object sender, RoutedEventArgs e)
         {
-            Form_8_GenericNewColor newColor = new Form_8_GenericNewColor(ColorComboBox.Text);
+            GenericNewColor newColor = new GenericNewColor(ColorComboBox.Text);
             newColor.ShowDialog();
             if (!arranjos.allcolor.Contains(newColor.colorClass))
             {
@@ -138,3 +138,6 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         }
     }
 }
+
+
+

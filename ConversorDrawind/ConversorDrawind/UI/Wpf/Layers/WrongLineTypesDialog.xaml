@@ -1,7 +1,8 @@
 <Window x:Class="ConversorDrawind.UI.Wpf.Layers.WrongLineTypesDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Correção de Linhas"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleLineCorrection}"
         Width="745"
         Height="325"
         ResizeMode="NoResize"
@@ -16,7 +17,7 @@
         </Grid.RowDefinitions>
 
         <TextBlock Grid.Row="0"
-                   Text="Os tipos de linhas do layers seguintes não corresponde a um tipo de linha presente no arquivo “acadiso.lin”, por favor, corrija os erros para continuar."
+                   Text="{x:Static local:Localization.MessageLineTypesNeedCorrection}"
                    TextWrapping="Wrap"
                    Margin="0,0,0,3" />
 
@@ -33,14 +34,14 @@
                   MouseDoubleClick="WrongLinesDataGridMouseDoubleClick"
                   VerticalScrollBarVisibility="Auto">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="Nome do Layer" Binding="{Binding NomeLayer}" Width="250" />
-                <DataGridTextColumn Header="Linha do Layer" Binding="{Binding LinhaLayer}" Width="500" />
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelLayerName}" Binding="{Binding NomeLayer}" Width="250" />
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelLayerLine}" Binding="{Binding LinhaLayer}" Width="500" />
             </DataGrid.Columns>
         </DataGrid>
 
         <Button x:Name="ContinueButton"
                 Grid.Row="2"
-                Content="Continuar"
+                Content="{x:Static local:Localization.ButtonContinue}"
                 Width="75"
                 HorizontalAlignment="Right"
                 Margin="0,6,0,0"

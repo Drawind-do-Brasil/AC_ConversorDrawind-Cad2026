@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.Interop;
+ï»¿using Autodesk.AutoCAD.Interop;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -7,8 +7,6 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-
 namespace ConversorDrawind
 {
    public  static class LoadFiles
@@ -89,11 +87,10 @@ namespace ConversorDrawind
                     idleReadCount = 0;
                 }
 
-                Application.DoEvents();
                 Thread.Sleep(CommandPollMs);
             }
 
-            throw new TimeoutException("Tempo limite aguardando execução do comando: " + commandName);
+            throw new TimeoutException("Tempo limite aguardando execuÃ§Ã£o do comando: " + commandName);
         }
         private static int GetCommandActive(AcadDocument acadDocument)
         {
@@ -114,3 +111,7 @@ namespace ConversorDrawind
 
     }
 }
+
+
+
+

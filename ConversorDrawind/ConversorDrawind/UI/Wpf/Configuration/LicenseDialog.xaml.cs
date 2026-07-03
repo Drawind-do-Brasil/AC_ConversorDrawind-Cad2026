@@ -1,3 +1,4 @@
+using ConversorDrawind;
 using System;
 using System.IO;
 using System.Text;
@@ -8,8 +9,8 @@ namespace ConversorDrawind.UI.Wpf.Configuration
     public partial class LicenseDialog : Window
     {
         private readonly string senhaCP = string.Empty;
-        private readonly string local = Path.Combine(System.Windows.Forms.Application.UserAppDataPath, "access.lic");
-        private readonly string localLegacy = Path.Combine(System.Windows.Forms.Application.UserAppDataPath, "Acess.dll");
+        private readonly string local = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ConversorDrawind", "access.lic");
+        private readonly string localLegacy = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "ConversorDrawind", "Acess.dll");
 
         public LicenseDialog()
         {
@@ -63,8 +64,9 @@ namespace ConversorDrawind.UI.Wpf.Configuration
             {
                 Ok = true;
                 Close();
-                MessageBox.Show("Ativação realizada com sucesso!",
-                    "Atenção",
+                System.Windows.MessageBox.Show(
+                    Localization.MessageActivationSuccess,
+                    Localization.TitleAttentionPlain,
                     MessageBoxButton.OK,
                     MessageBoxImage.Information);
                 return;
@@ -75,8 +77,9 @@ namespace ConversorDrawind.UI.Wpf.Configuration
 
         private static void ShowInvalidPassword()
         {
-            MessageBox.Show("Senha inválida!",
-                "Atenção",
+            System.Windows.MessageBox.Show(
+                Localization.MessageInvalidPassword,
+                Localization.TitleAttentionPlain,
                 MessageBoxButton.OK,
                 MessageBoxImage.Exclamation);
         }

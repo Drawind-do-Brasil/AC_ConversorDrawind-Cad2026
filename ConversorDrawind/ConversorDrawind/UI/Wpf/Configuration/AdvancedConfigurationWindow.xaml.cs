@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 namespace ConversorDrawind.UI.Wpf.Configuration
 {
@@ -15,3 +15,6 @@ namespace ConversorDrawind.UI.Wpf.Configuration
         }
     }
 }
+
+
+

@@ -1,10 +1,12 @@
-﻿using Microsoft.Win32;
+using ConversorDrawind;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using Microsoft.Win32;
 using System.Threading;
 using System.Windows;
+using System.Windows.Input;
 using ACAD = Autodesk.AutoCAD.Interop;
 
 namespace ConversorDrawind.UI.Wpf.Layers
@@ -12,44 +14,72 @@ namespace ConversorDrawind.UI.Wpf.Layers
     public partial class LayerBaseDialog : Window
     {
         private readonly Arranjos arranjos;
-        private bool initialLoadChecked;
+        private readonly List<string> layers;
 
-        public LayerBaseDialog(string currentLayerBase, Arranjos arranjos)
+        public LayerBaseDialog(string currentLayer, Arranjos arranjos)
         {
             InitializeComponent();
             this.arranjos = arranjos;
-            LayerBase = currentLayerBase;
-            RefreshLayers(currentLayerBase);
+            layers = new List<string>(arranjos.allNewLayer);
+            BaseLayerComboBox.ItemsSource = layers;
+            BaseLayerComboBox.Text = currentLayer;
         }
-
-        public string LayerBase { get; private set; }
 
         private void WindowLoaded(object sender, RoutedEventArgs e)
         {
-            if (initialLoadChecked)
-            {
-                return;
-            }
-
-            initialLoadChecked = true;
-            if (arranjos.allBaseLayer.Count == 0)
-            {
-                LoadBaseLayersFromDrawing();
-            }
+            BaseLayerComboBox.Focus();
         }
 
         private void SearchButtonClick(object sender, RoutedEventArgs e)
         {
-            LoadBaseLayersFromDrawing();
+            OpenFileDialog dialog = new OpenFileDialog();
+            if (dialog.ShowDialog() != true)
+            {
+                return;
+            }
+
+            Thread loadThread = new Thread(LoadLayersFromAcad);
+            loadThread.SetApartmentState(ApartmentState.STA);
+            loadThread.Start(dialog.FileName);
+            loadThread.Join();
+
+            layers.Clear();
+            layers.AddRange(arranjos.allNewLayer);
+            BaseLayerComboBox.ItemsSource = null;
+            BaseLayerComboBox.ItemsSource = layers;
+        }
+
+        private static void LoadLayersFromAcad(object state)
+        {
+            try
+            {
+                string file = (string)state;
+                ACAD.AcadApplication acadApplication;
+                ACAD.AcadDocument acadDocument;
+                using (MessageFilter.ScopedRegistration())
+                {
+                    acadApplication = new ACAD.AcadApplication();
+                    acadDocument = ComRetry.Invoke(() => acadApplication.Documents.Open(file, false), 120, 100);
+                }
+                using (MessageFilter.ScopedRegistration())
+                {
+                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
+                }
+                using (MessageFilter.ScopedRegistration())
+                {
+                    LoadFiles.SendCommand("DRAWINDCAD_LoadLayer\n", acadDocument);
+                }
+            }
+            catch (Exception e)
+            {
+                ApplicationRuntime.ControladorT = false;
+                System.Windows.MessageBox.Show(e.Message, Localization.TitleWarningNoExclamation, MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (arranjos.allBaseLayer.Contains(BaseLayerComboBox.Text))
-            {
-                LayerBase = BaseLayerComboBox.Text;
-            }
-
+            LayerBase = BaseLayerComboBox.Text;
             DialogResult = true;
         }
 
@@ -58,97 +88,6 @@ namespace ConversorDrawind.UI.Wpf.Layers
             DialogResult = false;
         }
 
-        private void LoadBaseLayersFromDrawing()
-        {
-            try
-            {
-                OpenFileDialog openFileDialog = new OpenFileDialog
-                {
-                    Filter = "Drawing (*.dwg)|*.dwg"
-                };
-
-                if (openFileDialog.ShowDialog(this) != true)
-                {
-                    return;
-                }
-
-                Thread loadThread = new Thread(GetLayerDrawing);
-                loadThread.SetApartmentState(ApartmentState.STA);
-                loadThread.Start(openFileDialog.FileName);
-
-                Thread statusThread = new Thread(ApplicationRuntime.ThreadMethodAnalisando);
-                statusThread.SetApartmentState(ApartmentState.STA);
-                statusThread.Start();
-
-                loadThread.Join();
-                ApplicationRuntime.StopStatusThread(statusThread);
-
-                ImportTempLayers();
-                RefreshLayers(arranjos.allBaseLayer.FirstOrDefault() ?? LayerBase);
-                Activate();
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        private static void GetLayerDrawing(object fileName)
-        {
-            try
-            {
-                ACAD.AcadApplication acadApplication;
-                ACAD.AcadDocument acadDocument;
-                using (MessageFilter.ScopedRegistration())
-                {
-                    string file = (string)fileName;
-                    acadApplication = new ACAD.AcadApplication();
-                    acadDocument = acadApplication.Documents.Open(file, false);
-                }
-
-                using (MessageFilter.ScopedRegistration())
-                {
-                    LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
-                }
-
-                using (MessageFilter.ScopedRegistration())
-                {
-                    LoadFiles.SendCommand("DRAWINDCAD_LoadLayer\n", acadDocument);
-                    acadDocument.Close(false);
-                    acadApplication.Quit();
-                }
-            }
-            catch (Exception e)
-            {
-                ApplicationRuntime.ControladorT = false;
-                MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            }
-        }
-
-        private void ImportTempLayers()
-        {
-            string filetxt = new global::ConversorDrawind.Configuration().GetPROGRAMDirectoryTemp() + "TempImporLayer.Temp";
-            if (!File.Exists(filetxt))
-            {
-                return;
-            }
-
-            foreach (string line in File.ReadLines(filetxt, Encoding.UTF8))
-            {
-                string baseLayer = line.ToUpper();
-                arranjos.allBaseLayer.Remove(baseLayer);
-                arranjos.allBaseLayer.Add(baseLayer);
-            }
-
-            arranjos.allBaseLayer.Sort();
-            File.Delete(filetxt);
-        }
-
-        private void RefreshLayers(string selectedLayer)
-        {
-            BaseLayerComboBox.ItemsSource = null;
-            BaseLayerComboBox.ItemsSource = arranjos.allBaseLayer;
-            BaseLayerComboBox.Text = selectedLayer;
-        }
+        public string LayerBase { get; private set; }
     }
 }
-

@@ -1,3 +1,4 @@
+using ConversorDrawind;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
@@ -42,8 +43,9 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
 
             if (textStyles.Any(row => row.Nome.ToUpper() == dialog.Values[0].ToUpper()))
             {
-                MessageBox.Show("Não é possivel adiconar esse estilo, esse nome já existe!",
-                    "Erro",
+                System.Windows.MessageBox.Show(
+                    Localization.MessageCannotAddStyle,
+                    Localization.TitleWarningNoExclamation,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 return;
@@ -56,8 +58,9 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
         {
             if (textStyles.Count == 1)
             {
-                MessageBox.Show("Não é possivel remover esse estilo, é necessário pelo menos um estilo!",
-                    "Erro",
+                System.Windows.MessageBox.Show(
+                    Localization.MessageCannotRemoveStyle,
+                    Localization.TitleWarningNoExclamation,
                     MessageBoxButton.OK,
                     MessageBoxImage.Error);
                 return;
@@ -68,8 +71,9 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
                 return;
             }
 
-            if (MessageBox.Show("Deseja realmente excluir a linha selecionada?",
-                    "Atenção",
+            if (System.Windows.MessageBox.Show(
+                    Localization.MessageDeleteSelectedRow,
+                    Localization.TitleAttentionPlain,
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Exclamation,
                     MessageBoxResult.Yes) == MessageBoxResult.Yes)

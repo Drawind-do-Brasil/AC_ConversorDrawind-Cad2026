@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -54,7 +54,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
 
             if (columnIndex == 1)
             {
-                Form_6_TagFormatInventor myBlock = new Form_6_TagFormatInventor(Inventor.listTags, Original.listTags[rowIndex]);
+                TagFormatInventor myBlock = new TagFormatInventor(Inventor.listTags, Original.listTags[rowIndex]);
                 myBlock.ShowDialog();
                 row.InventorTag = myBlock.indice != -1
                     ? myBlock.indice + "  -  " + Inventor.listTags[myBlock.indice].tag
@@ -99,7 +99,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         private void EditWidthFactor(int rowIndex, IEnumerable<AssociationRow> rows)
         {
             string current = Rows[rowIndex].WidthFactor ?? string.Empty;
-            Form_5_AttFormatWidthFactor widthFactor = new Form_5_AttFormatWidthFactor(current);
+            AttFormatWidthFactor widthFactor = new AttFormatWidthFactor(current);
             widthFactor.ShowDialog();
 
             foreach (AssociationRow row in rows)
@@ -289,3 +289,6 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         }
     }
 }
+
+
+

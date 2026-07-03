@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 namespace ConversorDrawind.UI.Wpf.Common
 {
@@ -27,3 +27,6 @@ namespace ConversorDrawind.UI.Wpf.Common
         }
     }
 }
+
+
+

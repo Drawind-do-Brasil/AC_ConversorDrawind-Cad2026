@@ -49,3 +49,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void RemoveExplodeLayerClick(object sender, RoutedEventArgs e) => Forward(nameof(RemoveExplodeLayerClick), sender, e);
     }
 }
+
+
+

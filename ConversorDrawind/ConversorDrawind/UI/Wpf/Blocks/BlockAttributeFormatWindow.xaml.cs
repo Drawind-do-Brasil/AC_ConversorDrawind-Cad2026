@@ -126,7 +126,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
             int columnIndex = CurrentColumnIndex();
             if (columnIndex == 1)
             {
-                Form_5_AttFormatChangeCheckBox modifierDialog = new Form_5_AttFormatChangeCheckBox();
+                AttFormatChangeCheckBox modifierDialog = new AttFormatChangeCheckBox();
                 modifierDialog.ShowDialog();
                 foreach (BlockAttributeRow selectedRow in SelectedRows())
                 {
@@ -163,7 +163,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
             else if (columnIndex == 3)
             {
                 string[] layer = row.Filter.Split(';');
-                Form_5_AttFormatFilter filterDialog = new Form_5_AttFormatFilter(layer[1], arranjos, layer[0]);
+                AttFormatFilter filterDialog = new AttFormatFilter(layer[1], arranjos, layer[0]);
                 filterDialog.ShowDialog();
                 string filter = filterDialog.filtro.layerBase + ";" + filterDialog.filtro.GetConjunto();
                 foreach (BlockAttributeRow selectedRow in SelectedRows())
@@ -175,7 +175,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
             }
             else if (columnIndex == 4)
             {
-                Form_5_AttFormatWidthFactor widthDialog = new Form_5_AttFormatWidthFactor(row.WidthFactor);
+                AttFormatWidthFactor widthDialog = new AttFormatWidthFactor(row.WidthFactor);
                 widthDialog.ShowDialog();
                 foreach (BlockAttributeRow selectedRow in SelectedRows())
                 {
@@ -299,4 +299,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         }
     }
 }
+
+
+
 

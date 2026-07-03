@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading;
@@ -87,7 +87,7 @@ namespace ConversorDrawind.UI.Wpf.Conversion
 
         private void CancelClick(object sender, RoutedEventArgs e)
         {
-            Form_2_Processo.SetCanceled(true);
+            Processo.SetCanceled(true);
             backgroundWorker.CancelAsync();
             Close();
         }
@@ -95,7 +95,7 @@ namespace ConversorDrawind.UI.Wpf.Conversion
         public string Time()
         {
             string elapsed = new DateTime(TimeSpan.FromTicks(DateTime.Now.Subtract(startTime).Ticks).Ticks).ToString("HH:mm:ss");
-            Form_2_Processo.SetTempo(elapsed);
+            Processo.SetTempo(elapsed);
             return elapsed;
         }
 
@@ -106,3 +106,6 @@ namespace ConversorDrawind.UI.Wpf.Conversion
         }
     }
 }
+
+
+

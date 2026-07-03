@@ -1,7 +1,8 @@
 <Window x:Class="ConversorDrawind.UI.Wpf.Blocks.WidthFactorDialog"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Width Factor"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleWidthFactor}"
         Width="246"
         SizeToContent="Height"
         ResizeMode="NoResize"
@@ -21,7 +22,7 @@
             <TextBlock Grid.Row="0"
                        Grid.Column="0"
                        Margin="0,3,24,0"
-                       Text="Width factor" />
+                       Text="{x:Static local:Localization.LabelWidthFactor}" />
             <TextBox x:Name="WidthFactorTextBox"
                      Grid.Row="0"
                      Grid.Column="1"
@@ -33,11 +34,11 @@
                         Margin="0,24,0,0"
                         Orientation="Horizontal"
                         HorizontalAlignment="Center">
-                <Button Content="Cancelar"
+                <Button Content="{x:Static local:Localization.ButtonCancel}"
                         Width="75"
                         IsCancel="True"
                         Click="CancelClick" />
-                <Button Content="Continuar"
+                <Button Content="{x:Static local:Localization.ButtonContinue}"
                         Width="75"
                         Margin="39,0,0,0"
                         IsDefault="True"

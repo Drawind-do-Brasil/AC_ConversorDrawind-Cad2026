@@ -1,4 +1,4 @@
-using System.Windows;
+﻿using System.Windows;
 
 namespace ConversorDrawind.UI.Wpf.Status
 {
@@ -16,3 +16,6 @@ namespace ConversorDrawind.UI.Wpf.Status
         }
     }
 }
+
+
+
