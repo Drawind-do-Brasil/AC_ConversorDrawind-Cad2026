@@ -1,25 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using ConversorDrawind.UI.Wpf.Conversion;
+using System;
 using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
-    public partial class Form_2_ProcessoEnd : Form
+    public sealed class Form_2_ProcessoEnd : IDisposable
     {
-        public Form_2_ProcessoEnd()
+        public DialogResult ShowDialog()
         {
-            InitializeComponent();
-            Label_Processo.Text = "Tempo de Conversão: " + Form_2_Processo.tempo;
+            ConversionFinishedDialog dialog = new ConversionFinishedDialog(Form_2_Processo.tempo);
+            bool? result = dialog.ShowDialog();
+            return result == true ? DialogResult.OK : DialogResult.Cancel;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public void Dispose()
         {
-            this.Close();
         }
     }
 }

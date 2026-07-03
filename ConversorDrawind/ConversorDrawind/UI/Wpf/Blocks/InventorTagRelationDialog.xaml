@@ -1,0 +1,45 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Blocks.InventorTagRelationDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Tags Formato Inventor"
+        Width="320"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <Border Padding="12">
+        <StackPanel>
+            <ComboBox x:Name="TagComboBox"
+                      Height="24"
+                      IsEditable="True"
+                      IsTextSearchEnabled="True"
+                      DisplayMemberPath="Label"
+                      SelectionChanged="TagSelectionChanged">
+                <ComboBox.ItemContainerStyle>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="Black" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsAssociated}" Value="True">
+                                <Setter Property="Foreground" Value="LightGray" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ComboBox.ItemContainerStyle>
+            </ComboBox>
+
+            <StackPanel Margin="0,24,0,0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button Content="Continuar"
+                        Width="116"
+                        IsDefault="True"
+                        Click="ContinueClick" />
+                <Button Content="Cancelar"
+                        Width="116"
+                        Margin="28,0,0,0"
+                        IsCancel="True"
+                        Click="CancelClick" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

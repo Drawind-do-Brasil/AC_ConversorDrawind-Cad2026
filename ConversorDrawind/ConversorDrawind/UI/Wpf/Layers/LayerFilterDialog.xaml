@@ -1,0 +1,65 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Layers.LayerFilterDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Filtro"
+        Width="320"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <Border Padding="12">
+        <StackPanel>
+            <GroupBox x:Name="ObjectTypeGroupBox" Header="Tipo de Objeto" Margin="0,0,0,8">
+                <StackPanel Margin="6">
+                    <ComboBox x:Name="ObjectTypeComboBox" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,0,6" />
+                    <Button Content="Adicionar outras entidades" Click="AddEntityButtonClick" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Cor" Margin="0,0,0,8">
+                <StackPanel Margin="6">
+                    <ComboBox x:Name="ColorComboBox" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,0,6" />
+                    <Button Content="Outros tipos de cor" Click="OtherColorButtonClick" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox x:Name="LineTypeGroupBox" Header="Tipo de Linha" Margin="0,0,0,8">
+                <StackPanel Margin="6">
+                    <ComboBox x:Name="LineTypeComboBox" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,0,6" />
+                    <Button Content="Carregar outros tipos de linha" Click="LoadLineTypesButtonClick" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Texto" Margin="0,0,0,8">
+                <Grid Margin="6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="72" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Conteudo:" VerticalAlignment="Center" Margin="0,0,8,6" />
+                    <TextBox x:Name="TextContentTextBox" Grid.Row="0" Grid.Column="1" Margin="0,0,0,6" />
+
+                    <TextBlock Grid.Row="1" Grid.Column="0" Text="Altura:" VerticalAlignment="Center" Margin="0,0,8,0" />
+                    <TextBox x:Name="TextHeightTextBox" Grid.Row="1" Grid.Column="1" PreviewTextInput="DecimalTextBoxPreviewTextInput" />
+                </Grid>
+            </GroupBox>
+
+            <GroupBox x:Name="OrientationGroupBox" Header="Orientação (Linha)" Margin="0,0,0,16">
+                <ComboBox x:Name="OrientationComboBox"
+                          Margin="6"
+                          IsEditable="False"
+                          SelectionChanged="OrientationComboBoxSelectionChanged" />
+            </GroupBox>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Continuar" IsDefault="True" MinWidth="96" Margin="0,0,8,0" Click="ContinueButtonClick" />
+                <Button Content="Cancelar" IsCancel="True" MinWidth="96" Click="CancelButtonClick" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

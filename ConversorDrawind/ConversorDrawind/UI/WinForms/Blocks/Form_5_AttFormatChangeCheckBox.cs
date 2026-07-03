@@ -1,38 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
+using ConversorDrawind.UI.Wpf.Blocks;
 
 namespace ConversorDrawind
 {
-    public partial class Form_5_AttFormatChangeCheckBox : Form
+    public class Form_5_AttFormatChangeCheckBox
     {
-        public  bool modificar = true;
+        public bool modificar = true;
 
         public Form_5_AttFormatChangeCheckBox()
         {
-            InitializeComponent();
-            comboBox1.Text = "Modificar";
         }
 
-
-
-        private void OK_Click(object sender, EventArgs e)
+        public DialogResult ShowDialog()
         {
-            if (comboBox1.Text == "Modificar")
-                modificar = true;
-            else
-                modificar = false;
-            this.Close();
-        }
+            BlockCheckboxChangeDialog dialog = new BlockCheckboxChangeDialog(modificar);
+            bool? result = dialog.ShowDialog();
 
-        private void Cancel_Click(object sender, EventArgs e)
-        {
-            this.Close();
+            if (result == true)
+            {
+                modificar = dialog.Modificar;
+                return DialogResult.OK;
+            }
+
+            return DialogResult.Cancel;
         }
     }
 }

@@ -1,57 +1,36 @@
-﻿using System;
-using System.Linq;
+using ConversorDrawind.UI.Wpf.Layers;
+using System;
 using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
-    public partial class Form_3_ConfigurarLayersCor : Form
+    public sealed class Form_3_ConfigurarLayersCor : IDisposable
     {
-        Arranjos arranjos = new Arranjos();
+        private readonly Arranjos arranjos;
         public string cor;
 
         public Form_3_ConfigurarLayersCor(string valor, Arranjos arranjos)
         {
-            InitializeComponent();
-            NLCCBCor.Text = cor = valor;
+            cor = valor;
             this.arranjos = arranjos;
-            CarregarControlFilterCBCor();
         }
 
-        private void CarregarControlFilterCBCor()
+        public DialogResult ShowDialog()
         {
-            NLCCBCor.Items.Clear();
-            NLCCBCor.Items.AddRange(arranjos.allcolor.ToArray());
-            NLCCBCor.Items.Remove(this.arranjos.allcolor.First());
-            NLCCBCor.Items.Remove(arranjos.lineTypeRemove.First());
-            NLCCBCor.Items.Remove(arranjos.lineTypeRemove.Last());
-        }
+            LayerColorDialog dialog = new LayerColorDialog(cor, arranjos);
+            bool? result = dialog.ShowDialog();
 
-        private void NLCBContinuar_Click(object sender, EventArgs e)
-        {
-            if (NLCCBCor.Items.Contains(NLCCBCor.Text))
-                cor = NLCCBCor.Text;
-            this.Close();
-        }
-
-        private void NLCBCancelar_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void NLCBCor_Click(object sender, EventArgs e)
-        {
-            string color = string.Empty;
-            Form_8_GenericNewColor newColor = new Form_8_GenericNewColor(NLCCBCor.Text);
-            newColor.ShowDialog();
-
-            if (!arranjos.allcolor.Contains(newColor.colorClass))
+            if (result == true)
             {
-                arranjos.allcolor.Add(newColor.colorClass);
-                NLCCBCor.Items.Add(newColor.colorClass);
+                cor = dialog.Color;
+                return DialogResult.OK;
             }
 
-            NLCCBCor.Text = newColor.colorClass;
-            newColor.Dispose();
+            return DialogResult.Cancel;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

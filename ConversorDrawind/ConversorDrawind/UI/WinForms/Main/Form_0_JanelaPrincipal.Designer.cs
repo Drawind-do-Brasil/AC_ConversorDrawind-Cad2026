@@ -2628,19 +2628,15 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(935, 680);
+            this.Size = new System.Drawing.Size(935, 680);
             this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.label47);
             this.Controls.Add(this.label37);
             this.Controls.Add(this.label36);
             this.Controls.Add(this.tCPrincipal);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(941, 627);
             this.Name = "Form_0_JanelaPrincipal";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Conversor Drawind - Autocad 2026";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.JanelaPrincipal_FormClosing);
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.JanelaPrincipal_FormClosed);
             this.Load += new System.EventHandler(this.JanelaPrincipal_Load);
             this.tCPrincipal.ResumeLayout(false);
             this.tPConverter.ResumeLayout(false);

@@ -1,0 +1,49 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Configuration.LinPathDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Atencao!"
+        Width="620"
+        Height="150"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner">
+    <Grid Margin="12">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Text="O caminho especificado para o arquivo (&quot;acad.lin&quot;) do Autocad 2026 nao existe. Por favor, especifique o arquivo correto."
+                   TextWrapping="Wrap" />
+        <Grid Grid.Row="1" Margin="0,18,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="105" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Content="Procurar"
+                    Height="24"
+                    Click="Browse_Click" />
+            <TextBox x:Name="PathTextBox"
+                     Grid.Column="1"
+                     Margin="8,0,0,0"
+                     Height="24" />
+        </Grid>
+        <StackPanel Grid.Row="2"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Bottom">
+            <Button Content="Continuar"
+                    Width="101"
+                    Height="24"
+                    IsDefault="True"
+                    Click="Continue_Click" />
+            <Button Content="Cancelar"
+                    Width="101"
+                    Height="24"
+                    Margin="8,0,0,0"
+                    IsCancel="True"
+                    Click="Cancel_Click" />
+        </StackPanel>
+    </Grid>
+</Window>

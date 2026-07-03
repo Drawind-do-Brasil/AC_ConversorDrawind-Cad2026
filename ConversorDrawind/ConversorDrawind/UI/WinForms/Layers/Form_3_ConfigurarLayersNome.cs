@@ -1,40 +1,36 @@
-﻿using System;
+using ConversorDrawind.UI.Wpf.Layers;
+using System;
 using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
-    public partial class Form_3_ConfigurarLayersNome : Form
+    public sealed class Form_3_ConfigurarLayersNome : IDisposable
     {
         public string nome;
-        private Arranjos arranjos;
+        private readonly Arranjos arranjos;
+
         public Form_3_ConfigurarLayersNome(string nome, Arranjos arranjos)
         {
-            InitializeComponent();
             this.nome = nome;
-            NLCLNome.Text = nome;
             this.arranjos = arranjos;
         }
 
-        private void NLCBContinuar_Click(object sender, EventArgs e)
+        public DialogResult ShowDialog()
         {
-            if (!arranjos.allNewLayer.Contains(NLCLNome.Text) || NLCLNome.Text == this.nome)
+            LayerNameDialog dialog = new LayerNameDialog(nome, arranjos.allNewLayer);
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
             {
-                this.nome = NLCLNome.Text;
-                this.Close();
+                nome = dialog.LayerName;
+                return DialogResult.OK;
             }
-            else
-            {
-                MessageBox.Show("O layer já existe!",
-                                "Error",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning,
-                                MessageBoxDefaultButton.Button1);
-            }
+
+            return DialogResult.Cancel;
         }
 
-        private void NLCBCancelar_Click(object sender, EventArgs e)
+        public void Dispose()
         {
-            this.Close();
         }
     }
 }

@@ -1,43 +1,45 @@
-﻿using System;
-using System.Linq;
+using ConversorDrawind.UI.Wpf.Layers;
+using System;
 using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
-    public partial class Form_3_ConfigurarLayersLinha : Form
+    public sealed class Form_3_ConfigurarLayersLinha : IDisposable
     {
         public string linha;
-        private Arranjos arranjos = new Arranjos();
+        private readonly Arranjos arranjos;
 
         public Form_3_ConfigurarLayersLinha(string valor, Arranjos arranjos)
         {
-            InitializeComponent();
-            NLCCBLinhas.Items.AddRange(arranjos.allLineType2.ToArray());
-            NLCCBLinhas.Items.Remove(arranjos.lineTypeRemove.First());
-            NLCCBLinhas.Items.Remove(arranjos.lineTypeRemove.Last());
+            this.arranjos = arranjos;
+            linha = string.Empty;
 
-            for (int i = 0; i <  NLCCBLinhas.Items.Count; i++)
+            foreach (string lineType in arranjos.allLineType2)
             {
-                if (NLCCBLinhas.Items[i].ToString().Split(',').First().ToUpper() == valor)
+                if (lineType.Split(',')[0].ToUpper() == valor)
                 {
-                    NLCCBLinhas.Text = linha = NLCCBLinhas.Items[i].ToString();
+                    linha = lineType;
                     break;
                 }
             }
-
-            this.arranjos = arranjos;
         }
 
-        private void NLCBContinuar_Click(object sender, EventArgs e)
+        public DialogResult ShowDialog()
         {
-            if(NLCCBLinhas.Items.Contains(NLCCBLinhas.Text))
-                linha = NLCCBLinhas.Text;
-            this.Close();
+            LayerLineTypeDialog dialog = new LayerLineTypeDialog(linha.Split(',')[0].ToUpper(), arranjos);
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                linha = dialog.LineType;
+                return DialogResult.OK;
+            }
+
+            return DialogResult.Cancel;
         }
 
-        private void NLCBCancelar_Click(object sender, EventArgs e)
+        public void Dispose()
         {
-            this.Close();
         }
     }
 }

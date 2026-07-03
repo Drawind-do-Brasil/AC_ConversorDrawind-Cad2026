@@ -1,0 +1,69 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Configuration.DimensionAdvancedDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Configuração avançada de cotas"
+        Width="500"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <Border Padding="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="128" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox x:Name="FixArrowCheckBox"
+                      Grid.Row="0"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2"
+                      Content="Alterar setas de cotas que colidirem."
+                      Margin="0,0,0,8" />
+
+            <TextBlock Grid.Row="1"
+                       Grid.Column="0"
+                       Text="Alterar setas que colidirem para:"
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,4" />
+            <ComboBox x:Name="ArrowTypeComboBox"
+                      Grid.Row="1"
+                      Grid.Column="1"
+                      IsEditable="False"
+                      Margin="0,0,0,4" />
+
+            <TextBlock Grid.Row="2"
+                       Grid.Column="0"
+                       Text="Distância exata de transição da seta: (Onde a seta passa a ser para fora) "
+                       VerticalAlignment="Center"
+                       Margin="0,0,8,12" />
+            <TextBox x:Name="DistanceTextBox"
+                     Grid.Row="2"
+                     Grid.Column="1"
+                     Margin="0,0,0,12"
+                     PreviewTextInput="DistanceTextBoxPreviewTextInput" />
+
+            <StackPanel Grid.Row="3"
+                        Grid.Column="0"
+                        Grid.ColumnSpan="2"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                <Button Content="Continuar"
+                        IsDefault="True"
+                        Width="101"
+                        Margin="0,0,6,0"
+                        Click="ContinueButtonClick" />
+                <Button Content="Cancelar"
+                        IsCancel="True"
+                        Width="101"
+                        Click="CancelButtonClick" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

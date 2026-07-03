@@ -1,32 +1,34 @@
-﻿using System;
+using ConversorDrawind.UI.Wpf.Layers;
+using System;
 using System.Windows.Forms;
 
 namespace ConversorDrawind
 {
-    public partial class Form_4_LayersNewEntity : Form
+    public sealed class Form_4_LayersNewEntity : IDisposable
     {
         public string entidade;
 
         public Form_4_LayersNewEntity(string entidadeAtual)
         {
             entidade = entidadeAtual;
-            InitializeComponent();
         }
 
-        private void bContinuar_Click(object sender, EventArgs e)
+        public DialogResult ShowDialog()
         {
-            entidade = tBEntity.Text.ToUpper();
-            this.Close();
+            LayerEntityDialog dialog = new LayerEntityDialog(entidade);
+            bool? result = dialog.ShowDialog();
+
+            if (result == true)
+            {
+                entidade = dialog.Entity;
+                return DialogResult.OK;
+            }
+
+            return DialogResult.Cancel;
         }
 
-        private void bCancelar_Click(object sender, EventArgs e)
+        public void Dispose()
         {
-            this.Close();
-        }
-
-        private void NewEntity_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            this.Dispose();
         }
     }
 }

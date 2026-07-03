@@ -1,19 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System;
 using System.Windows.Forms;
+using ConversorDrawind.UI.Wpf.Configuration;
 
 namespace ConversorDrawind
 {
-    public partial class Form_ConfiguracaoAvancada : Form
+    public class Form_ConfiguracaoAvancada : IDisposable
     {
-        public Form_ConfiguracaoAvancada()
+        public DialogResult ShowDialog()
         {
-            InitializeComponent();
+            AdvancedConfigurationWindow window = new AdvancedConfigurationWindow();
+            bool? result = window.ShowDialog();
+            return result == true ? DialogResult.OK : DialogResult.Cancel;
+        }
+
+        public void Dispose()
+        {
         }
     }
 }

@@ -1,0 +1,41 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Blocks.BlockCheckboxChangeDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Width="196"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <Border Padding="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <ComboBox x:Name="ModifyComboBox"
+                      Grid.Row="0"
+                      Height="24"
+                      IsReadOnly="True"
+                      SelectedIndex="0">
+                <ComboBoxItem Content="Modificar" />
+                <ComboBoxItem Content="Não modificar" />
+            </ComboBox>
+
+            <StackPanel Grid.Row="1"
+                        Margin="0,6,0,0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button Content="Cancel"
+                        Width="64"
+                        IsCancel="True"
+                        Click="CancelClick" />
+                <Button Content="OK"
+                        Width="68"
+                        Margin="8,0,0,0"
+                        IsDefault="True"
+                        Click="OkClick" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

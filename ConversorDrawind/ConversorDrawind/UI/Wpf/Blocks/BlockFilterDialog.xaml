@@ -1,0 +1,81 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Blocks.BlockFilterDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Filtro"
+        Width="320"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <Border Padding="12">
+        <StackPanel>
+            <GroupBox Header="Layer">
+                <ComboBox x:Name="LayerComboBox"
+                          Margin="6"
+                          Height="24"
+                          IsEditable="True"
+                          IsTextSearchEnabled="True" />
+            </GroupBox>
+
+            <GroupBox Header="Cor" Margin="0,6,0,0">
+                <StackPanel Margin="6">
+                    <ComboBox x:Name="ColorComboBox"
+                              Height="24"
+                              IsEditable="True"
+                              IsTextSearchEnabled="True" />
+                    <Button Content="Outros tipos de cor"
+                            Height="24"
+                            Margin="0,6,0,0"
+                            Click="OtherColorClick" />
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Header="Texto" Margin="0,6,0,0">
+                <Grid Margin="6">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="62" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="0,4,0,0"
+                               Text="Conteudo:" />
+                    <TextBox x:Name="ContentTextBox"
+                             Grid.Row="0"
+                             Grid.Column="1"
+                             Height="24" />
+
+                    <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="0,10,0,0"
+                               Text="Altura:" />
+                    <TextBox x:Name="HeightTextBox"
+                             Grid.Row="1"
+                             Grid.Column="1"
+                             Height="24"
+                             Margin="0,6,0,0"
+                             PreviewTextInput="HeightPreviewTextInput" />
+                </Grid>
+            </GroupBox>
+
+            <StackPanel Margin="0,18,0,0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Center">
+                <Button Content="Continuar"
+                        Width="116"
+                        IsDefault="True"
+                        Click="ContinueClick" />
+                <Button Content="Cancelar"
+                        Width="116"
+                        Margin="28,0,0,0"
+                        IsCancel="True"
+                        Click="CancelClick" />
+            </StackPanel>
+        </StackPanel>
+    </Border>
+</Window>

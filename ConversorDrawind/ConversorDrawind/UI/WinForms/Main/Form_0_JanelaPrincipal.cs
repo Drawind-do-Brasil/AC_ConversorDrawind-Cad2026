@@ -15,7 +15,7 @@ using Microsoft.Win32;
 
 namespace ConversorDrawind
 {
-    public partial class Form_0_JanelaPrincipal : Form
+    public partial class Form_0_JanelaPrincipal : UserControl
     {
         public static string extensaoGeral = "DWG";
         public static string LOGdirConvertidos = Path.Combine(Path.GetTempPath(), "ConversorDrawindTemp");
@@ -54,8 +54,8 @@ namespace ConversorDrawind
                 StatusConversor.SelectedIndex = 0;
 
                 Configuration.SaveConfigDLL();
-                this.Show();
-                this.Activate();
+                Show();
+                Activate();
                 CarregarTemplates();
                 /*if (File.Exists(LOGarqConvertidos))
                     ButtonRestaurar.Enabled = true;
@@ -101,6 +101,15 @@ namespace ConversorDrawind
 
 
             }
+        }
+
+        public void Activate()
+        {
+            FindForm()?.Activate();
+        }
+
+        public new void SetTopLevel(bool value)
+        {
         }
 
         public static void CloseAllInstance()

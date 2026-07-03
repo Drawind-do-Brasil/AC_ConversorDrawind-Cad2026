@@ -1,47 +1,30 @@
-﻿using System;
-using System.Windows.Forms;
-using System.IO;
+using System;
+using ConversorDrawind.UI.Wpf.Configuration;
 
 namespace ConversorDrawind
 {
-    public partial class Form_1_CaminhoLin : Form
+    public class Form_1_CaminhoLin : IDisposable
     {
-        public string file = "";
+        public string file = string.Empty;
+
         public Form_1_CaminhoLin(string arquivo)
         {
-            InitializeComponent();
-            textBox1.Text = file = arquivo;
+            file = arquivo;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        public System.Windows.Forms.DialogResult ShowDialog()
         {
-            openFileDialog.Filter = "Arquivo Lin (*.lin)|*.lin";
+            LinPathDialog dialog = new LinPathDialog(file);
+            bool? result = dialog.ShowDialog();
+            file = dialog.SelectedFile;
 
-            if (openFileDialog.ShowDialog() == DialogResult.OK)
-            {
-                file = textBox1.Text = openFileDialog.FileName;
-            }
+            return result == true
+                ? System.Windows.Forms.DialogResult.OK
+                : System.Windows.Forms.DialogResult.Cancel;
         }
 
-        private void button3_Click(object sender, EventArgs e)
+        public void Dispose()
         {
-            if (File.Exists(file))
-            {
-                this.Close();
-            }
-            else
-            {
-                MessageBox.Show("Por favor, especifique o arquivo correto.",
-                                "Atenção",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Exclamation,
-                                MessageBoxDefaultButton.Button1);
-            }
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            this.Close();
         }
     }
 }
