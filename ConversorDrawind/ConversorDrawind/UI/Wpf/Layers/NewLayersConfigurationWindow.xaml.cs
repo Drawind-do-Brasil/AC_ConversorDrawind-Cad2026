@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -69,7 +69,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
             catch (Exception e)
             {
-                Form_0_JanelaPrincipal.ControladorT = false;
+                ApplicationRuntime.ControladorT = false;
                 System.Windows.Forms.MessageBox.Show(new System.Windows.Forms.Form() { TopMost = true },
                     e.Message,
                     "Error",
@@ -139,12 +139,12 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     loadThread.SetApartmentState(ApartmentState.STA);
                     loadThread.Start(openFileDialog.FileName);
 
-                    Thread statusThread = new Thread(new ThreadStart(Form_0_JanelaPrincipal.ThreadMethodAnalisando));
+                    Thread statusThread = new Thread(new ThreadStart(ApplicationRuntime.ThreadMethodAnalisando));
                     statusThread.SetApartmentState(ApartmentState.STA);
                     statusThread.Start();
 
                     loadThread.Join();
-                    Form_0_JanelaPrincipal.StopStatusThread(statusThread);
+                    ApplicationRuntime.StopStatusThread(statusThread);
 
                     string filetxt = new global::ConversorDrawind.Configuration().GetPROGRAMDirectoryTemp() + "TempImporNewLayer.Temp";
                     if (File.Exists(filetxt))
@@ -186,8 +186,8 @@ namespace ConversorDrawind.UI.Wpf.Layers
                                 {
                                     if (!isCheck)
                                     {
-                                        if (System.Windows.Forms.MessageBox.Show("Deseja atualizar os layer que já existem?\nObservação: O layer '0' sempre é atualizado.",
-                                            "Atenção",
+                                        if (System.Windows.Forms.MessageBox.Show("Deseja atualizar os layer que jÃ¡ existem?\nObservaÃ§Ã£o: O layer '0' sempre Ã© atualizado.",
+                                            "AtenÃ§Ã£o",
                                             System.Windows.Forms.MessageBoxButtons.YesNo,
                                             System.Windows.Forms.MessageBoxIcon.Exclamation,
                                             System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
@@ -230,7 +230,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             LoadRows();
             if (!isAddAll)
             {
-                System.Windows.Forms.MessageBox.Show("Alguns layers não foram adicionados, porque existem layers com o mesmo nome na lista.",
+                System.Windows.Forms.MessageBox.Show("Alguns layers nÃ£o foram adicionados, porque existem layers com o mesmo nome na lista.",
                     "Error",
                     System.Windows.Forms.MessageBoxButtons.OK,
                     System.Windows.Forms.MessageBoxIcon.Warning,
@@ -265,7 +265,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
         {
             if (Rows.Count > 0 && LayersGrid.SelectedIndex != -1)
             {
-                if (System.Windows.Forms.MessageBox.Show("Deseja realmente limpar tudo?", "Atenção", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                if (System.Windows.Forms.MessageBox.Show("Deseja realmente limpar tudo?", "AtenÃ§Ã£o", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
                 {
                     arranjos.allNewLayerComposition.Clear();
                     arranjos.allNewLayer.Clear();
@@ -321,7 +321,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
         {
             if (Rows.Count > 0 && LayersGrid.SelectedItem is LayerRow row)
             {
-                if (System.Windows.Forms.MessageBox.Show("Deseja realmente excluir a linha selecionada?", "Atenção", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
+                if (System.Windows.Forms.MessageBox.Show("Deseja realmente excluir a linha selecionada?", "AtenÃ§Ã£o", System.Windows.Forms.MessageBoxButtons.YesNo, System.Windows.Forms.MessageBoxIcon.Exclamation, System.Windows.Forms.MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.Yes)
                 {
                     Rows.Remove(row);
                 }
@@ -436,3 +436,4 @@ namespace ConversorDrawind.UI.Wpf.Layers
         }
     }
 }
+

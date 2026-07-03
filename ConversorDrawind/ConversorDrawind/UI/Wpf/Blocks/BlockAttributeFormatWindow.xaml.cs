@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -79,11 +79,11 @@ namespace ConversorDrawind.UI.Wpf.Blocks
                 {
                     if (File.Exists(openFileDialog.FileName))
                     {
-                        Thread statusThread = new Thread(new ThreadStart(Form_0_JanelaPrincipal.ThreadMethodAbrindoCad));
+                        Thread statusThread = new Thread(new ThreadStart(ApplicationRuntime.ThreadMethodAbrindoCad));
                         statusThread.SetApartmentState(ApartmentState.STA);
                         statusThread.Start();
                         drawingBlock = new GetInfo(openFileDialog.FileName);
-                        Form_0_JanelaPrincipal.StopStatusThread(statusThread);
+                        ApplicationRuntime.StopStatusThread(statusThread);
                         isContinueOp1 = true;
                     }
                 }
@@ -299,3 +299,4 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         }
     }
 }
+

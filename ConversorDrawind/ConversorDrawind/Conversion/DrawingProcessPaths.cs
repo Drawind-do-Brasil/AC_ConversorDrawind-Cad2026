@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 
 namespace ConversorDrawind
@@ -29,8 +29,8 @@ namespace ConversorDrawind
 
         public static void EnsureConvertedLogDirectory()
         {
-            if (!Directory.Exists(Form_0_JanelaPrincipal.LOGdirConvertidos))
-                Directory.CreateDirectory(Form_0_JanelaPrincipal.LOGdirConvertidos);
+            if (!Directory.Exists(ApplicationRuntime.LOGdirConvertidos))
+                Directory.CreateDirectory(ApplicationRuntime.LOGdirConvertidos);
         }
 
         public static string GetBackupPath(string drawingPath)
@@ -39,3 +39,4 @@ namespace ConversorDrawind
         }
     }
 }
+

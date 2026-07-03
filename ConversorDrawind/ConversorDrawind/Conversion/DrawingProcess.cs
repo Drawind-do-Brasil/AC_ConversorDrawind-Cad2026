@@ -454,11 +454,11 @@ namespace ConversorDrawind
 
                     if (parametros.configuration.EXTCONFIsPutOnTheScaleDrawing)
                     {
-                        Form_0_JanelaPrincipal.ControladorT2 = false;
+                        ApplicationRuntime.ControladorT2 = false;
 
                         myClass.SendCommand("DRAWINDCAD_Scale\n");
 
-                        Form_0_JanelaPrincipal.ControladorT2 = true;
+                        ApplicationRuntime.ControladorT2 = true;
                     }
 
 
@@ -515,7 +515,7 @@ namespace ConversorDrawind
                 {
                     try
                     {
-                        if (Form_0_JanelaPrincipal.extensaoGeral == "DWG")
+                        if (ApplicationRuntime.ExtensaoGeral == "DWG")
                             ComRetry.Invoke(() => myClass.acadDocument.Save());
 
                         else
@@ -526,14 +526,14 @@ namespace ConversorDrawind
                     }
                     catch (Exception)
                     {
-                        Form_0_JanelaPrincipal.ControladorT2 = false;
+                        ApplicationRuntime.ControladorT2 = false;
                         MessageBox.Show(new Form() { TopMost = true },
                                     "Não foi possível salvar o arquivo, ele pode estar sendo usado por outro programa.",
                                     "Error",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning,
                                     MessageBoxDefaultButton.Button1);
-                        Form_0_JanelaPrincipal.ControladorT2 = true;
+                        ApplicationRuntime.ControladorT2 = true;
                     }
 
                     if (!parametros.closedesenhos)
@@ -582,8 +582,8 @@ namespace ConversorDrawind
             try
             {
                 DrawingProcessPaths.EnsureConvertedLogDirectory();
-                if (File.Exists(Form_0_JanelaPrincipal.LOGarqConvertidos))
-                    TryDeleteFile(Form_0_JanelaPrincipal.LOGarqConvertidos);
+                if (File.Exists(ApplicationRuntime.LOGarqConvertidos))
+                    TryDeleteFile(ApplicationRuntime.LOGarqConvertidos);
             }
             catch (Exception)
             {
@@ -603,7 +603,7 @@ namespace ConversorDrawind
 
             bool converted = false;
             bool deleteLogAfterClose = false;
-            using (FileStream logStream = new FileStream(Form_0_JanelaPrincipal.LOGarqConvertidos, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+            using (FileStream logStream = new FileStream(ApplicationRuntime.LOGarqConvertidos, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
             using (StreamWriter swlog = new StreamWriter(logStream))
             {
                 try
@@ -652,7 +652,7 @@ namespace ConversorDrawind
             }
 
             if (deleteLogAfterClose)
-                TryDeleteFile(Form_0_JanelaPrincipal.LOGarqConvertidos);
+                TryDeleteFile(ApplicationRuntime.LOGarqConvertidos);
 
             //File.Delete(arqtemp);
         }
@@ -906,4 +906,5 @@ namespace ConversorDrawind
         }
     }
 }
+
 

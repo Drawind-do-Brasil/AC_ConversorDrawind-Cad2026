@@ -1,11 +1,33 @@
-<Window x:Class="ConversorDrawind.UI.Wpf.Main.MainWindow"
+﻿<Window x:Class="ConversorDrawind.UI.Wpf.Main.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:wfi="clr-namespace:System.Windows.Forms.Integration;assembly=WindowsFormsIntegration"
+        xmlns:main="clr-namespace:ConversorDrawind.UI.Wpf.Main"
         Title="Conversor Drawind - Autocad 2026"
-        Width="951"
-        Height="719"
-        ResizeMode="NoResize"
+        Width="1050"
+        Height="760"
+        MinWidth="980"
+        MinHeight="680"
         WindowStartupLocation="CenterScreen">
-    <wfi:WindowsFormsHost x:Name="Host" />
+    <DockPanel Margin="10">
+        <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <TextBlock Grid.Column="0" Foreground="Blue" VerticalAlignment="Center" Text="Compatível com Autocad 2026" />
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
+                <TextBlock Margin="0,0,18,0" VerticalAlignment="Center" Text="Desenvolvido por Nayara Ferreira de Jesus." />
+                <TextBlock VerticalAlignment="Center" Text="Copyright © Drawind do Brasil 2026" />
+            </StackPanel>
+        </Grid>
+
+        <TabControl x:Name="MainTabs">
+            <TabItem Header="Converter">
+                <main:ConverterWorkspace x:Name="ConverterView" />
+            </TabItem>
+            <TabItem Header="Criar Conversor">
+                <main:ConverterEditorWorkspace x:Name="EditorView" />
+            </TabItem>
+        </TabControl>
+    </DockPanel>
 </Window>

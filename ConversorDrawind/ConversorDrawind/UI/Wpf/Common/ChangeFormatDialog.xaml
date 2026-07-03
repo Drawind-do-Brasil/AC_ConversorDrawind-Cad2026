@@ -21,7 +21,7 @@
 
             <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
                 <Button Content="Mudar apenas o caminho do arquivo"
-                        Width="196"
+                        Width="206"
                         Margin="0,0,6,0"
                         Click="ChangePathButtonClick" />
                 <Button Content="Atualizar os blocos"

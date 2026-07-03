@@ -1,4 +1,4 @@
-using Microsoft.Win32;
+﻿using Microsoft.Win32;
 using System;
 using System.IO;
 using System.Linq;
@@ -76,12 +76,12 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 loadThread.SetApartmentState(ApartmentState.STA);
                 loadThread.Start(openFileDialog.FileName);
 
-                Thread statusThread = new Thread(Form_0_JanelaPrincipal.ThreadMethodAnalisando);
+                Thread statusThread = new Thread(ApplicationRuntime.ThreadMethodAnalisando);
                 statusThread.SetApartmentState(ApartmentState.STA);
                 statusThread.Start();
 
                 loadThread.Join();
-                Form_0_JanelaPrincipal.StopStatusThread(statusThread);
+                ApplicationRuntime.StopStatusThread(statusThread);
 
                 ImportTempLayers();
                 RefreshLayers(arranjos.allBaseLayer.FirstOrDefault() ?? LayerBase);
@@ -119,7 +119,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
             catch (Exception e)
             {
-                Form_0_JanelaPrincipal.ControladorT = false;
+                ApplicationRuntime.ControladorT = false;
                 MessageBox.Show(e.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
@@ -151,3 +151,4 @@ namespace ConversorDrawind.UI.Wpf.Layers
         }
     }
 }
+
