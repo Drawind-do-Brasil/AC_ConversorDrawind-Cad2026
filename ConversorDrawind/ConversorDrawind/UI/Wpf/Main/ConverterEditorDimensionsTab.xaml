@@ -1,0 +1,52 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorDimensionsTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10">
+            <UniformGrid Columns="4">
+                <TextBlock Text="{x:Static local:Localization.LabelLayer}" />
+                <ComboBox x:Name="DimensionLayerComboBox" IsEditable="True" />
+                <TextBlock Text="{x:Static local:Localization.LabelLineColor}" />
+                <ComboBox x:Name="DimensionLineColorComboBox" IsEditable="True" />
+                <TextBlock Text="{x:Static local:Localization.LabelTextColor}" />
+                <ComboBox x:Name="DimensionTextColorComboBox" IsEditable="True" />
+                <TextBlock Text="{x:Static local:Localization.LabelArrowType}" />
+                <ComboBox x:Name="DimensionArrowTypeComboBox" IsEditable="True" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimStyle}" />
+                <TextBox x:Name="DimensionStyleTextBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelTextStyle}" />
+                <ComboBox x:Name="TextStyleComboBox" IsEditable="True" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionScale}" />
+                <TextBox x:Name="DimensionScaleTextBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionArrowSize}" />
+                <TextBox x:Name="DimensionArrowSizeTextBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionOffset}" />
+                <TextBox x:Name="DimensionOffsetTextBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionLineExtend}" />
+                <TextBox x:Name="DimensionLineExtTextBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionLinearPrecision}" />
+                <ComboBox x:Name="DimensionLinearPrecisionComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionAngularPrecision}" />
+                <ComboBox x:Name="DimensionAngularPrecisionComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionLinearUnit}" />
+                <ComboBox x:Name="DimensionLinearUnitComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionAngularUnit}" />
+                <ComboBox x:Name="DimensionAngularUnitComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionOutsideAlign}" />
+                <ComboBox x:Name="DimensionOutsideAlignComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionLineForced}" />
+                <ComboBox x:Name="DimensionLineForcedComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionTextInside}" />
+                <ComboBox x:Name="DimensionTextInsideComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionTextAlignment}" />
+                <ComboBox x:Name="DimensionTextAlignmentComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionTextPlacementVertical}" />
+                <ComboBox x:Name="DimensionTextPlacementComboBox" />
+                <TextBlock Text="{x:Static local:Localization.LabelDimensionBaseLayer}" />
+                <ComboBox x:Name="DimensionBaseLayerComboBox" IsEditable="True" />
+            </UniformGrid>
+            <Button Content="{x:Static local:Localization.LabelDimensionArrowSettingsButton}" Width="260" Margin="0,12,0,0" Click="DimensionArrowAdvancedClick" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

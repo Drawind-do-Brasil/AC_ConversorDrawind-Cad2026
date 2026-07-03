@@ -1,0 +1,28 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorMainTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="10">
+            <CheckBox x:Name="ConvertDimensionsCheckBox" Content="{x:Static local:Localization.LabelConvertDimensions}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="ConvertLayersCheckBox" Content="{x:Static local:Localization.LabelConvertLayers}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="ScaleDrawingCheckBox" Content="{x:Static local:Localization.LabelScaleDrawing}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="AttributeFormatCheckBox" Content="{x:Static local:Localization.LabelAttributeDrawingFormat}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="RunCommandsCheckBox" Content="{x:Static local:Localization.LabelRunCommandsAtEnd}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="ShowErrorMessagesCheckBox" Content="{x:Static local:Localization.LabelEnableErrorMessages}" />
+            <CheckBox x:Name="DeleteTeklaCheckBox" Content="{x:Static local:Localization.LabelDeleteTeklaWord}" />
+            <CheckBox x:Name="PurgeCheckBox" Content="{x:Static local:Localization.LabelPurgeDrawing}" />
+            <CheckBox x:Name="ExplodeCheckBox" Content="{x:Static local:Localization.LabelExplode}" />
+            <CheckBox x:Name="ExplodeBlocksCheckBox" Content="{x:Static local:Localization.LabelExplodeBlocks}" />
+            <CheckBox x:Name="DmBlockCheckBox" Content="{x:Static local:Localization.LabelAddDmBlock}" />
+            <GroupBox Header="{x:Static local:Localization.LabelOriginOfDrawings}" Margin="0,12,0,0">
+                <StackPanel>
+                    <RadioButton x:Name="TeklaOriginRadio" Content="{x:Static local:Localization.LabelTeklaStructures}" Checked="OriginChanged" />
+                    <RadioButton x:Name="CadOriginRadio" Content="{x:Static local:Localization.LabelCad}" Checked="OriginChanged" />
+                </StackPanel>
+            </GroupBox>
+            <TextBlock Text="{x:Static local:Localization.LabelComments}" Margin="0,12,0,2" />
+            <TextBox x:Name="AddCommentsTextBox" Height="70" AcceptsReturn="True" TextWrapping="Wrap" />
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

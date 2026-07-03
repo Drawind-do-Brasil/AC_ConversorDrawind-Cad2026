@@ -1,0 +1,46 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorBlocksAndAttributesTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <TabControl Margin="10">
+        <TabItem Header="{x:Static local:Localization.TabTeklaStructures}">
+            <DockPanel Margin="8">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                    <TextBox x:Name="AttributedFormatPathTextBox" Width="520" />
+                    <Button Content="{x:Static local:Localization.ButtonAttributedFormat}" Margin="6,0,0,0" Click="BrowseAttributedFormatClick" />
+                </StackPanel>
+                <ListBox x:Name="BlocksListBox" Margin="0,8,0,0" />
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="{x:Static local:Localization.ButtonEdit}" Click="EditBlockClick" />
+                    <Button Content="{x:Static local:Localization.ButtonRemove}" Margin="6,0,0,0" Click="RemoveBlockClick" />
+                </StackPanel>
+            </DockPanel>
+        </TabItem>
+        <TabItem Header="{x:Static local:Localization.TabCad}">
+            <Grid Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="{x:Static local:Localization.LabelCad}" />
+                    <ListBox x:Name="InventorBlocksListBox" Height="320" />
+                    <Button Content="{x:Static local:Localization.ButtonLoadCadBlocks}" Click="LoadInventorBlocksClick" />
+                </StackPanel>
+                <StackPanel Grid.Column="1" Margin="8,0">
+                    <TextBlock Text="{x:Static local:Localization.LabelOriginalBlocks}" />
+                    <ListBox x:Name="OriginalBlocksListBox" Height="320" />
+                    <Button Content="{x:Static local:Localization.ButtonLoadOriginalBlocks}" Click="LoadOriginalBlocksClick" />
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="{x:Static local:Localization.LabelRelations}" />
+                    <ListBox x:Name="BlockRelationsListBox" Height="320" MouseDoubleClick="BlockRelationsDoubleClick" />
+                    <Button Content="{x:Static local:Localization.ButtonRelate}" Click="RelateBlocksClick" />
+                    <Button Content="{x:Static local:Localization.ButtonEditRelationParameters}" Margin="0,6,0,0" Click="EditBlockRelationClick" />
+                    <Button Content="{x:Static local:Localization.ButtonRemoveRelation}" Margin="0,6,0,0" Click="RemoveBlockRelationClick" />
+                </StackPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

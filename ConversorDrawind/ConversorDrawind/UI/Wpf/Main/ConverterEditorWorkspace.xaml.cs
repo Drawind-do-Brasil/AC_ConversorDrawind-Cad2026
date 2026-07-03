@@ -1,4 +1,4 @@
-﻿using System.Windows;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -13,6 +13,16 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private MainWindow OwnerWindow => Window.GetWindow(this) as MainWindow;
         private void Forward(string action, object sender, RoutedEventArgs e) => OwnerWindow?.InvokeUiAction(action, sender, e);
+
+        public TextBox CommentsTextBox => MainTab.CommentsTextBox;
+        public TextBox AddCommentsTextBox => MainTab.CommentsTextBox;
+        public TextBox AttributedFormatPathTextBox => BlocksAndAttributesTab.AttributedFormatPath;
+        public ComboBox TeklaTextLayerComboBox => ConvertersTab.TeklaLayerComboBox;
+        public ComboBox FormatBlockLayerComboBox => ConvertersTab.FormatLayerComboBox;
+        public ComboBox DimensionLayerComboBox => DimensionsTab.LayerComboBox;
+        public TextBox DimensionStyleTextBox => DimensionsTab.StyleTextBox;
+        public RadioButton ManualScaleRadio => ScaleTab.ManualRadio;
+        public RadioButton AutoScaleRadio => ScaleTab.AutoRadio;
 
         private void NewConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(NewConverterClick), sender, e);
         private void SaveConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(SaveConverterClick), sender, e);
@@ -49,6 +59,3 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void RemoveExplodeLayerClick(object sender, RoutedEventArgs e) => Forward(nameof(RemoveExplodeLayerClick), sender, e);
     }
 }
-
-
-

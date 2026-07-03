@@ -1,0 +1,32 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorLispDllTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <GroupBox Header="{x:Static local:Localization.LabelLisp}" Margin="0,0,5,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBox x:Name="LispCommandTextBox" />
+                    <TextBox x:Name="LispPathTextBox" Margin="0,4,0,0" />
+                    <CheckBox x:Name="RunOnlyAtEndCheckBox" Content="{x:Static local:Localization.LabelRunOnlyAtEnd}" />
+                    <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddLispClick" />
+                </StackPanel>
+                <ListBox x:Name="LispListBox" />
+            </DockPanel>
+        </GroupBox>
+        <GroupBox Grid.Column="1" Header="{x:Static local:Localization.LabelDll}" Margin="5,0,0,0">
+            <DockPanel>
+                <StackPanel DockPanel.Dock="Top">
+                    <TextBox x:Name="DllCommandTextBox" />
+                    <TextBox x:Name="DllPathTextBox" Margin="0,4,0,0" />
+                    <Button Content="{x:Static local:Localization.ButtonSave}" Click="AddDllClick" />
+                </StackPanel>
+                <ListBox x:Name="DllListBox" />
+            </DockPanel>
+        </GroupBox>
+    </Grid>
+</UserControl>

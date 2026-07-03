@@ -5,33 +5,60 @@
     <Grid Margin="10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5" />
             <ColumnDefinition Width="170" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        <StackPanel Grid.ColumnSpan="3" Orientation="Horizontal" Margin="0,0,0,8">
-            <Button Content="{x:Static local:Localization.ButtonAdd}" Width="140" Click="AddDrawingsClick" />
-            <Button Content="{x:Static local:Localization.ButtonClear}" Width="100" Margin="8,0,0,0" Click="ClearDrawingsClick" />
-            <Button Content="{x:Static local:Localization.ButtonRestoreLastConverted}" Width="220" Margin="8,0,0,0" Click="RestoreLastConvertedClick" />
-            <CheckBox x:Name="KeepFilesOpenCheckBox" Content="{x:Static local:Localization.LabelKeepFilesOpen}" Margin="18,4,0,0" />
-            <TextBlock Text="{x:Static local:Localization.LabelExtension}" Margin="18,4,4,0" />
-            <ComboBox x:Name="ExtensionComboBox" Width="78" IsEditable="True" />
-            <TextBlock Text="{x:Static local:Localization.LabelStatus}" Margin="18,4,4,0" />
-            <ComboBox x:Name="StatusComboBox" Width="150" DisplayMemberPath="Nome" SelectionChanged="StatusComboBoxSelectionChanged" />
+  
+      
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <TextBlock Text="{x:Static local:Localization.LabelStatus}" />
+                <ComboBox x:Name="StatusComboBox" Width="150" DisplayMemberPath="Nome" SelectionChanged="StatusComboBoxSelectionChanged" />
+            </Grid>
+            <GroupBox Grid.Row="1" Header="{x:Static local:Localization.LabelConverters}" >
+                <ListBox x:Name="ConvertersListBox" SelectionChanged="ConvertersSelectionChanged" />
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0"  Orientation="Horizontal" >
+                <Button Content="{x:Static local:Localization.ButtonAdd}" Width="100" Click="AddDrawingsClick" />
+                <Separator Visibility="Hidden" Margin="2.5"/>
+                <Button Content="{x:Static local:Localization.ButtonClear}" Width="100" Click="ClearDrawingsClick" />
+            </StackPanel>
+            <GroupBox Grid.Row="1" Header="{x:Static local:Localization.LabelDrawings}" >
+                <ListBox x:Name="DrawingsListBox" AllowDrop="True" Drop="DrawingsDrop" DragEnter="DrawingsDragEnter" />
+            </GroupBox>
+    
+        </Grid>
+     
+        <StackPanel Grid.Row="0" Grid.Column="4">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{x:Static local:Localization.LabelExtension}"  />
+                <Separator Visibility="Hidden" Margin="5"/>
+                <ComboBox x:Name="ExtensionComboBox" Width="78" IsEditable="True" />
+            </StackPanel>
+            <Separator Visibility="Hidden" Margin="2.5"/>
+            <CheckBox x:Name="KeepFilesOpenCheckBox" Content="{x:Static local:Localization.LabelKeepFilesOpen}" />
+            <Separator Visibility="Hidden" Margin="2.5"/>
+            <Button  Content="{x:Static local:Localization.ButtonConvert}" Height="44" VerticalAlignment="Top" Click="ConvertClick" />
         </StackPanel>
-        <GroupBox Grid.Row="1" Grid.Column="0" Header="{x:Static local:Localization.LabelDrawings}" Margin="0,0,8,0">
-            <ListBox x:Name="DrawingsListBox" AllowDrop="True" Drop="DrawingsDrop" DragEnter="DrawingsDragEnter" />
-        </GroupBox>
-        <GroupBox Grid.Row="1" Grid.Column="1" Header="{x:Static local:Localization.LabelConverters}" Margin="0,0,8,0">
-            <ListBox x:Name="ConvertersListBox" SelectionChanged="ConvertersSelectionChanged" />
-        </GroupBox>
-        <Button Grid.Row="1" Grid.Column="2" Content="{x:Static local:Localization.ButtonConvert}" Height="44" VerticalAlignment="Top" Click="ConvertClick" />
-        <TextBlock Grid.Row="2" Grid.ColumnSpan="3" Text="{x:Static local:Localization.LabelComments}" Margin="0,8,0,2" />
-        <TextBox Grid.Row="3" Grid.ColumnSpan="3" x:Name="TemplateCommentsTextBox" Height="62" AcceptsReturn="True" TextWrapping="Wrap" />
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
+            <TextBlock  Text="{x:Static local:Localization.LabelComments}"  />
+            <TextBox  x:Name="TemplateCommentsTextBox" Height="62" AcceptsReturn="True" TextWrapping="Wrap" />
+        </StackPanel>
     </Grid>
 </UserControl>
