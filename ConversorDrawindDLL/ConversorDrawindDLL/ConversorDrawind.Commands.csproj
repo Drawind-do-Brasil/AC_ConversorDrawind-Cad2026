@@ -4,7 +4,7 @@
     <TargetFramework>net8.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <RootNamespace>ConversorDrawindDLL</RootNamespace>
-    <AssemblyName>ConversorDrawind</AssemblyName>
+    <AssemblyName>ConversorDrawind.Commands</AssemblyName>
     <PlatformTarget>x64</PlatformTarget>
     <Prefer32Bit>false</Prefer32Bit>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

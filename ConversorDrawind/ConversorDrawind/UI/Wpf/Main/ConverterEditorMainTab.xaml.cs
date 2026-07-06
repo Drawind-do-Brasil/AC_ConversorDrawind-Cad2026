@@ -11,6 +11,19 @@ namespace ConversorDrawind.UI.Wpf.Main
         }
 
         public TextBox CommentsTextBox => AddCommentsTextBox;
+        public CheckBox ConvertDimensionsCheckBoxControl => ConvertDimensionsCheckBox;
+        public CheckBox ConvertLayersCheckBoxControl => ConvertLayersCheckBox;
+        public CheckBox ScaleDrawingCheckBoxControl => ScaleDrawingCheckBox;
+        public CheckBox AttributeFormatCheckBoxControl => AttributeFormatCheckBox;
+        public CheckBox RunCommandsCheckBoxControl => RunCommandsCheckBox;
+        public CheckBox ShowErrorMessagesCheckBoxControl => ShowErrorMessagesCheckBox;
+        public CheckBox DeleteTeklaCheckBoxControl => DeleteTeklaCheckBox;
+        public CheckBox PurgeCheckBoxControl => PurgeCheckBox;
+        public CheckBox ExplodeCheckBoxControl => ExplodeCheckBox;
+        public CheckBox ExplodeBlocksCheckBoxControl => ExplodeBlocksCheckBox;
+        public CheckBox DmBlockCheckBoxControl => DmBlockCheckBox;
+        public RadioButton TeklaOriginRadioControl => TeklaOriginRadio;
+        public RadioButton CadOriginRadioControl => CadOriginRadio;
 
         private MainWindow OwnerWindow => Window.GetWindow(this) as MainWindow;
 

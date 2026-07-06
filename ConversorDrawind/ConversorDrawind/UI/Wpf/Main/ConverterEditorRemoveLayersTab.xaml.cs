@@ -11,6 +11,9 @@ namespace ConversorDrawind.UI.Wpf.Main
             InitializeComponent();
         }
 
+        public ListBox LayerBaseListBox => RemoveLayerBaseListBox;
+        public DataGrid LayersGrid => RemoveLayersGrid;
+
         private MainWindow OwnerWindow => Window.GetWindow(this) as MainWindow;
 
         private void Forward(string action, object sender, RoutedEventArgs e) => OwnerWindow?.InvokeUiAction(action, sender, e);

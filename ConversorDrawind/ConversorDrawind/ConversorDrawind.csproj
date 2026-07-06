@@ -5,7 +5,7 @@
     <UseWindowsForms>false</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <RootNamespace>ConversorDrawind</RootNamespace>
-    <AssemblyName>Conversor Drawind</AssemblyName>
+    <AssemblyName>ConversorDrawind</AssemblyName>
     <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
     <ApplicationIcon>ico1.ico</ApplicationIcon>
     <AppConfig>app.config</AppConfig>

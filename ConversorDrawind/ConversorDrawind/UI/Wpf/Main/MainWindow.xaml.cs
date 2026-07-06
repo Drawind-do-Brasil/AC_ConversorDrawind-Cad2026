@@ -23,6 +23,11 @@ namespace ConversorDrawind.UI.Wpf.Main
         private readonly ObservableCollection<string> cadBlockNames = new ObservableCollection<string>();
         private readonly ObservableCollection<string> originalBlockNames = new ObservableCollection<string>();
         private readonly ObservableCollection<string> blockRelations = new ObservableCollection<string>();
+        private readonly ObservableCollection<LayerRuleRow> layerRuleRows = new ObservableCollection<LayerRuleRow>();
+        private readonly ObservableCollection<RemoveLayerRow> removeLayerRows = new ObservableCollection<RemoveLayerRow>();
+        private readonly ObservableCollection<string> removeLayerBaseNames = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> allExplodeLayerNames = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> selectedExplodeLayerNames = new ObservableCollection<string>();
         private global::ConversorDrawind.Configuration configuration = new global::ConversorDrawind.Configuration();
         private Arranjos arranjos = new Arranjos();
         private List<Block> listBlocks = new List<Block>();
@@ -59,6 +64,16 @@ namespace ConversorDrawind.UI.Wpf.Main
                 case "DimensionArrowAdvancedClick": ConfigureAdvancedDimensionArrow(); break;
                 case "OtherLineColorClick": AddOtherDimensionColor(EditorView.DimensionLineColorComboBox); break;
                 case "OtherTextColorClick": AddOtherDimensionColor(EditorView.DimensionTextColorComboBox); break;
+                case "AddLayerRuleClick": AddLayerRule(); break;
+                case "DeleteLayerRuleClick": DeleteSelectedLayerRules(); break;
+                case "MoveLayerRuleUpClick": MoveLayerRule(-1); break;
+                case "MoveLayerRuleDownClick": MoveLayerRule(1); break;
+                case "LayerRulesGridDoubleClick": EditLayerRuleCell(); break;
+                case "AddRemoveLayerClick": AddRemoveLayerRule(); break;
+                case "DeleteRemoveLayerClick": DeleteSelectedRemoveLayers(); break;
+                case "RemoveLayersGridDoubleClick": EditRemoveLayerCell(); break;
+                case "AddExplodeLayerClick": AddExplodeLayer(); break;
+                case "RemoveExplodeLayerClick": RemoveExplodeLayer(); break;
                 case "BrowseAttributedFormatClick": BrowseAttributedFormat(); break;
                 case "EditBlockClick": EditTeklaBlock(); break;
                 case "EditBlockDoubleClick": EditTeklaBlock(); break;
@@ -94,6 +109,11 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.CadBlocksListBox.ItemsSource = cadBlockNames;
             EditorView.OriginalBlocksListBox.ItemsSource = originalBlockNames;
             EditorView.BlockRelationsListBox.ItemsSource = blockRelations;
+            EditorView.LayerRulesGrid.ItemsSource = layerRuleRows;
+            EditorView.RemoveLayerBaseListBox.ItemsSource = removeLayerBaseNames;
+            EditorView.RemoveLayersGrid.ItemsSource = removeLayerRows;
+            EditorView.AllExplodeLayersListBox.ItemsSource = allExplodeLayerNames;
+            EditorView.SelectedExplodeLayersListBox.ItemsSource = selectedExplodeLayerNames;
             ConverterView.ExtensionComboBox.ItemsSource = new[] { "DWG", "DXF" };
             ConverterView.ExtensionComboBox.SelectedItem = ApplicationRuntime.ExtensaoGeral;
             ConverterView.StatusComboBox.ItemsSource = new[] { new StatusConversorItem(Localization.StatusActiveWorks, "TemplatesAtivos"), new StatusConversorItem(Localization.StatusInactiveWorks, "TemplatesInativos") };
@@ -320,16 +340,270 @@ namespace ConversorDrawind.UI.Wpf.Main
             return bool.TryParse(text, out bool result) ? result : fallback;
         }
 
+        private void PopulateEditorComboBoxes()
+        {
+            SetComboItems(EditorView.TeklaTextLayerComboBox, PreferredLayerFirst("DRAWING SHEET"), configuration.LayerTeklaString);
+            SetComboItems(EditorView.FormatBlockLayerComboBox, PreferredLayerFirst("OTHER OBJECT TYPE"), configuration.LayerBlockAttribute);
+            SetComboItems(EditorView.ScaleLayerComboBox, arranjos.allNewLayer.Concat(arranjos.allBaseLayer), configuration.EXTSCALELayer);
+        }
+
+        private IEnumerable<string> PreferredLayerFirst(string preferredLayer)
+        {
+            yield return preferredLayer;
+            foreach (string layer in arranjos.allBaseLayer.Where(layer => !string.Equals(layer, preferredLayer, StringComparison.OrdinalIgnoreCase)))
+            {
+                yield return layer;
+            }
+        }
+
+        private void RefreshLayerRuleRows()
+        {
+            layerRuleRows.Clear();
+            foreach (string item in arranjos.conversor)
+            {
+                string[] parts = item.Split(new[] { ';' }, 3);
+                if (parts.Length == 3)
+                {
+                    layerRuleRows.Add(new LayerRuleRow(parts[0], parts[1], parts[2]));
+                }
+            }
+        }
+
+        private void SaveLayerRuleRowsToArranjos()
+        {
+            arranjos.conversor.Clear();
+            foreach (LayerRuleRow row in layerRuleRows)
+            {
+                arranjos.conversor.Add((row.BaseLayer ?? string.Empty) + ";" + (row.Filter ?? string.Empty) + ";" + (row.NewLayer ?? string.Empty));
+            }
+        }
+
+        private void RefreshRemoveLayerViews()
+        {
+            removeLayerBaseNames.Clear();
+            foreach (string layer in arranjos.allNewLayer.Concat(arranjos.allBaseLayer).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                removeLayerBaseNames.Add(layer);
+            }
+
+            removeLayerRows.Clear();
+            foreach (Filter filter in arranjos.layerRemove)
+            {
+                removeLayerRows.Add(new RemoveLayerRow(filter.layerBase, filter.GetConjunto()));
+            }
+        }
+
+        private void SaveRemoveLayerRowsToArranjos()
+        {
+            arranjos.layerRemove.Clear();
+            foreach (RemoveLayerRow row in removeLayerRows)
+            {
+                Filter filter = new Filter(arranjos)
+                {
+                    layerBase = row.Layer ?? string.Empty
+                };
+                filter.SetConjunto(row.Filter ?? string.Empty);
+                arranjos.layerRemove.Add(filter);
+            }
+        }
+
+        private void RefreshExplodeLayerViews()
+        {
+            allExplodeLayerNames.Clear();
+            foreach (string layer in arranjos.allBaseLayer.Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                allExplodeLayerNames.Add(layer);
+            }
+
+            selectedExplodeLayerNames.Clear();
+            foreach (string layer in arranjos.allExplodeLayers.Where(layer => !string.IsNullOrWhiteSpace(layer)).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                selectedExplodeLayerNames.Add(layer);
+            }
+        }
+
+        private void SaveExplodeLayerRowsToArranjos()
+        {
+            arranjos.allExplodeLayers.Clear();
+            arranjos.allExplodeLayers.AddRange(selectedExplodeLayerNames.Where(layer => !string.IsNullOrWhiteSpace(layer)));
+        }
+
+        private void AddLayerRule()
+        {
+            Filter filter = new Filter(arranjos);
+            filter.SetConjunto();
+            NewLayer newLayer = new NewLayer(arranjos);
+            newLayer.SetConjunto();
+
+            int insertIndex = EditorView.LayerRulesGrid.SelectedIndex >= 0 ? EditorView.LayerRulesGrid.SelectedIndex : layerRuleRows.Count;
+            layerRuleRows.Insert(insertIndex, new LayerRuleRow(string.Empty, filter.GetConjunto(), newLayer.GetConjunto()));
+            EditorView.LayerRulesGrid.SelectedIndex = insertIndex;
+        }
+
+        private void DeleteSelectedLayerRules()
+        {
+            List<LayerRuleRow> selectedRows = EditorView.LayerRulesGrid.SelectedItems.OfType<LayerRuleRow>().ToList();
+            foreach (LayerRuleRow row in selectedRows)
+            {
+                layerRuleRows.Remove(row);
+            }
+        }
+
+        private void MoveLayerRule(int direction)
+        {
+            if (!(EditorView.LayerRulesGrid.SelectedItem is LayerRuleRow selected))
+            {
+                return;
+            }
+
+            int index = layerRuleRows.IndexOf(selected);
+            int newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= layerRuleRows.Count)
+            {
+                return;
+            }
+
+            layerRuleRows.Move(index, newIndex);
+            EditorView.LayerRulesGrid.SelectedIndex = newIndex;
+        }
+
+        private void EditLayerRuleCell()
+        {
+            if (!(EditorView.LayerRulesGrid.SelectedItem is LayerRuleRow row) || EditorView.LayerRulesGrid.CurrentColumn == null)
+            {
+                return;
+            }
+
+            int columnIndex = EditorView.LayerRulesGrid.Columns.IndexOf(EditorView.LayerRulesGrid.CurrentColumn);
+            if (columnIndex == 0)
+            {
+                using (LayersLayerBase dialog = new LayersLayerBase(row.BaseLayer, arranjos))
+                {
+                    if (dialog.ShowDialog() == UiDialogResult.OK)
+                    {
+                        row.BaseLayer = dialog.layerBase;
+                        EditorView.LayerRulesGrid.Items.Refresh();
+                    }
+                }
+            }
+            else if (columnIndex == 1)
+            {
+                using (LayersFilter dialog = new LayersFilter(row.Filter, arranjos))
+                {
+                    if (dialog.ShowDialog() == UiDialogResult.OK)
+                    {
+                        row.Filter = dialog.filtro.GetConjunto();
+                        EditorView.LayerRulesGrid.Items.Refresh();
+                    }
+                }
+            }
+            else if (columnIndex == 2)
+            {
+                using (LayersNewLayer dialog = new LayersNewLayer(row.NewLayer, arranjos))
+                {
+                    if (dialog.ShowDialog() == UiDialogResult.OK)
+                    {
+                        row.NewLayer = dialog.novoLayer.GetConjunto();
+                        EditorView.LayerRulesGrid.Items.Refresh();
+                    }
+                }
+            }
+        }
+
+        private void AddRemoveLayerRule()
+        {
+            Filter filter = new Filter(arranjos);
+            filter.SetConjunto2();
+            foreach (string layer in EditorView.RemoveLayerBaseListBox.SelectedItems.OfType<string>())
+            {
+                if (!removeLayerRows.Any(row => string.Equals(row.Layer, layer, StringComparison.OrdinalIgnoreCase)))
+                {
+                    removeLayerRows.Add(new RemoveLayerRow(layer, filter.GetConjunto()));
+                }
+            }
+        }
+
+        private void DeleteSelectedRemoveLayers()
+        {
+            List<RemoveLayerRow> selectedRows = EditorView.RemoveLayersGrid.SelectedItems.OfType<RemoveLayerRow>().ToList();
+            foreach (RemoveLayerRow row in selectedRows)
+            {
+                removeLayerRows.Remove(row);
+            }
+        }
+
+        private void EditRemoveLayerCell()
+        {
+            if (!(EditorView.RemoveLayersGrid.SelectedItem is RemoveLayerRow row) || EditorView.RemoveLayersGrid.CurrentColumn == null)
+            {
+                return;
+            }
+
+            int columnIndex = EditorView.RemoveLayersGrid.Columns.IndexOf(EditorView.RemoveLayersGrid.CurrentColumn);
+            if (columnIndex != 1)
+            {
+                return;
+            }
+
+            using (LayersFilter dialog = new LayersFilter(row.Filter, arranjos))
+            {
+                dialog.DisableOrientacao();
+                if (dialog.ShowDialog() == UiDialogResult.OK)
+                {
+                    row.Filter = dialog.filtro.GetConjunto();
+                    EditorView.RemoveLayersGrid.Items.Refresh();
+                }
+            }
+        }
+
+        private void AddExplodeLayer()
+        {
+            foreach (string layer in EditorView.AllExplodeLayersListBox.SelectedItems.OfType<string>())
+            {
+                if (!selectedExplodeLayerNames.Contains(layer))
+                {
+                    selectedExplodeLayerNames.Add(layer);
+                }
+            }
+        }
+
+        private void RemoveExplodeLayer()
+        {
+            List<string> selectedLayers = EditorView.SelectedExplodeLayersListBox.SelectedItems.OfType<string>().ToList();
+            foreach (string layer in selectedLayers)
+            {
+                selectedExplodeLayerNames.Remove(layer);
+            }
+        }
+
         private void LoadConfigurationToControls()
         {
             DisposeTeklaDrawingBlock();
             ConverterView.TemplateCommentsTextBox.Text = configuration.EXTCONFComments ?? string.Empty;
             EditorView.AddCommentsTextBox.Text = configuration.EXTCONFComments ?? string.Empty;
+            EditorView.ConvertDimensionsCheckBox.IsChecked = configuration.EXTCONFIsConvertDimension;
+            EditorView.ConvertLayersCheckBox.IsChecked = configuration.EXTCONFIsConvertLayer;
+            EditorView.ScaleDrawingCheckBox.IsChecked = configuration.EXTCONFIsPutOnTheScaleDrawing;
+            EditorView.AttributeFormatCheckBox.IsChecked = configuration.EXTCONFIsExchangeFormat;
+            EditorView.RunCommandsCheckBox.IsChecked = configuration.EXTCONFIsExecuteLISP;
+            EditorView.ShowErrorMessagesCheckBox.IsChecked = configuration.PROGRAMMessage;
+            EditorView.DeleteTeklaCheckBox.IsChecked = configuration.EXTCONFIsDeleteTeklaStructures;
+            EditorView.PurgeCheckBox.IsChecked = configuration.EXTCONFIsPurge;
+            EditorView.ExplodeCheckBox.IsChecked = configuration.EXTCONFInventorExplode;
+            EditorView.ExplodeBlocksCheckBox.IsChecked = configuration.ExplodeBlocks;
+            EditorView.DmBlockCheckBox.IsChecked = configuration.DMBlock;
+            EditorView.TeklaOriginRadio.IsChecked = configuration.EXTCONFOrigem == 0;
+            EditorView.CadOriginRadio.IsChecked = configuration.EXTCONFOrigem != 0;
             EditorView.AttributedFormatPathTextBox.Text = configuration.PROGRAMblockFormatoCaminho;
             EditorView.CadBlocksPathTextBox.Text = configuration.EXTCONFCaminhoBlocoInv;
             EditorView.OriginalBlocksPathTextBox.Text = configuration.EXTCONFCaminhoBlocoInv;
+            PopulateEditorComboBoxes();
+            RefreshLayerRuleRows();
+            RefreshRemoveLayerViews();
+            RefreshExplodeLayerViews();
             EditorView.TeklaTextLayerComboBox.Text = configuration.LayerTeklaString;
             EditorView.FormatBlockLayerComboBox.Text = configuration.LayerBlockAttribute;
+            EditorView.LayerLtScaleTextBox.Text = Convert.ToString(configuration.EXTLINELtscale);
             PopulateDimensionComboBoxes();
             EditorView.DimensionLayerComboBox.Text = configuration.EXTDIMlayer;
             EditorView.DimensionStyleTextBox.Text = configuration.EXTDIMStyleName;
@@ -353,6 +627,20 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.DimensionBaseLayerComboBox.Text = configuration.EXTDIMBaseLayer;
             EditorView.ManualScaleRadio.IsChecked = configuration.EXTSCALEManual;
             EditorView.AutoScaleRadio.IsChecked = !configuration.EXTSCALEManual;
+            EditorView.ScaleManualP1XTextBox.Text = Convert.ToString(configuration.EXTSCALEMp1.X);
+            EditorView.ScaleManualP1YTextBox.Text = Convert.ToString(configuration.EXTSCALEMp1.Y);
+            EditorView.ScaleManualP1ZTextBox.Text = Convert.ToString(configuration.EXTSCALEMp1.Z);
+            EditorView.ScaleManualP2XTextBox.Text = Convert.ToString(configuration.EXTSCALEMp2.X);
+            EditorView.ScaleManualP2YTextBox.Text = Convert.ToString(configuration.EXTSCALEMp2.Y);
+            EditorView.ScaleManualP2ZTextBox.Text = Convert.ToString(configuration.EXTSCALEMp2.Z);
+            EditorView.ScaleAutoP1XTextBox.Text = Convert.ToString(configuration.EXTSCALEAp1.X);
+            EditorView.ScaleAutoP1YTextBox.Text = Convert.ToString(configuration.EXTSCALEAp1.Y);
+            EditorView.ScaleAutoP1ZTextBox.Text = Convert.ToString(configuration.EXTSCALEAp1.Z);
+            EditorView.ScaleAutoP2XTextBox.Text = Convert.ToString(configuration.EXTSCALEAp2.X);
+            EditorView.ScaleAutoP2YTextBox.Text = Convert.ToString(configuration.EXTSCALEAp2.Y);
+            EditorView.ScaleAutoP2ZTextBox.Text = Convert.ToString(configuration.EXTSCALEAp2.Z);
+            EditorView.ScaleLayerComboBox.Text = configuration.EXTSCALELayer;
+            EditorView.ScaleTextSizeTextBox.Text = Convert.ToString(configuration.EXTSCALETextSize);
             lispCommands.Clear();
             foreach (string command in arranjos.listLISPCommand)
             {
@@ -366,12 +654,25 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void ReadConfigurationFromControls()
         {
             configuration.EXTCONFComments = EditorView.AddCommentsTextBox.Text;
+            configuration.EXTCONFIsConvertDimension = EditorView.ConvertDimensionsCheckBox.IsChecked == true;
+            configuration.EXTCONFIsConvertLayer = EditorView.ConvertLayersCheckBox.IsChecked == true;
+            configuration.EXTCONFIsPutOnTheScaleDrawing = EditorView.ScaleDrawingCheckBox.IsChecked == true;
+            configuration.EXTCONFIsExchangeFormat = EditorView.AttributeFormatCheckBox.IsChecked == true;
+            configuration.EXTCONFIsExecuteLISP = EditorView.RunCommandsCheckBox.IsChecked == true;
+            configuration.PROGRAMMessage = EditorView.ShowErrorMessagesCheckBox.IsChecked == true;
+            configuration.EXTCONFIsDeleteTeklaStructures = EditorView.DeleteTeklaCheckBox.IsChecked == true;
+            configuration.EXTCONFIsPurge = EditorView.PurgeCheckBox.IsChecked == true;
+            configuration.EXTCONFInventorExplode = EditorView.ExplodeCheckBox.IsChecked == true;
+            configuration.ExplodeBlocks = EditorView.ExplodeBlocksCheckBox.IsChecked == true;
+            configuration.DMBlock = EditorView.DmBlockCheckBox.IsChecked == true;
+            configuration.EXTCONFOrigem = EditorView.TeklaOriginRadio.IsChecked == true ? 0 : 1;
             configuration.PROGRAMblockFormatoCaminho = EditorView.AttributedFormatPathTextBox.Text;
             configuration.EXTCONFCaminhoBlocoInv = string.IsNullOrWhiteSpace(EditorView.OriginalBlocksPathTextBox.Text)
                 ? EditorView.CadBlocksPathTextBox.Text
                 : EditorView.OriginalBlocksPathTextBox.Text;
             configuration.LayerTeklaString = EditorView.TeklaTextLayerComboBox.Text;
             configuration.LayerBlockAttribute = EditorView.FormatBlockLayerComboBox.Text;
+            configuration.EXTLINELtscale = ReadDouble(EditorView.LayerLtScaleTextBox.Text, configuration.EXTLINELtscale);
             configuration.EXTDIMlayer = EditorView.DimensionLayerComboBox.Text;
             configuration.EXTDIMStyleName = EditorView.DimensionStyleTextBox.Text;
             configuration.EXTDIMColorLine = EditorView.DimensionLineColorComboBox.Text;
@@ -393,6 +694,23 @@ namespace ConversorDrawind.UI.Wpf.Main
             configuration.EXTDIMTad = ReadInt(EditorView.DimensionTextPlacementComboBox.Text, configuration.EXTDIMTad);
             configuration.EXTDIMBaseLayer = EditorView.DimensionBaseLayerComboBox.Text;
             configuration.EXTSCALEManual = EditorView.ManualScaleRadio.IsChecked == true;
+            configuration.EXTSCALEMp1.X = ReadDouble(EditorView.ScaleManualP1XTextBox.Text, configuration.EXTSCALEMp1.X);
+            configuration.EXTSCALEMp1.Y = ReadDouble(EditorView.ScaleManualP1YTextBox.Text, configuration.EXTSCALEMp1.Y);
+            configuration.EXTSCALEMp1.Z = ReadDouble(EditorView.ScaleManualP1ZTextBox.Text, configuration.EXTSCALEMp1.Z);
+            configuration.EXTSCALEMp2.X = ReadDouble(EditorView.ScaleManualP2XTextBox.Text, configuration.EXTSCALEMp2.X);
+            configuration.EXTSCALEMp2.Y = ReadDouble(EditorView.ScaleManualP2YTextBox.Text, configuration.EXTSCALEMp2.Y);
+            configuration.EXTSCALEMp2.Z = ReadDouble(EditorView.ScaleManualP2ZTextBox.Text, configuration.EXTSCALEMp2.Z);
+            configuration.EXTSCALEAp1.X = ReadDouble(EditorView.ScaleAutoP1XTextBox.Text, configuration.EXTSCALEAp1.X);
+            configuration.EXTSCALEAp1.Y = ReadDouble(EditorView.ScaleAutoP1YTextBox.Text, configuration.EXTSCALEAp1.Y);
+            configuration.EXTSCALEAp1.Z = ReadDouble(EditorView.ScaleAutoP1ZTextBox.Text, configuration.EXTSCALEAp1.Z);
+            configuration.EXTSCALEAp2.X = ReadDouble(EditorView.ScaleAutoP2XTextBox.Text, configuration.EXTSCALEAp2.X);
+            configuration.EXTSCALEAp2.Y = ReadDouble(EditorView.ScaleAutoP2YTextBox.Text, configuration.EXTSCALEAp2.Y);
+            configuration.EXTSCALEAp2.Z = ReadDouble(EditorView.ScaleAutoP2ZTextBox.Text, configuration.EXTSCALEAp2.Z);
+            configuration.EXTSCALELayer = EditorView.ScaleLayerComboBox.Text;
+            configuration.EXTSCALETextSize = ReadDouble(EditorView.ScaleTextSizeTextBox.Text, configuration.EXTSCALETextSize);
+            SaveLayerRuleRowsToArranjos();
+            SaveRemoveLayerRowsToArranjos();
+            SaveExplodeLayerRowsToArranjos();
             arranjos.listLISPCommand.Clear();
             arranjos.listLISPCommand.AddRange(lispCommands);
         }
@@ -973,6 +1291,32 @@ namespace ConversorDrawind.UI.Wpf.Main
         {
             DisposeTeklaDrawingBlock();
             base.OnClosed(e);
+        }
+
+        public class LayerRuleRow
+        {
+            public LayerRuleRow(string baseLayer, string filter, string newLayer)
+            {
+                BaseLayer = baseLayer;
+                Filter = filter;
+                NewLayer = newLayer;
+            }
+
+            public string BaseLayer { get; set; }
+            public string Filter { get; set; }
+            public string NewLayer { get; set; }
+        }
+
+        public class RemoveLayerRow
+        {
+            public RemoveLayerRow(string layer, string filter)
+            {
+                Layer = layer;
+                Filter = filter;
+            }
+
+            public string Layer { get; set; }
+            public string Filter { get; set; }
         }
     }
 }

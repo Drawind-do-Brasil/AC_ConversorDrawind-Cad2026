@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11925.98 stable
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind", "ConversorDrawind\ConversorDrawind\ConversorDrawind.csproj", "{DB406439-AEEC-44F7-BF16-4A95EC48E80B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind.Shared", "ConversorDrawind.Shared\ConversorDrawind.Shared.csproj", "{132F1DB6-59AC-49B2-BDBA-B630BE494F08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawindDLL", "ConversorDrawindDLL\ConversorDrawindDLL\ConversorDrawindDLL.csproj", "{AA9456B5-411F-4625-A984-FDA0A9696BFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind.Commands", "ConversorDrawindDLL\ConversorDrawindDLL\ConversorDrawind.Commands.csproj", "{AA9456B5-411F-4625-A984-FDA0A9696BFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -58,5 +58,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {584EFE80-F113-4F43-B37E-FE2645CBE3E3}
 	EndGlobalSection
 EndGlobal
