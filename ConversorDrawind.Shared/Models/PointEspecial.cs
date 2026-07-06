@@ -1,39 +1,28 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind
 {
-    public class PointEspecial2 : ICloneable
+    public class PointEspecial : ICloneable
     {
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
 
-
-        public PointEspecial2()
+        public PointEspecial()
         {
             this.X = 0;
             this.Y = 0;
             this.Z = 0;
         }
 
-        public PointEspecial2(double X, double Y, double Z)
+        public PointEspecial(double X, double Y, double Z)
         {
             this.X = X;
             this.Y = Y;
             this.Z = Z;
         }
 
-        public PointEspecial2(PointEspecial2 point)
-        {
-            X = point.X;
-            Y = point.Y;
-            Z = point.Z;
-        }
-
-        public PointEspecial2(global::ConversorDrawind.PointEspecial point)
+        public PointEspecial(PointEspecial point)
         {
             X = point.X;
             Y = point.Y;
@@ -46,3 +35,7 @@ namespace ConversorDrawindDLL
         }
     }
 }
+
+
+
+

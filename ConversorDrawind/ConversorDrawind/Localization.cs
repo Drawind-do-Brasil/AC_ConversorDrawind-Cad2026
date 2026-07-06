@@ -15,6 +15,7 @@ namespace ConversorDrawind
         public static string ButtonBrowse => "Procurar";
         public static string ButtonEllipsis => "...";
         public static string ButtonAdd => "Adicionar";
+        public static string ButtonModify => "Modificar";
         public static string ButtonRemove => "Remover";
         public static string ButtonDelete => "Excluir";
         public static string ButtonClear => "Limpar";
@@ -61,6 +62,8 @@ namespace ConversorDrawind
         public static string LabelComments => "Comentários";
         public static string LabelLayer => "Layer:";
         public static string LabelColor => "Cor:";
+        public static string LabelCommandName => "Nome do comando:";
+        public static string LabelCommandPath => "Local do Lisp ou DLL:";
         public static string LabelLineType => "Tipo de linha:";
         public static string LabelHeight => "Altura:";
         public static string LabelWidth => "Largura:";

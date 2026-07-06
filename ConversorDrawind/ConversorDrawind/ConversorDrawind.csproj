@@ -46,6 +46,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ConversorDrawind.Shared\ConversorDrawind.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Autodesk.AutoCAD.Interop">
       <HintPath>C:\Program Files\Autodesk\AutoCAD 2026\Autodesk.AutoCAD.Interop.dll</HintPath>
       <EmbedInteropTypes>true</EmbedInteropTypes>
@@ -57,6 +61,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="Configuration\Configuration.cs" />
+    <Compile Remove="Configuration\ConfigurationPaths.cs" />
+    <Compile Remove="Configuration\ConfigurationXmlContract.cs" />
+    <Compile Remove="Configuration\ConfigurationXmlDocument.cs" />
+    <Compile Remove="Configuration\ConverterFileService.cs" />
+    <Compile Remove="Configuration\DllConfigFile.cs" />
+    <Compile Remove="Configuration\UserSettingsService.cs" />
+    <Compile Remove="Models\Arranjos.cs" />
+    <Compile Remove="Models\Block.cs" />
+    <Compile Remove="Models\Filter.cs" />
+    <Compile Remove="Models\PointEspecial.cs" />
+    <Compile Remove="Models\StatusConversorItem.cs" />
+    <Compile Remove="Models\TagBlock.cs" />
+    <Compile Remove="Utilities\NumericTextParser.cs" />
     <None Update="app.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

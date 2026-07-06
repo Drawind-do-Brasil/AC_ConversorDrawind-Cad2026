@@ -39,6 +39,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ConversorDrawind.Shared\ConversorDrawind.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="accoremgd">
       <HintPath>$(AutoCADInstallDir)accoremgd.dll</HintPath>
       <Private>false</Private>

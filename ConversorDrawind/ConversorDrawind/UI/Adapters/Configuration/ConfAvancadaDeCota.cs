@@ -2,13 +2,13 @@
 using System;
 namespace ConversorDrawind
 {
-    public sealed class Form_7_ConfAvaACADaDeCota : IDisposable
+    public sealed class ConfAvancadaDeCota : IDisposable
     {
         public bool EXTDIMCorrigeSeta = false;
         public string EXTDIMCorrigeSetaTipoSeta = "Oblique";
         public double EXTDIMCorrigeSetaFactor = 7.23;
 
-        public Form_7_ConfAvaACADaDeCota(bool concerta, string tipoSeta, double distancia)
+        public ConfAvancadaDeCota(bool concerta, string tipoSeta, double distancia)
         {
             EXTDIMCorrigeSeta = concerta;
             EXTDIMCorrigeSetaTipoSeta = tipoSeta;
