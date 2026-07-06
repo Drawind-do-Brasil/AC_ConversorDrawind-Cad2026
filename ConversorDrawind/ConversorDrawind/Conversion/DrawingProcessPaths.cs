@@ -7,7 +7,7 @@ namespace ConversorDrawind
     {
         public static string DllPath
         {
-            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConversorDrawind.dll"); }
+            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "ConversorDrawind.Commands.dll"); }
         }
 
         public static string TempCommandFile

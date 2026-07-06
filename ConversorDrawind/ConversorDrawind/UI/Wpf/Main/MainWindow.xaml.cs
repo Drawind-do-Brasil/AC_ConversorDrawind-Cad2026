@@ -59,6 +59,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 case "NewConverterClick": NewConverter(); break;
                 case "SaveConverterClick": SaveConverter(); break;
                 case "ImportConverterClick": ImportConverter(); break;
+                case "LoadClientLayersClick": LoadClientLayers(); break;
                 case "ConfigureClientLayersClick": using (ConfigurarLayers f = new ConfigurarLayers(arranjos)) f.ShowDialog(); break;
                 case "ConfigureTextStylesClick": using (ConfigurarTextStyle f = new ConfigurarTextStyle(arranjos)) f.ShowDialog(); break;
                 case "DimensionArrowAdvancedClick": ConfigureAdvancedDimensionArrow(); break;
@@ -354,6 +355,18 @@ namespace ConversorDrawind.UI.Wpf.Main
             {
                 yield return layer;
             }
+        }
+
+        private void LoadClientLayers()
+        {
+            using (ConfigurarLayers dialog = new ConfigurarLayers(arranjos))
+            {
+                dialog.OpenAcadLoadLayerExterno();
+            }
+
+            PopulateEditorComboBoxes();
+            PopulateDimensionComboBoxes();
+            RefreshRemoveLayerViews();
         }
 
         private void RefreshLayerRuleRows()
