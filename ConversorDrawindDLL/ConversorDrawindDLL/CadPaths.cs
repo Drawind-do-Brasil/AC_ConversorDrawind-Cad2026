@@ -10,13 +10,13 @@ namespace ConversorDrawindDLL
         {
             try
             {
-                var doc = Application.DocumentManager.MdiActiveDocument;
-                if (doc == null)
+                IAcadDocumentContext documentContext = new AcadDocumentContext();
+                if (documentContext.Document == null)
                     return null;
 
                 return HostApplicationServices.Current.FindFile(
                     fileName,
-                    doc.Database,
+                    documentContext.Database,
                     FindFileHint.Default
                 );
             }

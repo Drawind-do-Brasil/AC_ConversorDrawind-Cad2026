@@ -1,0 +1,39 @@
+﻿{
+    "status":  "passed",
+    "startedAt":  "2026-07-06T09:47:55.8826958-03:00",
+    "finishedAt":  "2026-07-06T09:48:05.2094415-03:00",
+    "elapsedMilliseconds":  9327,
+    "exitCode":  0,
+    "commands":  [
+                     "DRAWINDCAD_Convert"
+                 ],
+    "failureReasons":  [
+
+                       ],
+    "paths":  {
+                  "inputDwg":  "C:\\0_Programas\\Desenho Minerita - Copia\\DIAGRAMA 6 - .dwg",
+                  "workingDwg":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\large-minerita-purge\\DIAGRAMA 6 - .dwg",
+                  "txml":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawind\\ConversorDrawind\\bin\\Debug\\TemplatesAtivos\\0_PURGE_NOS_DESENHOS.txml",
+                  "dll":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL\\bin\\Debug\\ConversorDrawind.dll",
+                  "coreConsole":  "C:\\Program Files\\Autodesk\\AutoCAD 2026\\accoreconsole.exe",
+                  "tempConfiguration":  "C:\\Users\\Micro048\\AppData\\Local\\Temp\\ConversorDrawind.Temp",
+                  "script":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\large-minerita-purge\\run-conversor.scr",
+                  "stdoutLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\large-minerita-purge\\accoreconsole.out.log",
+                  "stderrLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\large-minerita-purge\\accoreconsole.err.log"
+              },
+    "bytes":  {
+                  "inputDwg":  8083104,
+                  "workingDwg":  8573099,
+                  "txml":  2691,
+                  "dll":  505344,
+                  "stdoutLog":  7370,
+                  "stderrLog":  null
+              },
+    "sha256":  {
+                   "inputDwg":  "9D8961988F3D27683D92B120258783498476E3A401B8BADEA165AB64A9AE87AE",
+                   "workingDwg":  "27F36B23B61B361E8EB1BBA6D150EDE2DBE8F554B9850C1AC9E35C3CBAAF9533",
+                   "txml":  "11B9FBEAA40D17A3C64A7B8EBABC1A921883B45C14F36D0F4F52387D52415A0B",
+                   "dll":  "CB4E48CCD81FF8FB92A0C9DEBE2A210F3372CAF7B7BDA4FE22B928A3A84C50F9",
+                   "script":  "26DBD664A1D40D425AF743F2071CB52F0757C1C8C9EAF4D19F514AD85B406C95"
+               }
+}

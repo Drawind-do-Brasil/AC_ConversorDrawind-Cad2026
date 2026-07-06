@@ -14,19 +14,29 @@ namespace ConversorDrawindDLL
         private static double distFactor2 = 0.08;
         private static double scale = 1;
         private static double distMin = 7.23;
+
+        internal static void ResetForTests()
+        {
+            distFactor = 0.2;
+            distFactor2 = 0.08;
+            scale = 1;
+            distMin = 7.23;
+        }
+
         public static void ConsetaSetaSeta(string tipoSeta, double escala, double distanciaMinima)
         {
             scale = escala;
             distMin = distanciaMinima;
-            Document document = Application.DocumentManager.MdiActiveDocument;
-            Database dataBase = document.Database;
-            Editor editor = document.Editor;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            Database dataBase = documentContext.Database;
+            Editor editor = documentContext.Editor;
+            IEntitySelector entitySelector = new AcadEntitySelector(editor);
             using (Transaction transaction = dataBase.TransactionManager.MyStartTransaction())
             {
                 try
                 {
                     ObjectId[] objectsID = new ObjectId[0];
-                    PromptSelectionResult promptSelectionResult = editor.SelectAll(FilterByType(new string[] { "DIMENSION" }));
+                    PromptSelectionResult promptSelectionResult = entitySelector.SelectAll(FilterByType(new string[] { "DIMENSION" }));
                     if (promptSelectionResult.Status == PromptStatus.OK)
                         objectsID = promptSelectionResult.Value.GetObjectIds();
 
@@ -37,9 +47,10 @@ namespace ConversorDrawindDLL
                         {
                             RotatedDimension rotatedDimension = entity as RotatedDimension;
 
-                            Line3d line = new Line3d(rotatedDimension.XLine2Point, rotatedDimension.DimLinePoint);
-                            Plane plano = line.GetPerpendicularPlane(rotatedDimension.DimLinePoint);
-                            Point3d point = rotatedDimension.XLine1Point.OrthoProject(plano);
+                            Point3d point = ArrowFixService.ProjectFirstExtensionPoint(
+                                rotatedDimension.XLine1Point,
+                                rotatedDimension.XLine2Point,
+                                rotatedDimension.DimLinePoint);
 
                             if (rotatedDimension.DimLinePoint.DistanceTo(point) < distMin * scale)
                             {
@@ -76,9 +87,10 @@ namespace ConversorDrawindDLL
 
         public static bool AnalisePoint(RotatedDimension rotatedDimension, Point3d pt)
         {
-            Document document = Application.DocumentManager.MdiActiveDocument;
-            Database dataBase = document.Database;
-            Editor editor = document.Editor;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            Database dataBase = documentContext.Database;
+            Editor editor = documentContext.Editor;
+            IEntitySelector entitySelector = new AcadEntitySelector(editor);
        
                 try
                 {
@@ -86,7 +98,7 @@ namespace ConversorDrawindDLL
                     List<ObjectId> listObjectId = new List<ObjectId>();
                     Point3d P1 = new Point3d(pt.X + (scale * distFactor), pt.Y + (scale * distFactor), pt.Z);
                     Point3d P2 = new Point3d(pt.X - (scale * distFactor), pt.Y - (scale * distFactor), pt.Z);
-                    PromptSelectionResult psr = editor.SelectCrossingWindow(P1, P2, FilterByType(new string[] { "DIMENSION" }));
+                    PromptSelectionResult psr = entitySelector.SelectCrossingWindow(P1, P2, FilterByType(new string[] { "DIMENSION" }));
                     if (psr.Status == PromptStatus.OK)
                         listObjectId.AddRange(psr.Value.GetObjectIds());
 
@@ -105,9 +117,10 @@ namespace ConversorDrawindDLL
                         if (entity.GetType() == typeof(RotatedDimension))
                         {
                             RotatedDimension dimension = entity as RotatedDimension;
-                            Line3d line = new Line3d(dimension.XLine2Point, dimension.DimLinePoint);
-                            Plane plano = line.GetPerpendicularPlane(dimension.DimLinePoint);
-                            Point3d point = dimension.XLine1Point.OrthoProject(plano);
+                            Point3d point = ArrowFixService.ProjectFirstExtensionPoint(
+                                dimension.XLine1Point,
+                                dimension.XLine2Point,
+                                dimension.DimLinePoint);
                             double t1 = pt.DistanceTo(dimension.DimLinePoint);
                             double t2 = pt.DistanceTo(point);
                             if (pt.DistanceTo(dimension.DimLinePoint) > (distFactor2 * scale) && pt.DistanceTo(point) > (distFactor2 * scale))
@@ -142,22 +155,12 @@ namespace ConversorDrawindDLL
 
         public static double GetDistDimension(RotatedDimension rotatedDimension)
         {
-            Line3d line = new Line3d(rotatedDimension.XLine2Point, rotatedDimension.DimLinePoint);
-            Plane plano = line.GetPerpendicularPlane(rotatedDimension.DimLinePoint);
-            Point3d point = rotatedDimension.XLine1Point.OrthoProject(plano);
-            return rotatedDimension.DimLinePoint.DistanceTo(point);
+            return ArrowFixService.GetDimensionDistance(rotatedDimension);
         }
 
         public static SelectionFilter FilterByType(string[] tiposDeObjetos)
         {
-            List<TypedValue> typedValuelist = new List<TypedValue>();
-            typedValuelist.Add(new TypedValue((int)DxfCode.Operator, "<or"));
-            foreach (string tipo in tiposDeObjetos)
-            {
-                typedValuelist.Add(new TypedValue((int)DxfCode.Start, tipo));
-            }
-            typedValuelist.Add(new TypedValue((int)DxfCode.Operator, "or>"));
-            return new SelectionFilter(typedValuelist.ToArray());
+            return new SelectionFilter(LayerFilterFactory.ObjectTypes(tiposDeObjetos));
         }
     }
 }

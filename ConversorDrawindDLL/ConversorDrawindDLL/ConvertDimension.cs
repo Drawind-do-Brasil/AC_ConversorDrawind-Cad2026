@@ -47,8 +47,8 @@ namespace ConversorDrawindDLL
         {
             ConvertLayer.CreateDimstyle2();
             ObjectId[] ids = ConvertLayer.Filter("ALL","DIMENSION", "ALL", "ALL");
-            Document acDoc = Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            Database acCurDb = documentContext.Database;
             using (Transaction acTrans = acCurDb.TransactionManager.MyStartTransaction())
             {
                 try
@@ -92,9 +92,10 @@ namespace ConversorDrawindDLL
         /// </summary>
         public void ConvertD()
         {
-            document = Application.DocumentManager.MdiActiveDocument;
-            database = document.Database;
-            editor = document.Editor;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            document = documentContext.Document;
+            database = documentContext.Database;
+            editor = documentContext.Editor;
             ObjectId ds = ConvertLayer.CreateDimstyle();
 
             using (transaction = database.TransactionManager.MyStartTransaction())
@@ -134,11 +135,9 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         private ObjectId[] FilterDimension()
         {
-            TypedValue[] typedValue = new TypedValue[2];
-            typedValue.SetValue(new TypedValue((int)DxfCode.Start, "INSERT"), 0);
-            typedValue.SetValue(new TypedValue((int)DxfCode.LayerName, Configuration.Config.EXTDIMBaseLayer), 1);
-            SelectionFilter selectionFilter = new SelectionFilter(typedValue);
-            ObjectId[] objectIdList = editor.SelectAll(selectionFilter).Value.GetObjectIds();
+            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertOnLayer(Configuration.Config.EXTDIMBaseLayer));
+            IEntitySelector entitySelector = new AcadEntitySelector(editor);
+            ObjectId[] objectIdList = entitySelector.SelectAll(selectionFilter).Value.GetObjectIds();
             return objectIdList;
         }
 
@@ -166,16 +165,8 @@ namespace ConversorDrawindDLL
 
                 if (objectsInBlock.dBTextList.Count > 0)
                 {
-                    double rotation = Math.Round(RadianToDegree(objectsInBlock.dBTextList.First().Rotation), 2);
-
-                    for (int j = 0; j < objectsInBlock.dBTextList.Count; j++)
-                    {
-                        if (rotation != Math.Round(RadianToDegree(objectsInBlock.dBTextList[j].Rotation), 2))
-                        {
-                            IsDimensionTangent = true;
-                            break;
-                        }
-                    }
+                    IsDimensionTangent = DimensionTextAnalyzer.HasDifferentTextRotations(
+                        objectsInBlock.dBTextList.Select(text => text.Rotation));
 
                     if (IsDimensionTangent)
                     {
@@ -695,10 +686,11 @@ namespace ConversorDrawindDLL
         {
             BlockTable blockTable = transaction.GetObject(database.BlockTableId, OpenMode.ForRead) as BlockTable;
             BlockTableRecord blockTableRecord = transaction.GetObject(blockTable[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-            Line line = new Line(p1, p2);
-            line.SetDatabaseDefaults();
-            line.Layer = Configuration.Config.EXTDIMlayer;
-            line.Color = ConvertLayer.GetColorForName( Configuration.Config.EXTDIMColorLine);
+            Line line = DimensionEntityFactory.CreateLine(
+                p1,
+                p2,
+                Configuration.Config.EXTDIMlayer,
+                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine));
             blockTableRecord.AppendEntity(line);
             transaction.AddNewlyCreatedDBObject(line, true);
         }
@@ -711,20 +703,11 @@ namespace ConversorDrawindDLL
         {
             BlockTable blockTable = transaction.GetObject(database.BlockTableId, OpenMode.ForRead) as BlockTable;
             BlockTableRecord blockTableRecord = transaction.GetObject(blockTable[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-            RotatedDimension rotatedDimension = new RotatedDimension();
-            rotatedDimension.SetDatabaseDefaults();
-            rotatedDimension.XLine1Point = dimensionProperties.XLine1Point; //new Point3d(0, 15, 0)
-            rotatedDimension.XLine2Point = dimensionProperties.XLine2Point; //new Point3d(20, 20, 0)
-            rotatedDimension.DimLinePoint = dimensionProperties.DimLinePoint; //new Point3d(55, 20, 0)
-            rotatedDimension.Rotation = dimensionProperties.Rotation;
-            rotatedDimension.DimensionText = dimensionProperties.Text;
-            rotatedDimension.DimensionStyle = dimStyle;
-            rotatedDimension.UsingDefaultTextPosition = false;
-            rotatedDimension.TextPosition = dimensionProperties.TextPosition;
-            rotatedDimension.TextRotation = dimensionProperties.TextRotation;
-            if (rotatedDimension.Layer != Configuration.Config.EXTDIMlayer)
-                rotatedDimension.Layer = Configuration.Config.EXTDIMlayer;
-            rotatedDimension.Color = ConvertLayer.GetColorForName( Configuration.Config.EXTDIMColorLine);
+            RotatedDimension rotatedDimension = DimensionEntityFactory.CreateRotatedDimension(
+                dimensionProperties,
+                dimStyle,
+                Configuration.Config.EXTDIMlayer,
+                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine));
             blockTableRecord.AppendEntity(rotatedDimension);
             transaction.AddNewlyCreatedDBObject(rotatedDimension, true);
           
@@ -740,19 +723,11 @@ namespace ConversorDrawindDLL
 
             BlockTable blockTable = transaction.GetObject(database.BlockTableId, OpenMode.ForRead) as BlockTable;
             BlockTableRecord blockTableRecord = transaction.GetObject(blockTable[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-            Point3AngularDimension lineAngularDimension2 = new Point3AngularDimension();
-            lineAngularDimension2.SetDatabaseDefaults();
-            lineAngularDimension2.XLine1Point = dimensionProperties.XLine1Start;
-            lineAngularDimension2.XLine2Point = dimensionProperties.XLine2Start;
-            lineAngularDimension2.CenterPoint = dimensionProperties.Center;
-            lineAngularDimension2.ArcPoint = dimensionProperties.ArcPoint;
-            lineAngularDimension2.DimensionText = dimensionProperties.Text;
-            if (lineAngularDimension2.Layer != Configuration.Config.EXTDIMlayer)
-                lineAngularDimension2.Layer = Configuration.Config.EXTDIMlayer;
-            lineAngularDimension2.Color = ConvertLayer.GetColorForName( Configuration.Config.EXTDIMColorLine);
-            lineAngularDimension2.DimensionStyle = dimStyle;
-            lineAngularDimension2.TextPosition = dimensionProperties.TextPosition;
-            lineAngularDimension2.UsingDefaultTextPosition = false;
+            Point3AngularDimension lineAngularDimension2 = DimensionEntityFactory.CreateAngularDimension(
+                dimensionProperties,
+                dimStyle,
+                Configuration.Config.EXTDIMlayer,
+                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine));
             blockTableRecord.AppendEntity(lineAngularDimension2);
             transaction.AddNewlyCreatedDBObject(lineAngularDimension2, true);
 
@@ -764,19 +739,12 @@ namespace ConversorDrawindDLL
 
             BlockTable blockTable = transaction.GetObject(database.BlockTableId, OpenMode.ForRead) as BlockTable;
             BlockTableRecord blockTableRecord = transaction.GetObject(blockTable[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
-            Point3AngularDimension lineAngularDimension2 = new Point3AngularDimension();
-            lineAngularDimension2.SetDatabaseDefaults();
-            lineAngularDimension2.XLine1Point = dimensionProperties.XLine1Start;
-            lineAngularDimension2.XLine2Point = dimensionProperties.XLine2Start;
-            lineAngularDimension2.CenterPoint = dimensionProperties.Center;
-            lineAngularDimension2.ArcPoint = dimensionProperties.ArcPoint;
-            lineAngularDimension2.DimensionText = dimensionProperties.Text;
-            lineAngularDimension2.Layer = Configuration.Config.EXTDIMlayer;
-            lineAngularDimension2.Color = ConvertLayer.GetColorForName( Configuration.Config.EXTDIMColorLine);
-            lineAngularDimension2.DimensionStyle = dimStyle;
-            lineAngularDimension2.Dimgap = 10 *  Configuration.Config.EXTDIMSizeSeta * 2;
-            lineAngularDimension2.TextPosition = dimensionProperties.TextPosition;
-            lineAngularDimension2.UsingDefaultTextPosition = false;
+            Point3AngularDimension lineAngularDimension2 = DimensionEntityFactory.CreateAngularDimensionWithLargeGap(
+                dimensionProperties,
+                dimStyle,
+                Configuration.Config.EXTDIMlayer,
+                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine),
+                Configuration.Config.EXTDIMSizeSeta);
             blockTableRecord.AppendEntity(lineAngularDimension2);
             transaction.AddNewlyCreatedDBObject(lineAngularDimension2, true);
 
@@ -807,7 +775,7 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         public static double DegreeToRadian(double angle)
         {
-            return Math.PI * angle / 180.0;
+            return DimensionGeometry.DegreeToRadian(angle);
         }
 
         /// <summary>
@@ -817,7 +785,7 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         private static double RadianToDegree(double angle)
         {
-            return angle * (180.0 / Math.PI);
+            return DimensionGeometry.RadianToDegree(angle);
         }
 
         /// <summary>
@@ -829,13 +797,7 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         private bool IsOnLine(Point3d endPoint1, Point3d endPoint2, Point3d checkPoint)
         {
-            if (Math.Round(endPoint1.Y, 4) == Math.Round(endPoint2.Y, 4) && Math.Round(endPoint1.Y, 4) == Math.Round(checkPoint.Y, 4))
-                return true;
-            else if (Math.Round(endPoint1.X, 4) == Math.Round(endPoint2.X, 4) && Math.Round(endPoint1.X, 4) == Math.Round(checkPoint.X, 4))
-                return true;
-            else
-                return Math.Round((double)(checkPoint.Y - endPoint1.Y) / (endPoint2.Y - endPoint1.Y), 4)
-                    == Math.Round((double)(checkPoint.X - endPoint1.X) / (endPoint2.X - endPoint1.X), 4);
+            return DimensionGeometry.IsOnLine(endPoint1, endPoint2, checkPoint);
         }
 
         /// <summary>
@@ -983,18 +945,7 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         private bool CheckParallelLine(double radian1, double radian2)
         {
-            double slope1 = Math.Tan(radian1);
-            double slope2 = Math.Tan(radian2);
-
-            if ((Math.Round(slope1, 1) == Math.Round(slope2, 1)) || (Math.Round(radian1, 2) == Math.Round(radian2, 2)))
-                return true;
-
-            double angle1 = Math.Round(RadianToDegree(radian1), 2);
-            double angle2 = Math.Round(RadianToDegree(radian2), 2);
-
-            if (angle1 - 180 == angle2 || angle1 + 180 == angle2)
-                return true;
-            return false;
+            return DimensionGeometry.CheckParallelLine(radian1, radian2);
         }
 
 
@@ -1007,7 +958,7 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         private double SlopeTwoPoints(Point3d p1, Point3d p2)
         {
-            return Math.Atan((p2.Y - p1.Y) / (p2.X - p1.X));
+            return DimensionGeometry.SlopeTwoPoints(p1, p2);
         }
 
         private bool IsPointEqual(Point3d p1, Point3d p2)

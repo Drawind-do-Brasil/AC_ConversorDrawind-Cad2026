@@ -23,9 +23,10 @@ namespace ConversorDrawindDLL
 
         public static void AddBlockDM()
         {
-            document = Application.DocumentManager.MdiActiveDocument;
-            database = document.Database;
-            editor = document.Editor;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            document = documentContext.Document;
+            database = documentContext.Database;
+            editor = documentContext.Editor;
             using (transaction = database.TransactionManager.MyStartTransaction())
             {
                 try
@@ -84,8 +85,8 @@ namespace ConversorDrawindDLL
 
         public static void CreateAndAssignALayer(string layer, string line, Autodesk.AutoCAD.Colors.Color color)
         {
-            Document acDoc = Application.DocumentManager.MdiActiveDocument;
-            Database acCurDb = acDoc.Database;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            Database acCurDb = documentContext.Database;
 
             try
             {
@@ -118,9 +119,9 @@ namespace ConversorDrawindDLL
         }
         public static void FREEZE(string nome)
         {
-            Document document = Application.DocumentManager.MdiActiveDocument;
-            Database database = document.Database;
-            Editor editor = document.Editor;
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            Database database = documentContext.Database;
+            Editor editor = documentContext.Editor;
 
 
             try
@@ -165,7 +166,7 @@ namespace ConversorDrawindDLL
         {
             string texto = null;
 
-            if (id.ObjectClass.DxfName.ToUpper() == "TEXT")
+            if (string.Equals(id.ObjectClass.DxfName, "TEXT", StringComparison.OrdinalIgnoreCase))
             {
                 DBText dBText = (DBText)id.GetObject(OpenMode.ForRead);
                 if (dBText == null)
@@ -185,7 +186,7 @@ namespace ConversorDrawindDLL
                 }
             }
             
-            else if (id.ObjectClass.DxfName.ToUpper() == "INSERT")
+            else if (string.Equals(id.ObjectClass.DxfName, "INSERT", StringComparison.OrdinalIgnoreCase))
             {
                 BlockReference bref = (BlockReference)id.GetObject(OpenMode.ForRead);
                 BlockTableRecord block = (BlockTableRecord)bref.BlockTableRecord.GetObject(OpenMode.ForRead);
@@ -202,15 +203,10 @@ namespace ConversorDrawindDLL
 
         public static ObjectId[] FilterBlock(string name)
         {
-            TypedValue[] typedValue = new TypedValue[] {
-                    new TypedValue((int)DxfCode.Operator, "<and"),
-                    new TypedValue((int)DxfCode.Start, "INSERT"),
-                    new TypedValue((int)DxfCode.BlockName, name),
-                    new TypedValue((int)DxfCode.Operator, "and>")};
+            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertBlockByNameAnd(name));
+            IEntitySelector entitySelector = new AcadEntitySelector(editor);
 
-            SelectionFilter selectionFilter = new SelectionFilter(typedValue);
-
-            PromptSelectionResult promptSelectionResult = editor.SelectAll(selectionFilter);
+            PromptSelectionResult promptSelectionResult = entitySelector.SelectAll(selectionFilter);
             if (promptSelectionResult.Status == PromptStatus.OK)
                 return promptSelectionResult.Value.GetObjectIds();
 
@@ -219,18 +215,10 @@ namespace ConversorDrawindDLL
 
         public static ObjectId[] FilterObjsID()
         {
-            TypedValue[] typedValue = new TypedValue[] {
-                    new TypedValue((int)DxfCode.Operator, "<and"),
-                    new TypedValue((int)DxfCode.Operator, "<or"),
-                    new TypedValue((int)DxfCode.Start, "TEXT"),
-                    new TypedValue((int)DxfCode.Start, "INSERT"),
-                    new TypedValue((int)DxfCode.Operator, "or>"),
-                    new TypedValue((int)DxfCode.Operator, "and>")};
+            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.TextOrInsert());
+            IEntitySelector entitySelector = new AcadEntitySelector(editor);
 
-
-            SelectionFilter selectionFilter = new SelectionFilter(typedValue);
-
-            PromptSelectionResult promptSelectionResult = editor.SelectAll(selectionFilter);
+            PromptSelectionResult promptSelectionResult = entitySelector.SelectAll(selectionFilter);
 
             if (promptSelectionResult.Status == PromptStatus.OK)
                 return promptSelectionResult.Value.GetObjectIds();

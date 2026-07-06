@@ -11,33 +11,29 @@ namespace ConversorDrawindDLL
         static public List<InstanciaConversor> ConversorInstancias = new List<InstanciaConversor>();
         static double GetObliqueByTextStyle(string style)
         {
-            List<string> estiloAtual = Arranjos.Arrj.AllTextSyles.Where(a => a.Split(':').First().ToUpper() == style.ToUpper()).ToList();
-            if (estiloAtual.Count == 0)
-                estiloAtual.Add(Arranjos.defaultTextStyle);
-            string[] estiloAtualSplit = estiloAtual.First().Split(':');
-
-            return ConvertDimension.DegreeToRadian(estiloAtualSplit[6].ToDouble());
+            return TextStyleResolver.ResolveOblique(Arranjos.Arrj.AllTextSyles, style);
         }
         static public void ConvertInstance(Entity entity)
         {
-            if (entity.Id.ObjectClass.DxfName.ToUpper() == "DIMENSION")
+            if (string.Equals(entity.Id.ObjectClass.DxfName, "DIMENSION", StringComparison.OrdinalIgnoreCase))
                 return;
 
             InstanciaConversor conversor =
-                ConversorInstancias.Where(p => p.BaseLayerName == entity.Layer.ToUpper() &&
-                                     (p.BaseObjectType == "ALL" || p.BaseObjectType == entity.Id.ObjectClass.DxfName.ToUpper()) &&
+                ConversorInstancias.Where(p => string.Equals(p.BaseLayerName, entity.Layer, StringComparison.OrdinalIgnoreCase) &&
+                                     (string.Equals(p.BaseObjectType, "ALL", StringComparison.OrdinalIgnoreCase) || string.Equals(p.BaseObjectType, entity.Id.ObjectClass.DxfName, StringComparison.OrdinalIgnoreCase)) &&
                                      (p.BaseColor == null || p.BaseColor.ColorIndex == entity.Color.ColorIndex) &&
-                                     (p.BaseLineTypeString == "ALL" || p.BaseLineTypeString == entity.Linetype.ToUpper()) &&
+                                     (string.Equals(p.BaseLineTypeString, "ALL", StringComparison.OrdinalIgnoreCase) || string.Equals(p.BaseLineTypeString, entity.Linetype, StringComparison.OrdinalIgnoreCase)) &&
                                      (entity.GetType() != typeof(DBText) || (entity.GetType() == typeof(DBText) &&
-                                                                            (String.IsNullOrEmpty(p.BaseConteudo) || p.BaseConteudo == ((DBText)entity).TextString) &&
-                                                                            (p.BaseAlturaTexto == 0 || Math.Round(((DBText)entity).Height, p.BaseAlturaTextoArredondamento) == p.BaseAlturaTexto))) &&
+                                                                             (String.IsNullOrEmpty(p.BaseConteudo) || p.BaseConteudo == ((DBText)entity).TextString) &&
+                                                                             (p.BaseAlturaTexto == 0 || Math.Round(((DBText)entity).Height, p.BaseAlturaTextoArredondamento) == p.BaseAlturaTexto))) &&
                                      (entity.GetType() != typeof(Line) || (entity.GetType() == typeof(Line) && (p.BaseOrientacaoLinha == "ALL" || ConvertLayer.WhatIsTheOrientation(((Line)entity).StartPoint, ((Line)entity).EndPoint, p.BaseOrientacaoLinha))))).FirstOrDefault();
 
 
             if (conversor == null)
                 return;
 
-            if (entity.Id.ObjectClass.DxfName.ToUpper() == "INSERT" && conversor.BaseObjectType.ToUpper() != "INSERT")
+            if (string.Equals(entity.Id.ObjectClass.DxfName, "INSERT", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(conversor.BaseObjectType, "INSERT", StringComparison.OrdinalIgnoreCase))
                 return;
 
             try

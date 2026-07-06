@@ -11,9 +11,13 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
                     <TextBox x:Name="LispCommandTextBox" />
-                    <TextBox x:Name="LispPathTextBox" Margin="0,4,0,0" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
+                    <TextBox x:Name="LispPathTextBox" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
                     <CheckBox x:Name="RunOnlyAtEndCheckBox" Content="{x:Static local:Localization.LabelRunOnlyAtEnd}" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
                     <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddLispClick" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
                 </StackPanel>
                 <ListBox x:Name="LispListBox" />
             </DockPanel>
@@ -22,8 +26,11 @@
             <DockPanel>
                 <StackPanel DockPanel.Dock="Top">
                     <TextBox x:Name="DllCommandTextBox" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
                     <TextBox x:Name="DllPathTextBox" Margin="0,4,0,0" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
                     <Button Content="{x:Static local:Localization.ButtonSave}" Click="AddDllClick" />
+                    <Separator Visibility="Hidden" Margin="2.5"/>
                 </StackPanel>
                 <ListBox x:Name="DllListBox" />
             </DockPanel>

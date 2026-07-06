@@ -112,9 +112,8 @@ namespace ConversorDrawindDLL
 
         public void LoadXML(string file)
         {
-
+            ConfigurationXmlData data = ConfigurationXmlReader.Read(file);
             Arranjos.Arrj.AllNewLayerComposition.Clear();
-
             Arranjos.Arrj.Conversor.Clear();
             Arranjos.Arrj.LayerRemove.Clear();
             Arranjos.Arrj.ListLISPCommand.Clear();
@@ -123,203 +122,78 @@ namespace ConversorDrawindDLL
             Arranjos.ListBlocksOrig.Clear();
             Arranjos.Arrj.AllExplodeLayers.Clear();
 
+            EXTCONFComments = data.EXTCONFComments;
+            ConvTekla0ConvInv1 = data.ConvTekla0ConvInv1;
+            EXTCONFIsConvertDimension = data.EXTCONFIsConvertDimension;
+            EXTCONFIsConvertLayer = data.EXTCONFIsConvertLayer;
+            EXTCONFIsExchangeFormat = data.EXTCONFIsExchangeFormat;
+            EXTCONFIsPutOnTheScaleDrawing = data.EXTCONFIsPutOnTheScaleDrawing;
+            EXTCONFIsExecuteLISP = data.EXTCONFIsExecuteLISP;
+            EXTCONFIsPurge = data.EXTCONFIsPurge;
+            PROGRAMMessage = data.PROGRAMMessage;
+            EXTCONFIsDeleteTeklaStructures = data.EXTCONFIsDeleteTeklaStructures;
+            ExplodeBlocks = data.ExplodeBlocks;
+            LayerTeklaString = data.LayerTeklaString;
+            LayerBlockAttribute = data.LayerBlockAttribute;
+            EXTCONFInventorExplode = data.EXTCONFInventorExplode;
+            EXTDIMGERALHabilit = data.EXTDIMGERALHabilit;
+            EXTDIMlayer = data.EXTDIMlayer;
+            EXTDIMColorLine = data.EXTDIMColorLine;
+            EXTDIMColorText = data.EXTDIMColorText;
+            EXTDIMStyleName = data.EXTDIMStyleName;
+            EXTDIMSeta = data.EXTDIMSeta;
+            EXTDIMScale = data.EXTDIMScale;
+            EXTDIMPrecision = data.EXTDIMPrecision;
+            EXTDIMAngularPrecision = data.EXTDIMAngularPrecision;
+            EXTDIMUnit = data.EXTDIMUnit;
+            EXTDIMAngularUnit = data.EXTDIMAngularUnit;
+            EXTDIMSizeSeta = data.EXTDIMSizeSeta;
+            EXTDIMOffsetLineFromRefPoint = data.EXTDIMOffsetLineFromRefPoint;
+            EXTDIMOutsideAlign = data.EXTDIMOutsideAlign;
+            EXTDIMTad = data.EXTDIMTad;
+            EXTDIMDimensionPosition = data.EXTDIMDimensionPosition;
+            EXTDIMTextForced = data.EXTDIMTextForced;
+            EXTDIMLineForced = data.EXTDIMLineForced;
+            EXTDIMDIMEX = data.EXTDIMDIMEX;
+            EXTDIMBaseLayer = data.EXTDIMBaseLayer;
+            EXTDIMCorrigeSeta = data.EXTDIMCorrigeSeta;
+            EXTDIMCorrigeSetaTipoSeta = data.EXTDIMCorrigeSetaTipoSeta;
+            EXTDIMCorrigeSetaFactor = data.EXTDIMCorrigeSetaFactor;
+            EXTTEXTStyleName = data.EXTTEXTStyleName;
+            EXTSCALEManual = data.EXTSCALEManual;
+            EXTSCALEMp1 = data.EXTSCALEMp1;
+            EXTSCALEMp2 = data.EXTSCALEMp2;
+            EXTSCALEAp1 = data.EXTSCALEAp1;
+            EXTSCALEAp2 = data.EXTSCALEAp2;
+            EXTSCALELayer = data.EXTSCALELayer;
+            EXTSCALETextSize = data.EXTSCALETextSize;
+            EXTLINELtscale = data.EXTLINELtscale;
+            PROGRAMblockFormatoCaminho = data.PROGRAMblockFormatoCaminho;
+            EXTCONFCaminhoBlocoInv = data.EXTCONFCaminhoBlocoInv;
+            if (data.DMBlock.HasValue)
+                DMBlock = data.DMBlock.Value;
+            EXTTEXTSize = data.TextSizeFromStyle;
 
-
-            XElement importXML = XElement.Load(file);
-
-            EXTCONFComments = importXML.Element("COMMENTS").Attribute("TEXT").Value;
-
-
-            ConvTekla0ConvInv1 = Convert.ToInt32(importXML.Element("BASIC_CONFIG").Attribute("TEKLAORCAD").Value);
-            EXTCONFIsConvertDimension = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("CONVERT_DIMENSIONS").Value);
-            EXTCONFIsConvertLayer = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("CONVERT_LAYERS").Value);
-            EXTCONFIsExchangeFormat = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("EXCHANGE_FORMAT").Value);
-            EXTCONFIsPutOnTheScaleDrawing = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("SCALE").Value);
-            EXTCONFIsExecuteLISP = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("LISPORDLL").Value);
-            EXTCONFIsPurge = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("PURGE").Value);
-            PROGRAMMessage = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("MESSAGE").Value);
-            EXTCONFIsDeleteTeklaStructures = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("DELETE_TEKLA_STRUCTURES").Value);
-            ExplodeBlocks = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("EXPLOD_BLOCKS").Value);
-            LayerTeklaString = importXML.Element("BASIC_CONFIG").Attribute("LAYER_TEKLA_STRING").Value;
-            LayerBlockAttribute = importXML.Element("BASIC_CONFIG").Attribute("LAYER_BLOCK_ATTRIBUTE").Value;
-            EXTCONFInventorExplode = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("CAD_EXPLODE").Value);
-
-            EXTDIMGERALHabilit = Convert.ToBoolean(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_GERAL_HABILIT").Value);
-            EXTDIMlayer = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_LAYER").Value;
-            EXTDIMColorLine = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_LINE_COLOR").Value;
-            EXTDIMColorText = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_TEXT_COLOR").Value;
-            EXTDIMStyleName = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_STYLE").Value;
-            EXTDIMSeta = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ARROW_TYPE").Value;
-            EXTDIMScale = Convert.ToDouble(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_SCALE").Value.ReplaceComma());
-            EXTDIMPrecision = Convert.ToInt32(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_PRECISION").Value);
-            EXTDIMAngularPrecision = Convert.ToInt32(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ANGULAR_PRECISION").Value);
-            EXTDIMUnit = Convert.ToInt32(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_UNIT").Value);
-            EXTDIMAngularUnit = Convert.ToInt32(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ANGULAR_UNIT").Value);
-            EXTDIMSizeSeta = Convert.ToDouble(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ARROW_SIZE").Value.ReplaceComma());
-            EXTDIMOffsetLineFromRefPoint = Convert.ToDouble(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_OFFSET").Value.ReplaceComma());
-            EXTDIMOutsideAlign = Convert.ToBoolean(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_OUTSIDE_ALING").Value);
-            EXTDIMTad = Convert.ToInt32(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_TAD").Value);
-            EXTDIMDimensionPosition = Convert.ToBoolean(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_POSITION").Value);
-            EXTDIMTextForced = Convert.ToBoolean(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_TEXT_FORCED").Value);
-            EXTDIMLineForced = Convert.ToBoolean(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_LINE_FORCED").Value);
-            EXTDIMDIMEX = Convert.ToDouble(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_DIMEX").Value.ReplaceComma());
-            EXTDIMBaseLayer = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_BASE_LAYER").Value;
-            EXTDIMCorrigeSeta = Convert.ToBoolean(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ARROW_FIX").Value);
-            EXTDIMCorrigeSetaTipoSeta = importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ARROW_FIX_TYPE").Value;
-            EXTDIMCorrigeSetaFactor = Convert.ToDouble(importXML.Element("DIMENSION_CONFIG").Attribute("DIM_ARROW_FACTOR").Value.ReplaceComma());
-           EXTTEXTStyleName = importXML.Element("TEXT_CONFIG").Attribute("TEXT_STYPE").Value;
-
-            EXTSCALEManual = Convert.ToBoolean(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MODE").Value);
-            EXTSCALEMp1.X = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MANUAL_P1_X").Value.ReplaceComma());
-            EXTSCALEMp1.Y = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MANUAL_P1_Y").Value.ReplaceComma());
-            EXTSCALEMp1.Z = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MANUAL_P1_Z").Value.ReplaceComma());
-            EXTSCALEMp2.X = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MANUAL_P2_X").Value.ReplaceComma());
-            EXTSCALEMp2.Y = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MANUAL_P2_Y").Value.ReplaceComma());
-            EXTSCALEMp2.Z = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_MANUAL_P2_Z").Value.ReplaceComma());
-            EXTSCALEAp1.X = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_AUTO_P1_X").Value.ReplaceComma());
-            EXTSCALEAp1.Y = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_AUTO_P1_Y").Value.ReplaceComma());
-            EXTSCALEAp1.Z = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_AUTO_P1_Z").Value.ReplaceComma());
-            EXTSCALEAp2.X = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_AUTO_P2_X").Value.ReplaceComma());
-            EXTSCALEAp2.Y = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_AUTO_P2_Y").Value.ReplaceComma());
-            EXTSCALEAp2.Z = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_AUTO_P2_Z").Value.ReplaceComma());
-            EXTSCALELayer = importXML.Element("SCALE_CONFIG").Attribute("SCALE_LAYER").Value;
-            EXTSCALETextSize = Convert.ToDouble(importXML.Element("SCALE_CONFIG").Attribute("SCALE_TEXT_SIZE").Value.ReplaceComma());
-
-            EXTLINELtscale = Convert.ToDouble(importXML.Element("BASIC_LAYERS").Attribute("LTSCALE").Value.ReplaceComma());
-
-
-            foreach (var item in importXML.Element("NEW_LAYERS").Elements("NEW_LAYER"))
-            {
-                Arranjos.Arrj.AllNewLayerComposition.Add(item.Value);
-            }
-
-
-            try
-            {
-                Arranjos.Arrj.AllTextSyles.Clear();
-                foreach (var item in importXML.Element("NEW_TEXTSTYLES").Elements("TEXT_STYLE"))
-                {
-                    Arranjos.Arrj.AllTextSyles.Add(item.Value);
-                }
-                if (Arranjos.Arrj.AllTextSyles.Count == 0)
-                    Arranjos.Arrj.AllTextSyles.Add(Arranjos.defaultTextStyle);
-            }
-            catch (Exception)
-            {
-                Arranjos.Arrj.AllTextSyles.Add(Arranjos.defaultTextStyle);
-            }
-
-
-            string line;
-            foreach (var item in importXML.Element("REMOVE_LAYERS").Elements("REMOVE_LAYER"))
-            {
-                Filter f = new Filter();
-                line = item.Value;
-                string[] treatment = line.Split('$');
-                string[] st = treatment.Last().Split(';');
-                f.layerBase = st[0];
-                f.SetConjunto(st[1]);
-                Arranjos.Arrj.LayerRemove.Add(f);
-            }
-
-            foreach (var item in importXML.Element("CONVERTERS").Elements("CONVERTER"))
-            {
-                Arranjos.Arrj.Conversor.Add(item.Value);
-            }
-            foreach (var item in importXML.Element("DLL_OR_LIST_COMMANDS").Elements("COMMAND"))
-            {
-                Arranjos.Arrj.ListLISPCommand.Add(item.Value);
-            }
-
-            PROGRAMblockFormatoCaminho = importXML.Element("BLOCK_CONFIG").Attribute("DIRECTORY_TEKLA_CONVERSION").Value;
-            EXTCONFCaminhoBlocoInv = importXML.Element("BLOCK_CONFIG").Attribute("DIRECTORY_CAD_CONVERSION").Value;
-
-
-            string[] allexplodelayers = importXML.Element("BLOCK_CONFIG").Attribute("LAYER_EXPLODE").Value.Split(';');
-            Arranjos.Arrj.AllExplodeLayers.AddRange(allexplodelayers);
-
-            foreach (var item in importXML.Element("BLOCK_CONFIG").Elements("BLOCK_ATT"))
-            {
-                BlockClass blockClass = new BlockClass();
-                blockClass.blockName = item.Attribute("NOME").Value;
-                foreach (var tag in item.Elements("TAG"))
-                {
-                    TagBlockClass tagTemp = new TagBlockClass();
-                    tagTemp.SetConjunto(tag.Value);
-                    blockClass.listTags.Add(tagTemp);
-                }
-                Arranjos.ListBlocks.Add(blockClass);
-            }
-            foreach (var item in importXML.Element("BLOCK_CONFIG").Elements("BLOCK_ATT_CAD"))
-            {
-                BlockClass blockClass = new BlockClass();
-
-                string[] linesplit = item.Attribute("NOME").Value.Split(';');
-                blockClass.blockName = linesplit[0];
-                blockClass.blockNameRelacao = linesplit[1];
-                blockClass.cor = Color.FromArgb(Convert.ToInt32(linesplit[2]));
-
-                foreach (var tag in item.Elements("TAG"))
-                {
-                    TagBlockClass tagTemp = new TagBlockClass();
-                    tagTemp.SetConjunto(tag.Value);
-                    string[] linetemp = tag.Value.Split('@');
-                    tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
-                    tagTemp.isSociate = Convert.ToBoolean(linetemp[linetemp.Count() - 1]);
-                    blockClass.listTags.Add(tagTemp);
-                }
-                Arranjos.ListBlocksInv.Add(blockClass);
-            }
-            foreach (var item in importXML.Element("BLOCK_CONFIG").Elements("BLOCK_ATT_ORIG"))
-            {
-                BlockClass blockClass = new BlockClass();
-
-                string[] linesplit = item.Attribute("NOME").Value.Split(';');
-                blockClass.blockName = linesplit[0];
-                blockClass.blockNameRelacao = linesplit[1];
-                blockClass.cor = Color.FromArgb(Convert.ToInt32(linesplit[2]));
-
-                foreach (var tag in item.Elements("TAG"))
-                {
-                    TagBlockClass tagTemp = new TagBlockClass();
-                    tagTemp.SetConjunto(tag.Value);
-                    string[] linetemp = tag.Value.Split('@');
-                    tagTemp.indiceRelacao = Convert.ToInt32(linetemp[linetemp.Count() - 2]);
-                    tagTemp.isSociate = Convert.ToBoolean(linetemp[linetemp.Count() - 1]);
-                    blockClass.listTags.Add(tagTemp);
-                }
-                Arranjos.ListBlocksOrig.Add(blockClass);
-            }
-            try
-            {
-                DMBlock = Convert.ToBoolean(importXML.Element("BASIC_CONFIG").Attribute("DMBLOCK").Value);
-            }
-            catch (Exception)
-            {
-
-            }
-           List<string> estiloAtual =  Arranjos.Arrj.AllTextSyles.Where(a => a.Split(':').First().ToUpper() == EXTTEXTStyleName.ToUpper()).ToList();
-            if (estiloAtual.Count == 0)
-                estiloAtual.Add(Arranjos.defaultTextStyle);
-            string[] estiloAtualSplit = estiloAtual.First().Split(':');
-
-            EXTTEXTSize = estiloAtualSplit[4].ToDouble();
+            Arranjos.Arrj.AllNewLayerComposition.AddRange(data.AllNewLayerComposition);
+            Arranjos.Arrj.AllTextSyles.Clear();
+            Arranjos.Arrj.AllTextSyles.AddRange(data.AllTextSyles);
+            Arranjos.Arrj.LayerRemove.AddRange(data.LayerRemove);
+            Arranjos.Arrj.Conversor.AddRange(data.Conversor);
+            Arranjos.Arrj.ListLISPCommand.AddRange(data.ListLISPCommand);
+            Arranjos.Arrj.AllExplodeLayers.AddRange(data.AllExplodeLayers);
+            Arranjos.ListBlocks.AddRange(data.ListBlocks);
+            Arranjos.ListBlocksInv.AddRange(data.ListBlocksInv);
+            Arranjos.ListBlocksOrig.AddRange(data.ListBlocksOrig);
 
             InstanciaConversor.ConversorInstancias.Clear();
-            InstanciaConversor.ConversorInstancias.AddRange(Arranjos.Arrj.Conversor.Select(p => new InstanciaConversor(p)));
+            InstanciaConversor.ConversorInstancias.AddRange(ConfigurationXmlReader.CreateConverterInstances(Arranjos.Arrj.Conversor));
 
         }
 
         public static string LoadConfigDLL()
         {
             string arquivo = Path.Combine(Path.GetTempPath(), "ConversorDrawind.dll.config");
-            if (!File.Exists(arquivo))
-                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Quadro_DrawindDM.dwg");
-
-            XElement importXML = XElement.Load(arquivo);
-
-
-            return importXML.Element("configurations").Attribute("BlocoDM").Value;
+            return ConfigurationXmlReader.ReadLoadConfigDll(arquivo);
         }
 
     }

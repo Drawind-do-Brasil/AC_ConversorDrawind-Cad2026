@@ -2,51 +2,222 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ConversorDrawind">
+    <UserControl.Resources>
+        <GridLength x:Key="DimensionLabelColumnWidth">220</GridLength>
+        <GridLength x:Key="DimensionValueColumnWidth">240</GridLength>
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="10">
-            <UniformGrid Columns="4">
-                <TextBlock Text="{x:Static local:Localization.LabelLayer}" />
-                <ComboBox x:Name="DimensionLayerComboBox" IsEditable="True" />
-                <TextBlock Text="{x:Static local:Localization.LabelLineColor}" />
-                <ComboBox x:Name="DimensionLineColorComboBox" IsEditable="True" />
-                <TextBlock Text="{x:Static local:Localization.LabelTextColor}" />
-                <ComboBox x:Name="DimensionTextColorComboBox" IsEditable="True" />
-                <TextBlock Text="{x:Static local:Localization.LabelArrowType}" />
-                <ComboBox x:Name="DimensionArrowTypeComboBox" IsEditable="True" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimStyle}" />
-                <TextBox x:Name="DimensionStyleTextBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelTextStyle}" />
-                <ComboBox x:Name="TextStyleComboBox" IsEditable="True" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionScale}" />
-                <TextBox x:Name="DimensionScaleTextBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionArrowSize}" />
-                <TextBox x:Name="DimensionArrowSizeTextBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionOffset}" />
-                <TextBox x:Name="DimensionOffsetTextBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionLineExtend}" />
-                <TextBox x:Name="DimensionLineExtTextBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionLinearPrecision}" />
-                <ComboBox x:Name="DimensionLinearPrecisionComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionAngularPrecision}" />
-                <ComboBox x:Name="DimensionAngularPrecisionComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionLinearUnit}" />
-                <ComboBox x:Name="DimensionLinearUnitComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionAngularUnit}" />
-                <ComboBox x:Name="DimensionAngularUnitComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionOutsideAlign}" />
-                <ComboBox x:Name="DimensionOutsideAlignComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionLineForced}" />
-                <ComboBox x:Name="DimensionLineForcedComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionTextInside}" />
-                <ComboBox x:Name="DimensionTextInsideComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionTextAlignment}" />
-                <ComboBox x:Name="DimensionTextAlignmentComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionTextPlacementVertical}" />
-                <ComboBox x:Name="DimensionTextPlacementComboBox" />
-                <TextBlock Text="{x:Static local:Localization.LabelDimensionBaseLayer}" />
-                <ComboBox x:Name="DimensionBaseLayerComboBox" IsEditable="True" />
-            </UniformGrid>
-            <Button Content="{x:Static local:Localization.LabelDimensionArrowSettingsButton}" Width="260" Margin="0,12,0,0" Click="DimensionArrowAdvancedClick" />
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Margin="0,0,8,0">
+                    <Grid Margin="0,0,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelLayer}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionLayerComboBox" IsEditable="True" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelLineColor}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionLineColorComboBox" IsEditable="True" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelTextColor}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionTextColorComboBox" IsEditable="True" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelArrowType}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionArrowTypeComboBox" IsEditable="True" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimStyle}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBox Grid.Column="1" x:Name="DimensionStyleTextBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelTextStyle}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="TextStyleComboBox" IsEditable="True" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionScale}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBox Grid.Column="1" x:Name="DimensionScaleTextBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionArrowSize}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBox Grid.Column="1" x:Name="DimensionArrowSizeTextBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionOffset}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBox Grid.Column="1" x:Name="DimensionOffsetTextBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionLineExtend}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <TextBox Grid.Column="1" x:Name="DimensionLineExtTextBox" />
+                    </Grid>
+
+                    <Button Content="{x:Static local:Localization.LabelDimensionArrowSettingsButton}" Width="260" Margin="0,12,0,0" HorizontalAlignment="Left" Click="DimensionArrowAdvancedClick" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionLinearPrecision}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionLinearPrecisionComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionAngularPrecision}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionAngularPrecisionComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionLinearUnit}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionLinearUnitComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionAngularUnit}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionAngularUnitComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionOutsideAlign}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionOutsideAlignComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionLineForced}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionLineForcedComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionTextInside}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionTextInsideComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionTextAlignment}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionTextAlignmentComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionTextPlacementVertical}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionTextPlacementComboBox" />
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionValueColumnWidth}" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Text="{x:Static local:Localization.LabelDimensionBaseLayer}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                        <ComboBox Grid.Column="1" x:Name="DimensionBaseLayerComboBox" IsEditable="True" />
+                    </Grid>
+                </StackPanel>
+            </Grid>
         </StackPanel>
     </ScrollViewer>
 </UserControl>
