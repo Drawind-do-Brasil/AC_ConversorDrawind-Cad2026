@@ -26,7 +26,7 @@ namespace ConversorDrawindDLL
                 sr.Close();
 
                 converterName = Path.GetFileNameWithoutExtension(file);
-                configuration.LoadXML(file);
+                RuntimeConfigurationLoader.Load(file, configuration);
             }
             catch (System.Exception e)
             {
