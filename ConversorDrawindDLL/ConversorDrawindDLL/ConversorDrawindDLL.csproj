@@ -58,6 +58,13 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Compile Update="UI\ScaleForm.Designer.cs">
+      <DependentUpon>ScaleForm.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Update="UI\ScaleForm.resx">
+      <DependentUpon>ScaleForm.cs</DependentUpon>
+      <LogicalName>ConversorDrawindDLL.ScaleForm.resources</LogicalName>
+    </EmbeddedResource>
   </ItemGroup>
 
   <Target Name="ValidateAutoCADReferences" BeforeTargets="ResolveAssemblyReferences">
