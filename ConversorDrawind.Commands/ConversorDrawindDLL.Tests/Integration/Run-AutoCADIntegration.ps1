@@ -174,7 +174,7 @@ $coreConsole = Resolve-RequiredPath $CoreConsolePath "AutoCAD Core Console"
 
 if ([string]::IsNullOrWhiteSpace($DllPath)) {
     $scriptRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
-    $defaultDll = Join-Path $scriptRoot "..\..\ConversorDrawindDLL\bin\Debug\ConversorDrawind.dll"
+    $defaultDll = Join-Path $scriptRoot "..\..\ConversorDrawindDLL\bin\Debug\ConversorDrawind.Commands.dll"
     $DllPath = $defaultDll
 }
 

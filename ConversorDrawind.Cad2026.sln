@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind", "Convers
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind.Shared", "ConversorDrawind.Shared\ConversorDrawind.Shared.csproj", "{132F1DB6-59AC-49B2-BDBA-B630BE494F08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind.Commands", "ConversorDrawindDLL\ConversorDrawindDLL\ConversorDrawind.Commands.csproj", "{AA9456B5-411F-4625-A984-FDA0A9696BFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConversorDrawind.Commands", "ConversorDrawind.Commands\ConversorDrawindDLL\ConversorDrawind.Commands.csproj", "{AA9456B5-411F-4625-A984-FDA0A9696BFB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -6,6 +6,9 @@ namespace ConversorDrawind
 {
     public class Configuration
     {
+        public static Configuration Config = new Configuration();
+        public static double INTREFTamFormato = 841;
+
         /// <summary>
         /// INT CONVERT DIMENSION
         /// </summary>
@@ -37,6 +40,7 @@ namespace ConversorDrawind
         public bool EXTDIMOutsideAlign = false;
         public string EXTDIMlayer = "0";
         public string EXTTEXTStyleName = "TEXTO";
+        public double EXTTEXTSize = 2.5;
         
         public bool EXTDIMGERALHabilit = true;
         public double EXTDIMDIMEX = 1.25;
@@ -54,6 +58,7 @@ namespace ConversorDrawind
         public PointEspecial EXTSCALEAp2 = new PointEspecial(0, 0, 0);
         public string EXTSCALELayer = "0";
         public double EXTSCALETextSize = 2.5;
+        public string EXTSCALETextSizeString = "2,5";
 
         /// <summary>
         /// EXT CONFIGURATION
@@ -92,6 +97,7 @@ namespace ConversorDrawind
 
         public int EXTCONFOrigem = 0;
         public bool EXTCONFInventorExplode = false;
+        public int ConvTekla0ConvInv1 = 0;
         public string EXTCONFCaminhoBlocoInv = "";
 
 

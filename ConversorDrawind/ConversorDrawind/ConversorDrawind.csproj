@@ -47,6 +47,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\ConversorDrawind.Shared\ConversorDrawind.Shared.csproj" />
+    <ProjectReference Include="..\..\ConversorDrawind.Commands\ConversorDrawindDLL\ConversorDrawind.Commands.csproj" />
   </ItemGroup>
 
   <ItemGroup>
