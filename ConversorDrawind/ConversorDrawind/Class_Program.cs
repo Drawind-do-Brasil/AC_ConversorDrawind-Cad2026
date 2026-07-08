@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using ConversorDrawind.UI.Wpf.Common;
 using ConversorDrawind.UI.Wpf.Main;
 
 namespace ConversorDrawind
@@ -17,6 +18,7 @@ namespace ConversorDrawind
         static void ThreadMethod()
         {
             System.Windows.Application application = new System.Windows.Application();
+            WpfApplicationStyles.Register(application);
             application.Run(new MainWindow());
         }
     }
