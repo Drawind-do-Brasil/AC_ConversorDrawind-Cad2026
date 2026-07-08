@@ -8,12 +8,17 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ListBox x:Name="LispListBox"
-                 Grid.Row="0"
-                 HorizontalContentAlignment="Stretch"
-                 SelectionChanged="LispListBoxSelectionChanged"
-                 MouseDoubleClick="LispListBoxDoubleClick">
-            <ListBox.ContextMenu>
+        <DataGrid x:Name="LispCommandsGrid"
+                  Grid.Row="0"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Single"
+                  SelectionUnit="FullRow"
+                  SelectionChanged="LispListBoxSelectionChanged"
+                  MouseDoubleClick="LispListBoxDoubleClick">
+            <DataGrid.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="{x:Static local:Localization.ButtonAdd}" Click="AddLispClick" />
                     <MenuItem Header="{x:Static local:Localization.ButtonModify}" Click="ModifyLispClick" />
@@ -22,8 +27,13 @@
                     <MenuItem Header="{x:Static local:Localization.ButtonMoveUp}" Click="MoveLispUpClick" />
                     <MenuItem Header="{x:Static local:Localization.ButtonMoveDown}" Click="MoveLispDownClick" />
                 </ContextMenu>
-            </ListBox.ContextMenu>
-        </ListBox>
+            </DataGrid.ContextMenu>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelAttributeName}" Binding="{Binding Name}" Width="220" />
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelLispLocation}" Binding="{Binding Path}" Width="*" />
+                <DataGridCheckBoxColumn Header="{x:Static local:Localization.LabelRunOnlyAtEnd}" Binding="{Binding RunOnlyAtEnd}" Width="160" />
+            </DataGrid.Columns>
+        </DataGrid>
 
         <StackPanel Grid.Row="1"
                     Orientation="Horizontal"

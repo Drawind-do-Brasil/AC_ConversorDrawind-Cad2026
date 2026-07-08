@@ -81,7 +81,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         public DataGrid RemoveLayersGrid => RemoveLayersTab.LayersGrid;
         public ListBox AllExplodeLayersListBox => ExplosionTab.AllLayersListBox;
         public ListBox SelectedExplodeLayersListBox => ExplosionTab.SelectedLayersListBox;
-        public ListBox LispCommandsListBox => LispDllTab.CommandsListBox;
+        public DataGrid LispCommandsListBox => LispDllTab.CommandsListBox;
 
         private void NewConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(NewConverterClick), sender, e);
         private void SaveConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(SaveConverterClick), sender, e);

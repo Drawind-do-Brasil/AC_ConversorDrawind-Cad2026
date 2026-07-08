@@ -19,7 +19,13 @@
                 <Button Content="{x:Static local:Localization.ButtonRemove}"  Click="DeleteRemoveLayerClick" />
             </StackPanel>
         </Grid>
-        <DataGrid x:Name="RemoveLayersGrid" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Extended" MouseDoubleClick="RemoveLayersGridDoubleClick">
+        <DataGrid x:Name="RemoveLayersGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Extended"
+                  MouseDoubleClick="RemoveLayersGridDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static local:Localization.LabelLayer}" Binding="{Binding Layer}" Width="220" />
                 <DataGridTextColumn Header="{x:Static local:Localization.LabelLayerFilter}" Binding="{Binding Filter}" Width="360" />

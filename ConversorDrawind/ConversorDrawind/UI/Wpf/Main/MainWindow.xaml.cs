@@ -19,7 +19,7 @@ namespace ConversorDrawind.UI.Wpf.Main
     {
         private readonly ObservableCollection<string> drawings = new ObservableCollection<string>();
         private readonly ObservableCollection<string> converterNames = new ObservableCollection<string>();
-        private readonly ObservableCollection<string> lispCommands = new ObservableCollection<string>();
+        private readonly ObservableCollection<LispCommandRow> lispCommands = new ObservableCollection<LispCommandRow>();
         private readonly ObservableCollection<string> teklaBlockNames = new ObservableCollection<string>();
         private readonly ObservableCollection<string> cadBlockNames = new ObservableCollection<string>();
         private readonly ObservableCollection<string> originalBlockNames = new ObservableCollection<string>();
@@ -763,7 +763,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             lispCommands.Clear();
             foreach (string command in arranjos.listLISPCommand)
             {
-                lispCommands.Add(command);
+                lispCommands.Add(LispCommandRow.FromCommandEntry(command));
             }
             RefreshBlockViews();
             UpdateRelationControls();
@@ -826,7 +826,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             SaveRemoveLayerRowsToArranjos();
             SaveExplodeLayerRowsToArranjos();
             arranjos.listLISPCommand.Clear();
-            arranjos.listLISPCommand.AddRange(lispCommands);
+            arranjos.listLISPCommand.AddRange(lispCommands.Select(command => command.ToCommandEntry()));
         }
 
         private void RefreshBlockViews()
@@ -1367,7 +1367,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
             if (dialog.ShowDialog() == true)
             {
-                lispCommands.Add(dialog.CommandEntry);
+                lispCommands.Add(LispCommandRow.FromCommandEntry(dialog.CommandEntry));
                 EditorView.LispCommandsListBox.SelectedIndex = lispCommands.Count - 1;
             }
         }
@@ -1380,14 +1380,14 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            LispDllCommandDialog dialog = new LispDllCommandDialog(lispCommands[index])
+            LispDllCommandDialog dialog = new LispDllCommandDialog(lispCommands[index].ToCommandEntry())
             {
                 Owner = this
             };
 
             if (dialog.ShowDialog() == true)
             {
-                lispCommands[index] = dialog.CommandEntry;
+                lispCommands[index] = LispCommandRow.FromCommandEntry(dialog.CommandEntry);
                 EditorView.LispCommandsListBox.SelectedIndex = index;
             }
         }
@@ -1416,7 +1416,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            string item = lispCommands[index];
+            LispCommandRow item = lispCommands[index];
             lispCommands[index] = lispCommands[newIndex];
             lispCommands[newIndex] = item;
             EditorView.LispCommandsListBox.SelectedIndex = newIndex;
@@ -1453,6 +1453,40 @@ namespace ConversorDrawind.UI.Wpf.Main
 
             public string Layer { get; set; }
             public string Filter { get; set; }
+        }
+
+        public class LispCommandRow
+        {
+            public LispCommandRow(string name, string path, bool runOnlyAtEnd)
+            {
+                Name = name;
+                Path = path;
+                RunOnlyAtEnd = runOnlyAtEnd;
+            }
+
+            public string Name { get; set; }
+            public string Path { get; set; }
+            public bool RunOnlyAtEnd { get; set; }
+
+            public static LispCommandRow FromCommandEntry(string commandEntry)
+            {
+                string[] parts = (commandEntry ?? string.Empty).Split(new[] { '@' }, 3);
+                return new LispCommandRow(
+                    parts.Length > 0 ? parts[0] : string.Empty,
+                    parts.Length > 1 ? parts[1] : string.Empty,
+                    parts.Length == 3);
+            }
+
+            public string ToCommandEntry()
+            {
+                string entry = (Name ?? string.Empty) + "@" + (Path ?? string.Empty);
+                if (RunOnlyAtEnd)
+                {
+                    entry += "@True";
+                }
+
+                return entry;
+            }
         }
     }
 }

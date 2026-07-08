@@ -64,7 +64,9 @@ namespace ConversorDrawind
         public static string LabelLayer => "Layer:";
         public static string LabelColor => "Cor:";
         public static string LabelCommandName => "Nome do comando:";
+        public static string LabelAttributeName => "Nome do atributo";
         public static string LabelCommandPath => "Local do Lisp ou DLL:";
+        public static string LabelLispLocation => "Local do Lisp";
         public static string LabelLineType => "Tipo de linha:";
         public static string LabelHeight => "Altura:";
         public static string LabelWidth => "Largura:";

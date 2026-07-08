@@ -11,7 +11,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             InitializeComponent();
         }
 
-        public ListBox CommandsListBox => LispListBox;
+        public DataGrid CommandsListBox => LispCommandsGrid;
 
         private MainWindow OwnerWindow => Window.GetWindow(this) as MainWindow;
 
