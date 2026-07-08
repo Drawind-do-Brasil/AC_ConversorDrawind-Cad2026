@@ -9,6 +9,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Threading;
 using ConversorDrawind.UI.Wpf.Blocks;
+using ConversorDrawind.UI.Wpf.LispDll;
 using WpfMessageBox = System.Windows.MessageBox;
 using ConversorDrawind;
 
@@ -92,8 +93,8 @@ namespace ConversorDrawind.UI.Wpf.Main
                 case "RelateBlocksClick": RelateSelectedBlocks(); break;
                 case "EditBlockRelationClick": EditBlockRelationParameters(); break;
                 case "RemoveBlockRelationClick": RemoveSelectedRelation(); break;
-                case "LispListBoxSelectionChanged": SelectLispCommand(); break;
-                case "BrowseLispPathClick": BrowseLispCommandPath(); break;
+                case "LispListBoxSelectionChanged": break;
+                case "LispListBoxDoubleClick": ModifyLispCommand(); break;
                 case "AddLispClick": AddLispCommand(); break;
                 case "ModifyLispClick": ModifyLispCommand(); break;
                 case "DeleteLispClick": DeleteLispCommand(); break;
@@ -697,7 +698,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
             RefreshBlockViews();
             UpdateRelationControls();
-            ClearLispCommandFields();
         }
 
         private void ReadConfigurationFromControls()
@@ -1287,61 +1287,38 @@ namespace ConversorDrawind.UI.Wpf.Main
             scaleDrawingPath = string.Empty;
         }
 
-        private void SelectLispCommand()
-        {
-            if (!(EditorView.LispCommandsListBox.SelectedItem is string selected))
-            {
-                return;
-            }
-
-            string[] parts = selected.Split(new[] { '@' }, 3);
-            EditorView.LispCommandNameTextBox.Text = parts.Length > 0 ? parts[0] : string.Empty;
-            EditorView.LispCommandPathTextBox.Text = parts.Length > 1 ? parts[1] : string.Empty;
-            EditorView.LispRunOnlyAtEndCheckBox.IsChecked = parts.Length == 3;
-        }
-
-        private void BrowseLispCommandPath()
-        {
-            OpenFileDialog dialog = new OpenFileDialog
-            {
-                Filter = "Autocad Apps File|*.arx;*.lsp;*.dvb;*.dbx;*.vlx;*.fas;*.dll",
-                Multiselect = false
-            };
-
-            if (dialog.ShowDialog(this) == true)
-            {
-                EditorView.LispCommandPathTextBox.Text = dialog.FileName;
-            }
-        }
-
         private void AddLispCommand()
         {
-            if (!ValidateLispCommandInputs())
+            LispDllCommandDialog dialog = new LispDllCommandDialog
             {
-                return;
-            }
+                Owner = this
+            };
 
-            string command = BuildLispCommandEntry();
-            lispCommands.Add(command);
-            EditorView.LispCommandsListBox.SelectedIndex = lispCommands.Count - 1;
+            if (dialog.ShowDialog() == true)
+            {
+                lispCommands.Add(dialog.CommandEntry);
+                EditorView.LispCommandsListBox.SelectedIndex = lispCommands.Count - 1;
+            }
         }
 
         private void ModifyLispCommand()
         {
-            if (!ValidateLispCommandInputs())
-            {
-                return;
-            }
-
             int index = EditorView.LispCommandsListBox.SelectedIndex;
             if (index < 0)
             {
                 return;
             }
 
-            string command = BuildLispCommandEntry();
-            lispCommands[index] = command;
-            EditorView.LispCommandsListBox.SelectedIndex = index;
+            LispDllCommandDialog dialog = new LispDllCommandDialog(lispCommands[index])
+            {
+                Owner = this
+            };
+
+            if (dialog.ShowDialog() == true)
+            {
+                lispCommands[index] = dialog.CommandEntry;
+                EditorView.LispCommandsListBox.SelectedIndex = index;
+            }
         }
 
         private void DeleteLispCommand()
@@ -1357,7 +1334,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             {
                 EditorView.LispCommandsListBox.SelectedIndex = index < lispCommands.Count ? index : lispCommands.Count - 1;
             }
-            ClearLispCommandFields();
         }
 
         private void MoveLispCommand(int direction)
@@ -1373,44 +1349,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             lispCommands[index] = lispCommands[newIndex];
             lispCommands[newIndex] = item;
             EditorView.LispCommandsListBox.SelectedIndex = newIndex;
-        }
-
-        private bool ValidateLispCommandInputs()
-        {
-            if (string.IsNullOrWhiteSpace(EditorView.LispCommandNameTextBox.Text))
-            {
-                WpfMessageBox.Show("Comando inválido", Localization.AppTitle);
-                return false;
-            }
-
-            string path = EditorView.LispCommandPathTextBox.Text.Trim();
-            if (!string.IsNullOrWhiteSpace(path) && !File.Exists(path))
-            {
-                WpfMessageBox.Show("Arquivo inválido", Localization.AppTitle);
-                return false;
-            }
-
-            return true;
-        }
-
-        private string BuildLispCommandEntry()
-        {
-            string command = EditorView.LispCommandNameTextBox.Text.Trim();
-            string path = EditorView.LispCommandPathTextBox.Text.Trim();
-            string entry = command + "@" + path;
-            if (EditorView.LispRunOnlyAtEndCheckBox.IsChecked == true)
-            {
-                entry += "@True";
-            }
-
-            return entry;
-        }
-
-        private void ClearLispCommandFields()
-        {
-            EditorView.LispCommandNameTextBox.Text = string.Empty;
-            EditorView.LispCommandPathTextBox.Text = string.Empty;
-            EditorView.LispRunOnlyAtEndCheckBox.IsChecked = false;
         }
 
         protected override void OnClosed(EventArgs e)

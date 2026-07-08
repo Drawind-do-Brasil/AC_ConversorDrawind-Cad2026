@@ -78,9 +78,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         public ListBox AllExplodeLayersListBox => ExplosionTab.AllLayersListBox;
         public ListBox SelectedExplodeLayersListBox => ExplosionTab.SelectedLayersListBox;
         public ListBox LispCommandsListBox => LispDllTab.CommandsListBox;
-        public TextBox LispCommandNameTextBox => LispDllTab.CommandNameTextBox;
-        public TextBox LispCommandPathTextBox => LispDllTab.CommandPathTextBox;
-        public CheckBox LispRunOnlyAtEndCheckBox => LispDllTab.RunOnlyAtEndCheckBoxControl;
 
         private void NewConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(NewConverterClick), sender, e);
         private void SaveConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(SaveConverterClick), sender, e);

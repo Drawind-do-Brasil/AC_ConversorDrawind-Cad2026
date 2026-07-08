@@ -12,9 +12,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         }
 
         public ListBox CommandsListBox => LispListBox;
-        public TextBox CommandNameTextBox => LispCommandTextBox;
-        public TextBox CommandPathTextBox => LispPathTextBox;
-        public CheckBox RunOnlyAtEndCheckBoxControl => RunOnlyAtEndCheckBox;
 
         private MainWindow OwnerWindow => Window.GetWindow(this) as MainWindow;
 
@@ -22,7 +19,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void ForwardSelection(string action, object sender, SelectionChangedEventArgs e) => OwnerWindow?.InvokeUiAction(action, sender, e);
 
         private void LispListBoxSelectionChanged(object sender, SelectionChangedEventArgs e) => ForwardSelection(nameof(LispListBoxSelectionChanged), sender, e);
-        private void BrowseLispPathClick(object sender, RoutedEventArgs e) => Forward(nameof(BrowseLispPathClick), sender, e);
+        private void LispListBoxDoubleClick(object sender, MouseButtonEventArgs e) => Forward(nameof(LispListBoxDoubleClick), sender, e);
         private void AddLispClick(object sender, RoutedEventArgs e) => Forward(nameof(AddLispClick), sender, e);
         private void ModifyLispClick(object sender, RoutedEventArgs e) => Forward(nameof(ModifyLispClick), sender, e);
         private void DeleteLispClick(object sender, RoutedEventArgs e) => Forward(nameof(DeleteLispClick), sender, e);
