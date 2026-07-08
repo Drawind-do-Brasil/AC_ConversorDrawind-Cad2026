@@ -62,14 +62,14 @@ namespace ConversorDrawindDLL
             return values.Select(CloneFilter).ToList().AsReadOnly();
         }
 
-        internal static ReadOnlyCollection<BlockClass> CopyBlocks(IEnumerable<BlockClass> values)
+        internal static ReadOnlyCollection<Block> CopyBlocks(IEnumerable<Block> values)
         {
             return values.Select(CloneBlock).ToList().AsReadOnly();
         }
 
-        private static BlockClass CloneBlock(BlockClass source)
+        private static Block CloneBlock(Block source)
         {
-            BlockClass clone = new BlockClass();
+            Block clone = new Block();
             clone.blockName = source.blockName;
             clone.blockNameRelacao = source.blockNameRelacao;
             clone.cor = Color.FromArgb(source.cor.ToArgb());
@@ -77,15 +77,15 @@ namespace ConversorDrawindDLL
             return clone;
         }
 
-        private static TagBlockClass CloneTag(TagBlockClass source)
+        private static TagBlock CloneTag(TagBlock source)
         {
-            TagBlockClass clone = new TagBlockClass();
+            TagBlock clone = new TagBlock();
             clone.verifiqued = source.verifiqued;
             clone.widthfactor = source.widthfactor;
             clone.tag = source.tag;
             clone.modify = source.modify;
-            clone.p1 = new PointEspecial2(source.p1);
-            clone.p2 = new PointEspecial2(source.p2);
+            clone.p1 = new PointEspecial(source.p1);
+            clone.p2 = new PointEspecial(source.p2);
             clone.filtro = CloneFilter(source.filtro);
             clone.text = source.text;
             clone.indiceRelacao = source.indiceRelacao;
@@ -178,9 +178,9 @@ namespace ConversorDrawindDLL
         public bool ExplodeBlocks { get; }
         public string TeklaSheetLayer { get; }
         public string BlockAttributeLayer { get; }
-        public IReadOnlyList<BlockClass> TeklaBlocks { get; }
-        public IReadOnlyList<BlockClass> InventorBlocks { get; }
-        public IReadOnlyList<BlockClass> OriginalBlocks { get; }
+        public IReadOnlyList<Block> TeklaBlocks { get; }
+        public IReadOnlyList<Block> InventorBlocks { get; }
+        public IReadOnlyList<Block> OriginalBlocks { get; }
 
         private BlockConversionPlan(Configuration configuration)
         {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace ConversorDrawind
 {
@@ -53,6 +54,18 @@ namespace ConversorDrawind
 };
         public static string defaultTextStyle = "TEXTO:RomanS:false:false:2.5:1:0";
 
+        [XmlIgnore]
+        public static Arranjos Arrj = new Arranjos();
+
+        [XmlIgnore]
+        public static List<Block> ListBlocks = new List<Block>();
+
+        [XmlIgnore]
+        public static List<Block> ListBlocksInv = new List<Block>();
+
+        [XmlIgnore]
+        public static List<Block> ListBlocksOrig = new List<Block>();
+
         public List<string> allcolor = new List<string>();
         public List<string> allobjects = new List<string>();
         public List<string> allLineType1 = new List<string>();
@@ -66,6 +79,24 @@ namespace ConversorDrawind
         public List<string> listDLLCommand = new List<string>();
         public List<string> allExplodeLayers = new List<string>();
         public List<string> allTextSyles = new List<string>();
+
+        [XmlIgnore]
+        public List<string> AllNewLayerComposition { get { return allNewLayerComposition; } }
+
+        [XmlIgnore]
+        public List<string> Conversor { get { return conversor; } }
+
+        [XmlIgnore]
+        public List<Filter> LayerRemove { get { return layerRemove; } }
+
+        [XmlIgnore]
+        public List<string> ListLISPCommand { get { return listLISPCommand; } }
+
+        [XmlIgnore]
+        public List<string> AllExplodeLayers { get { return allExplodeLayers; } }
+
+        [XmlIgnore]
+        public List<string> AllTextSyles { get { return allTextSyles; } }
 
         public Arranjos()
         {

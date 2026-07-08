@@ -1,3 +1,8 @@
+using Arranjos = global::ConversorDrawind.Arranjos;
+using Block = global::ConversorDrawind.Block;
+using Filter = global::ConversorDrawind.Filter;
+using TagBlock = global::ConversorDrawind.TagBlock;
+
 namespace ConversorDrawindDLL.Tests;
 
 public sealed class ConfigurationCharacterizationTests
@@ -341,12 +346,12 @@ public sealed class ConfigurationCharacterizationTests
                point.Z.ToString("R", CultureInfo.InvariantCulture);
     }
 
-    private static string Filter(Filter filter)
+    private static string Filter(global::ConversorDrawind.Filter filter)
     {
         return filter.layerBase + ";" + filter.GetConjunto();
     }
 
-    private static string Block(BlockClass block)
+    private static string Block(global::ConversorDrawind.Block block)
     {
         return string.Join(",", new[]
         {
@@ -357,7 +362,7 @@ public sealed class ConfigurationCharacterizationTests
         });
     }
 
-    private static string Tag(TagBlockClass tag)
+    private static string Tag(global::ConversorDrawind.TagBlock tag)
     {
         return string.Join(",", new[]
         {
@@ -366,7 +371,7 @@ public sealed class ConfigurationCharacterizationTests
             Point(tag.p1),
             Point(tag.p2),
             tag.filtro.layerBase + ":" + tag.filtro.GetConjunto(),
-            tag.widthfactor.ToString("R", CultureInfo.InvariantCulture),
+            tag.WidthFactorValue.ToString("R", CultureInfo.InvariantCulture),
             tag.indiceRelacao.ToString(CultureInfo.InvariantCulture),
             tag.isSociate.ToString()
         });

@@ -21,14 +21,14 @@ namespace ConversorDrawindDLL
             this.logError = logError ?? throw new ArgumentNullException(nameof(logError));
         }
 
-        internal void CaptureAttributesFromBlocks(List<BlockClass> blocks)
+        internal void CaptureAttributesFromBlocks(List<Block> blocks)
         {
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.MyStartTransaction())
             {
                 try
                 {
-                    foreach (BlockClass block in blocks)
+                    foreach (Block block in blocks)
                     {
                         try
                         {

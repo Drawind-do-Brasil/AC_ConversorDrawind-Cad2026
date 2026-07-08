@@ -1,11 +1,12 @@
-﻿using System;
+using System;
 using System.Linq;
 
 namespace ConversorDrawind
 {
     public class NewLayer
     {
-        private Arranjos arranjos = new Arranjos();
+        private readonly Arranjos arranjos;
+
         public string layer;
         public string cor;
         public string tipoLinha;
@@ -15,7 +16,7 @@ namespace ConversorDrawind
 
         public NewLayer(Arranjos arranjos)
         {
-            this.arranjos = arranjos;
+            this.arranjos = arranjos ?? new Arranjos();
         }
 
         public string GetConjunto()
@@ -28,35 +29,35 @@ namespace ConversorDrawind
                    estiloTexto;
         }
 
-
         public void SetConjunto()
         {
             layer = "0";
-            cor = this.arranjos.allcolor[1];
-            tipoLinha = this.arranjos.allLineType2.First();
+            cor = arranjos.allcolor[1];
+            tipoLinha = arranjos.allLineType2.First();
             alturaTexto = string.Empty;
             larguraTexto = string.Empty;
-            estiloTexto = this.arranjos.allTextSyles.First().Split(':').First();
+            estiloTexto = arranjos.allTextSyles.First().Split(':').First();
         }
 
         public void SetConjuntoEspecial()
         {
             string layertemp = "";
-            for (int i = 0; i < this.arranjos.allLineType2.Count; i++)
+            for (int i = 0; i < arranjos.allLineType2.Count; i++)
             {
-                if (this.arranjos.allLineType2[i] != this.arranjos.lineTypeRemove.First() &&
-                    this.arranjos.allLineType2[i] != this.arranjos.lineTypeRemove.Last())
+                if (arranjos.allLineType2[i] != arranjos.lineTypeRemove.First() &&
+                    arranjos.allLineType2[i] != arranjos.lineTypeRemove.Last())
                 {
-                    layertemp = this.arranjos.allLineType2[i];
+                    layertemp = arranjos.allLineType2[i];
                     break;
                 }
             }
+
             layer = "0";
             cor = "WHITE";
             tipoLinha = layertemp;
             alturaTexto = string.Empty;
             larguraTexto = string.Empty;
-            estiloTexto = this.arranjos.allTextSyles.First().Split(':').First();
+            estiloTexto = arranjos.allTextSyles.First().Split(':').First();
         }
 
         public void SetConjunto(string conjunto)
@@ -69,24 +70,19 @@ namespace ConversorDrawind
                 tipoLinha = split[2];
                 alturaTexto = split[3];
                 larguraTexto = split[4];
-                if (split.Count() >= 6)
-                    estiloTexto = split[5];
-                else
-                    estiloTexto = this.arranjos.allTextSyles.First().Split(':').First();
+                estiloTexto = split.Count() >= 6
+                    ? split[5]
+                    : arranjos.allTextSyles.First().Split(':').First();
             }
             catch (Exception)
             {
-                layer = this.arranjos.allNewLayer.First();
-                cor = this.arranjos.allcolor.First();
-                tipoLinha = this.arranjos.allLineType2.First();
+                layer = arranjos.allNewLayer.First();
+                cor = arranjos.allcolor.First();
+                tipoLinha = arranjos.allLineType2.First();
                 alturaTexto = string.Empty;
                 larguraTexto = string.Empty;
-                estiloTexto = this.arranjos.allTextSyles.First().Split(':').First();
+                estiloTexto = arranjos.allTextSyles.First().Split(':').First();
             }
         }
     }
 }
-
-
-
-

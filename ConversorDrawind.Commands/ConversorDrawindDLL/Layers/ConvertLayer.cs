@@ -1,4 +1,4 @@
-﻿using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -604,7 +604,7 @@ namespace ConversorDrawindDLL
             return scale;
         }
 
-        public static double ScaleDrawingInv(double scale, List<BlockClass> blockClasso)
+        public static double ScaleDrawingInv(double scale, List<Block> blockClasso)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Editor editor = documentContext.Editor;
@@ -620,7 +620,7 @@ namespace ConversorDrawindDLL
 
             try
             {
-                foreach (BlockClass item in blockClasso)
+                foreach (Block item in blockClasso)
                 {
                     myIDs.AddRange(ConvertBlocks.FilterBlock(item.blockName));
                 }

@@ -62,9 +62,9 @@ namespace ConversorDrawindDLL
             InstanciaConversor.ConversorInstancias.AddRange(Arranjos.Arrj.Conversor.Select(item => new InstanciaConversor(item)));
         }
 
-        private static BlockClass CloneBlock(global::ConversorDrawind.Block source)
+        private static Block CloneBlock(global::ConversorDrawind.Block source)
         {
-            BlockClass block = new BlockClass();
+            Block block = new Block();
             block.blockName = source.blockName;
             block.blockNameRelacao = source.blockNameRelacao;
             block.cor = Color.FromArgb(source.cor.ToArgb());
@@ -72,14 +72,14 @@ namespace ConversorDrawindDLL
             return block;
         }
 
-        private static TagBlockClass CloneTag(global::ConversorDrawind.TagBlock source)
+        private static TagBlock CloneTag(global::ConversorDrawind.TagBlock source)
         {
-            TagBlockClass tag = new TagBlockClass();
-            tag.widthfactor = source.widthfactor.ToDouble();
+            TagBlock tag = new TagBlock();
+            tag.widthfactor = source.widthfactor;
             tag.tag = source.tag;
             tag.modify = source.modify;
-            tag.p1 = new PointEspecial2(source.p1);
-            tag.p2 = new PointEspecial2(source.p2);
+            tag.p1 = new PointEspecial(source.p1);
+            tag.p2 = new PointEspecial(source.p2);
             tag.filtro = CloneFilter(source.filtro);
             tag.indiceRelacao = source.indiceRelacao;
             tag.isSociate = source.isSociate;

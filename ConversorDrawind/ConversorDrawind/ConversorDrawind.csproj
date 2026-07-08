@@ -71,12 +71,6 @@
     <Compile Remove="Configuration\ConverterFileService.cs" />
     <Compile Remove="Configuration\DllConfigFile.cs" />
     <Compile Remove="Configuration\UserSettingsService.cs" />
-    <Compile Remove="Models\Arranjos.cs" />
-    <Compile Remove="Models\Block.cs" />
-    <Compile Remove="Models\Filter.cs" />
-    <Compile Remove="Models\PointEspecial.cs" />
-    <Compile Remove="Models\StatusConversorItem.cs" />
-    <Compile Remove="Models\TagBlock.cs" />
     <Compile Remove="Utilities\NumericTextParser.cs" />
     <None Update="app.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

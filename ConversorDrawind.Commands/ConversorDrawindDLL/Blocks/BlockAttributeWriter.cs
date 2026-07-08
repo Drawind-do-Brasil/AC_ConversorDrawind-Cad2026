@@ -24,7 +24,7 @@ namespace ConversorDrawindDLL
             return dict;
         }
 
-        internal static void ChangeAttributes(ObjectId[] objectIdList, BlockClass block, Action<string, string> logError)
+        internal static void ChangeAttributes(ObjectId[] objectIdList, Block block, Action<string, string> logError)
         {
             try
             {
@@ -42,7 +42,7 @@ namespace ConversorDrawindDLL
                                 if (entity.GetType() == typeof(AttributeReference))
                                 {
                                     AttributeReference attributeReference = entity as AttributeReference;
-                                    attributeReference.WidthFactor = block.listTags[i].widthfactor;
+                                    attributeReference.WidthFactor = block.listTags[i].WidthFactorValue;
                                     attributeReference.TextString = block.listTags[i].text;
                                 }
                             }
@@ -59,8 +59,8 @@ namespace ConversorDrawindDLL
         internal static void ChangeRelatedAttributes(
             IAcadDocumentContext documentContext,
             ObjectId[] objectIdList,
-            BlockClass block,
-            BlockClass relatedBlock,
+            Block block,
+            Block relatedBlock,
             Action<string, string> logError)
         {
             Database database = documentContext.Database;
@@ -83,7 +83,7 @@ namespace ConversorDrawindDLL
                                     if (entity.GetType() == typeof(AttributeReference))
                                     {
                                         AttributeReference attributeReference = entity as AttributeReference;
-                                        attributeReference.WidthFactor = block.listTags[i].widthfactor;
+                                        attributeReference.WidthFactor = block.listTags[i].WidthFactorValue;
                                         attributeReference.TextString = relatedBlock.listTags[block.listTags[i].indiceRelacao].text;
                                     }
                                 }

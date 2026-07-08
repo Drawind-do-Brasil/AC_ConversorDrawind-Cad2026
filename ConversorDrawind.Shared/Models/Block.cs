@@ -12,6 +12,27 @@ namespace ConversorDrawind
         public string blockNameRelacao;
         public List<TagBlock> listTags = new List<TagBlock>();
         public Color cor = Color.Black;
+
+        public Block()
+        {
+        }
+
+        public Block(string name)
+        {
+            blockName = name;
+        }
+
+        public double GetWFTag(string tag)
+        {
+            foreach (TagBlock item in listTags)
+            {
+                if (item.tag == tag)
+                    return item.WidthFactorValue;
+            }
+
+            return 1;
+        }
+
         public void ResetTagReference()
         {
             foreach (TagBlock item in listTags)
@@ -33,9 +54,9 @@ namespace ConversorDrawind
         }
     }
 
-    public class BlockClassComparer : IEqualityComparer<Block>
+    public class BlockComparer : IEqualityComparer<Block>
     {
-        public BlockClassComparer(Func<Block, Block, bool> equalityComparer, Func<Block, int> getHashCode)
+        public BlockComparer(Func<Block, Block, bool> equalityComparer, Func<Block, int> getHashCode)
         {
             EqualityComparer = equalityComparer;
             HashCodeGenerator = getHashCode;

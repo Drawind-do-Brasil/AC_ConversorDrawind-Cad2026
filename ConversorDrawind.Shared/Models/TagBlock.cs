@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Xml.Serialization;
 
 namespace ConversorDrawind
 {
@@ -15,6 +16,20 @@ namespace ConversorDrawind
         public Filter filtro;
         public int indiceRelacao = -1;
         public bool isSociate = false;
+
+        [XmlIgnore]
+        public bool verifiqued = false;
+
+        [XmlIgnore]
+        public string text = string.Empty;
+
+        [XmlIgnore]
+        public double WidthFactorValue
+        {
+            get { return string.IsNullOrWhiteSpace(widthfactor) ? 1 : NumericTextParser.ToDouble(widthfactor); }
+            set { widthfactor = value.ToString(System.Globalization.CultureInfo.InvariantCulture); }
+        }
+
         public TagBlock()
         {
             filtro = new Filter(new Arranjos());
@@ -27,6 +42,8 @@ namespace ConversorDrawind
             other.p1 = new PointEspecial(this.p1);
             other.p2 = new PointEspecial(this.p2);
             other.filtro = new Filter(this.filtro);
+            other.verifiqued = this.verifiqued;
+            other.text = this.text;
             return other;
         }
 

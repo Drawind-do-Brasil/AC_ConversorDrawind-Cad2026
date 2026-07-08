@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Xml.Serialization;
 
 namespace ConversorDrawind
 {
@@ -14,9 +15,16 @@ namespace ConversorDrawind
         public string alturaTexto;
         public string orientacao = "ALL";
 
+        [XmlIgnore]
+        public int alturaTextoRound;
+
+        public Filter()
+        {
+        }
+
         public Filter(Arranjos arranjos)
         {
-            this.arranjos = arranjos;
+            this.arranjos = arranjos ?? new Arranjos();
         }
 
         public Filter(Filter filter)
@@ -29,6 +37,7 @@ namespace ConversorDrawind
             this.conteudoTexto = filter.conteudoTexto;
             this.alturaTexto = filter.alturaTexto;
             this.orientacao = filter.orientacao;
+            this.alturaTextoRound = filter.alturaTextoRound;
         }
 
         public string GetConjunto()
@@ -83,6 +92,10 @@ namespace ConversorDrawind
                 conteudoTexto = split[3];
                 alturaTexto = split[4];
                 orientacao = split[5];
+
+                int qtde = 0;
+                int.TryParse((alturaTexto ?? string.Empty).Replace('.', ',').Split(',').Last(), out qtde);
+                alturaTextoRound = qtde;
             }
             catch (Exception)
             {

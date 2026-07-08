@@ -126,14 +126,14 @@ namespace ConversorDrawindDLL
             }
         }
 
-        internal void DeleteRelatedBlocks(List<BlockClass> blocks)
+        internal void DeleteRelatedBlocks(List<Block> blocks)
         {
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.MyStartTransaction())
             {
                 try
                 {
-                    foreach (BlockClass block in blocks)
+                    foreach (Block block in blocks)
                     {
                         if (block.blockNameRelacao != "")
                         {

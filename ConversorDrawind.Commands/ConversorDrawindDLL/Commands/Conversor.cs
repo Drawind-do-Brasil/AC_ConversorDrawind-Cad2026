@@ -1,4 +1,4 @@
-Ôªøusing Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -46,7 +46,7 @@ namespace ConversorDrawindDLL
                 BlockTable blockTable = trans.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
                 BlockTableRecord modelSpace = trans.GetObject(blockTable[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
-                // Selecionar todos os elementos no espa√ßo de modelo
+                // Selecionar todos os elementos no espaÁo de modelo
                 PromptSelectionResult selectionResult = entitySelector.SelectAll();
                 if (selectionResult.Status == PromptStatus.OK)
                 {
@@ -62,7 +62,7 @@ namespace ConversorDrawindDLL
                             // Calcular o vetor de deslocamento entre os pontos de origem e destino
                             Vector3d displacement = endPoint.GetVectorTo(startPoint);
 
-                            // Aplicar a transforma√ß√£o para mover o objeto
+                            // Aplicar a transformaÁ„o para mover o objeto
                             entity.TransformBy(Matrix3d.Displacement(displacement));
                         }
                     }
@@ -71,7 +71,7 @@ namespace ConversorDrawindDLL
                 trans.Commit();
             }
 
-            // Atualizar a viewport para refletir as altera√ß√µes
+            // Atualizar a viewport para refletir as alteraÁıes
             ed.Regen();
         }
         public static void MoveToOrigin()
@@ -81,21 +81,21 @@ namespace ConversorDrawindDLL
             Editor ed = documentContext.Editor;
             IEntitySelector entitySelector = new AcadEntitySelector(ed);
 
-            // Obter as coordenadas m√≠nimas e m√°ximas do desenho
+            // Obter as coordenadas mÌnimas e m·ximas do desenho
             Point3d extMin = new Point3d(NewMin.X, NewMin.Y, NewMin.Z);
             Point3d extMax = new Point3d(NewMax.X, NewMax.Y, NewMax.Z);
 
 
-            // Calcular o vetor de deslocamento necess√°rio para mover do EXTMIN para (0,0,0)
+            // Calcular o vetor de deslocamento necess·rio para mover do EXTMIN para (0,0,0)
             Vector3d displacement = new Vector3d(-extMin.X, -extMin.Y, -extMin.Z);
 
             using (Transaction trans = db.TransactionManager.StartTransaction())
             {
-                // Abrir o espa√ßo de modelo para sele√ß√£o
+                // Abrir o espaÁo de modelo para seleÁ„o
                 BlockTable bt = (BlockTable)trans.GetObject(db.BlockTableId, OpenMode.ForRead);
                 BlockTableRecord modelSpace = (BlockTableRecord)trans.GetObject(bt[BlockTableRecord.ModelSpace], OpenMode.ForWrite);
 
-                // Selecionar todos os elementos no espa√ßo de modelo
+                // Selecionar todos os elementos no espaÁo de modelo
                 PromptSelectionResult selectionResult = entitySelector.SelectAll();
                 if (selectionResult.Status == PromptStatus.OK)
                 {
@@ -110,11 +110,11 @@ namespace ConversorDrawindDLL
                     }
                 }
 
-                // Commit das altera√ß√µes e encerrar a transa√ß√£o
+                // Commit das alteraÁıes e encerrar a transaÁ„o
                 trans.Commit();
             }
 
-            // Atualizar a viewport para refletir as altera√ß√µes
+            // Atualizar a viewport para refletir as alteraÁıes
             ed.Regen();
         }
         
@@ -159,8 +159,8 @@ namespace ConversorDrawindDLL
                 "Extraindo os blocos ",
                 InitialConversionLayer,
                 "Erro 14",
-                "N√£o foi poss√≠vel extrair os layers dos blocos.\nVerifique se a convers√£o ocorreu normalmente.",
-                "Descri√ß√£o: Erro ao extrair os layers dos blocos...\n");
+                "N„o foi possÌvel extrair os layers dos blocos.\nVerifique se a convers„o ocorreu normalmente.",
+                "DescriÁ„o: Erro ao extrair os layers dos blocos...\n");
 
             extentsWorkflow.RefreshAndZoom();
 
@@ -190,8 +190,8 @@ namespace ConversorDrawindDLL
                 "Movendo para origem ",
                 extentsWorkflow.MoveToOriginAndRefreshZoom,
                 "Erro 14",
-                "N√£o foi poss√≠vel extrair os layers dos blocos.\nVerifique se a convers√£o ocorreu normalmente.",
-                "Descri√ß√£o: Erro ao extrair os layers dos blocos...\n");
+                "N„o foi possÌvel extrair os layers dos blocos.\nVerifique se a convers„o ocorreu normalmente.",
+                "DescriÁ„o: Erro ao extrair os layers dos blocos...\n");
             
 
             workflow.ConvertDimensionsIfEnabled();
@@ -283,7 +283,7 @@ namespace ConversorDrawindDLL
                 PromptKeywordOptions pko = new PromptKeywordOptions("Fechar: ");
                 pko.AllowNone = true;
                 pko.Keywords.Add("Sim");
-                pko.Keywords.Add("N√£o");
+                pko.Keywords.Add("N„o");
                 pko.Keywords.Default = "Sim";
                 PromptResult tipoOperacao = editor.GetKeywords(pko);
                 if (tipoOperacao.Status == PromptStatus.Cancel)
@@ -362,8 +362,8 @@ namespace ConversorDrawindDLL
                     ConvertLayer.Zoom(ptMin, new Point3d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal, ptMax.Z * escalaFinal));
                 },
                 "Erro 23",
-                "N√£o foi poss√≠vel colocar o desenho na escala real!",
-                "Descri√ß√£o: Erro ao tentar colocar o desenho na escala real...\n",
+                "N„o foi possÌvel colocar o desenho na escala real!",
+                "DescriÁ„o: Erro ao tentar colocar o desenho na escala real...\n",
                 "... Completado.\n");
 
 
@@ -391,14 +391,14 @@ namespace ConversorDrawindDLL
                 {
                     string newdate = editor.GetString("Digite o nome do bloco: ").StringResult.Replace("*******", " ");
                     double scale = escalaFinal = scaleWorkflow.ReadLineTypeScale();
-                    ConvertLayer.ScaleDrawingInv(scale, new List<BlockClass>() { new BlockClass(newdate) });
+                    ConvertLayer.ScaleDrawingInv(scale, new List<Block>() { new Block(newdate) });
                     object ptMax2 = GetNewMax();
                     object ptMin2 = GetNewMin();
                     ConvertLayer.Zoom((Point3d)ptMin2, (Point3d)ptMax2);
                 },
                 "Erro 24",
-                "N√£o foi poss√≠vel colocar o formato na escala real!",
-                "Descri√ß√£o: Erro ao tentar colocar o formato na escala real...\n",
+                "N„o foi possÌvel colocar o formato na escala real!",
+                "DescriÁ„o: Erro ao tentar colocar o formato na escala real...\n",
                 "... Completado.\n");
         }
 
@@ -418,11 +418,11 @@ namespace ConversorDrawindDLL
             if (Configuration.Config.EXTDIMCorrigeSeta)
             {
                 stepRunner.Run(
-                    "Consertando setas das dimens√µes... ",
+                    "Consertando setas das dimensıes... ",
                     DRAWINDCAD_ConsertarSetaSeta,
                     "Erro 26",
                     string.Empty,
-                    "Descri√ß√£o: Erro ao tentar consertar as setas das dimens√µes...\n",
+                    "DescriÁ„o: Erro ao tentar consertar as setas das dimensıes...\n",
                     "... Completado.\n");
             }
 
@@ -439,17 +439,17 @@ namespace ConversorDrawindDLL
                         ConvertLayer.PurgeTextSyles();
                     },
                     "Erro 28",
-                    "N√£o foi poss√≠vel remover layers, blocos e tipo de linhas desnessessario .nVerifique se a convers√£o ocorreu normalmente.",
-                    "Descri√ß√£o: Erro ao tentar purgar o desenho...\n",
+                    "N„o foi possÌvel remover layers, blocos e tipo de linhas desnessessario .nVerifique se a convers„o ocorreu normalmente.",
+                    "DescriÁ„o: Erro ao tentar purgar o desenho...\n",
                     "... Completado.\n");
             }
 
             TimeSpan ts = DateTime.Now.Subtract(timeini);
             editor.Regen();
-            messenger.WriteMessage("\nConvers√£o: " + conversor + "\tUsu√°rio: " + Environment.UserName + "\tTempo: " + ts.Hours + "h:" + ts.Minutes + "mm:" + ts.Seconds + "s:" + ts.Milliseconds + "ms\n");
-            messenger.WriteMessage("Conversor Drawind 2011 @ 2016 - Vers√£o 2016 - Drawind do Brasil Corpora√ß√£o Limitada. Todos os direitos reservados.\n");
+            messenger.WriteMessage("\nConvers„o: " + conversor + "\tUsu·rio: " + Environment.UserName + "\tTempo: " + ts.Hours + "h:" + ts.Minutes + "mm:" + ts.Seconds + "s:" + ts.Milliseconds + "ms\n");
+            messenger.WriteMessage("Conversor Drawind 2011 @ 2016 - Vers„o 2016 - Drawind do Brasil CorporaÁ„o Limitada. Todos os direitos reservados.\n");
             messenger.WriteMessage("Desenvolvido por Nayara Ferreira de Jesus.\n");
-            messenger.WriteMessage("Convers√£o finalizada.\n");
+            messenger.WriteMessage("Convers„o finalizada.\n");
         }
 
 
@@ -497,7 +497,7 @@ namespace ConversorDrawindDLL
 
                 SelectionFilter filter = new SelectionFilter(filterList.ToArray());
 
-                // Selecionar todos os elementos no espa√ßo de modelo com o filtro
+                // Selecionar todos os elementos no espaÁo de modelo com o filtro
                 PromptSelectionResult selectionResult = entitySelector.SelectAll(filter);
                 if (selectionResult.Status == PromptStatus.OK)
                 {
@@ -565,12 +565,12 @@ namespace ConversorDrawindDLL
                 // Criar um filtro para todos os tipos de entidades
                 TypedValue[] filterList = new TypedValue[]
                 {
-            new TypedValue((int)DxfCode.Start, "INSERT, CIRCLE, LINE, TEXT, ARC, HATCH, DIMENSION, MTEXT, LWPOLYLINE, SPLINE, ATTDEF, SOLID, POINT, MTEXT") // Adicione outros tipos de entidades, se necess√°rio
+            new TypedValue((int)DxfCode.Start, "INSERT, CIRCLE, LINE, TEXT, ARC, HATCH, DIMENSION, MTEXT, LWPOLYLINE, SPLINE, ATTDEF, SOLID, POINT, MTEXT") // Adicione outros tipos de entidades, se necess·rio
                 };
 
                 SelectionFilter filter = new SelectionFilter(filterList);
 
-                // Selecionar todos os elementos no espa√ßo de modelo com o filtro
+                // Selecionar todos os elementos no espaÁo de modelo com o filtro
                 PromptSelectionResult selectionResult = entitySelector.SelectAll(filter);
                 if (selectionResult.Status == PromptStatus.OK)
                 {
@@ -667,12 +667,12 @@ namespace ConversorDrawindDLL
                 // Criar um filtro para todos os tipos de entidades
                 TypedValue[] filterList = new TypedValue[]
                 {
-            new TypedValue((int)DxfCode.Start, "INSERT, TEXT, MTEXT") // Adicione outros tipos de entidades, se necess√°rio
+            new TypedValue((int)DxfCode.Start, "INSERT, TEXT, MTEXT") // Adicione outros tipos de entidades, se necess·rio
                 };
 
                 SelectionFilter filter = new SelectionFilter(filterList);
 
-                // Selecionar todos os elementos no espa√ßo de modelo com o filtro
+                // Selecionar todos os elementos no espaÁo de modelo com o filtro
                 PromptSelectionResult selectionResult = entitySelector.SelectAll(filter);
                 if (selectionResult.Status == PromptStatus.OK)
                 {
@@ -725,7 +725,7 @@ namespace ConversorDrawindDLL
                                     }
 
 
-                                    // Transformar a posi√ß√£o do texto para o espa√ßo do modelo
+                                    // Transformar a posiÁ„o do texto para o espaÁo do modelo
 
 
                                 }
@@ -918,7 +918,7 @@ namespace ConversorDrawindDLL
             {
                 Conversor.EscreverLog("Erro 36", e.Message);
                 messenger.WriteMessage("... Erro. \n" +
-                            "Descri√ß√£o: Erro ao capturar os textos no formato...\n");
+                            "DescriÁ„o: Erro ao capturar os textos no formato...\n");
             }
             finally
             {
@@ -938,7 +938,7 @@ namespace ConversorDrawindDLL
                 IEditorMessenger messenger = new AcadEditorMessenger(editor);
                 using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
                 {
-                    messenger.WriteMessage("Removendo layers desnecess√°rios... ");
+                    messenger.WriteMessage("Removendo layers desnecess·rios... ");
                     try
                     {
                         ConvertBlocks.DeleteLayerNew(Arranjos.Arrj.LayerRemove);
@@ -1006,7 +1006,7 @@ namespace ConversorDrawindDLL
                 {
                     Conversor.EscreverLog("Erro 39", e.Message);
                     messenger.WriteMessage("Editando o novo bloco ... Erro. \n" +
-                                    "Descri√ß√£o: Erro ao editar o novo bloco...\n");
+                                    "DescriÁ„o: Erro ao editar o novo bloco...\n");
                     if (Configuration.Config.PROGRAMMessage)
                     {
                         string nomeBlocos = "";
@@ -1017,7 +1017,7 @@ namespace ConversorDrawindDLL
                         nomeBlocos = nomeBlocos.Trim();
                         nomeBlocos = nomeBlocos.Trim(',');
                         FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
-                            "N√£o foi poss√≠vel atributar o formato. \nOs blocos ou atributos dentro dos blocos n√£o correspondem ao especificado.\nNomes dos blocos especificados: " + nomeBlocos + ".",
+                            "N„o foi possÌvel atributar o formato. \nOs blocos ou atributos dentro dos blocos n„o correspondem ao especificado.\nNomes dos blocos especificados: " + nomeBlocos + ".",
                                              "Erro",
                                              FORMS.MessageBoxButtons.OK,
                                              FORMS.MessageBoxIcon.Warning,

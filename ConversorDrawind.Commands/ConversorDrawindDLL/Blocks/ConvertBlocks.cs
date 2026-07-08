@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -66,8 +66,8 @@ namespace ConversorDrawindDLL
                                 {
                                     DBText text = obj as DBText;
                                     Point3d textPositionInModelSpace = text.Position.TransformBy(blockTransform);
-                                    List<TagBlockClass> listTags = TagBlockClass.GetTagBlock(textPositionInModelSpace);
-                                    foreach (TagBlockClass tag in listTags)
+                                    List<TagBlock> listTags = GetTagBlocksAtPoint(textPositionInModelSpace);
+                                    foreach (TagBlock tag in listTags)
                                     {
                                         int qtde = 0;
                                         int.TryParse(tag.filtro.alturaTexto.ReplaceComma().Split(',').Last(), out qtde);
@@ -115,9 +115,9 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    foreach (BlockClass block in Arranjos.ListBlocks)
+                    foreach (Block block in Arranjos.ListBlocks)
                     {
-                        foreach (TagBlockClass tag in block.listTags)
+                        foreach (TagBlock tag in block.listTags)
                         {
                             if (tag.verifiqued)
                                 continue;
@@ -179,27 +179,40 @@ namespace ConversorDrawindDLL
        
         }
 
-        public static void GeTTextInv(List<BlockClass> blockClass)
+        private static List<TagBlock> GetTagBlocksAtPoint(Point3d point)
+        {
+            List<TagBlock> list = new List<TagBlock>();
+            foreach (Block block in Arranjos.ListBlocks)
+            {
+                list.AddRange(block.listTags.Where(tag => !tag.verifiqued && CheckPoint(point,
+                    GetPTReal(new Point3d(tag.p1.X, tag.p1.Y, tag.p1.Z)),
+                    GetPTReal(new Point3d(tag.p2.X, tag.p2.Y, tag.p2.Z)))).ToList());
+            }
+
+            return list;
+        }
+
+        public static void GeTTextInv(List<Block> Block)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             new BlockAttributeReader(documentContext, FilterBlock, Conversor.EscreverLog)
-                .CaptureAttributesFromBlocks(blockClass);
+                .CaptureAttributesFromBlocks(Block);
         }
 
-        public static void SetText(List<BlockClass> blockClass)
+        public static void SetText(List<Block> Block)
         {
-            foreach (BlockClass block in blockClass)
+            foreach (Block block in Block)
             {
                 ChangingAttibutes(FilterBlock(block.blockName), block);
             }
 
         }
 
-        public static void SetText2(List<BlockClass> blockClassi, List<BlockClass> blockClasso)
+        public static void SetText2(List<Block> blockClassi, List<Block> blockClasso)
         {
-            foreach (BlockClass block in blockClasso)
+            foreach (Block block in blockClasso)
             {
-                foreach (BlockClass item in blockClassi)
+                foreach (Block item in blockClassi)
                 {
                     if (block.blockNameRelacao == item.blockName)
                     {
@@ -212,13 +225,13 @@ namespace ConversorDrawindDLL
 
         }
 
-        public static void ChangingAttibutes(ObjectId[] objectIdList, BlockClass block)
+        public static void ChangingAttibutes(ObjectId[] objectIdList, Block block)
         {
             BlockAttributeWriter.ChangeAttributes(objectIdList, block, Conversor.EscreverLog);
         }
 
 
-        public static void ChangingAttibutes2(ObjectId[] objectIdList, BlockClass block, BlockClass blockClassi)
+        public static void ChangingAttibutes2(ObjectId[] objectIdList, Block block, Block blockClassi)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             BlockAttributeWriter.ChangeRelatedAttributes(
@@ -463,7 +476,7 @@ namespace ConversorDrawindDLL
         }
 
 
-        public static void DeleteBlocks(List<BlockClass> blockClassi)
+        public static void DeleteBlocks(List<Block> blockClassi)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, Conversor.EscreverLog)
