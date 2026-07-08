@@ -267,10 +267,8 @@ namespace ConversorDrawindDLL
     public sealed class ScaleConversionSettings
     {
         public bool Manual { get; }
-        public PointEspecial2 ManualPoint1 { get; }
-        public PointEspecial2 ManualPoint2 { get; }
-        public PointEspecial2 AutoPoint1 { get; }
-        public PointEspecial2 AutoPoint2 { get; }
+        public PointEspecial2 Point1 { get; }
+        public PointEspecial2 Point2 { get; }
         public string Layer { get; }
         public double TextSize { get; }
         public string TextSizeString { get; }
@@ -278,10 +276,8 @@ namespace ConversorDrawindDLL
         private ScaleConversionSettings(Configuration configuration)
         {
             Manual = configuration.EXTSCALEManual;
-            ManualPoint1 = new PointEspecial2(configuration.EXTSCALEMp1);
-            ManualPoint2 = new PointEspecial2(configuration.EXTSCALEMp2);
-            AutoPoint1 = new PointEspecial2(configuration.EXTSCALEAp1);
-            AutoPoint2 = new PointEspecial2(configuration.EXTSCALEAp2);
+            Point1 = new PointEspecial2(configuration.EXTSCALEp1);
+            Point2 = new PointEspecial2(configuration.EXTSCALEp2);
             Layer = configuration.EXTSCALELayer;
             TextSize = configuration.EXTSCALETextSize;
             TextSizeString = configuration.EXTSCALETextSizeString;

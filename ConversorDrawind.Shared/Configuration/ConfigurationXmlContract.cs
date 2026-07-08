@@ -85,18 +85,12 @@ namespace ConversorDrawind
         public const string TextObliqueAngle = "TEXT_OBLIQUE_ANGLE";
 
         public const string ScaleMode = "SCALE_MODE";
-        public const string ScaleManualP1X = "SCALE_MANUAL_P1_X";
-        public const string ScaleManualP1Y = "SCALE_MANUAL_P1_Y";
-        public const string ScaleManualP1Z = "SCALE_MANUAL_P1_Z";
-        public const string ScaleManualP2X = "SCALE_MANUAL_P2_X";
-        public const string ScaleManualP2Y = "SCALE_MANUAL_P2_Y";
-        public const string ScaleManualP2Z = "SCALE_MANUAL_P2_Z";
-        public const string ScaleAutoP1X = "SCALE_AUTO_P1_X";
-        public const string ScaleAutoP1Y = "SCALE_AUTO_P1_Y";
-        public const string ScaleAutoP1Z = "SCALE_AUTO_P1_Z";
-        public const string ScaleAutoP2X = "SCALE_AUTO_P2_X";
-        public const string ScaleAutoP2Y = "SCALE_AUTO_P2_Y";
-        public const string ScaleAutoP2Z = "SCALE_AUTO_P2_Z";
+        public const string ScaleP1X = "SCALE_P1_X";
+        public const string ScaleP1Y = "SCALE_P1_Y";
+        public const string ScaleP1Z = "SCALE_P1_Z";
+        public const string ScaleP2X = "SCALE_P2_X";
+        public const string ScaleP2Y = "SCALE_P2_Y";
+        public const string ScaleP2Z = "SCALE_P2_Z";
         public const string ScaleLayer = "SCALE_LAYER";
         public const string ScaleTextSize = "SCALE_TEXT_SIZE";
 

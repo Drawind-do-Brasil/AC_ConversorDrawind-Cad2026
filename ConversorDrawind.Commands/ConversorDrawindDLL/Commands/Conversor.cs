@@ -817,8 +817,8 @@ namespace ConversorDrawindDLL
             if (!string.Equals(text.Layer, Configuration.Config.EXTSCALELayer, StringComparison.OrdinalIgnoreCase))
                 return false;
             if (ConvertBlocks.CheckPoint(positionInSpace,
-                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp1.X, Configuration.Config.EXTSCALEAp1.Y, Configuration.Config.EXTSCALEAp1.Z)),
-                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp2.X, Configuration.Config.EXTSCALEAp2.Y, Configuration.Config.EXTSCALEAp2.Z))))
+                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEp1.X, Configuration.Config.EXTSCALEp1.Y, Configuration.Config.EXTSCALEp1.Z)),
+                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEp2.X, Configuration.Config.EXTSCALEp2.Y, Configuration.Config.EXTSCALEp2.Z))))
 
             {
                 int arredondamento = Configuration.Config.EXTSCALETextSizeString.Split(',').Last().Length;

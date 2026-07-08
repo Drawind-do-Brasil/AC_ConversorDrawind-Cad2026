@@ -48,10 +48,8 @@ namespace ConversorDrawind
         /// EXT SCALE
         /// </summary>
         public bool EXTSCALEManual = true;
-        public PointEspecial EXTSCALEMp1 = new PointEspecial(0, 0, 0);
-        public PointEspecial EXTSCALEMp2 = new PointEspecial(0, 0, 0);
-        public PointEspecial EXTSCALEAp1 = new PointEspecial(0, 0, 0);
-        public PointEspecial EXTSCALEAp2 = new PointEspecial(0, 0, 0);
+        public PointEspecial EXTSCALEp1 = new PointEspecial(0, 0, 0);
+        public PointEspecial EXTSCALEp2 = new PointEspecial(0, 0, 0);
         public string EXTSCALELayer = "0";
         public double EXTSCALETextSize = 2.5;
 

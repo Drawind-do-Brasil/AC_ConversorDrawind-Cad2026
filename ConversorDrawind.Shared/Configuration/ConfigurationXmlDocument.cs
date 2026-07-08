@@ -130,18 +130,12 @@ namespace ConversorDrawind
                 ScaleConfig = new ScaleConfigXml
                 {
                     ScaleMode = configuration.EXTSCALEManual,
-                    ScaleManualP1X = configuration.EXTSCALEMp1.X,
-                    ScaleManualP1Y = configuration.EXTSCALEMp1.Y,
-                    ScaleManualP1Z = configuration.EXTSCALEMp1.Z,
-                    ScaleManualP2X = configuration.EXTSCALEMp2.X,
-                    ScaleManualP2Y = configuration.EXTSCALEMp2.Y,
-                    ScaleManualP2Z = configuration.EXTSCALEMp2.Z,
-                    ScaleAutoP1X = configuration.EXTSCALEAp1.X,
-                    ScaleAutoP1Y = configuration.EXTSCALEAp1.Y,
-                    ScaleAutoP1Z = configuration.EXTSCALEAp1.Z,
-                    ScaleAutoP2X = configuration.EXTSCALEAp2.X,
-                    ScaleAutoP2Y = configuration.EXTSCALEAp2.Y,
-                    ScaleAutoP2Z = configuration.EXTSCALEAp2.Z,
+                    ScaleP1X = configuration.EXTSCALEp1.X,
+                    ScaleP1Y = configuration.EXTSCALEp1.Y,
+                    ScaleP1Z = configuration.EXTSCALEp1.Z,
+                    ScaleP2X = configuration.EXTSCALEp2.X,
+                    ScaleP2Y = configuration.EXTSCALEp2.Y,
+                    ScaleP2Z = configuration.EXTSCALEp2.Z,
                     ScaleLayer = configuration.EXTSCALELayer,
                     ScaleTextSize = configuration.EXTSCALETextSize
                 },
@@ -239,18 +233,12 @@ namespace ConversorDrawind
 
             var scale = ScaleConfig ?? new ScaleConfigXml();
             configuration.EXTSCALEManual = scale.ScaleMode;
-            configuration.EXTSCALEMp1.X = scale.ScaleManualP1X;
-            configuration.EXTSCALEMp1.Y = scale.ScaleManualP1Y;
-            configuration.EXTSCALEMp1.Z = scale.ScaleManualP1Z;
-            configuration.EXTSCALEMp2.X = scale.ScaleManualP2X;
-            configuration.EXTSCALEMp2.Y = scale.ScaleManualP2Y;
-            configuration.EXTSCALEMp2.Z = scale.ScaleManualP2Z;
-            configuration.EXTSCALEAp1.X = scale.ScaleAutoP1X;
-            configuration.EXTSCALEAp1.Y = scale.ScaleAutoP1Y;
-            configuration.EXTSCALEAp1.Z = scale.ScaleAutoP1Z;
-            configuration.EXTSCALEAp2.X = scale.ScaleAutoP2X;
-            configuration.EXTSCALEAp2.Y = scale.ScaleAutoP2Y;
-            configuration.EXTSCALEAp2.Z = scale.ScaleAutoP2Z;
+            configuration.EXTSCALEp1.X = scale.GetPoint1X();
+            configuration.EXTSCALEp1.Y = scale.GetPoint1Y();
+            configuration.EXTSCALEp1.Z = scale.GetPoint1Z();
+            configuration.EXTSCALEp2.X = scale.GetPoint2X();
+            configuration.EXTSCALEp2.Y = scale.GetPoint2Y();
+            configuration.EXTSCALEp2.Z = scale.GetPoint2Z();
             configuration.EXTSCALELayer = scale.ScaleLayer;
             configuration.EXTSCALETextSize = scale.ScaleTextSize;
 
@@ -521,6 +509,42 @@ namespace ConversorDrawind
         [XmlAttribute("SCALE_MODE")]
         public bool ScaleMode { get; set; }
 
+        [XmlAttribute("SCALE_P1_X")]
+        public double ScaleP1X { get; set; }
+
+        [XmlIgnore]
+        public bool ScaleP1XSpecified { get; set; }
+
+        [XmlAttribute("SCALE_P1_Y")]
+        public double ScaleP1Y { get; set; }
+
+        [XmlIgnore]
+        public bool ScaleP1YSpecified { get; set; }
+
+        [XmlAttribute("SCALE_P1_Z")]
+        public double ScaleP1Z { get; set; }
+
+        [XmlIgnore]
+        public bool ScaleP1ZSpecified { get; set; }
+
+        [XmlAttribute("SCALE_P2_X")]
+        public double ScaleP2X { get; set; }
+
+        [XmlIgnore]
+        public bool ScaleP2XSpecified { get; set; }
+
+        [XmlAttribute("SCALE_P2_Y")]
+        public double ScaleP2Y { get; set; }
+
+        [XmlIgnore]
+        public bool ScaleP2YSpecified { get; set; }
+
+        [XmlAttribute("SCALE_P2_Z")]
+        public double ScaleP2Z { get; set; }
+
+        [XmlIgnore]
+        public bool ScaleP2ZSpecified { get; set; }
+
         [XmlAttribute("SCALE_MANUAL_P1_X")]
         public double ScaleManualP1X { get; set; }
 
@@ -562,6 +586,18 @@ namespace ConversorDrawind
 
         [XmlAttribute("SCALE_TEXT_SIZE")]
         public double ScaleTextSize { get; set; }
+
+        public double GetPoint1X() => ScaleP1XSpecified ? ScaleP1X : GetLegacyPoint(ScaleManualP1X, ScaleAutoP1X);
+        public double GetPoint1Y() => ScaleP1YSpecified ? ScaleP1Y : GetLegacyPoint(ScaleManualP1Y, ScaleAutoP1Y);
+        public double GetPoint1Z() => ScaleP1ZSpecified ? ScaleP1Z : GetLegacyPoint(ScaleManualP1Z, ScaleAutoP1Z);
+        public double GetPoint2X() => ScaleP2XSpecified ? ScaleP2X : GetLegacyPoint(ScaleManualP2X, ScaleAutoP2X);
+        public double GetPoint2Y() => ScaleP2YSpecified ? ScaleP2Y : GetLegacyPoint(ScaleManualP2Y, ScaleAutoP2Y);
+        public double GetPoint2Z() => ScaleP2ZSpecified ? ScaleP2Z : GetLegacyPoint(ScaleManualP2Z, ScaleAutoP2Z);
+
+        private double GetLegacyPoint(double manualValue, double autoValue)
+        {
+            return ScaleMode ? manualValue : autoValue;
+        }
     }
 
     public sealed class BasicLayersXml

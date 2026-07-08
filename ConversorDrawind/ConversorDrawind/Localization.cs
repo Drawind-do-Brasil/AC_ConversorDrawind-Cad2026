@@ -54,6 +54,7 @@ namespace ConversorDrawind
         public static string ButtonPurge => "Purgar";
         public static string ButtonConvert => "Converter";
         public static string ButtonClose => "Fechar";
+        public static string ButtonSelectInDrawing => "Selecionar no desenho";
 
         public static string LabelName => "Nome:";
         public static string LabelTemplate => "Template:";

@@ -35,6 +35,8 @@ namespace ConversorDrawind.UI.Wpf.Main
         private List<Block> listBlocksOrig = new List<Block>();
         private GetInfo teklaDrawingBlock;
         private string teklaDrawingBlockPath = string.Empty;
+        private GetInfo scaleDrawing;
+        private string scaleDrawingPath = string.Empty;
         private bool isInitializing;
 
         public MainWindow()
@@ -65,6 +67,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 case "DimensionArrowAdvancedClick": ConfigureAdvancedDimensionArrow(); break;
                 case "OtherLineColorClick": AddOtherDimensionColor(EditorView.DimensionLineColorComboBox); break;
                 case "OtherTextColorClick": AddOtherDimensionColor(EditorView.DimensionTextColorComboBox); break;
+                case "SelectScalePointsClick": SelectScalePointsFromDrawing(); break;
                 case "AddLayerRuleClick": AddLayerRule(); break;
                 case "DeleteLayerRuleClick": DeleteSelectedLayerRules(); break;
                 case "MoveLayerRuleUpClick": MoveLayerRule(-1); break;
@@ -679,18 +682,12 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.DimensionBaseLayerComboBox.Text = configuration.EXTDIMBaseLayer;
             EditorView.ManualScaleRadio.IsChecked = configuration.EXTSCALEManual;
             EditorView.AutoScaleRadio.IsChecked = !configuration.EXTSCALEManual;
-            EditorView.ScaleManualP1XTextBox.Text = Convert.ToString(configuration.EXTSCALEMp1.X);
-            EditorView.ScaleManualP1YTextBox.Text = Convert.ToString(configuration.EXTSCALEMp1.Y);
-            EditorView.ScaleManualP1ZTextBox.Text = Convert.ToString(configuration.EXTSCALEMp1.Z);
-            EditorView.ScaleManualP2XTextBox.Text = Convert.ToString(configuration.EXTSCALEMp2.X);
-            EditorView.ScaleManualP2YTextBox.Text = Convert.ToString(configuration.EXTSCALEMp2.Y);
-            EditorView.ScaleManualP2ZTextBox.Text = Convert.ToString(configuration.EXTSCALEMp2.Z);
-            EditorView.ScaleAutoP1XTextBox.Text = Convert.ToString(configuration.EXTSCALEAp1.X);
-            EditorView.ScaleAutoP1YTextBox.Text = Convert.ToString(configuration.EXTSCALEAp1.Y);
-            EditorView.ScaleAutoP1ZTextBox.Text = Convert.ToString(configuration.EXTSCALEAp1.Z);
-            EditorView.ScaleAutoP2XTextBox.Text = Convert.ToString(configuration.EXTSCALEAp2.X);
-            EditorView.ScaleAutoP2YTextBox.Text = Convert.ToString(configuration.EXTSCALEAp2.Y);
-            EditorView.ScaleAutoP2ZTextBox.Text = Convert.ToString(configuration.EXTSCALEAp2.Z);
+            EditorView.ScaleP1XTextBox.Text = Convert.ToString(configuration.EXTSCALEp1.X);
+            EditorView.ScaleP1YTextBox.Text = Convert.ToString(configuration.EXTSCALEp1.Y);
+            EditorView.ScaleP1ZTextBox.Text = Convert.ToString(configuration.EXTSCALEp1.Z);
+            EditorView.ScaleP2XTextBox.Text = Convert.ToString(configuration.EXTSCALEp2.X);
+            EditorView.ScaleP2YTextBox.Text = Convert.ToString(configuration.EXTSCALEp2.Y);
+            EditorView.ScaleP2ZTextBox.Text = Convert.ToString(configuration.EXTSCALEp2.Z);
             EditorView.ScaleLayerComboBox.Text = configuration.EXTSCALELayer;
             EditorView.ScaleTextSizeTextBox.Text = Convert.ToString(configuration.EXTSCALETextSize);
             lispCommands.Clear();
@@ -746,18 +743,12 @@ namespace ConversorDrawind.UI.Wpf.Main
             configuration.EXTDIMTad = ReadInt(EditorView.DimensionTextPlacementComboBox.Text, configuration.EXTDIMTad);
             configuration.EXTDIMBaseLayer = EditorView.DimensionBaseLayerComboBox.Text;
             configuration.EXTSCALEManual = EditorView.ManualScaleRadio.IsChecked == true;
-            configuration.EXTSCALEMp1.X = ReadDouble(EditorView.ScaleManualP1XTextBox.Text, configuration.EXTSCALEMp1.X);
-            configuration.EXTSCALEMp1.Y = ReadDouble(EditorView.ScaleManualP1YTextBox.Text, configuration.EXTSCALEMp1.Y);
-            configuration.EXTSCALEMp1.Z = ReadDouble(EditorView.ScaleManualP1ZTextBox.Text, configuration.EXTSCALEMp1.Z);
-            configuration.EXTSCALEMp2.X = ReadDouble(EditorView.ScaleManualP2XTextBox.Text, configuration.EXTSCALEMp2.X);
-            configuration.EXTSCALEMp2.Y = ReadDouble(EditorView.ScaleManualP2YTextBox.Text, configuration.EXTSCALEMp2.Y);
-            configuration.EXTSCALEMp2.Z = ReadDouble(EditorView.ScaleManualP2ZTextBox.Text, configuration.EXTSCALEMp2.Z);
-            configuration.EXTSCALEAp1.X = ReadDouble(EditorView.ScaleAutoP1XTextBox.Text, configuration.EXTSCALEAp1.X);
-            configuration.EXTSCALEAp1.Y = ReadDouble(EditorView.ScaleAutoP1YTextBox.Text, configuration.EXTSCALEAp1.Y);
-            configuration.EXTSCALEAp1.Z = ReadDouble(EditorView.ScaleAutoP1ZTextBox.Text, configuration.EXTSCALEAp1.Z);
-            configuration.EXTSCALEAp2.X = ReadDouble(EditorView.ScaleAutoP2XTextBox.Text, configuration.EXTSCALEAp2.X);
-            configuration.EXTSCALEAp2.Y = ReadDouble(EditorView.ScaleAutoP2YTextBox.Text, configuration.EXTSCALEAp2.Y);
-            configuration.EXTSCALEAp2.Z = ReadDouble(EditorView.ScaleAutoP2ZTextBox.Text, configuration.EXTSCALEAp2.Z);
+            configuration.EXTSCALEp1.X = ReadDouble(EditorView.ScaleP1XTextBox.Text, configuration.EXTSCALEp1.X);
+            configuration.EXTSCALEp1.Y = ReadDouble(EditorView.ScaleP1YTextBox.Text, configuration.EXTSCALEp1.Y);
+            configuration.EXTSCALEp1.Z = ReadDouble(EditorView.ScaleP1ZTextBox.Text, configuration.EXTSCALEp1.Z);
+            configuration.EXTSCALEp2.X = ReadDouble(EditorView.ScaleP2XTextBox.Text, configuration.EXTSCALEp2.X);
+            configuration.EXTSCALEp2.Y = ReadDouble(EditorView.ScaleP2YTextBox.Text, configuration.EXTSCALEp2.Y);
+            configuration.EXTSCALEp2.Z = ReadDouble(EditorView.ScaleP2ZTextBox.Text, configuration.EXTSCALEp2.Z);
             configuration.EXTSCALELayer = EditorView.ScaleLayerComboBox.Text;
             configuration.EXTSCALETextSize = ReadDouble(EditorView.ScaleTextSizeTextBox.Text, configuration.EXTSCALETextSize);
             SaveLayerRuleRowsToArranjos();
@@ -948,6 +939,77 @@ namespace ConversorDrawind.UI.Wpf.Main
             List<Block> blocks = DeduplicateBlocks(drawingBlock.GetListBlocks());
             drawingBlock.Dispose();
             return blocks;
+        }
+
+        private void SelectScalePointsFromDrawing()
+        {
+            GetInfo drawing = OpenScaleDrawing();
+            if (drawing == null)
+            {
+                return;
+            }
+
+            PointEspecial p1 = new PointEspecial();
+            PointEspecial p2 = new PointEspecial();
+            drawing.Get2Point(ref p1, ref p2);
+
+            if (drawing.Status() == "ERROR")
+            {
+                return;
+            }
+
+            SetScalePointFields(p1, p2);
+            Thread.Sleep(5);
+            Activate();
+        }
+
+        private GetInfo OpenScaleDrawing()
+        {
+            if (scaleDrawing != null)
+            {
+                scaleDrawing.UpdateStatus();
+            }
+
+            if (scaleDrawing != null && scaleDrawing.Status() != "ERROR")
+            {
+                return scaleDrawing;
+            }
+
+            DisposeScaleDrawing();
+
+            string fileName = BrowseDrawingFile(scaleDrawingPath);
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return null;
+            }
+
+            GetInfo drawing = OpenDrawingBlock(fileName);
+            if (drawing == null)
+            {
+                scaleDrawingPath = string.Empty;
+                return null;
+            }
+
+            scaleDrawing = drawing;
+            scaleDrawingPath = fileName;
+            return scaleDrawing;
+        }
+
+        private void SetScalePointFields(PointEspecial p1, PointEspecial p2)
+        {
+            EditorView.ScaleP1XTextBox.Text = Convert.ToString(p1.X);
+            EditorView.ScaleP1YTextBox.Text = Convert.ToString(p1.Y);
+            EditorView.ScaleP1ZTextBox.Text = Convert.ToString(p1.Z);
+            EditorView.ScaleP2XTextBox.Text = Convert.ToString(p2.X);
+            EditorView.ScaleP2YTextBox.Text = Convert.ToString(p2.Y);
+            EditorView.ScaleP2ZTextBox.Text = Convert.ToString(p2.Z);
+
+            configuration.EXTSCALEp1.X = p1.X;
+            configuration.EXTSCALEp1.Y = p1.Y;
+            configuration.EXTSCALEp1.Z = p1.Z;
+            configuration.EXTSCALEp2.X = p2.X;
+            configuration.EXTSCALEp2.Y = p2.Y;
+            configuration.EXTSCALEp2.Z = p2.Z;
         }
 
         private List<Block> DeduplicateBlocks(List<Block> blocks)
@@ -1213,6 +1275,18 @@ namespace ConversorDrawind.UI.Wpf.Main
             teklaDrawingBlockPath = string.Empty;
         }
 
+        private void DisposeScaleDrawing()
+        {
+            if (scaleDrawing == null)
+            {
+                return;
+            }
+
+            scaleDrawing.Dispose();
+            scaleDrawing = null;
+            scaleDrawingPath = string.Empty;
+        }
+
         private void SelectLispCommand()
         {
             if (!(EditorView.LispCommandsListBox.SelectedItem is string selected))
@@ -1342,6 +1416,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         protected override void OnClosed(EventArgs e)
         {
             DisposeTeklaDrawingBlock();
+            DisposeScaleDrawing();
             base.OnClosed(e);
         }
 

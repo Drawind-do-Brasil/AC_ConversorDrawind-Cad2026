@@ -9,172 +9,104 @@
     <StackPanel Margin="10">
         <RadioButton x:Name="ManualScaleRadio" Content="{x:Static local:Localization.LabelManualScale}" Checked="ScaleModeChanged" />
         <RadioButton x:Name="AutoScaleRadio" Content="{x:Static local:Localization.LabelAutomaticScale}" Checked="ScaleModeChanged" />
-        <GroupBox Header="{x:Static local:Localization.LabelManual}" Margin="0,10,0,0">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
+        <GroupBox Header="Pontos" Margin="0,10,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP1X}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P1XTextBox" />
+                        </Grid>
+                        <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP1Y}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P1YTextBox" />
+                        </Grid>
+                        <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP1Z}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P1ZTextBox" />
+                        </Grid>
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
 
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP1X}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="P1XTextBox" />
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP2X}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P2XTextBox" />
+                        </Grid>
+                        <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP2Y}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P2YTextBox" />
+                        </Grid>
+                        <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP2Z}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P2ZTextBox" />
+                        </Grid>
+
                     </Grid>
-                    <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
 
-                    <Grid Grid.Column="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP1Y}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="P1YTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
+                </StackPanel>
 
-                    <Grid Grid.Column="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP1Z}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="P1ZTextBox" />
-                    </Grid>
-                </Grid>
-                <Separator Visibility="Hidden" Margin="0,2.5" />
 
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP2X}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="P2XTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
-
-                    <Grid Grid.Column="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP2Y}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="P2YTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
-
-                    <Grid Grid.Column="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP2Z}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="P2ZTextBox" />
-                    </Grid>
-                </Grid>
-            </StackPanel>
-        </GroupBox>
-        <GroupBox Header="{x:Static local:Localization.LabelAutomatic}" Margin="0,10,0,0">
-            <StackPanel>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP1X}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="AP1XTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
-
-                    <Grid Grid.Column="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP1Y}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="AP1YTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
-
-                    <Grid Grid.Column="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP1Z}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="AP1ZTextBox" />
-                    </Grid>
-                </Grid>
-                <Separator Visibility="Hidden" Margin="0,2.5" />
-
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP2X}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="AP2XTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
-
-                    <Grid Grid.Column="2">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP2Y}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="AP2YTextBox" />
-                    </Grid>
-                    <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
-
-                    <Grid Grid.Column="4">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
-                            <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
-                        </Grid.ColumnDefinitions>
-                        <TextBlock Text="{x:Static local:Localization.LabelP2Z}" VerticalAlignment="Center" Margin="0,0,8,0" />
-                        <TextBox Grid.Column="1" x:Name="AP2ZTextBox" />
-                    </Grid>
-                </Grid>
-                <Separator Visibility="Hidden" Margin="0,2.5" />
-
-              
-            </StackPanel>
+                <Button Grid.Column="3" Content="{x:Static local:Localization.ButtonSelectInDrawing}"
+                      Width="160"
+                      HorizontalAlignment="Left"
+                      Click="SelectScalePointsClick" />
+            </Grid>
         </GroupBox>
         <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5" />
         <Grid>
@@ -188,7 +120,7 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{x:Static local:Localization.LabelTextLayer}" VerticalAlignment="Center" Margin="0,0,8,0" />
@@ -198,7 +130,7 @@
 
             <Grid Grid.Column="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
                 </Grid.ColumnDefinitions>
                 <TextBlock Text="{x:Static local:Localization.LabelTextSize}" VerticalAlignment="Center" Margin="0,0,8,0" />

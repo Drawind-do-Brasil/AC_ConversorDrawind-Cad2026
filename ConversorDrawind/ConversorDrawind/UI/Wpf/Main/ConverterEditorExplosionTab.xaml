@@ -8,10 +8,14 @@
             <ColumnDefinition Width="Auto"/>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <StackPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <TextBlock Text="{x:Static local:Localization.LabelAllLayers}" />
-            <ListBox x:Name="AllExplodeLayersListBox"
-                     Height="420"
+            <ListBox  Grid.Row="1" x:Name="AllExplodeLayersListBox"
+                     VerticalAlignment="Stretch"
                      SelectionMode="Extended"
                      AllowDrop="True"
                      MouseMove="ExplodeLayersMouseMove"
@@ -19,18 +23,22 @@
                      Drop="ExplodeLayersDrop" />
             <Separator Visibility="Hidden" Margin="2.5"/>
 
-        </StackPanel>
+        </Grid>
         <Grid  Grid.Column="1" VerticalAlignment="Center" Margin="5">
             <StackPanel>
-                <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddExplodeLayerClick" />
+                <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddExplodeLayerClick" Padding="10"/>
                 <Separator Visibility="Hidden" Margin="2.5"/>
-                <Button Content="{x:Static local:Localization.ButtonRemove}" Click="RemoveExplodeLayerClick" />
+                <Button Content="{x:Static local:Localization.ButtonRemove}" Click="RemoveExplodeLayerClick" Padding="10" />
             </StackPanel>
         </Grid>
-        <StackPanel Grid.Column="2">
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
             <TextBlock Text="{x:Static local:Localization.LabelExplodeOnlyLayers}" />
-            <ListBox x:Name="SelectedExplodeLayersListBox"
-                     Height="420"
+            <ListBox Grid.Row="1" x:Name="SelectedExplodeLayersListBox"
+                     VerticalAlignment="Stretch"
                      SelectionMode="Extended"
                      AllowDrop="True"
                      MouseMove="ExplodeLayersMouseMove"
@@ -38,6 +46,6 @@
                      Drop="ExplodeLayersDrop" />
             <Separator Visibility="Hidden" Margin="2.5"/>
           
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>

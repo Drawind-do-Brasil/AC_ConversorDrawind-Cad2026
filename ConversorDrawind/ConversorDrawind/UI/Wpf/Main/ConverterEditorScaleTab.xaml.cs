@@ -18,12 +18,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         public TextBox P2XTextBoxControl => P2XTextBox;
         public TextBox P2YTextBoxControl => P2YTextBox;
         public TextBox P2ZTextBoxControl => P2ZTextBox;
-        public TextBox AP1XTextBoxControl => AP1XTextBox;
-        public TextBox AP1YTextBoxControl => AP1YTextBox;
-        public TextBox AP1ZTextBoxControl => AP1ZTextBox;
-        public TextBox AP2XTextBoxControl => AP2XTextBox;
-        public TextBox AP2YTextBoxControl => AP2YTextBox;
-        public TextBox AP2ZTextBoxControl => AP2ZTextBox;
         public ComboBox ZoomLayerFilterComboBoxControl => ZoomLayerFilterComboBox;
         public TextBox ZoomTextSizeTextBoxControl => ZoomTextSizeTextBox;
 
@@ -32,5 +26,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void Forward(string action, object sender, RoutedEventArgs e) => OwnerWindow?.InvokeUiAction(action, sender, e);
 
         private void ScaleModeChanged(object sender, RoutedEventArgs e) => Forward(nameof(ScaleModeChanged), sender, e);
+        private void SelectScalePointsClick(object sender, RoutedEventArgs e) => Forward(nameof(SelectScalePointsClick), sender, e);
     }
 }

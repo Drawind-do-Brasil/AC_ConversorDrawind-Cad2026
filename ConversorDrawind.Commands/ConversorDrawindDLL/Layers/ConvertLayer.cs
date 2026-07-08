@@ -572,8 +572,8 @@ namespace ConversorDrawindDLL
 
             if (Configuration.Config.EXTSCALEManual || scale <= 0)
             {
-                Zoom(GetPointDiference(pIni, new Point3d(Configuration.Config.EXTSCALEMp1.X, Configuration.Config.EXTSCALEMp1.Y, Configuration.Config.EXTSCALEMp1.Z), scaleDesenho),
-                     GetPointDiference(pIni, new Point3d(Configuration.Config.EXTSCALEMp2.X, Configuration.Config.EXTSCALEMp2.Y, Configuration.Config.EXTSCALEMp2.Z), scaleDesenho));
+                Zoom(GetPointDiference(pIni, new Point3d(Configuration.Config.EXTSCALEp1.X, Configuration.Config.EXTSCALEp1.Y, Configuration.Config.EXTSCALEp1.Z), scaleDesenho),
+                     GetPointDiference(pIni, new Point3d(Configuration.Config.EXTSCALEp2.X, Configuration.Config.EXTSCALEp2.Y, Configuration.Config.EXTSCALEp2.Z), scaleDesenho));
                 ScaleForm scaleF = new ScaleForm();
                 scaleF.TopMost = true;
                 scaleF.ShowDialog();
