@@ -33,23 +33,14 @@ namespace ConversorDrawind
 
         public GetInfo(string fileArq)
         {
-            if (fileArq != "")
+            if (!string.IsNullOrWhiteSpace(fileArq))
             {
                 try
                 {
                     using (MessageFilter.ScopedRegistration())
                     {
-                        try
-                        {
-                            acadDocument = acadApplication.Documents.Item(0);
-                        }
-                        catch (Exception)
-                        {
-                            acadApplication = new ACAD.AcadApplication();
-                            acadApplication.WindowState = ACCOMMON.AcWindowState.acMax;
-                        }
-
-                        acadDocument = acadApplication.Documents.Open(fileArq, false);
+                        EnsureAcadApplication();
+                        acadDocument = ComRetry.Invoke(() => acadApplication.Documents.Open(fileArq, false), 120, 100);
                     }
 
                     LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
@@ -65,6 +56,25 @@ namespace ConversorDrawind
                     status = "ERROR";
                 }
             }
+        }
+
+        private static void EnsureAcadApplication()
+        {
+            if (acadApplication != null)
+            {
+                try
+                {
+                    ComRetry.Invoke(() => acadApplication.Documents.Count, 120, 100);
+                    return;
+                }
+                catch (Exception)
+                {
+                    acadApplication = null;
+                }
+            }
+
+            acadApplication = ComRetry.Invoke(() => new ACAD.AcadApplication(), 120, 100);
+            ComRetry.Invoke(() => acadApplication.WindowState = ACCOMMON.AcWindowState.acMax, 120, 100);
         }
 
         public string Status()

@@ -242,7 +242,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         {
             OpenFileDialog dialog = new OpenFileDialog { Filter = Localization.FilterTemplateXml };
             if (dialog.ShowDialog(this) != true) return;
-            configuration.LoadXML(dialog.FileName, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
+            ConverterFileService.LoadConverter(configuration, dialog.FileName, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
             EditorView.ConverterNameTextBox.Text = Path.GetFileNameWithoutExtension(dialog.FileName);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, EditorView.ConverterNameTextBox.Text);

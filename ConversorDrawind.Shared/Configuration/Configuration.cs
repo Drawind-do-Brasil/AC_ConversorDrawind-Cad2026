@@ -6,6 +6,8 @@ namespace ConversorDrawind
 {
     public class Configuration
     {
+        private static readonly IConverterConfigurationRepository ConfigurationRepository = new TxmlConverterConfigurationRepository();
+
         public static Configuration Config = new Configuration();
         public static double INTREFTamFormato = 841;
 
@@ -114,23 +116,27 @@ namespace ConversorDrawind
 
         public bool CheckFileTxmlExist(string file, StatusConversorItem statusConversorItem)
         {
-            return File.Exists(ConfigurationPaths.TxmlPath(file, statusConversorItem));
+            return ConfigurationRepository.Exists(file, statusConversorItem);
         }
 
+        [Obsolete("Use ConverterFileService.LoadConverter or IConverterConfigurationRepository.Load to work with ConverterConfiguration.")]
         public void Load(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
             LoadXML(file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
         }
+
+        [Obsolete("Use ConverterFileService.LoadConverter or IConverterConfigurationRepository.Load to work with ConverterConfiguration.")]
         public void LoadXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
-            string arquivo = ConfigurationPaths.TxmlPath(file, statusConversorItem);
-            ConfigurationXmlDocument.Load(arquivo).ApplyTo(this, arranjos, blocks, blocosi, blocoso);
+            ConverterConfiguration configuration = ConfigurationRepository.Load(file, statusConversorItem);
+            ConfigurationCompatibilityMapper.ApplyToLegacyState(configuration, this, arranjos, blocks, blocosi, blocoso);
         }
 
+        [Obsolete("Use ConverterFileService.SaveConverter or IConverterConfigurationRepository.Save to save ConverterConfiguration.")]
         public void SaveXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
-            string arquivo = ConfigurationPaths.TxmlPath(file, statusConversorItem);
-            ConfigurationXmlDocument.From(this, arranjos, blocks, blocosi, blocoso).Save(arquivo);
+            ConverterConfiguration configuration = ConfigurationCompatibilityMapper.FromLegacyState(this, arranjos, blocks, blocosi, blocoso);
+            ConfigurationRepository.Save(file, statusConversorItem, configuration);
         }
         public static string LoadConfigDLL()
         {

@@ -1,15 +1,17 @@
-﻿using System;
+using System;
+using System.Globalization;
 
 namespace ConversorDrawind
 {
-    internal static class NumericTextParser
+    public static class NumericTextParser
     {
         public static double ToDouble(string value)
         {
-            return Convert.ToDouble(value.Replace('.', ','));
+            if (string.IsNullOrWhiteSpace(value))
+                return 0;
+
+            string normalized = value.Replace(',', '.');
+            return Convert.ToDouble(normalized, CultureInfo.InvariantCulture);
         }
     }
 }
-
-
-

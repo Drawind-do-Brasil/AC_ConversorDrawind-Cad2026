@@ -36,7 +36,7 @@ public sealed class ConfigurationCharacterizationTests
     }
 
     [Fact]
-    public void Configuration_SaveXML_DeveGerarMesmoContratoXml()
+    public void Configuration_SaveXML_DeveGerarContratoEstruturadoVersion2()
     {
         using var workspace = TestWorkspace.Create();
         var state = ConfigurationFixture.CreatePopulatedState();
@@ -51,9 +51,18 @@ public sealed class ConfigurationCharacterizationTests
         loaded.LoadXML("BASELINE", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
         loaded.SaveXML("ROUNDTRIP", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
 
+        var baselineXml = XDocument.Load(workspace.GetFile("BASELINE.txml"));
+        var roundtripXml = XDocument.Load(workspace.GetFile("ROUNDTRIP.txml"));
+
+        Assert.Equal("2", baselineXml.Root!.Attribute("VERSION")!.Value);
+        Assert.Equal("2", roundtripXml.Root!.Attribute("VERSION")!.Value);
+        Assert.NotNull(roundtripXml.Descendants("NEW_LAYER").Single(layer => layer.Attribute("NAME")!.Value == "NEW_A").Attribute("COLOR"));
+        Assert.NotNull(roundtripXml.Descendants("CONVERSION_RULE").Single().Element("SOURCE"));
+        Assert.NotNull(roundtripXml.Descendants("CONVERSION_RULE").Single().Element("TARGET"));
+
         Assert.Equal(
-            XmlAssert.Normalize(workspace.GetFile("BASELINE.txml")),
-            XmlAssert.Normalize(workspace.GetFile("ROUNDTRIP.txml")));
+            ConfigurationSnapshot.Create(state.Configuration, state.Arranjos, state.Blocks, state.BlocksInv, state.BlocksOrig),
+            ConfigurationSnapshot.Create(loaded, arranjos, blocks, blocksInv, blocksOrig));
     }
 
     [Fact]
@@ -258,7 +267,7 @@ internal sealed class ConfigurationFixture
         arranjos.allNewLayerComposition.AddRange(new[] { "NEW_A:WHITE:CONTINUOUS", "NEW_B:RED:HIDDEN" });
         arranjos.allNewLayer.AddRange(new[] { "NEW_A", "NEW_B" });
         arranjos.allTextSyles.AddRange(new[] { "TEXTO_TESTE:RomanS:false:false:2.5:1:0" });
-        arranjos.conversor.Add("LAYER_A:NEW_A:TEXT:ALL:ALL::ALL");
+        arranjos.conversor.Add("LAYER_A;TEXT:ALL:ALL:::ALL;NEW_A:BYLAYER:BYLAYER:::TEXTO_TESTE");
         arranjos.listLISPCommand.Add("(command \"zoom\" \"e\")");
         arranjos.allExplodeLayers.AddRange(new[] { "EXPLODE_A", "EXPLODE_B" });
 
@@ -419,14 +428,6 @@ internal static class ConfigurationSnapshot
     private static string Format(double value)
     {
         return value.ToString("R", CultureInfo.InvariantCulture);
-    }
-}
-
-internal static class XmlAssert
-{
-    public static string Normalize(string file)
-    {
-        return XDocument.Load(file).ToString(SaveOptions.DisableFormatting);
     }
 }
 

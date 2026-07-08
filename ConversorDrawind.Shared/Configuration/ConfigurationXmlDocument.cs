@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Xml.Linq;
 using System.Xml.Serialization;
 
 namespace ConversorDrawind
@@ -54,10 +56,66 @@ namespace ConversorDrawind
 
         public static ConfigurationXmlDocument Load(string file)
         {
-            using (var stream = File.OpenRead(file))
+            XDocument document = XDocument.Load(file);
+            NormalizeLegacyDecimalAttributes(document);
+            NormalizeLegacyRootElementOrder(document);
+
+            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(document.ToString(SaveOptions.DisableFormatting))))
             {
                 return (ConfigurationXmlDocument)Serializer.Deserialize(stream);
             }
+        }
+
+        private static void NormalizeLegacyDecimalAttributes(XDocument document)
+        {
+            foreach (XAttribute attribute in document.Descendants().Attributes())
+            {
+                string value = attribute.Value;
+
+                if (string.IsNullOrWhiteSpace(value) || !value.Contains(","))
+                    continue;
+
+                string normalized = value.Replace(',', '.');
+                double parsed;
+
+                if (double.TryParse(normalized, NumberStyles.Float, CultureInfo.InvariantCulture, out parsed))
+                    attribute.Value = parsed.ToString("R", CultureInfo.InvariantCulture);
+            }
+        }
+
+        private static void NormalizeLegacyRootElementOrder(XDocument document)
+        {
+            XElement root = document.Root;
+            if (root == null)
+                return;
+
+            string[] orderedNames =
+            {
+                "COMMENTS",
+                "BASIC_CONFIG",
+                "DIMENSION_CONFIG",
+                "TEXT_CONFIG",
+                "SCALE_CONFIG",
+                "BASIC_LAYERS",
+                "BASIC_LINES",
+                "NEW_TEXTSTYLES",
+                "NEW_LAYERS",
+                "REMOVE_LAYERS",
+                "CONVERTERS",
+                "DLL_OR_LIST_COMMANDS",
+                "BLOCK_CONFIG"
+            };
+
+            List<XElement> elements = root.Elements().ToList();
+            if (elements.Count == 0)
+                return;
+
+            root.RemoveNodes();
+
+            foreach (string name in orderedNames)
+                root.Add(elements.Where(element => element.Name.LocalName == name));
+
+            root.Add(elements.Where(element => !orderedNames.Contains(element.Name.LocalName)));
         }
 
         public void Save(string file)
@@ -188,6 +246,7 @@ namespace ConversorDrawind
 
             var basic = BasicConfig ?? new BasicConfigXml();
             configuration.EXTCONFOrigem = basic.TeklaOrCad;
+            configuration.ConvTekla0ConvInv1 = basic.TeklaOrCad;
             configuration.EXTCONFIsConvertDimension = basic.ConvertDimensions;
             configuration.EXTCONFIsConvertLayer = basic.ConvertLayers;
             configuration.EXTCONFIsExchangeFormat = basic.ExchangeFormat;

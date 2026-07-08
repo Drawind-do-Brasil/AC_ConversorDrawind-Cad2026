@@ -14,9 +14,16 @@ namespace ConversorDrawindDLL
             var blocksInv = new List<global::ConversorDrawind.Block>();
             var blocksOrig = new List<global::ConversorDrawind.Block>();
 
-            global::ConversorDrawind.ConfigurationXmlDocument
-                .Load(file)
-                .ApplyTo(configuration, arranjos, blocks, blocksInv, blocksOrig);
+            global::ConversorDrawind.ConverterConfiguration structuredConfiguration =
+                global::ConversorDrawind.ConverterConfigurationReader.Load(file);
+
+            global::ConversorDrawind.ConfigurationCompatibilityMapper.ApplyToLegacyState(
+                structuredConfiguration,
+                configuration,
+                arranjos,
+                blocks,
+                blocksInv,
+                blocksOrig);
 
             ApplyRuntimeState(configuration, arranjos, blocks, blocksInv, blocksOrig);
         }

@@ -6,6 +6,8 @@ namespace ConversorDrawind
 {
     public static class ConverterFileService
     {
+        private static readonly IConverterConfigurationRepository Repository = new TxmlConverterConfigurationRepository();
+
         public static List<string> ListConverterNames(StatusConversorItem statusConversorItem)
         {
             try
@@ -36,7 +38,8 @@ namespace ConversorDrawind
             List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
-            configuration.LoadXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
+            ConverterConfiguration structuredConfiguration = LoadConverter(converterName, statusConversorItem);
+            ConfigurationCompatibilityMapper.ApplyToLegacyState(structuredConfiguration, configuration, arranjos, blocks, blocksInv, blocksOrig);
         }
 
         public static void SaveConverter(
@@ -48,7 +51,18 @@ namespace ConversorDrawind
             List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
-            configuration.SaveXML(converterName, arranjos, blocks, blocksInv, blocksOrig, statusConversorItem);
+            ConverterConfiguration structuredConfiguration = ConfigurationCompatibilityMapper.FromLegacyState(configuration, arranjos, blocks, blocksInv, blocksOrig);
+            SaveConverter(converterName, statusConversorItem, structuredConfiguration);
+        }
+
+        public static ConverterConfiguration LoadConverter(string converterName, StatusConversorItem statusConversorItem)
+        {
+            return Repository.Load(converterName, statusConversorItem);
+        }
+
+        public static void SaveConverter(string converterName, StatusConversorItem statusConversorItem, ConverterConfiguration configuration)
+        {
+            Repository.Save(converterName, statusConversorItem, configuration);
         }
 
     }

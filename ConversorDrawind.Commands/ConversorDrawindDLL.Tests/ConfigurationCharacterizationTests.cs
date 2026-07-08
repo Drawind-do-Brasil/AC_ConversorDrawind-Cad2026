@@ -334,6 +334,13 @@ public sealed class ConfigurationCharacterizationTests
                point.Z.ToString("R", CultureInfo.InvariantCulture);
     }
 
+    private static string Point(global::ConversorDrawind.PointEspecial point)
+    {
+        return point.X.ToString("R", CultureInfo.InvariantCulture) + ";" +
+               point.Y.ToString("R", CultureInfo.InvariantCulture) + ";" +
+               point.Z.ToString("R", CultureInfo.InvariantCulture);
+    }
+
     private static string Filter(Filter filter)
     {
         return filter.layerBase + ";" + filter.GetConjunto();
