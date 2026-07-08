@@ -39,6 +39,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         private GetInfo scaleDrawing;
         private string scaleDrawingPath = string.Empty;
         private bool isInitializing;
+        private bool isSynchronizingConverterSelection;
 
         public MainWindow()
         {
@@ -124,18 +125,48 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.ClientTextStylesControl.ConfigurationChanged += ClientTextStylesConfigurationChanged;
             ConverterView.ExtensionComboBox.ItemsSource = new[] { "DWG", "DXF" };
             ConverterView.ExtensionComboBox.SelectedItem = ApplicationRuntime.ExtensaoGeral;
-            ConverterView.StatusComboBox.ItemsSource = new[] { new StatusConversorItem(Localization.StatusActiveWorks, "TemplatesAtivos"), new StatusConversorItem(Localization.StatusInactiveWorks, "TemplatesInativos") };
+            StatusConversorItem[] statusItems = new[] { new StatusConversorItem(Localization.StatusActiveWorks, "TemplatesAtivos"), new StatusConversorItem(Localization.StatusInactiveWorks, "TemplatesInativos") };
+            ConverterView.StatusComboBox.ItemsSource = statusItems;
             ConverterView.StatusComboBox.SelectedIndex = 0;
             EditorView.ConverterComboBox.ItemsSource = converterNames;
             LoadConfigurationToControls();
+            RestoreInitialConverter(statusItems);
             isInitializing = false;
-            LoadConverterLists();
         }
 
         private void LoadConverterLists()
         {
             converterNames.Clear();
             foreach (string name in ConverterFileService.ListConverterNames(CurrentStatus)) converterNames.Add(name);
+        }
+
+        private void RestoreInitialConverter(IEnumerable<StatusConversorItem> statusItems)
+        {
+            string converterName = string.Empty;
+            if (UserSettingsService.TryReadLastConverter(out string statusFolder, out string lastConverterName))
+            {
+                StatusConversorItem savedStatus = statusItems.FirstOrDefault(status => string.Equals(status.Pasta, statusFolder, StringComparison.OrdinalIgnoreCase));
+                if (savedStatus != null)
+                {
+                    ConverterView.StatusComboBox.SelectedItem = savedStatus;
+                    converterName = lastConverterName;
+                }
+            }
+
+            LoadConverterLists();
+
+            if (string.IsNullOrWhiteSpace(converterName) || !converterNames.Contains(converterName))
+            {
+                converterName = converterNames.FirstOrDefault();
+            }
+
+            if (string.IsNullOrWhiteSpace(converterName))
+            {
+                return;
+            }
+
+            LoadConverter(converterName);
+            SelectLoadedConverter(converterName);
         }
 
         private void AddDrawings()
@@ -160,12 +191,12 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void SelectConverterFromList()
         {
-            if (ConverterView.ConvertersListBox.SelectedItem is string selected) { LoadConverter(selected); EditorView.ConverterComboBox.SelectedItem = selected; EditorView.ConverterNameTextBox.Text = selected; }
+            if (!isInitializing && !isSynchronizingConverterSelection && ConverterView.ConvertersListBox.SelectedItem is string selected) { LoadConverter(selected); SelectLoadedConverter(selected); }
         }
 
         private void SelectConverterFromEditor()
         {
-            if (!isInitializing && EditorView.ConverterComboBox.SelectedItem is string selected) { LoadConverter(selected); ConverterView.ConvertersListBox.SelectedItem = selected; EditorView.ConverterNameTextBox.Text = selected; }
+            if (!isInitializing && !isSynchronizingConverterSelection && EditorView.ConverterComboBox.SelectedItem is string selected) { LoadConverter(selected); SelectLoadedConverter(selected); }
         }
 
         private void LoadConverter(string converterName)
@@ -173,6 +204,22 @@ namespace ConversorDrawind.UI.Wpf.Main
             configuration = new global::ConversorDrawind.Configuration(); arranjos = new Arranjos(); listBlocks = new List<Block>(); listBlocksInv = new List<Block>(); listBlocksOrig = new List<Block>();
             ConverterFileService.LoadConverter(configuration, converterName, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
             LoadConfigurationToControls();
+            UserSettingsService.SaveLastConverter(CurrentStatus, converterName);
+        }
+
+        private void SelectLoadedConverter(string converterName)
+        {
+            isSynchronizingConverterSelection = true;
+            try
+            {
+                ConverterView.ConvertersListBox.SelectedItem = converterName;
+                EditorView.ConverterComboBox.SelectedItem = converterName;
+                EditorView.ConverterNameTextBox.Text = converterName;
+            }
+            finally
+            {
+                isSynchronizingConverterSelection = false;
+            }
         }
 
         private void NewConverter()
@@ -187,6 +234,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             ReadConfigurationFromControls();
             ConverterFileService.SaveConverter(configuration, name, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
             LoadConverterLists();
+            SelectLoadedConverter(name);
+            UserSettingsService.SaveLastConverter(CurrentStatus, name);
         }
 
         private void ImportConverter()
@@ -196,6 +245,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             configuration.LoadXML(dialog.FileName, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
             EditorView.ConverterNameTextBox.Text = Path.GetFileNameWithoutExtension(dialog.FileName);
             LoadConfigurationToControls();
+            UserSettingsService.SaveLastConverter(CurrentStatus, EditorView.ConverterNameTextBox.Text);
         }
 
         private void ConvertSelectedDrawings()
