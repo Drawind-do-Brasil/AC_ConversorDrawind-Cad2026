@@ -10,7 +10,7 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <TextBlock Grid.Row="0" Text="{x:Static local:Localization.LabelLayersAfterConversion}" />
-            <ListBox Grid.Row="1"  x:Name="RemoveLayerBaseListBox" Height="320" SelectionMode="Extended" Margin="0,0,0,10" />
+            <ListBox Grid.Row="1"  x:Name="RemoveLayerBaseListBox"  SelectionMode="Extended" Margin="0,0,0,10" />
             
             <StackPanel  Grid.Row="2" DockPanel.Dock="Left" Width="230">
            

@@ -3,18 +3,19 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ConversorDrawind">
     <UserControl.Resources>
-        <GridLength x:Key="DimensionHeaderLeftColumnWidth">650</GridLength>
-        <GridLength x:Key="DimensionHeaderLabelColumnWidth">132</GridLength>
-        <GridLength x:Key="DimensionHeaderValueColumnWidth">187</GridLength>
-        <GridLength x:Key="DimensionHeaderButtonColumnWidth">300</GridLength>
+        <GridLength x:Key="DimensionHeaderLeftColumnWidth">13*</GridLength>
+        <GridLength x:Key="DimensionHeaderRightColumnWidth">11*</GridLength>
+        <GridLength x:Key="DimensionHeaderLabelColumnWidth">13*</GridLength>
+        <GridLength x:Key="DimensionHeaderValueColumnWidth">19*</GridLength>
+        <GridLength x:Key="DimensionHeaderButtonColumnWidth">30*</GridLength>
 
-        <GridLength x:Key="DimensionAdvancedSectionColumnWidth">390</GridLength>
+        <GridLength x:Key="DimensionAdvancedSectionColumnWidth">*</GridLength>
         <GridLength x:Key="DimensionAdvancedSectionGapWidth">15</GridLength>
-        <GridLength x:Key="DimensionAdvancedLabelColumnWidth">210</GridLength>
-        <GridLength x:Key="DimensionAdvancedValueColumnWidth">150</GridLength>
+        <GridLength x:Key="DimensionAdvancedLabelColumnWidth">7*</GridLength>
+        <GridLength x:Key="DimensionAdvancedValueColumnWidth">5*</GridLength>
 
-        <GridLength x:Key="DimensionConversionLabelColumnWidth">400</GridLength>
-        <GridLength x:Key="DimensionConversionValueColumnWidth">230</GridLength>
+        <GridLength x:Key="DimensionConversionLabelColumnWidth">40*</GridLength>
+        <GridLength x:Key="DimensionConversionValueColumnWidth">23*</GridLength>
 
         <Style x:Key="FieldRowGrid" TargetType="Grid">
             <Setter Property="Height" Value="31" />
@@ -44,7 +45,7 @@
                 <Grid Margin="8">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="{StaticResource DimensionHeaderLeftColumnWidth}" />
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="{StaticResource DimensionHeaderRightColumnWidth}" />
                     </Grid.ColumnDefinitions>
 
                     <Grid Grid.Column="0">
@@ -80,29 +81,41 @@
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
                                 <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelLineColor}" Style="{StaticResource FormLabel}" />
                             <ComboBox Grid.Column="1" x:Name="DimensionLineColorComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" />
-                            <Button Grid.Column="2" Content="Outros" Margin="13,0,0,0" HorizontalAlignment="Left" Style="{StaticResource FormButton}" Click="OtherLineColorClick" />
+                            <Button Grid.Column="2" 
+                                    Content="Outros" 
+                                    Margin="13,0,0,0" 
+                                    Padding="10,0"
+                                    HorizontalAlignment="Left" 
+                                    Style="{StaticResource FormButton}"
+                                    Click="OtherLineColorClick" />
                         </Grid>
 
                         <Grid Grid.Row="3" Style="{StaticResource FieldRowGrid}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
                                 <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelTextColor}" Style="{StaticResource FormLabel}" />
                             <ComboBox Grid.Column="1" x:Name="DimensionTextColorComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" />
-                            <Button Grid.Column="2" Content="Outros" Margin="13,0,0,0" HorizontalAlignment="Left" Style="{StaticResource FormButton}" Click="OtherTextColorClick" />
+                            <Button Grid.Column="2" 
+                                    Content="Outros" 
+                                    Margin="13,0,0,0" 
+                                    Padding="10,0"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource FormButton}" 
+                                    Click="OtherTextColorClick" />
                         </Grid>
 
                         <Grid Grid.Row="4" Style="{StaticResource FieldRowGrid}">
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
                                 <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
-                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
                             </Grid.ColumnDefinitions>
                             <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelArrowType}" Style="{StaticResource FormLabel}" />
                             <ComboBox Grid.Column="1" x:Name="DimensionArrowTypeComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" />
@@ -110,7 +123,7 @@
                                     Content="{x:Static local:Localization.LabelDimensionArrowSettingsButton}"
                                     Margin="13,0,0,0"
                                     HorizontalAlignment="Left"
-                                    Width="287"
+                                    Padding="10,0"
                                     Style="{StaticResource FormButton}"
                                     Click="DimensionArrowAdvancedClick" />
                         </Grid>
