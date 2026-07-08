@@ -2,7 +2,9 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:ConversorDrawind"
-             xmlns:main="clr-namespace:ConversorDrawind.UI.Wpf.Main">
+             xmlns:layers="clr-namespace:ConversorDrawind.UI.Wpf.Layers"
+             xmlns:main="clr-namespace:ConversorDrawind.UI.Wpf.Main"
+             xmlns:textStyles="clr-namespace:ConversorDrawind.UI.Wpf.TextStyles">
     <DockPanel Margin="10">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
             <Button Content="{x:Static local:Localization.ButtonNew}" Width="90" Click="NewConverterClick" />
@@ -18,8 +20,11 @@
             <TabItem Header="{x:Static local:Localization.TabMain}">
                 <main:ConverterEditorMainTab x:Name="MainTab" />
             </TabItem>
-            <TabItem Header="{x:Static local:Localization.TabLayersAndStyles}">
-                <main:ConverterEditorLayersAndStylesTab x:Name="LayersAndStylesTab" HorizontalContentAlignment="Left" />
+            <TabItem Header="{x:Static local:Localization.TabClientLayers}">
+                <layers:NewLayersConfigurationControl x:Name="ClientLayersTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabClientTextStyles}">
+                <textStyles:TextStyleConfigurationControl x:Name="ClientTextStylesTab" />
             </TabItem>
             <TabItem Header="{x:Static local:Localization.TabConverters}">
                 <main:ConverterEditorConvertersTab x:Name="ConvertersTab" />

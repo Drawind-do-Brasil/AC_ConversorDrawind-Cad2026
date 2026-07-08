@@ -1,5 +1,7 @@
-﻿using System;
 using ConversorDrawind.UI.Wpf.Layers;
+using System;
+using System.Windows;
+using System.Windows.Controls;
 
 namespace ConversorDrawind
 {
@@ -14,27 +16,76 @@ namespace ConversorDrawind
 
         public UiDialogResult ShowDialog()
         {
-            NewLayersConfigurationWindow window = new NewLayersConfigurationWindow(arranjos);
+            NewLayersConfigurationControl control = new NewLayersConfigurationControl(arranjos);
+            Window window = CreateWindow(control);
             bool? result = window.ShowDialog();
             return result == true ? UiDialogResult.OK : UiDialogResult.Cancel;
         }
 
         public void CheckLines()
         {
-            NewLayersConfigurationWindow.CheckLines(arranjos);
+            NewLayersConfigurationControl.CheckLines(arranjos);
         }
 
         public void OpenAcadLoadLayerExterno()
         {
-            NewLayersConfigurationWindow window = new NewLayersConfigurationWindow(arranjos);
-            window.OpenAcadLoadLayerExterno();
+            NewLayersConfigurationControl control = new NewLayersConfigurationControl(arranjos);
+            control.OpenAcadLoadLayerExterno();
         }
 
         public void Dispose()
         {
         }
+
+        private Window CreateWindow(NewLayersConfigurationControl control)
+        {
+            Window window = new Window
+            {
+                Title = Localization.TitleLayerConfiguration,
+                Width = 714,
+                Height = 403,
+                ResizeMode = ResizeMode.NoResize,
+                WindowStartupLocation = WindowStartupLocation.CenterOwner,
+                ShowInTaskbar = false
+            };
+
+            DockPanel container = new DockPanel();
+            StackPanel buttons = new StackPanel
+            {
+                Orientation = Orientation.Horizontal,
+                HorizontalAlignment = HorizontalAlignment.Right,
+                Margin = new Thickness(0, 6, 12, 12)
+            };
+
+            Button continueButton = new Button
+            {
+                Content = Localization.ButtonContinue,
+                IsDefault = true
+            };
+            Button cancelButton = new Button
+            {
+                Content = Localization.ButtonCancel,
+                IsCancel = true,
+                Margin = new Thickness(6, 0, 0, 0)
+            };
+
+            continueButton.Click += delegate
+            {
+                if (control.ApplyRowsToArranjos())
+                {
+                    window.DialogResult = true;
+                }
+            };
+            cancelButton.Click += delegate { window.DialogResult = false; };
+
+            buttons.Children.Add(continueButton);
+            buttons.Children.Add(cancelButton);
+            DockPanel.SetDock(buttons, Dock.Bottom);
+            container.Children.Add(buttons);
+            container.Children.Add(control);
+            window.Content = container;
+
+            return window;
+        }
     }
 }
-
-
-

@@ -120,6 +120,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.RemoveLayersGrid.ItemsSource = removeLayerRows;
             EditorView.AllExplodeLayersListBox.ItemsSource = allExplodeLayerNames;
             EditorView.SelectedExplodeLayersListBox.ItemsSource = selectedExplodeLayerNames;
+            EditorView.ClientLayersControl.ConfigurationChanged += ClientLayersConfigurationChanged;
+            EditorView.ClientTextStylesControl.ConfigurationChanged += ClientTextStylesConfigurationChanged;
             ConverterView.ExtensionComboBox.ItemsSource = new[] { "DWG", "DXF" };
             ConverterView.ExtensionComboBox.SelectedItem = ApplicationRuntime.ExtensaoGeral;
             ConverterView.StatusComboBox.ItemsSource = new[] { new StatusConversorItem(Localization.StatusActiveWorks, "TemplatesAtivos"), new StatusConversorItem(Localization.StatusInactiveWorks, "TemplatesInativos") };
@@ -353,6 +355,23 @@ namespace ConversorDrawind.UI.Wpf.Main
             SetComboItems(EditorView.ScaleLayerComboBox, arranjos.allNewLayer.Concat(arranjos.allBaseLayer), configuration.EXTSCALELayer);
         }
 
+        private void ClientLayersConfigurationChanged(object sender, EventArgs e)
+        {
+            RefreshLayerDependentViews();
+        }
+
+        private void ClientTextStylesConfigurationChanged(object sender, EventArgs e)
+        {
+            PopulateDimensionComboBoxes();
+        }
+
+        private void RefreshLayerDependentViews()
+        {
+            PopulateEditorComboBoxes();
+            PopulateDimensionComboBoxes();
+            RefreshRemoveLayerViews();
+        }
+
         private IEnumerable<string> PreferredLayerFirst(string preferredLayer)
         {
             yield return preferredLayer;
@@ -369,9 +388,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 dialog.OpenAcadLoadLayerExterno();
             }
 
-            PopulateEditorComboBoxes();
-            PopulateDimensionComboBoxes();
-            RefreshRemoveLayerViews();
+            RefreshLayerDependentViews();
         }
 
         private void RefreshLayerRuleRows()
@@ -653,6 +670,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.AttributedFormatPathTextBox.Text = configuration.PROGRAMblockFormatoCaminho;
             EditorView.CadBlocksPathTextBox.Text = configuration.EXTCONFCaminhoBlocoInv;
             EditorView.OriginalBlocksPathTextBox.Text = configuration.EXTCONFCaminhoBlocoInv;
+            EditorView.ClientLayersControl.LoadArranjos(arranjos);
+            EditorView.ClientTextStylesControl.LoadArranjos(arranjos);
             PopulateEditorComboBoxes();
             RefreshLayerRuleRows();
             RefreshRemoveLayerViews();
@@ -751,6 +770,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             configuration.EXTSCALEp2.Z = ReadDouble(EditorView.ScaleP2ZTextBox.Text, configuration.EXTSCALEp2.Z);
             configuration.EXTSCALELayer = EditorView.ScaleLayerComboBox.Text;
             configuration.EXTSCALETextSize = ReadDouble(EditorView.ScaleTextSizeTextBox.Text, configuration.EXTSCALETextSize);
+            EditorView.ClientLayersControl.ApplyRowsToArranjos(false);
+            EditorView.ClientTextStylesControl.ApplyRowsToArranjos();
             SaveLayerRuleRowsToArranjos();
             SaveRemoveLayerRowsToArranjos();
             SaveExplodeLayerRowsToArranjos();

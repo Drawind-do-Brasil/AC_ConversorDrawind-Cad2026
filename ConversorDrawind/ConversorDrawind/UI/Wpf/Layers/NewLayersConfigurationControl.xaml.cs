@@ -9,33 +9,54 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using ACAD = Autodesk.AutoCAD.Interop;
 
 namespace ConversorDrawind.UI.Wpf.Layers
 {
-    public partial class NewLayersConfigurationWindow : Window
+    public partial class NewLayersConfigurationControl : UserControl
     {
-        private readonly Arranjos arranjos;
+        private Arranjos arranjos;
 
-        public NewLayersConfigurationWindow(Arranjos arranjos)
+        public NewLayersConfigurationControl()
         {
             InitializeComponent();
-            this.arranjos = arranjos;
             Rows = new ObservableCollection<LayerRow>();
-            LoadRows();
             DataContext = this;
         }
 
+        public NewLayersConfigurationControl(Arranjos arranjos)
+            : this()
+        {
+            LoadArranjos(arranjos);
+        }
+
+        public event EventHandler ConfigurationChanged;
+
         public ObservableCollection<LayerRow> Rows { get; }
+
+        public void LoadArranjos(Arranjos arranjos)
+        {
+            this.arranjos = arranjos;
+            LoadRows();
+        }
 
         private void LoadRows()
         {
             Rows.Clear();
+            if (arranjos == null)
+            {
+                return;
+            }
+
             for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
             {
                 string[] listTemp = arranjos.allNewLayerComposition[i].Split(':');
-                Rows.Add(new LayerRow(listTemp[0], listTemp[1], listTemp[2]));
+                if (listTemp.Length >= 3)
+                {
+                    Rows.Add(new LayerRow(listTemp[0], listTemp[1], listTemp[2]));
+                }
             }
 
             if (Rows.Count == 0)
@@ -58,10 +79,12 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     acadApplication = new ACAD.AcadApplication();
                     acadDocument = ComRetry.Invoke(() => acadApplication.Documents.Open(file, false), 120, 100);
                 }
+
                 using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.LoadFile(DrawingProcess.DLLPath1, acadDocument);
                 }
+
                 using (MessageFilter.ScopedRegistration())
                 {
                     LoadFiles.SendCommand("DRAWINDCAD_NewLayer\n", acadDocument);
@@ -70,7 +93,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             catch (Exception e)
             {
                 ApplicationRuntime.ControladorT = false;
-                System.Windows.MessageBox.Show(e.Message, Localization.TitleWarningNoExclamation, System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Warning);
+                MessageBox.Show(e.Message, Localization.TitleWarningNoExclamation, MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
@@ -110,6 +133,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         public void OpenAcadLoadLayer()
         {
+            if (arranjos == null)
+            {
+                return;
+            }
+
             UpdateAllNewLayerComposition();
             UpdateAllNewLayer();
             ImportLayersFromAcad(false);
@@ -117,7 +145,67 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         public void OpenAcadLoadLayerExterno()
         {
+            if (arranjos == null)
+            {
+                return;
+            }
+
             ImportLayersFromAcad(true);
+        }
+
+        public bool ApplyRowsToArranjos(bool showWarnings = true)
+        {
+            if (arranjos == null)
+            {
+                return false;
+            }
+
+            bool isRemove = false;
+            arranjos.allNewLayerComposition.Clear();
+            arranjos.allNewLayer.Clear();
+            foreach (LayerRow row in Rows)
+            {
+                if (!arranjos.allNewLayer.Contains(row.Layer) || row.Layer == "")
+                {
+                    arranjos.allNewLayerComposition.Add(row.Layer + ":" + row.Color + ":" + row.Line);
+                    arranjos.allNewLayer.Add(row.Layer);
+                }
+                else
+                {
+                    isRemove = true;
+                }
+            }
+
+            if (!arranjos.allNewLayer.Contains("0"))
+            {
+                NewLayer novoLayer = new NewLayer(arranjos);
+                novoLayer.SetConjuntoEspecial();
+                arranjos.allNewLayerComposition.Add(novoLayer.layer + ":" + novoLayer.cor + ":" + novoLayer.tipoLinha.Split(',').First().ToUpper());
+                arranjos.allNewLayer.Add(novoLayer.layer);
+                if (showWarnings)
+                {
+                    MessageBox.Show(
+                        Localization.MessageLayerZeroAdded,
+                        Localization.TitleWarningNoExclamation,
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
+                }
+            }
+
+            if (isRemove && showWarnings)
+            {
+                MessageBox.Show(
+                    Localization.MessageDuplicateOrUnnamedLayersRemoved,
+                    Localization.TitleWarningNoExclamation,
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+            }
+
+            arranjos.allNewLayer.Sort();
+            arranjos.allNewLayerComposition.Sort();
+            LoadRows();
+            NotifyConfigurationChanged();
+            return true;
         }
 
         private void ImportLayersFromAcad(bool externalMode)
@@ -128,7 +216,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             try
             {
                 OpenFileDialog openFileDialog = new OpenFileDialog { Filter = Localization.FilterDrawing };
-                if (openFileDialog.ShowDialog() == true)
+                if (openFileDialog.ShowDialog(Window.GetWindow(this)) == true)
                 {
                     Thread loadThread = new Thread(new ParameterizedThreadStart(LoadNewLayerFromAcad));
                     loadThread.SetApartmentState(ApartmentState.STA);
@@ -181,11 +269,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
                                 {
                                     if (!isCheck)
                                     {
-                                        if (System.Windows.MessageBox.Show(
+                                        if (MessageBox.Show(
                                                 Localization.MessageUpdateExistingLayers,
                                                 Localization.TitleAttentionPlain,
-                                                System.Windows.MessageBoxButton.YesNo,
-                                                System.Windows.MessageBoxImage.Exclamation) == System.Windows.MessageBoxResult.Yes)
+                                                MessageBoxButton.YesNo,
+                                                MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                                         {
                                             isUpdate = true;
                                         }
@@ -223,13 +311,14 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
 
             LoadRows();
+            NotifyConfigurationChanged();
             if (!isAddAll)
             {
-                System.Windows.MessageBox.Show(
+                MessageBox.Show(
                     Localization.MessageSomeLayersNotAdded,
                     Localization.TitleWarningNoExclamation,
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Warning);
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
             }
         }
 
@@ -258,89 +347,48 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         private void ClearAllClick(object sender, RoutedEventArgs e)
         {
-            if (Rows.Count > 0 && LayersGrid.SelectedIndex != -1)
+            if (arranjos == null || Rows.Count == 0 || LayersGrid.SelectedIndex == -1)
             {
-                if (System.Windows.MessageBox.Show(
-                        Localization.MessageClearAll,
-                        Localization.TitleAttentionPlain,
-                        System.Windows.MessageBoxButton.YesNo,
-                        System.Windows.MessageBoxImage.Exclamation) == System.Windows.MessageBoxResult.Yes)
-                {
-                    arranjos.allNewLayerComposition.Clear();
-                    arranjos.allNewLayer.Clear();
-                    arranjos.allNewLayer.Add("0");
-                    Rows.Clear();
-                }
-            }
-        }
-
-        private void ContinueClick(object sender, RoutedEventArgs e)
-        {
-            bool isRemove = false;
-            arranjos.allNewLayerComposition.Clear();
-            arranjos.allNewLayer.Clear();
-            foreach (LayerRow row in Rows)
-            {
-                if (!arranjos.allNewLayer.Contains(row.Layer) || row.Layer == "")
-                {
-                    arranjos.allNewLayerComposition.Add(row.Layer + ":" + row.Color + ":" + row.Line);
-                    arranjos.allNewLayer.Add(row.Layer);
-                }
-                else
-                {
-                    isRemove = true;
-                }
+                return;
             }
 
-            if (!arranjos.allNewLayer.Contains("0"))
+            if (MessageBox.Show(
+                    Localization.MessageClearAll,
+                    Localization.TitleAttentionPlain,
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
             {
-                NewLayer novoLayer = new NewLayer(arranjos);
-                novoLayer.SetConjuntoEspecial();
-                arranjos.allNewLayerComposition.Add(novoLayer.layer + ":" + novoLayer.cor + ":" + novoLayer.tipoLinha.Split(',').First().ToUpper());
-                arranjos.allNewLayer.Add(novoLayer.layer);
-                System.Windows.MessageBox.Show(
-                    Localization.MessageLayerZeroAdded,
-                    Localization.TitleWarningNoExclamation,
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Warning);
+                arranjos.allNewLayerComposition.Clear();
+                arranjos.allNewLayer.Clear();
+                arranjos.allNewLayer.Add("0");
+                Rows.Clear();
+                NotifyConfigurationChanged();
             }
-
-            if (isRemove)
-            {
-                System.Windows.MessageBox.Show(
-                    Localization.MessageDuplicateOrUnnamedLayersRemoved,
-                    Localization.TitleWarningNoExclamation,
-                    System.Windows.MessageBoxButton.OK,
-                    System.Windows.MessageBoxImage.Warning);
-            }
-
-            arranjos.allNewLayer.Sort();
-            arranjos.allNewLayerComposition.Sort();
-            DialogResult = true;
-        }
-
-        private void CancelClick(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
         }
 
         private void DeleteRowClick(object sender, RoutedEventArgs e)
         {
             if (Rows.Count > 0 && LayersGrid.SelectedItem is LayerRow row)
             {
-                if (System.Windows.MessageBox.Show(
+                if (MessageBox.Show(
                         Localization.MessageDeleteSelectedRow,
                         Localization.TitleAttentionPlain,
-                        System.Windows.MessageBoxButton.YesNo,
-                        System.Windows.MessageBoxImage.Exclamation) == System.Windows.MessageBoxResult.Yes)
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                 {
                     Rows.Remove(row);
+                    ApplyRowsToArranjos(false);
                 }
             }
         }
 
         private void AddRowClick(object sender, RoutedEventArgs e)
         {
+            if (arranjos == null)
+            {
+                return;
+            }
+
             int novosNomes = 0;
             bool isOK = false;
             string name = "";
@@ -372,12 +420,12 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
 
             LayersGrid.SelectedIndex = Rows.Count - 1;
-            UpdateAllNewLayer();
+            ApplyRowsToArranjos(false);
         }
 
         private void LayersGridMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (LayersGrid.CurrentItem is not LayerRow row || LayersGrid.CurrentColumn == null)
+            if (arranjos == null || LayersGrid.CurrentItem is not LayerRow row || LayersGrid.CurrentColumn == null)
             {
                 return;
             }
@@ -388,7 +436,6 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 ConfigurarLayersNome dialog = new ConfigurarLayersNome(row.Layer, arranjos);
                 dialog.ShowDialog();
                 row.Layer = dialog.nome;
-                UpdateAllNewLayer();
                 dialog.Dispose();
             }
             else if (columnIndex == 1)
@@ -405,6 +452,13 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 row.Line = dialog.linha.Split(',').First().ToUpper();
                 dialog.Dispose();
             }
+
+            ApplyRowsToArranjos(false);
+        }
+
+        private void NotifyConfigurationChanged()
+        {
+            ConfigurationChanged?.Invoke(this, EventArgs.Empty);
         }
 
         public class LayerRow : INotifyPropertyChanged

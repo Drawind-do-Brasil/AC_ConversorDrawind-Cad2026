@@ -45,15 +45,15 @@
   <ItemGroup>
     <Reference Include="accoremgd">
       <HintPath>$(AutoCADInstallDir)accoremgd.dll</HintPath>
-      <Private>false</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="acdbmgd">
       <HintPath>$(AutoCADInstallDir)acdbmgd.dll</HintPath>
-      <Private>false</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="acmgd">
       <HintPath>$(AutoCADInstallDir)acmgd.dll</HintPath>
-      <Private>false</Private>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
 

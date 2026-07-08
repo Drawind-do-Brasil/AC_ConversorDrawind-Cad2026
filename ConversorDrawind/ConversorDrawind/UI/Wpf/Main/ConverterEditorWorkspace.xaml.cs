@@ -1,6 +1,8 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using ConversorDrawind.UI.Wpf.Layers;
+using ConversorDrawind.UI.Wpf.TextStyles;
 
 namespace ConversorDrawind.UI.Wpf.Main
 {
@@ -41,6 +43,8 @@ namespace ConversorDrawind.UI.Wpf.Main
         public Button EditRelationButton => BlocksAndAttributesTab.EditRelationButtonControl;
         public ComboBox TeklaTextLayerComboBox => ConvertersTab.TeklaLayerComboBox;
         public ComboBox FormatBlockLayerComboBox => ConvertersTab.FormatLayerComboBox;
+        public NewLayersConfigurationControl ClientLayersControl => ClientLayersTab;
+        public TextStyleConfigurationControl ClientTextStylesControl => ClientTextStylesTab;
         public ComboBox DimensionLayerComboBox => DimensionsTab.LayerComboBox;
         public TextBox DimensionStyleTextBox => DimensionsTab.StyleTextBox;
         public ComboBox DimensionLineColorComboBox => DimensionsTab.LineColorComboBox;
@@ -86,9 +90,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void ConfigurationTabsSelectionChanged(object sender, SelectionChangedEventArgs e) => Forward(nameof(ConfigurationTabsSelectionChanged), sender, e);
         private void FeatureCheckChanged(object sender, RoutedEventArgs e) => Forward(nameof(FeatureCheckChanged), sender, e);
         private void OriginChanged(object sender, RoutedEventArgs e) => Forward(nameof(OriginChanged), sender, e);
-        private void LoadClientLayersClick(object sender, RoutedEventArgs e) => Forward(nameof(LoadClientLayersClick), sender, e);
-        private void ConfigureClientLayersClick(object sender, RoutedEventArgs e) => Forward(nameof(ConfigureClientLayersClick), sender, e);
-        private void ConfigureTextStylesClick(object sender, RoutedEventArgs e) => Forward(nameof(ConfigureTextStylesClick), sender, e);
         private void AddLayerRuleClick(object sender, RoutedEventArgs e) => Forward(nameof(AddLayerRuleClick), sender, e);
         private void DeleteLayerRuleClick(object sender, RoutedEventArgs e) => Forward(nameof(DeleteLayerRuleClick), sender, e);
         private void MoveLayerRuleUpClick(object sender, RoutedEventArgs e) => Forward(nameof(MoveLayerRuleUpClick), sender, e);

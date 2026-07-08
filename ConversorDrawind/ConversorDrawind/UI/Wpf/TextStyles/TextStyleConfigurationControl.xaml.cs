@@ -1,39 +1,93 @@
 using ConversorDrawind;
+using System;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace ConversorDrawind.UI.Wpf.TextStyles
 {
-    public partial class TextStyleConfigurationWindow : Window
+    public partial class TextStyleConfigurationControl : UserControl
     {
-        private readonly Arranjos arranjos;
         private readonly ObservableCollection<TextStyleRow> textStyles = new ObservableCollection<TextStyleRow>();
+        private Arranjos arranjos;
 
-        public TextStyleConfigurationWindow(Arranjos arranjos)
+        public TextStyleConfigurationControl()
         {
             InitializeComponent();
+            TextStylesDataGrid.ItemsSource = textStyles;
+        }
+
+        public TextStyleConfigurationControl(Arranjos arranjos)
+            : this()
+        {
+            LoadArranjos(arranjos);
+        }
+
+        public event EventHandler ConfigurationChanged;
+
+        public void LoadArranjos(Arranjos arranjos)
+        {
             this.arranjos = arranjos;
             LoadRows();
-            TextStylesDataGrid.ItemsSource = textStyles;
+        }
+
+        public bool ApplyRowsToArranjos()
+        {
+            if (arranjos == null)
+            {
+                return false;
+            }
+
+            arranjos.allTextSyles.Clear();
+            foreach (TextStyleRow row in textStyles)
+            {
+                arranjos.allTextSyles.Add(row.ToConjunto());
+            }
+
+            if (arranjos.allTextSyles.Count == 0)
+            {
+                arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
+            }
+
+            NotifyConfigurationChanged();
+            return true;
         }
 
         private void LoadRows()
         {
             textStyles.Clear();
+            if (arranjos == null)
+            {
+                return;
+            }
+
+            if (arranjos.allTextSyles.Count == 0)
+            {
+                arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
+            }
+
             foreach (string textStyle in arranjos.allTextSyles)
             {
                 string[] values = textStyle.Split(':');
-                textStyles.Add(TextStyleRow.FromValues(values));
+                if (values.Length >= 7)
+                {
+                    textStyles.Add(TextStyleRow.FromValues(values));
+                }
             }
         }
 
         private void AddButtonClick(object sender, RoutedEventArgs e)
         {
+            if (arranjos == null)
+            {
+                return;
+            }
+
             TextStyleDialog dialog = new TextStyleDialog(new[] { string.Empty, "RomanS", bool.FalseString, bool.FalseString, "2.5", "1", "0" })
             {
-                Owner = this
+                Owner = Window.GetWindow(this)
             };
 
             if (dialog.ShowDialog() != true)
@@ -43,7 +97,7 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
 
             if (textStyles.Any(row => row.Nome.ToUpper() == dialog.Values[0].ToUpper()))
             {
-                System.Windows.MessageBox.Show(
+                MessageBox.Show(
                     Localization.MessageCannotAddStyle,
                     Localization.TitleWarningNoExclamation,
                     MessageBoxButton.OK,
@@ -52,13 +106,14 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
             }
 
             textStyles.Add(TextStyleRow.FromValues(dialog.Values));
+            ApplyRowsToArranjos();
         }
 
         private void DeleteButtonClick(object sender, RoutedEventArgs e)
         {
             if (textStyles.Count == 1)
             {
-                System.Windows.MessageBox.Show(
+                MessageBox.Show(
                     Localization.MessageCannotRemoveStyle,
                     Localization.TitleWarningNoExclamation,
                     MessageBoxButton.OK,
@@ -71,7 +126,7 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
                 return;
             }
 
-            if (System.Windows.MessageBox.Show(
+            if (MessageBox.Show(
                     Localization.MessageDeleteSelectedRow,
                     Localization.TitleAttentionPlain,
                     MessageBoxButton.YesNo,
@@ -79,6 +134,7 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
                     MessageBoxResult.Yes) == MessageBoxResult.Yes)
             {
                 textStyles.Remove(selectedRow);
+                ApplyRowsToArranjos();
             }
         }
 
@@ -91,30 +147,20 @@ namespace ConversorDrawind.UI.Wpf.TextStyles
 
             TextStyleDialog dialog = new TextStyleDialog(selectedRow.ToValues())
             {
-                Owner = this
+                Owner = Window.GetWindow(this)
             };
 
             if (dialog.ShowDialog() == true)
             {
                 selectedRow.ApplyValues(dialog.Values);
                 TextStylesDataGrid.Items.Refresh();
+                ApplyRowsToArranjos();
             }
         }
 
-        private void SaveButtonClick(object sender, RoutedEventArgs e)
+        private void NotifyConfigurationChanged()
         {
-            arranjos.allTextSyles.Clear();
-            foreach (TextStyleRow row in textStyles)
-            {
-                arranjos.allTextSyles.Add(row.ToConjunto());
-            }
-
-            DialogResult = true;
-        }
-
-        private void CancelButtonClick(object sender, RoutedEventArgs e)
-        {
-            DialogResult = false;
+            ConfigurationChanged?.Invoke(this, EventArgs.Empty);
         }
 
         private sealed class TextStyleRow

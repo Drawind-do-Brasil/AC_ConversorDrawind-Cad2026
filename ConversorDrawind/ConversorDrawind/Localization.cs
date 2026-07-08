@@ -182,6 +182,8 @@ namespace ConversorDrawind
         public static string TabCreateConverter => "Criar conversor";
         public static string TabMain => "Principal";
         public static string TabLayersAndStyles => "Layers e estilos";
+        public static string TabClientLayers => "Layers do Cliente";
+        public static string TabClientTextStyles => "Estilos de texto do cliente";
         public static string TabConverters => "Conversores";
         public static string TabDimensions => "Dimensões";
         public static string TabScale => "Escala";
