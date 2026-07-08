@@ -75,6 +75,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 case "RemoveLayersGridDoubleClick": EditRemoveLayerCell(); break;
                 case "AddExplodeLayerClick": AddExplodeLayer(); break;
                 case "RemoveExplodeLayerClick": RemoveExplodeLayer(); break;
+                case "ExplodeLayersDrop": MoveExplodeLayers(sender, (DragEventArgs)e); break;
                 case "BrowseAttributedFormatClick": BrowseAttributedFormat(); break;
                 case "EditBlockClick": EditTeklaBlock(); break;
                 case "EditBlockDoubleClick": EditTeklaBlock(); break;
@@ -587,6 +588,44 @@ namespace ConversorDrawind.UI.Wpf.Main
             {
                 selectedExplodeLayerNames.Remove(layer);
             }
+        }
+
+        private void MoveExplodeLayers(object sender, DragEventArgs e)
+        {
+            const string layerFormat = "ConversorDrawind.ExplodeLayerNames";
+            const string sourceFormat = "ConversorDrawind.ExplodeLayerSource";
+
+            if (!(sender is ListBox targetListBox) || !e.Data.GetDataPresent(layerFormat))
+            {
+                return;
+            }
+
+            string sourceName = e.Data.GetDataPresent(sourceFormat) ? e.Data.GetData(sourceFormat) as string : string.Empty;
+            if (sourceName == targetListBox.Name)
+            {
+                return;
+            }
+
+            List<string> layers = ((string[])e.Data.GetData(layerFormat)).ToList();
+            if (targetListBox == EditorView.SelectedExplodeLayersListBox)
+            {
+                foreach (string layer in layers)
+                {
+                    if (!selectedExplodeLayerNames.Contains(layer))
+                    {
+                        selectedExplodeLayerNames.Add(layer);
+                    }
+                }
+            }
+            else if (targetListBox == EditorView.AllExplodeLayersListBox)
+            {
+                foreach (string layer in layers)
+                {
+                    selectedExplodeLayerNames.Remove(layer);
+                }
+            }
+
+            e.Handled = true;
         }
 
         private void LoadConfigurationToControls()

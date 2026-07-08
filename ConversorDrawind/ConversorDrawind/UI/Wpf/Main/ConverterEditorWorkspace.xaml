@@ -8,10 +8,11 @@
             <Button Content="{x:Static local:Localization.ButtonNew}" Width="90" Click="NewConverterClick" />
             <Button Content="{x:Static local:Localization.ButtonSave}" Width="90" Margin="6,0,0,0" Click="SaveConverterClick" />
             <Button Content="{x:Static local:Localization.ButtonImport}" Width="90" Margin="6,0,0,0" Click="ImportConverterClick" />
-            <TextBlock Text="{x:Static local:Localization.LabelName}" Margin="18,4,4,0" />
-            <TextBox x:Name="ConverterNameTextBox" Width="260" />
             <TextBlock Text="{x:Static local:Localization.LabelTemplate}" Margin="18,4,4,0" />
             <ComboBox x:Name="ConverterComboBox" Width="220" SelectionChanged="ConverterComboBoxSelectionChanged" />
+            <TextBlock Text="{x:Static local:Localization.LabelName}" Margin="18,4,4,0" />
+            <TextBox x:Name="ConverterNameTextBox" Width="260" />
+       
         </StackPanel>
         <TabControl x:Name="ConfigurationTabs" SelectionChanged="ConfigurationTabsSelectionChanged">
             <TabItem Header="{x:Static local:Localization.TabMain}">

@@ -10,7 +10,13 @@
         </Grid.ColumnDefinitions>
         <StackPanel>
             <TextBlock Text="{x:Static local:Localization.LabelAllLayers}" />
-            <ListBox x:Name="AllExplodeLayersListBox" Height="420" SelectionMode="Extended" />
+            <ListBox x:Name="AllExplodeLayersListBox"
+                     Height="420"
+                     SelectionMode="Extended"
+                     AllowDrop="True"
+                     MouseMove="ExplodeLayersMouseMove"
+                     DragOver="ExplodeLayersDragOver"
+                     Drop="ExplodeLayersDrop" />
             <Separator Visibility="Hidden" Margin="2.5"/>
 
         </StackPanel>
@@ -23,7 +29,13 @@
         </Grid>
         <StackPanel Grid.Column="2">
             <TextBlock Text="{x:Static local:Localization.LabelExplodeOnlyLayers}" />
-            <ListBox x:Name="SelectedExplodeLayersListBox" Height="420" SelectionMode="Extended" />
+            <ListBox x:Name="SelectedExplodeLayersListBox"
+                     Height="420"
+                     SelectionMode="Extended"
+                     AllowDrop="True"
+                     MouseMove="ExplodeLayersMouseMove"
+                     DragOver="ExplodeLayersDragOver"
+                     Drop="ExplodeLayersDrop" />
             <Separator Visibility="Hidden" Margin="2.5"/>
           
         </StackPanel>
