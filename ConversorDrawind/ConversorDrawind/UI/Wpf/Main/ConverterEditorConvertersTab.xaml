@@ -16,11 +16,34 @@
             <Button Content="{x:Static local:Localization.ButtonMoveDown}" Width="120" Margin="6,0,0,0" Click="MoveLayerRuleDownClick" />
         </StackPanel>
 
-        <DataGrid Grid.Row="1" x:Name="LayerRulesGrid" AutoGenerateColumns="False" CanUserAddRows="False" SelectionMode="Extended" MouseDoubleClick="LayerRulesGridDoubleClick">
+        <DataGrid Grid.Row="1"
+                  x:Name="LayerRulesGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  IsReadOnly="True"
+                  SelectionMode="Extended"
+                  MouseDoubleClick="LayerRulesGridDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static local:Localization.LabelLayerBase}" Binding="{Binding BaseLayer}" Width="220" />
-                <DataGridTextColumn Header="{x:Static local:Localization.LabelLayerFilter}" Binding="{Binding Filter}" Width="320" />
-                <DataGridTextColumn Header="{x:Static local:Localization.LabelNewLayer}" Binding="{Binding NewLayer}" Width="320" />
+                <DataGridTemplateColumn Header="{x:Static local:Localization.LabelLayerFilter}" Width="360">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FilterDisplay}"
+                                       TextWrapping="Wrap"
+                                       ToolTip="{Binding Filter}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="{x:Static local:Localization.LabelNewLayer}" Width="360">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding NewLayerDisplay}"
+                                       TextWrapping="Wrap"
+                                       ToolTip="{Binding NewLayer}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
 

@@ -1441,6 +1441,74 @@ namespace ConversorDrawind.UI.Wpf.Main
             public string BaseLayer { get; set; }
             public string Filter { get; set; }
             public string NewLayer { get; set; }
+
+            public string FilterDisplay => FormatFilterDisplay(Filter);
+            public string NewLayerDisplay => FormatNewLayerDisplay(NewLayer);
+
+            private static string FormatFilterDisplay(string value)
+            {
+                string[] parts = SplitLegacyConjunto(value, 6);
+                if (parts == null)
+                {
+                    return value ?? string.Empty;
+                }
+
+                string line1 = "Objeto: " + parts[0] + "  |  Cor: " + parts[1];
+                string line2 = "Linha: " + parts[2] + "  |  Orientacao: " + parts[5];
+                string line3 = JoinDisplayParts(
+                    DisplayPart("Texto", parts[3]),
+                    DisplayPart("Altura", parts[4]));
+
+                return JoinDisplayLines(line1, line2, line3);
+            }
+
+            private static string FormatNewLayerDisplay(string value)
+            {
+                string[] parts = SplitLegacyConjunto(value, 6);
+                if (parts == null)
+                {
+                    return value ?? string.Empty;
+                }
+
+                string line1 = "Layer: " + parts[0] + "  |  Cor: " + parts[1];
+                string line2 = "Linha: " + parts[2] + "  |  Estilo: " + parts[5];
+                string line3 = JoinDisplayParts(
+                    DisplayPart("Altura", parts[3]),
+                    DisplayPart("Largura", parts[4]));
+
+                return JoinDisplayLines(line1, line2, line3);
+            }
+
+            private static string[] SplitLegacyConjunto(string value, int expectedParts)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return null;
+                }
+
+                string[] parts = value.Split(':');
+                if (parts.Length < expectedParts)
+                {
+                    return null;
+                }
+
+                return parts;
+            }
+
+            private static string DisplayPart(string label, string value)
+            {
+                return string.IsNullOrWhiteSpace(value) ? string.Empty : label + ": " + value;
+            }
+
+            private static string JoinDisplayParts(params string[] values)
+            {
+                return string.Join("  |  ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
+            }
+
+            private static string JoinDisplayLines(params string[] values)
+            {
+                return string.Join(Environment.NewLine, values.Where(value => !string.IsNullOrWhiteSpace(value)));
+            }
         }
 
         public class RemoveLayerRow
@@ -1453,6 +1521,55 @@ namespace ConversorDrawind.UI.Wpf.Main
 
             public string Layer { get; set; }
             public string Filter { get; set; }
+            public string FilterDisplay => FormatFilterDisplay(Filter);
+
+            private static string FormatFilterDisplay(string value)
+            {
+                string[] parts = SplitLegacyConjunto(value, 6);
+                if (parts == null)
+                {
+                    return value ?? string.Empty;
+                }
+
+                string line1 = "Objeto: " + parts[0] + "  |  Cor: " + parts[1];
+                string line2 = "Linha: " + parts[2] + "  |  Orientacao: " + parts[5];
+                string line3 = JoinDisplayParts(
+                    DisplayPart("Texto", parts[3]),
+                    DisplayPart("Altura", parts[4]));
+
+                return JoinDisplayLines(line1, line2, line3);
+            }
+
+            private static string[] SplitLegacyConjunto(string value, int expectedParts)
+            {
+                if (string.IsNullOrWhiteSpace(value))
+                {
+                    return null;
+                }
+
+                string[] parts = value.Split(':');
+                if (parts.Length < expectedParts)
+                {
+                    return null;
+                }
+
+                return parts;
+            }
+
+            private static string DisplayPart(string label, string value)
+            {
+                return string.IsNullOrWhiteSpace(value) ? string.Empty : label + ": " + value;
+            }
+
+            private static string JoinDisplayParts(params string[] values)
+            {
+                return string.Join("  |  ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
+            }
+
+            private static string JoinDisplayLines(params string[] values)
+            {
+                return string.Join(Environment.NewLine, values.Where(value => !string.IsNullOrWhiteSpace(value)));
+            }
         }
 
         public class LispCommandRow

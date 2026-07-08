@@ -28,7 +28,15 @@
                   MouseDoubleClick="RemoveLayersGridDoubleClick">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="{x:Static local:Localization.LabelLayer}" Binding="{Binding Layer}" Width="220" />
-                <DataGridTextColumn Header="{x:Static local:Localization.LabelLayerFilter}" Binding="{Binding Filter}" Width="360" />
+                <DataGridTemplateColumn Header="{x:Static local:Localization.LabelLayerFilter}" Width="420">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FilterDisplay}"
+                                       TextWrapping="Wrap"
+                                       ToolTip="{Binding Filter}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
             </DataGrid.Columns>
         </DataGrid>
     </DockPanel>
