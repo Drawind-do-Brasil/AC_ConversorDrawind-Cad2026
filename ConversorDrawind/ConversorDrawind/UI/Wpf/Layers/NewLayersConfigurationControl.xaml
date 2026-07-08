@@ -4,13 +4,13 @@
              xmlns:local="clr-namespace:ConversorDrawind">
     <DockPanel Margin="12">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button Content="{x:Static local:Localization.ButtonLoad}"  Padding="10,0" Click="LoadClick" />
+            <Button Content="{x:Static local:Localization.ButtonLoad}" Click="LoadClick" />
             <Separator Visibility="Hidden" Margin="2.5"/>
-            <Button Content="{x:Static local:Localization.ButtonClearAll}"  Padding="10,0"  Click="ClearAllClick" />
+            <Button Content="{x:Static local:Localization.ButtonClearAll}" Click="ClearAllClick" />
             <Separator Visibility="Hidden" Margin="2.5"/>
-            <Button Content="{x:Static local:Localization.ButtonAdd}"  Padding="10,0"  Click="AddRowClick" />
+            <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddRowClick" />
             <Separator Visibility="Hidden" Margin="2.5"/>
-            <Button Content="{x:Static local:Localization.ButtonDelete}"   Padding="10,0"  Click="DeleteRowClick" />
+            <Button Content="{x:Static local:Localization.ButtonDelete}" Click="DeleteRowClick" />
         </StackPanel>
 
         <DataGrid x:Name="LayersGrid"

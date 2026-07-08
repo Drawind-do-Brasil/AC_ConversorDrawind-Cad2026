@@ -26,9 +26,9 @@
         </Grid>
         <Grid  Grid.Column="1" VerticalAlignment="Center" Margin="5">
             <StackPanel>
-                <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddExplodeLayerClick" Padding="10"/>
+                <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddExplodeLayerClick" />
                 <Separator Visibility="Hidden" Margin="2.5"/>
-                <Button Content="{x:Static local:Localization.ButtonRemove}" Click="RemoveExplodeLayerClick" Padding="10" />
+                <Button Content="{x:Static local:Localization.ButtonRemove}" Click="RemoveExplodeLayerClick" />
             </StackPanel>
         </Grid>
         <Grid Grid.Column="2">

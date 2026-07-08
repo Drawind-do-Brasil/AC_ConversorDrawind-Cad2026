@@ -16,6 +16,7 @@ namespace ConversorDrawind.UI.Wpf.Common
 
             application.Resources[typeof(TextBox)] = CreateTextBoxStyle();
             application.Resources[typeof(ComboBox)] = CreateComboBoxStyle();
+            application.Resources[typeof(Button)] = CreateButtonStyle();
         }
 
         private static Style CreateTextBoxStyle()
@@ -31,6 +32,13 @@ namespace ConversorDrawind.UI.Wpf.Common
             Style style = new Style(typeof(ComboBox));
             style.Setters.Add(new Setter(FrameworkElement.HeightProperty, StandardInputHeight));
             style.Setters.Add(new Setter(Control.VerticalContentAlignmentProperty, VerticalAlignment.Center));
+            return style;
+        }
+
+        private static Style CreateButtonStyle()
+        {
+            Style style = new Style(typeof(Button));
+            style.Setters.Add(new Setter(Control.PaddingProperty, new Thickness(10, 2, 10, 2)));
             return style;
         }
     }

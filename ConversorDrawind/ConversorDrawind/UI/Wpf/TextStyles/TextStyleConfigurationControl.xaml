@@ -4,9 +4,9 @@
              xmlns:local="clr-namespace:ConversorDrawind">
     <DockPanel Margin="12">
         <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
-            <Button Content="{x:Static local:Localization.ButtonAddLine}"   Padding="10,0"  Click="AddButtonClick" />
+            <Button Content="{x:Static local:Localization.ButtonAddLine}" Click="AddButtonClick" />
             <Separator Visibility="Hidden" Margin="2.5"/>
-            <Button Content="{x:Static local:Localization.ButtonDeleteLine}"   Padding="10,0"  Click="DeleteButtonClick" />
+            <Button Content="{x:Static local:Localization.ButtonDeleteLine}" Click="DeleteButtonClick" />
         </StackPanel>
 
         <DataGrid x:Name="TextStylesDataGrid"
