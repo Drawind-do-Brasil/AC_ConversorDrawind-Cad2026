@@ -6,7 +6,7 @@ namespace ConversorDrawind
 {
     public static class ConverterFileService
     {
-        private static readonly IConverterConfigurationRepository Repository = new TxmlConverterConfigurationRepository();
+        private static readonly IConfigurationRepository Repository = new TxmlConfigurationRepository();
 
         public static List<string> ListConverterNames(StatusConversorItem statusConversorItem)
         {
@@ -38,8 +38,9 @@ namespace ConversorDrawind
             List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
-            ConverterConfiguration structuredConfiguration = LoadConverter(converterName, statusConversorItem);
-            ConfigurationCompatibilityMapper.ApplyToLegacyState(structuredConfiguration, configuration, arranjos, blocks, blocksInv, blocksOrig);
+            Configuration loadedConfiguration = LoadConverter(converterName, statusConversorItem);
+            configuration.Apply(loadedConfiguration);
+            ConfigurationCompatibilityMapper.ApplyToLegacyState(loadedConfiguration.ToConverterConfiguration(), configuration, arranjos, blocks, blocksInv, blocksOrig);
         }
 
         public static void SaveConverter(
@@ -52,17 +53,23 @@ namespace ConversorDrawind
             StatusConversorItem statusConversorItem)
         {
             ConverterConfiguration structuredConfiguration = ConfigurationCompatibilityMapper.FromLegacyState(configuration, arranjos, blocks, blocksInv, blocksOrig);
-            SaveConverter(converterName, statusConversorItem, structuredConfiguration);
+            SaveConverter(converterName, statusConversorItem, new Configuration(structuredConfiguration));
         }
 
-        public static ConverterConfiguration LoadConverter(string converterName, StatusConversorItem statusConversorItem)
+        public static Configuration LoadConverter(string converterName, StatusConversorItem statusConversorItem)
         {
             return Repository.Load(converterName, statusConversorItem);
         }
 
-        public static void SaveConverter(string converterName, StatusConversorItem statusConversorItem, ConverterConfiguration configuration)
+        public static void SaveConverter(string converterName, StatusConversorItem statusConversorItem, Configuration configuration)
         {
             Repository.Save(converterName, statusConversorItem, configuration);
+        }
+
+        [System.Obsolete("Use SaveConverter(string, StatusConversorItem, Configuration).")]
+        public static void SaveConverter(string converterName, StatusConversorItem statusConversorItem, ConverterConfiguration configuration)
+        {
+            Repository.Save(converterName, statusConversorItem, new Configuration(configuration));
         }
 
     }

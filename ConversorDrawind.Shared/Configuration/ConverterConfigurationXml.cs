@@ -9,28 +9,28 @@ using System.Xml.Linq;
 
 namespace ConversorDrawind
 {
-    public interface IConverterConfigurationRepository
+    public interface IConfigurationRepository
     {
         bool Exists(string converterName, StatusConversorItem statusConversorItem);
-        ConverterConfiguration Load(string converterName, StatusConversorItem statusConversorItem);
-        void Save(string converterName, StatusConversorItem statusConversorItem, ConverterConfiguration configuration);
+        Configuration Load(string converterName, StatusConversorItem statusConversorItem);
+        void Save(string converterName, StatusConversorItem statusConversorItem, Configuration configuration);
     }
 
-    public sealed class TxmlConverterConfigurationRepository : IConverterConfigurationRepository
+    public sealed class TxmlConfigurationRepository : IConfigurationRepository
     {
         public bool Exists(string converterName, StatusConversorItem statusConversorItem)
         {
             return File.Exists(ResolvePath(converterName, statusConversorItem));
         }
 
-        public ConverterConfiguration Load(string converterName, StatusConversorItem statusConversorItem)
+        public Configuration Load(string converterName, StatusConversorItem statusConversorItem)
         {
-            return ConverterConfigurationReader.Load(ResolvePath(converterName, statusConversorItem));
+            return ConfigurationReader.Load(ResolvePath(converterName, statusConversorItem));
         }
 
-        public void Save(string converterName, StatusConversorItem statusConversorItem, ConverterConfiguration configuration)
+        public void Save(string converterName, StatusConversorItem statusConversorItem, Configuration configuration)
         {
-            StructuredConfigurationXmlWriter.Save(ResolvePath(converterName, statusConversorItem), configuration);
+            StructuredConfigurationXmlWriter.Save(ResolvePath(converterName, statusConversorItem), configuration.ToConverterConfiguration());
         }
 
         private static string ResolvePath(string converterName, StatusConversorItem statusConversorItem)
@@ -39,6 +39,14 @@ namespace ConversorDrawind
                 return converterName.EndsWith(".txml", StringComparison.OrdinalIgnoreCase) ? converterName : converterName + ".txml";
 
             return ConfigurationPaths.TxmlPath(converterName, statusConversorItem);
+        }
+    }
+
+    public static class ConfigurationReader
+    {
+        public static Configuration Load(string file)
+        {
+            return new Configuration(ConverterConfigurationReader.Load(file));
         }
     }
 

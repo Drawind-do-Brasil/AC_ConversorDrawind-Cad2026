@@ -1,19 +1,19 @@
+using System;
 using System.Collections.Generic;
 
 namespace ConversorDrawind
 {
-    public sealed class ConverterConfiguration
+    [Obsolete("Use Configuration. ConverterConfiguration remains only as a compatibility alias.")]
+    public sealed class ConverterConfiguration : Configuration
     {
-        public string Comments { get; set; } = string.Empty;
-        public GeneralConfiguration General { get; set; } = new GeneralConfiguration();
-        public DimensionConfiguration Dimensions { get; set; } = new DimensionConfiguration();
-        public TextConfiguration Text { get; set; } = new TextConfiguration();
-        public ScaleConfiguration Scale { get; set; } = new ScaleConfiguration();
-        public LayerConfiguration Layers { get; set; } = new LayerConfiguration();
-        public LineConfiguration Lines { get; set; } = new LineConfiguration();
-        public CommandConfiguration Commands { get; set; } = new CommandConfiguration();
-        public BlockConfiguration Blocks { get; set; } = new BlockConfiguration();
-        public RuntimeConfiguration Runtime { get; set; } = new RuntimeConfiguration();
+        public ConverterConfiguration()
+        {
+        }
+
+        public ConverterConfiguration(Configuration source)
+            : base(source)
+        {
+        }
     }
 
     public sealed class GeneralConfiguration
