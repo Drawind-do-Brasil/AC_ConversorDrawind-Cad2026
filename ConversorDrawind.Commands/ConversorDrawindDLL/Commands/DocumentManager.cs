@@ -126,7 +126,7 @@ namespace ConversorDrawindDLL
 
             try
             {
-                LayerTable layerTable = (LayerTable)database.LayerTableId.GetObject( OpenMode.ForWrite);
+                LayerTable layerTable = (LayerTable)database.LayerTableId.GetObject(OpenMode.ForWrite);
                 LayerTableRecord layerTableRecord;
                 if (layerTable.Has(nome))
                 {
@@ -140,7 +140,7 @@ namespace ConversorDrawindDLL
 
 
             }
-        
+
         }
 
         public static void ChangeText(BlockReference bref, int index, string textonovo)
@@ -185,7 +185,7 @@ namespace ConversorDrawindDLL
                     return texto.Trim();
                 }
             }
-            
+
             else if (string.Equals(id.ObjectClass.DxfName, "INSERT", StringComparison.OrdinalIgnoreCase))
             {
                 BlockReference bref = (BlockReference)id.GetObject(OpenMode.ForRead);
@@ -267,7 +267,7 @@ namespace ConversorDrawindDLL
                 {
                     Entity ent = (Entity)transaction.GetObject(id, OpenMode.ForWrite, false);
 
-                    if (ent is AttributeDefinition) 
+                    if (ent is AttributeDefinition)
                     {
 
                         AttributeDefinition attDef = ((AttributeDefinition)(ent));

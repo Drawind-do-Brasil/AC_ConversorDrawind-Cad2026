@@ -1,17 +1,15 @@
+using ConversorDrawind.UI.Wpf.LispDll;
 using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Drawing;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Threading;
-using ConversorDrawind.UI.Wpf.Blocks;
-using ConversorDrawind.UI.Wpf.LispDll;
 using WpfMessageBox = System.Windows.MessageBox;
-using ConversorDrawind;
 
 namespace ConversorDrawind.UI.Wpf.Main
 {

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading;
-using ConversorDrawind.UI.Wpf.Common;
+﻿using ConversorDrawind.UI.Wpf.Common;
 using ConversorDrawind.UI.Wpf.Main;
+using System;
+using System.Threading;
 
 namespace ConversorDrawind
 {

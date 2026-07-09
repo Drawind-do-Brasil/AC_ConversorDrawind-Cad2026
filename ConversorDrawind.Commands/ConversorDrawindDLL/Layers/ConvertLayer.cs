@@ -1,4 +1,3 @@
-using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -6,7 +5,6 @@ using Autodesk.AutoCAD.Geometry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace ConversorDrawindDLL
 {
@@ -49,10 +47,10 @@ namespace ConversorDrawindDLL
                 {
                     ConvertLayersNewRecursive(benum.Current, trans);
                 }
-             
+
             }
             InstanciaConversor.ConvertInstance(obj);
-         
+
         }
 
         public static void ConvertLayersNew()
@@ -112,22 +110,22 @@ namespace ConversorDrawindDLL
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
             ObjectId id = ObjectId.Null;
-           
-                try
-                {
-                    id = LinetypeService.LoadLinetype(database, sLineTypName);
-                }
+
+            try
+            {
+                id = LinetypeService.LoadLinetype(database, sLineTypName);
+            }
 
 
-                catch (Exception e)
-                {
-                    Conversor.EscreverLog("Erro 57", e.Message);
-                }
-                finally
-                {
-          
-                }
-    
+            catch (Exception e)
+            {
+                Conversor.EscreverLog("Erro 57", e.Message);
+            }
+            finally
+            {
+
+            }
+
             return id;
         }
 
@@ -254,7 +252,7 @@ namespace ConversorDrawindDLL
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             TextStyleService.CreateStyles(documentContext, RuntimeConfigurationState.TextStyles, Conversor.EscreverLog);
         }
- 
+
         public static ObjectId CreateDimstyle()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
@@ -355,79 +353,79 @@ namespace ConversorDrawindDLL
         {
             return ScaleDetector.GetPointDifference(pontoIni, pontoRef, scale);
         }
-       /*
-        public static double ScaleDrawingCaptureText(string layertext)
-        {
-            double escala1p1 = 1;
-            double escala = -1;
+        /*
+         public static double ScaleDrawingCaptureText(string layertext)
+         {
+             double escala1p1 = 1;
+             double escala = -1;
 
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Editor editor = documentContext.Editor;
-            Database acCurDb = documentContext.Database;
+             IAcadDocumentContext documentContext = new AcadDocumentContext();
+             Editor editor = documentContext.Editor;
+             Database acCurDb = documentContext.Database;
 
-            TypedValue[] typedValue = new TypedValue[2];
-            typedValue.SetValue(new TypedValue((int)DxfCode.LayerName, layer), 1);
+             TypedValue[] typedValue = new TypedValue[2];
+             typedValue.SetValue(new TypedValue((int)DxfCode.LayerName, layer), 1);
 
-            SelectionFilter selectionFilter = new SelectionFilter(typedValue);
-            PromptSelectionResult promptSelectionResult = editor.SelectAll(selectionFilter);
-            ObjectId[] objectIdList = null;
-            if (promptSelectionResult.Status.ToString() == "OK")
-                objectIdList = promptSelectionResult.Value.GetObjectIds();
-            if (objectIdList != null)
-            {
-                using (Transaction acTrans = acCurDb.TransactionManager.MyStartTransaction())
-                {
-                    try
-                    {
-                        foreach (var item in objectIdList)
-                        {
-                           Entity entity = (Entity)acTrans.GetObject(item, OpenMode.ForRead);
-                            if(entity.GetType() == typeof(BlockReference))
-                            {
-                                 BlockReference bref = (BlockReference)acTrans.GetObject(item, OpenMode.ForRead);
+             SelectionFilter selectionFilter = new SelectionFilter(typedValue);
+             PromptSelectionResult promptSelectionResult = editor.SelectAll(selectionFilter);
+             ObjectId[] objectIdList = null;
+             if (promptSelectionResult.Status.ToString() == "OK")
+                 objectIdList = promptSelectionResult.Value.GetObjectIds();
+             if (objectIdList != null)
+             {
+                 using (Transaction acTrans = acCurDb.TransactionManager.MyStartTransaction())
+                 {
+                     try
+                     {
+                         foreach (var item in objectIdList)
+                         {
+                            Entity entity = (Entity)acTrans.GetObject(item, OpenMode.ForRead);
+                             if(entity.GetType() == typeof(BlockReference))
+                             {
+                                  BlockReference bref = (BlockReference)acTrans.GetObject(item, OpenMode.ForRead);
 
-                            var block = (BlockTableRecord)acTrans.GetObject(bref.BlockTableRecord, OpenMode.ForRead);
-                            var benum = block.GetEnumerator();
+                             var block = (BlockTableRecord)acTrans.GetObject(bref.BlockTableRecord, OpenMode.ForRead);
+                             var benum = block.GetEnumerator();
 
-                            while (benum.MoveNext())
-                            {
-                                Entity obj = (Entity)acTrans.GetObject(benum.Current, OpenMode.ForRead);
-                                if (obj.GetType() == typeof(DBText))
-                                {
-                                    DBText text = obj as DBText;
-                                    if (string.Equals(Configuration.Config.Scale.Layer, text.Layer, StringComparison.OrdinalIgnoreCase) && ConvertBlocks.CheckPoint(text.Position,
-                   ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp1.X, Configuration.Config.EXTSCALEAp1.Y, Configuration.Config.EXTSCALEAp1.Z)),
-                   ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp2.X, Configuration.Config.EXTSCALEAp2.Y, Configuration.Config.EXTSCALEAp2.Z))))
-                                    {
-                                        int arredondamento = Configuration.Config.Scale.TextSize.ToString().Split(',').Last().Length;
-                                        if (text.Height > Configuration.Config.Scale.TextSize - 0.2 &&
-                                            text.Height < Configuration.Config.Scale.TextSize + 0.2)
-                                        {
-                                            string[] temp = text.TextString.Split(':');
-                                            double escalaConvertida = 0;
-                                            if (Double.TryParse(temp.Last().ReplaceComma(), out escalaConvertida))
-                                                escala = escalaConvertida;
-                                            if (escala1p1 == escala)
-                                                escala = -1;
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        }
-                    }
-                    catch (System.Exception e)
-                    {
-                        Conversor.EscreverLog("Erro 90", e.Message);
-                    }
-                    finally
-                    {
-                        acTrans.MyCommit();
-                    }
-                }
-            }
-            return escala;
-        }*/
+                             while (benum.MoveNext())
+                             {
+                                 Entity obj = (Entity)acTrans.GetObject(benum.Current, OpenMode.ForRead);
+                                 if (obj.GetType() == typeof(DBText))
+                                 {
+                                     DBText text = obj as DBText;
+                                     if (string.Equals(Configuration.Config.Scale.Layer, text.Layer, StringComparison.OrdinalIgnoreCase) && ConvertBlocks.CheckPoint(text.Position,
+                    ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp1.X, Configuration.Config.EXTSCALEAp1.Y, Configuration.Config.EXTSCALEAp1.Z)),
+                    ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp2.X, Configuration.Config.EXTSCALEAp2.Y, Configuration.Config.EXTSCALEAp2.Z))))
+                                     {
+                                         int arredondamento = Configuration.Config.Scale.TextSize.ToString().Split(',').Last().Length;
+                                         if (text.Height > Configuration.Config.Scale.TextSize - 0.2 &&
+                                             text.Height < Configuration.Config.Scale.TextSize + 0.2)
+                                         {
+                                             string[] temp = text.TextString.Split(':');
+                                             double escalaConvertida = 0;
+                                             if (Double.TryParse(temp.Last().ReplaceComma(), out escalaConvertida))
+                                                 escala = escalaConvertida;
+                                             if (escala1p1 == escala)
+                                                 escala = -1;
+                                         }
+                                     }
+                                 }
+                             }
+                         }
+                         }
+                     }
+                     catch (System.Exception e)
+                     {
+                         Conversor.EscreverLog("Erro 90", e.Message);
+                     }
+                     finally
+                     {
+                         acTrans.MyCommit();
+                     }
+                 }
+             }
+             return escala;
+         }*/
         /*
                 public static double ScaleDrawingCapture(string layer)
                 {
@@ -585,8 +583,8 @@ namespace ConversorDrawindDLL
 
         public static double ScaleDrawing(double scale)
         {
-            Point3d ptMax =   Conversor.GetNewMax();
-            Point3d ptMin =   Conversor.GetNewMin();
+            Point3d ptMax = Conversor.GetNewMax();
+            Point3d ptMin = Conversor.GetNewMin();
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Editor editor = documentContext.Editor;
             Database acCurDb = documentContext.Database;

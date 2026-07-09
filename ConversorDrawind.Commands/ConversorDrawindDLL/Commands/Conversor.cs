@@ -117,15 +117,15 @@ namespace ConversorDrawindDLL
             // Atualizar a viewport para refletir as alterações
             ed.Regen();
         }
-        
+
 
         [CommandMethod("CDwi_Convert")]
         public static void CDwi_ConvertToDimension()
-        {    
+        {
             NewMin = new myPoint(double.MaxValue, double.MaxValue, double.MaxValue);
-        NewMax = new myPoint(double.MinValue, double.MinValue, double.MinValue);
+            NewMax = new myPoint(double.MinValue, double.MinValue, double.MinValue);
 
-        timeini = DateTime.Now;
+            timeini = DateTime.Now;
             //Main Instances
             escalaCapiturada = -1;
             escalaFinal = 1;
@@ -164,7 +164,7 @@ namespace ConversorDrawindDLL
 
             extentsWorkflow.RefreshAndZoom();
 
-          
+
             commandRunner.InitializeLogger(document, ref LOG_Diretorio, ref LOG_FileName);
 
 
@@ -175,24 +175,24 @@ namespace ConversorDrawindDLL
             GETSCALE();
             //idLayer = ConvertLayer.CreateAndAssignALayer(Configuration.Config.Dimensions.Layer);
 
-           
-       
-      
 
-     
+
+
+
+
             systemVariables.Set("DWGCHECK", 1);
 
             workflow.CreateLayersIfEnabled();
 
             workflow.CreateTextStylesIfNeeded();
-           
+
             stepRunner.Run(
                 "Movendo para origem ",
                 extentsWorkflow.MoveToOriginAndRefreshZoom,
                 "Erro 14",
                 "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao extrair os layers dos blocos...\n");
-            
+
 
             workflow.ConvertDimensionsIfEnabled();
 
@@ -486,14 +486,14 @@ namespace ConversorDrawindDLL
                 filterList.Add(new TypedValue((int)DxfCode.LayerName, "DrawingSheet"));
                 filterList.Add(new TypedValue((int)DxfCode.LayerName, "Drawing Sheet"));
                 filterList.Add(new TypedValue((int)DxfCode.LayerName, "Drawing_Sheet"));
-          
+
 
                 filterList.Add(new TypedValue((int)DxfCode.Operator, "or>"));
 
                 filterList.Add(new TypedValue((int)DxfCode.Start, "INSERT"));
 
                 filterList.Add(new TypedValue((int)DxfCode.Operator, "and>"));
-       
+
 
                 SelectionFilter filter = new SelectionFilter(filterList.ToArray());
 
@@ -524,8 +524,8 @@ namespace ConversorDrawindDLL
                                     {
 
                                         Entity ent2 = trans.GetObject(objectId, OpenMode.ForRead) as Entity;
-                                        if(ent2.GetType() == typeof(Line))
-                                        SetPtsByEntity(ent2, blockReference);
+                                        if (ent2.GetType() == typeof(Line))
+                                            SetPtsByEntity(ent2, blockReference);
 
 
                                     }
@@ -545,7 +545,7 @@ namespace ConversorDrawindDLL
                 {
                     trans.Commit();
                     return false;
-                  
+
                 }
             }
         }
@@ -583,9 +583,9 @@ namespace ConversorDrawindDLL
                         Entity entity = trans.GetObject(id, OpenMode.ForRead) as Entity;
                         if (entity != null)
                         {
-                            
-                                SetPtsByEntity(entity);
-                            
+
+                            SetPtsByEntity(entity);
+
 
                         }
                     }
@@ -687,7 +687,7 @@ namespace ConversorDrawindDLL
                         {
                             try
                             {
- 
+
                                 if (entity.GetType() == typeof(DBText))
                                 {
                                     DBText text = entity as DBText;
@@ -798,14 +798,14 @@ namespace ConversorDrawindDLL
             if (bref.Layer != "0")
                 return;
             var block = (BlockTableRecord)bref.BlockTableRecord.GetObject(OpenMode.ForRead);
-          
+
             var benum = block.GetEnumerator();
             if (benum.MoveNext() == false) return;
             var obj = (Entity)benum.Current.GetObject(OpenMode.ForRead);
             bref.Layer = obj.Layer;
-    
+
         }
-private static bool ChecarEscala(DBText text, Point3d positionInSpace)
+        private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         {
             if (!string.Equals(text.Layer, Configuration.Config.Scale.Layer, StringComparison.OrdinalIgnoreCase))
                 return false;

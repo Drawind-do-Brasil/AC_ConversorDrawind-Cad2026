@@ -1,5 +1,4 @@
-﻿using Autodesk.AutoCAD.ApplicationServices;
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using System;
@@ -91,65 +90,65 @@ namespace ConversorDrawindDLL
             Database dataBase = documentContext.Database;
             Editor editor = documentContext.Editor;
             IEntitySelector entitySelector = new AcadEntitySelector(editor);
-       
-                try
+
+            try
+            {
+
+                List<ObjectId> listObjectId = new List<ObjectId>();
+                Point3d P1 = new Point3d(pt.X + (scale * distFactor), pt.Y + (scale * distFactor), pt.Z);
+                Point3d P2 = new Point3d(pt.X - (scale * distFactor), pt.Y - (scale * distFactor), pt.Z);
+                PromptSelectionResult psr = entitySelector.SelectCrossingWindow(P1, P2, FilterByType(new string[] { "DIMENSION" }));
+                if (psr.Status == PromptStatus.OK)
+                    listObjectId.AddRange(psr.Value.GetObjectIds());
+
+                for (int i = 0; i < listObjectId.Count; i++)
                 {
-
-                    List<ObjectId> listObjectId = new List<ObjectId>();
-                    Point3d P1 = new Point3d(pt.X + (scale * distFactor), pt.Y + (scale * distFactor), pt.Z);
-                    Point3d P2 = new Point3d(pt.X - (scale * distFactor), pt.Y - (scale * distFactor), pt.Z);
-                    PromptSelectionResult psr = entitySelector.SelectCrossingWindow(P1, P2, FilterByType(new string[] { "DIMENSION" }));
-                    if (psr.Status == PromptStatus.OK)
-                        listObjectId.AddRange(psr.Value.GetObjectIds());
-
-                    for (int i = 0; i < listObjectId.Count; i++)
+                    if (listObjectId[i].ToString() == rotatedDimension.Id.ToString())
                     {
-                        if (listObjectId[i].ToString() == rotatedDimension.Id.ToString())
+                        listObjectId.RemoveAt(i);
+                        break;
+                    }
+                }
+
+                for (int i = 0; i < listObjectId.Count; i++)
+                {
+                    Entity entity = listObjectId[i].GetObject(OpenMode.ForRead) as Entity;
+                    if (entity.GetType() == typeof(RotatedDimension))
+                    {
+                        RotatedDimension dimension = entity as RotatedDimension;
+                        Point3d point = ArrowFixService.ProjectFirstExtensionPoint(
+                            dimension.XLine1Point,
+                            dimension.XLine2Point,
+                            dimension.DimLinePoint);
+                        double t1 = pt.DistanceTo(dimension.DimLinePoint);
+                        double t2 = pt.DistanceTo(point);
+                        if (pt.DistanceTo(dimension.DimLinePoint) > (distFactor2 * scale) && pt.DistanceTo(point) > (distFactor2 * scale))
                         {
                             listObjectId.RemoveAt(i);
-                            break;
+                            i--;
                         }
                     }
-
-                    for (int i = 0; i < listObjectId.Count; i++)
-                    {
-                        Entity entity = listObjectId[i].GetObject( OpenMode.ForRead) as Entity;
-                        if (entity.GetType() == typeof(RotatedDimension))
-                        {
-                            RotatedDimension dimension = entity as RotatedDimension;
-                            Point3d point = ArrowFixService.ProjectFirstExtensionPoint(
-                                dimension.XLine1Point,
-                                dimension.XLine2Point,
-                                dimension.DimLinePoint);
-                            double t1 = pt.DistanceTo(dimension.DimLinePoint);
-                            double t2 = pt.DistanceTo(point);
-                            if (pt.DistanceTo(dimension.DimLinePoint) > (distFactor2 * scale) && pt.DistanceTo(point) > (distFactor2 * scale))
-                            {
-                                listObjectId.RemoveAt(i);
-                                i--;
-                            }
-                        }
-                    }
-
-                    if (listObjectId.Count == 1)
-                    {
-                        Entity entity = listObjectId.First().GetObject( OpenMode.ForRead) as Entity;
-                        if (entity.GetType() == typeof(RotatedDimension))
-                        {
-                            RotatedDimension dimension = entity as RotatedDimension;
-                            if (GetDistDimension(dimension) < distMin * scale)
-                                return true;
-                        }
-                    }
-
                 }
-                catch (Exception e)
+
+                if (listObjectId.Count == 1)
                 {
-                    Conversor.EscreverLog("Erro 11", e.Message);
+                    Entity entity = listObjectId.First().GetObject(OpenMode.ForRead) as Entity;
+                    if (entity.GetType() == typeof(RotatedDimension))
+                    {
+                        RotatedDimension dimension = entity as RotatedDimension;
+                        if (GetDistDimension(dimension) < distMin * scale)
+                            return true;
+                    }
                 }
-          
 
-            
+            }
+            catch (Exception e)
+            {
+                Conversor.EscreverLog("Erro 11", e.Message);
+            }
+
+
+
             return false;
         }
 

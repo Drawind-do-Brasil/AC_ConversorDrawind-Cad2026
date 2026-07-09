@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Xml.Serialization;
 
 namespace ConversorDrawind
@@ -67,11 +64,11 @@ namespace ConversorDrawind
         {
             return tag + "@" +
                    modify + "@" +
-                   p1.X.ToString().Replace(',', '.') + "," + 
-                   p1.Y.ToString().Replace(',', '.') + "," + 
+                   p1.X.ToString().Replace(',', '.') + "," +
+                   p1.Y.ToString().Replace(',', '.') + "," +
                    p1.Z.ToString().Replace(',', '.') + ";" +
-                   p2.X.ToString().Replace(',', '.') + "," + 
-                   p2.Y.ToString().Replace(',', '.') + "," + 
+                   p2.X.ToString().Replace(',', '.') + "," +
+                   p2.Y.ToString().Replace(',', '.') + "," +
                    p2.Z.ToString().Replace(',', '.') + "@" +
                    filtro.layerBase + ";" +
                    filtro.GetConjunto() + "@" +

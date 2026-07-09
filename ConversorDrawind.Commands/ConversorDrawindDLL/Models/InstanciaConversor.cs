@@ -60,7 +60,7 @@ namespace ConversorDrawindDLL
                 Conversor.EscreverLog("Erro 101", e.Message + "| Erro na conversão do seguinte item: " + entity.Id.ObjectClass.DxfName.ToUpper() + " " + conversor.BaseLayerName + " " + conversor.BaseColorString + " " + conversor.BaseLineTypeString);
             }
         }
-      
+
         string baseLayerName;
         string baseObjectType;
         Color baseColor;
@@ -135,7 +135,7 @@ namespace ConversorDrawindDLL
             get { return baseLineTypeString; }
         }
 
-        public string TextSyle { get => textSyle;  }
+        public string TextSyle { get => textSyle; }
 
         public override string ToString()
         {
@@ -152,7 +152,7 @@ namespace ConversorDrawindDLL
             baseObjectType = split2[0].ToUpper();
             baseColor = ConvertLayer.GetColorForName(split2[1]);
             baseColorString = split2[1];
-   
+
             baseLineTypeString = split2[2].ToUpper();
             baseConteudo = split2[3];
             baseAlturaTexto = 0;
@@ -164,14 +164,14 @@ namespace ConversorDrawindDLL
             newLineTypeString = split3[2];
             newAltura = 0;
             double.TryParse(split3[3].ReplaceComma(), out newAltura);
-            newLargura =0;
+            newLargura = 0;
             double.TryParse(split3[4].ReplaceComma(), out newLargura);
 
             if (split3.Count() >= 6)
                 textSyle = split3[5];
             else
                 textSyle = RuntimeConfigurationState.TextStyles.First().Split(':').First();
-            
+
 
         }
     }

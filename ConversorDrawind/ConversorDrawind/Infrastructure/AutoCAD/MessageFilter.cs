@@ -55,16 +55,16 @@ namespace ConversorDrawind
         //
         // IOleMessageFilter functions.
         // Handle incoming thread requests.
-        int IOleMessageFilter.HandleInComingCall(int dwCallType, 
-          System.IntPtr hTaskCaller, int dwTickCount, System.IntPtr 
-          lpInterfaceInfo) 
+        int IOleMessageFilter.HandleInComingCall(int dwCallType,
+          System.IntPtr hTaskCaller, int dwTickCount, System.IntPtr
+          lpInterfaceInfo)
         {
             //Return the flag SERVERCALL_ISHANDLED.
             return 0;
         }
 
         // Thread call was rejected, so try again.
-        int IOleMessageFilter.RetryRejectedCall(System.IntPtr 
+        int IOleMessageFilter.RetryRejectedCall(System.IntPtr
           hTaskCallee, int dwTickCount, int dwRejectType)
         {
             if (dwRejectType == SERVERCALL_RETRYLATER)
@@ -79,17 +79,17 @@ namespace ConversorDrawind
             return -1;
         }
 
-        int IOleMessageFilter.MessagePending(System.IntPtr hTaskCallee, 
+        int IOleMessageFilter.MessagePending(System.IntPtr hTaskCallee,
           int dwTickCount, int dwPendingType)
         {
             //Return the flag PENDINGMSG_WAITDEFPROCESS.
-            return 2; 
+            return 2;
         }
 
         // Implement the IOleMessageFilter interface.
         [DllImport("Ole32.dll")]
-        private static extern int 
-          CoRegisterMessageFilter(IOleMessageFilter newFilter, out 
+        private static extern int
+          CoRegisterMessageFilter(IOleMessageFilter newFilter, out
           IOleMessageFilter oldFilter);
 
         private sealed class MessageFilterScope : IDisposable
@@ -107,26 +107,26 @@ namespace ConversorDrawind
         }
     }
 
-    [ComImport(), Guid("00000016-0000-0000-C000-000000000046"), 
+    [ComImport(), Guid("00000016-0000-0000-C000-000000000046"),
     InterfaceTypeAttribute(ComInterfaceType.InterfaceIsIUnknown)]
-    interface IOleMessageFilter 
+    interface IOleMessageFilter
     {
         [PreserveSig]
-        int HandleInComingCall( 
-            int dwCallType, 
-            IntPtr hTaskCaller, 
-            int dwTickCount, 
+        int HandleInComingCall(
+            int dwCallType,
+            IntPtr hTaskCaller,
+            int dwTickCount,
             IntPtr lpInterfaceInfo);
 
         [PreserveSig]
-        int RetryRejectedCall( 
-            IntPtr hTaskCallee, 
+        int RetryRejectedCall(
+            IntPtr hTaskCallee,
             int dwTickCount,
             int dwRejectType);
 
         [PreserveSig]
-        int MessagePending( 
-            IntPtr hTaskCallee, 
+        int MessagePending(
+            IntPtr hTaskCallee,
             int dwTickCount,
             int dwPendingType);
     }

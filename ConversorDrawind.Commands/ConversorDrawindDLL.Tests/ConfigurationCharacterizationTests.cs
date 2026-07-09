@@ -1,4 +1,3 @@
-using Arranjos = global::ConversorDrawind.Arranjos;
 using Block = global::ConversorDrawind.Block;
 using Filter = global::ConversorDrawind.Filter;
 using TagBlock = global::ConversorDrawind.TagBlock;

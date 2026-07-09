@@ -1,6 +1,6 @@
-﻿using System;
+﻿using ConversorDrawind.UI.Wpf.Status;
+using System;
 using System.Windows.Threading;
-using ConversorDrawind.UI.Wpf.Status;
 
 namespace ConversorDrawind
 {

@@ -72,18 +72,23 @@ public sealed class SharedConverterConfigurationTests
         using TestWorkspace workspace = TestWorkspace.Create();
         var status = new global::ConversorDrawind.StatusConversorItem("Teste", Path.GetFileName(workspace.Root));
         var configuration = new global::ConversorDrawind.Configuration();
-        var arranjos = new global::ConversorDrawind.Arranjos();
-        var blocks = new List<global::ConversorDrawind.Block>();
-        var cadBlocks = new List<global::ConversorDrawind.Block>();
-        var originalBlocks = new List<global::ConversorDrawind.Block>();
-
-        arranjos.allNewLayerComposition.Clear();
-        arranjos.allNewLayerComposition.Add("DWI01:RED:CONTINUOUS");
-        arranjos.conversor.Add("ALL;TEXT:ALL:ALL:::ALL;DWI01:BYLAYER:BYLAYER:::TEXTO");
-
-        configuration.SaveXML("sample", arranjos, blocks, cadBlocks, originalBlocks, status);
+        configuration.Layers.NewLayers = new List<global::ConversorDrawind.LayerDefinition>
+        {
+            new global::ConversorDrawind.LayerDefinition
+            {
+                Name = "DWI01",
+                Color = "RED",
+                LineType = "CONTINUOUS"
+            }
+        };
+        configuration.Layers.ConversionRules = new List<global::ConversorDrawind.LayerConversionRule>
+        {
+            global::ConversorDrawind.LegacyConfigurationParsers.ParseLayerConversionRule("ALL;TEXT:ALL:ALL:::ALL;DWI01:BYLAYER:BYLAYER:::TEXTO")
+        };
 
         string output = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, status.Pasta, "sample.txml");
+        global::ConversorDrawind.StructuredConfigurationXmlWriter.Save(output, configuration);
+
         XDocument saved = XDocument.Load(output);
 
         Assert.Equal("2", (string?)saved.Root?.Attribute("VERSION"));

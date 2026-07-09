@@ -1,10 +1,7 @@
-using ConversorDrawind;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
-using System.Threading;
 using ACAD = Autodesk.AutoCAD.Interop;
 using ACCOMMON = Autodesk.AutoCAD.Interop.Common;
 

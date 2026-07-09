@@ -1,12 +1,10 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace ConversorDrawindDLL
 {
@@ -38,7 +36,7 @@ namespace ConversorDrawindDLL
             Editor editor = documentContext.Editor;
             Database acCurDb = documentContext.Database;
             IEntitySelector entitySelector = new AcadEntitySelector(editor);
-     
+
             SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertOnLayer(layer));
             PromptSelectionResult promptSelectionResult = entitySelector.SelectAll(selectionFilter);
             ObjectId[] objectIdList = null;
@@ -147,8 +145,8 @@ namespace ConversorDrawindDLL
 
                                             if (String.IsNullOrEmpty(tag.filtro.alturaTexto) || Math.Round(text.Height, qtde) == Convert.ToDouble(tag.filtro.alturaTexto.ReplaceComma()))
                                             {
-                                     
-                           
+
+
                                                 if (cont == 0)
                                                     tag.text = text.TextString;
                                                 else if (CheckPoint(text.Position, p1, p2))
@@ -156,9 +154,9 @@ namespace ConversorDrawindDLL
                                                     tag.text = text.TextString;
                                                     break;
                                                 }
-                                               
+
                                                 cont++;
-                                         
+
                                             }
                                         }
                                     }
@@ -176,7 +174,7 @@ namespace ConversorDrawindDLL
                     transaction.MyCommit();
                 }
             }
-       
+
         }
 
         private static List<TagBlock> GetTagBlocksAtPoint(Point3d point)
@@ -483,6 +481,6 @@ namespace ConversorDrawindDLL
                 .DeleteRelatedBlocks(blockClassi);
         }
 
-   
+
     }
 }

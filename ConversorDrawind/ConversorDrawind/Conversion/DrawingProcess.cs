@@ -255,7 +255,7 @@ namespace ConversorDrawind
                     idleReadCount = 0;
                 }
 
-                
+
                 Thread.Sleep(CommandPollMs);
             }
 

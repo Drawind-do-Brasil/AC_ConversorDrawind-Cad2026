@@ -1,5 +1,5 @@
-﻿using System;
-using ConversorDrawind.UI.Wpf.Configuration;
+﻿using ConversorDrawind.UI.Wpf.Configuration;
+using System;
 
 namespace ConversorDrawind
 {

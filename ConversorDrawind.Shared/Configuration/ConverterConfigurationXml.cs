@@ -68,20 +68,18 @@ namespace ConversorDrawind
         public static Configuration Load(string file)
         {
             Configuration configuration = new Configuration();
-#pragma warning disable CS0618
-            Arranjos arranjos = new Arranjos();
-#pragma warning restore CS0618
+            LegacyConfigurationState state = new LegacyConfigurationState();
             List<Block> teklaBlocks = new List<Block>();
             List<Block> cadBlocks = new List<Block>();
             List<Block> originalBlocks = new List<Block>();
 
             ConfigurationXmlDocument
                 .Load(file)
-                .ApplyTo(configuration, arranjos, teklaBlocks, cadBlocks, originalBlocks);
+                .ApplyTo(configuration, state, teklaBlocks, cadBlocks, originalBlocks);
 
             return ConfigurationCompatibilityMapper.FromLegacyState(
                 configuration,
-                arranjos,
+                state,
                 teklaBlocks,
                 cadBlocks,
                 originalBlocks);

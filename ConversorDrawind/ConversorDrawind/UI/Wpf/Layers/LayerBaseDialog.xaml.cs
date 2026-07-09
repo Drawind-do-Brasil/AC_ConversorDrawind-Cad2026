@@ -1,12 +1,9 @@
-using ConversorDrawind;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Microsoft.Win32;
 using System.Threading;
 using System.Windows;
-using System.Windows.Input;
 using ACAD = Autodesk.AutoCAD.Interop;
 
 namespace ConversorDrawind.UI.Wpf.Layers

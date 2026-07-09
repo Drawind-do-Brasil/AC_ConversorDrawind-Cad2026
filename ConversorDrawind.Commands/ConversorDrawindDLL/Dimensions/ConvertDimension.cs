@@ -40,13 +40,13 @@ namespace ConversorDrawindDLL
         /// </summary>
         public ConvertDimension()
         {
-    
+
         }
 
         public void ConvertDInv()
         {
             ConvertLayer.CreateDimstyle2();
-            ObjectId[] ids = ConvertLayer.Filter("ALL","DIMENSION", "ALL", "ALL");
+            ObjectId[] ids = ConvertLayer.Filter("ALL", "DIMENSION", "ALL", "ALL");
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database acCurDb = documentContext.Database;
             using (Transaction acTrans = acCurDb.TransactionManager.MyStartTransaction())
@@ -148,7 +148,7 @@ namespace ConversorDrawindDLL
         private void ConvertDim(ObjectId[] objectIdList, ObjectId ds)
         {
 
-        
+
 
             for (int i = 0; i < objectIdList.Length; i++)
             {
@@ -450,9 +450,9 @@ namespace ConversorDrawindDLL
                         pTInternal.WidthFactor = objectsInBlock.dBTextList[i].WidthFactor;
                         pTInternal.TextStyleId = objectsInBlock.textStyle;
                         pTInternal.Layer = Configuration.Config.Dimensions.Layer;
-                        pTInternal.Color = ConvertLayer.GetColorForName( Configuration.Config.Dimensions.TextColor);
+                        pTInternal.Color = ConvertLayer.GetColorForName(Configuration.Config.Dimensions.TextColor);
                         pTInternal.Position = tPPInternal;
-                       
+
                         pTInternal.AdjustAlignment(database);
                         acBlkTblRec.AppendEntity(pTInternal);
                         transaction.AddNewlyCreatedDBObject(pTInternal, true);
@@ -606,7 +606,7 @@ namespace ConversorDrawindDLL
                         if (objectsInBlock.arcList[j].StartPoint.DistanceTo(objectsInBlock.arcList[j].EndPoint) > distX)
                             distX = objectsInBlock.arcList[j].StartPoint.DistanceTo(objectsInBlock.arcList[j].EndPoint);
                     }
-                    if (distX <  Configuration.Config.Dimensions.ArrowSize * 2)
+                    if (distX < Configuration.Config.Dimensions.ArrowSize * 2)
                     {
                         CreateAngularDimension3(dimensionProperties,
                                               objectsInBlock.dimStyle);
@@ -710,7 +710,7 @@ namespace ConversorDrawindDLL
                 ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
             blockTableRecord.AppendEntity(rotatedDimension);
             transaction.AddNewlyCreatedDBObject(rotatedDimension, true);
-          
+
 
         }
 
@@ -912,8 +912,8 @@ namespace ConversorDrawindDLL
 
             var degreeAngle = RadianToDegree(angle);
 
-            var resultado =  Math.Abs(90 - degreeAngle)  < tolerance;
-         
+            var resultado = Math.Abs(90 - degreeAngle) < tolerance;
+
 
             return resultado;
         }

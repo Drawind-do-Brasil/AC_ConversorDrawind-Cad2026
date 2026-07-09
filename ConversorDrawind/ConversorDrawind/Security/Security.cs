@@ -107,7 +107,7 @@ namespace ConversorDrawind
             + identifier("Win32_BIOS", "ReleaseDate")
             + identifier("Win32_BIOS", "Version");
         }
- 
+
         private string diskId()
 
         //Main physical hard drive ID

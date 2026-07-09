@@ -9,7 +9,7 @@ namespace ConversorDrawind
     {
         public static ConverterConfiguration FromLegacyState(
             Configuration configuration,
-            Arranjos arranjos,
+            LegacyConfigurationState state,
             List<Block> teklaBlocks,
             List<Block> cadBlocks,
             List<Block> originalBlocks)
@@ -65,7 +65,7 @@ namespace ConversorDrawind
 
             result.Text.DefaultStyleName = configuration.EXTTEXTStyleName;
             result.Text.DefaultSize = configuration.EXTTEXTSize;
-            result.Text.Styles = arranjos.allTextSyles.Select(LegacyConfigurationParsers.ParseTextStyleDefinition).ToList();
+            result.Text.Styles = state.TextStyles.Select(LegacyConfigurationParsers.ParseTextStyleDefinition).ToList();
 
             result.Scale.Manual = configuration.EXTSCALEManual;
             result.Scale.Point1 = ToPoint(configuration.EXTSCALEp1);
@@ -75,11 +75,11 @@ namespace ConversorDrawind
 
             result.Layers.TeklaDrawingSheetLayer = configuration.LayerTeklaString;
             result.Layers.BlockAttributeLayer = configuration.LayerBlockAttribute;
-            result.Layers.BaseLayers = arranjos.allBaseLayer.ToList();
-            result.Layers.NewLayers = arranjos.allNewLayerComposition.Select(LegacyConfigurationParsers.ParseLayerDefinition).ToList();
-            result.Layers.RemoveRules = arranjos.layerRemove.Select(ToRemoveRule).ToList();
-            result.Layers.ConversionRules = arranjos.conversor.Select(LegacyConfigurationParsers.ParseLayerConversionRule).ToList();
-            result.Layers.ExplodeLayers = arranjos.allExplodeLayers.Where(item => !string.IsNullOrEmpty(item)).ToList();
+            result.Layers.BaseLayers = state.BaseLayers.ToList();
+            result.Layers.NewLayers = state.NewLayerDefinitions.Select(LegacyConfigurationParsers.ParseLayerDefinition).ToList();
+            result.Layers.RemoveRules = state.RemoveRules.Select(ToRemoveRule).ToList();
+            result.Layers.ConversionRules = state.ConversionRules.Select(LegacyConfigurationParsers.ParseLayerConversionRule).ToList();
+            result.Layers.ExplodeLayers = state.ExplodeLayers.Where(item => !string.IsNullOrEmpty(item)).ToList();
 
             result.Lines.LineTypeScale = configuration.EXTLINELtscale;
             result.Lines.BaseLineTypes = configuration.Lines.BaseLineTypes.ToList();
@@ -89,8 +89,8 @@ namespace ConversorDrawind
             result.Catalogs.LayerLineTypes = configuration.Catalogs.LayerLineTypes.ToList();
             result.Catalogs.RemovedLineTypes = configuration.Catalogs.RemovedLineTypes.ToList();
 
-            result.Commands.LispCommands = arranjos.listLISPCommand.ToList();
-            result.Commands.DllCommands = arranjos.listDLLCommand.ToList();
+            result.Commands.LispCommands = state.LispCommands.ToList();
+            result.Commands.DllCommands = state.DllCommands.ToList();
 
             result.Blocks.TeklaBlockPath = configuration.PROGRAMblockFormatoCaminho;
             result.Blocks.CadBlockPath = configuration.EXTCONFCaminhoBlocoInv;
@@ -106,109 +106,6 @@ namespace ConversorDrawind
             return result;
         }
 
-        public static void ApplyToLegacyState(
-            ConverterConfiguration source,
-            Configuration configuration,
-            Arranjos arranjos,
-            List<Block> teklaBlocks,
-            List<Block> cadBlocks,
-            List<Block> originalBlocks)
-        {
-            source = source ?? new ConverterConfiguration();
-            source.EnsureDefaults();
-
-            arranjos.allBaseLayer.Clear();
-            arranjos.allNewLayerComposition.Clear();
-            arranjos.allNewLayer.Clear();
-            arranjos.conversor.Clear();
-            arranjos.layerRemove.Clear();
-            arranjos.listLISPCommand.Clear();
-            arranjos.listDLLCommand.Clear();
-            arranjos.allExplodeLayers.Clear();
-            arranjos.allTextSyles.Clear();
-            teklaBlocks.Clear();
-            cadBlocks.Clear();
-            originalBlocks.Clear();
-
-            configuration.EXTCONFComments = source.Comments ?? string.Empty;
-            configuration.EXTCONFOrigem = source.General.SourceMode;
-            configuration.ConvTekla0ConvInv1 = source.General.ConverterType;
-            configuration.EXTCONFIsConvertDimension = source.General.ConvertDimensions;
-            configuration.EXTCONFIsConvertLayer = source.General.ConvertLayers;
-            configuration.EXTCONFIsExchangeFormat = source.General.ExchangeFormat;
-            configuration.EXTCONFIsExchangeLM = source.General.ExchangeLm;
-            configuration.EXTCONFIsPutOnTheScaleDrawing = source.General.ApplyDrawingScale;
-            configuration.EXTCONFIsExecuteLISP = source.General.ExecuteLisp;
-            configuration.EXTCONFIsExecuteDLL = source.General.ExecuteDll;
-            configuration.EXTCONFIsFirstRum = source.General.FirstRunMode;
-            configuration.EXTCONFIsDeleteTeklaStructures = source.General.DeleteTeklaStructures;
-            configuration.EXTCONFIsPurge = source.General.Purge;
-            configuration.PROGRAMMessage = source.General.ShowMessages;
-            configuration.ExplodeBlocks = source.General.ExplodeBlocks;
-            configuration.EXTCONFInventorExplode = source.General.InventorExplode;
-
-            Configuration.INTREFTamFormato = source.Dimensions.ReferenceFormatSize;
-            configuration.INTFactorLengthChar = source.Dimensions.InternalLengthCharFactor;
-            configuration.INTDIMTextOffset = source.Dimensions.InternalTextOffset;
-            configuration.EXTDIMGERALHabilit = source.Dimensions.Enabled;
-            configuration.EXTDIMlayer = source.Dimensions.Layer;
-            configuration.EXTDIMBaseLayer = source.Dimensions.BaseLayer;
-            configuration.EXTDIMColorLine = source.Dimensions.LineColor;
-            configuration.EXTDIMColorText = source.Dimensions.TextColor;
-            configuration.EXTDIMStyleName = source.Dimensions.StyleName;
-            configuration.EXTDIMSeta = source.Dimensions.ArrowType;
-            configuration.EXTDIMSeta1 = source.Dimensions.ArrowType1;
-            configuration.EXTDIMSeta2 = source.Dimensions.ArrowType2;
-            configuration.EXTDIMScale = source.Dimensions.Scale;
-            configuration.EXTDIMPrecision = source.Dimensions.Precision;
-            configuration.EXTDIMAngularPrecision = source.Dimensions.AngularPrecision;
-            configuration.EXTDIMUnit = source.Dimensions.Unit;
-            configuration.EXTDIMAngularUnit = source.Dimensions.AngularUnit;
-            configuration.EXTDIMSizeSeta = source.Dimensions.ArrowSize;
-            configuration.EXTDIMTad = source.Dimensions.TextVerticalPosition;
-            configuration.EXTDIMDimensionPosition = source.Dimensions.TextRelativeToDimensionLine;
-            configuration.EXTDIMTextForced = source.Dimensions.ForceTextInside;
-            configuration.EXTDIMLineForced = source.Dimensions.ForceDimensionLine;
-            configuration.EXTDIMOffsetLineFromRefPoint = source.Dimensions.OffsetLineFromReferencePoint;
-            configuration.EXTDIMTextMove = source.Dimensions.TextMove;
-            configuration.EXTDIMOutsideAlign = source.Dimensions.OutsideAlign;
-            configuration.EXTDIMDIMEX = source.Dimensions.ExtensionLineOffset;
-            configuration.EXTDIMCorrigeSeta = source.Dimensions.FixArrow;
-            configuration.EXTDIMCorrigeSetaTipoSeta = source.Dimensions.FixArrowType;
-            configuration.EXTDIMCorrigeSetaFactor = source.Dimensions.FixArrowFactor;
-
-            configuration.EXTTEXTStyleName = source.Text.DefaultStyleName;
-            configuration.EXTTEXTSize = source.Text.DefaultSize;
-            arranjos.allTextSyles.AddRange(source.Text.Styles.Select(LegacyConfigurationParsers.FormatTextStyleDefinition));
-            if (arranjos.allTextSyles.Count == 0)
-                arranjos.allTextSyles.Add(Defaults.LegacyTextStyle());
-
-            configuration.EXTSCALEManual = source.Scale.Manual;
-            configuration.EXTSCALEp1 = ToPointEspecial(source.Scale.Point1);
-            configuration.EXTSCALEp2 = ToPointEspecial(source.Scale.Point2);
-            configuration.EXTSCALELayer = source.Scale.Layer;
-            configuration.EXTSCALETextSize = source.Scale.TextSize;
-
-            configuration.LayerTeklaString = source.Layers.TeklaDrawingSheetLayer;
-            configuration.LayerBlockAttribute = source.Layers.BlockAttributeLayer;
-            arranjos.allBaseLayer.AddRange(source.Layers.BaseLayers);
-            arranjos.allNewLayerComposition.AddRange(source.Layers.NewLayers.Select(LegacyConfigurationParsers.FormatLayerDefinition));
-            arranjos.allNewLayer.AddRange(source.Layers.NewLayers.Select(layer => layer.Name));
-            arranjos.layerRemove.AddRange(source.Layers.RemoveRules.Select(rule => ToFilter(rule.Filter)));
-            arranjos.conversor.AddRange(source.Layers.ConversionRules.Select(LegacyConfigurationParsers.FormatLayerConversionRule));
-            arranjos.allExplodeLayers.AddRange(source.Layers.ExplodeLayers);
-
-            configuration.EXTLINELtscale = source.Lines.LineTypeScale;
-            arranjos.listLISPCommand.AddRange(source.Commands.LispCommands);
-            arranjos.listDLLCommand.AddRange(source.Commands.DllCommands);
-
-            configuration.PROGRAMblockFormatoCaminho = source.Blocks.TeklaBlockPath;
-            configuration.EXTCONFCaminhoBlocoInv = source.Blocks.CadBlockPath;
-            configuration.DMBlock = source.Blocks.DimensionBlockEnabled;
-            teklaBlocks.AddRange(source.Blocks.TeklaBlocks.Select(ToBlock));
-            cadBlocks.AddRange(source.Blocks.CadBlocks.Select(ToBlock));
-            originalBlocks.AddRange(source.Blocks.OriginalBlocks.Select(ToBlock));
-        }
 
         public static void ApplyBlocksToLegacyLists(
             Configuration source,
@@ -342,3 +239,4 @@ namespace ConversorDrawind
     }
 #pragma warning restore CS0618
 }
+

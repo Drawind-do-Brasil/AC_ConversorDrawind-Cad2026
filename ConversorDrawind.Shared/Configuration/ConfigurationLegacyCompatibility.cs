@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace ConversorDrawind
 {
@@ -215,41 +214,12 @@ namespace ConversorDrawind
             return GetTempDirectory();
         }
 
-        public bool CheckFileTxmlExist(string file, StatusConversorItem statusConversorItem)
-        {
-            return ConfigurationRepository.Exists(file, statusConversorItem);
-        }
-
-        [Obsolete("Use ConverterFileService.LoadConverter or IConfigurationRepository.Load.")]
-        public void Load(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
-        {
-            LoadXML(file, arranjos, blocks, blocosi, blocoso, statusConversorItem);
-        }
-
-        [Obsolete("Use ConverterFileService.LoadConverter or IConfigurationRepository.Load.")]
-        public void LoadXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
-        {
-            Configuration configuration = ConfigurationRepository.Load(file, statusConversorItem);
-            Apply(configuration);
-            ConfigurationCompatibilityMapper.ApplyToLegacyState(configuration.ToConverterConfiguration(), this, arranjos, blocks, blocosi, blocoso);
-        }
-
-        [Obsolete("Use ConverterFileService.SaveConverter or IConfigurationRepository.Save.")]
-        public void SaveXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
-        {
-            ConverterConfiguration configuration = ConfigurationCompatibilityMapper.FromLegacyState(this, arranjos, blocks, blocosi, blocoso);
-            ConfigurationRepository.Save(file, statusConversorItem, configuration);
-        }
 
         public static string LoadConfigDLL()
         {
             return DllConfigFile.Load();
         }
 
-        public static void SaveConfigDLL()
-        {
-            DllConfigFile.SaveIfMissing();
-        }
 
         partial void InitializeCompatibilityState()
         {

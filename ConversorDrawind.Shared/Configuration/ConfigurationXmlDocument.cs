@@ -136,108 +136,16 @@ namespace ConversorDrawind
             }
         }
 
-        public static ConfigurationXmlDocument From(Configuration configuration, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso)
-        {
-            return new ConfigurationXmlDocument
-            {
-                Comments = new CommentsXml { Text = configuration.Comments },
-                BasicConfig = new BasicConfigXml
-                {
-                    TeklaOrCad = configuration.General.SourceMode,
-                    ConvertDimensions = configuration.General.ConvertDimensions,
-                    ConvertLayers = configuration.General.ConvertLayers,
-                    ExchangeFormat = configuration.General.ExchangeFormat,
-                    Scale = configuration.General.ApplyDrawingScale,
-                    LispOrDll = configuration.General.ExecuteLisp,
-                    Purge = configuration.General.Purge,
-                    Message = configuration.General.ShowMessages,
-                    DeleteTeklaStructures = configuration.General.DeleteTeklaStructures,
-                    ExplodeBlocks = configuration.General.ExplodeBlocks,
-                    LayerTeklaString = configuration.Layers.TeklaDrawingSheetLayer,
-                    LayerBlockAttribute = configuration.Layers.BlockAttributeLayer,
-                    CadExplode = configuration.General.InventorExplode,
-                    DmBlock = configuration.Blocks.DimensionBlockEnabled,
-                    DmBlockSpecified = true
-                },
-                DimensionConfig = new DimensionConfigXml
-                {
-                    DimGeralHabilit = configuration.Dimensions.Enabled,
-                    DimLayer = configuration.Dimensions.Layer,
-                    DimLineColor = configuration.Dimensions.LineColor,
-                    DimTextColor = configuration.Dimensions.TextColor,
-                    DimStyle = configuration.Dimensions.StyleName,
-                    DimArrowType = configuration.Dimensions.ArrowType,
-                    DimScale = configuration.Dimensions.Scale,
-                    DimPrecision = configuration.Dimensions.Precision,
-                    DimAngularPrecision = configuration.Dimensions.AngularPrecision,
-                    DimUnit = configuration.Dimensions.Unit,
-                    DimAngularUnit = configuration.Dimensions.AngularUnit,
-                    DimArrowSize = configuration.Dimensions.ArrowSize,
-                    DimOffset = configuration.Dimensions.OffsetLineFromReferencePoint,
-                    DimOutsideAling = configuration.Dimensions.OutsideAlign,
-                    DimTad = configuration.Dimensions.TextVerticalPosition,
-                    DimPosition = configuration.Dimensions.TextRelativeToDimensionLine,
-                    DimTextForced = configuration.Dimensions.ForceTextInside,
-                    DimLineForced = configuration.Dimensions.ForceDimensionLine,
-                    DimDimex = configuration.Dimensions.ExtensionLineOffset,
-                    DimBaseLayer = configuration.Dimensions.BaseLayer,
-                    DimArrowFix = configuration.Dimensions.FixArrow,
-                    DimArrowFixType = configuration.Dimensions.FixArrowType,
-                    DimArrowFactor = configuration.Dimensions.FixArrowFactor
-                },
-                TextConfig = new TextConfigXml { TextStyleName = configuration.Text.DefaultStyleName },
-                ScaleConfig = new ScaleConfigXml
-                {
-                    ScaleMode = configuration.Scale.Manual,
-                    ScaleP1X = configuration.Scale.Point1.X,
-                    ScaleP1Y = configuration.Scale.Point1.Y,
-                    ScaleP1Z = configuration.Scale.Point1.Z,
-                    ScaleP2X = configuration.Scale.Point2.X,
-                    ScaleP2Y = configuration.Scale.Point2.Y,
-                    ScaleP2Z = configuration.Scale.Point2.Z,
-                    ScaleLayer = configuration.Scale.Layer,
-                    ScaleTextSize = configuration.Scale.TextSize
-                },
-                BasicLayers = new BasicLayersXml
-                {
-                    LtScale = configuration.Lines.LineTypeScale,
-                    BaseLayers = arranjos.allBaseLayer.ToList()
-                },
-                BasicLines = new BasicLinesXml { BaseLines = configuration.Lines.BaseLineTypes.ToList() },
-                NewTextStyles = new TextStylesXml { TextStyles = arranjos.allTextSyles.ToList() },
-                NewLayers = new NewLayersXml
-                {
-                    Layers = arranjos.allNewLayerComposition.Count == 0
-                        ? new List<string> { "0:WHITE:CONTINUOUS" }
-                        : arranjos.allNewLayerComposition.ToList()
-                },
-                RemoveLayers = new RemoveLayersXml
-                {
-                    Layers = arranjos.layerRemove.Select(item => item.layerBase + ";" + item.GetConjunto()).ToList()
-                },
-                Converters = new ConvertersXml { Items = arranjos.conversor.ToList() },
-                Commands = new CommandsXml { Items = arranjos.listLISPCommand.ToList() },
-                BlockConfig = new BlockConfigXml
-                {
-                    DirectoryTeklaConversion = configuration.Blocks.TeklaBlockPath,
-                    DirectoryCadConversion = configuration.Blocks.CadBlockPath,
-                    LayerExplode = string.Join(";", arranjos.allExplodeLayers),
-                    TeklaBlocks = blocks.Select(CreateTeklaBlock).ToList(),
-                    CadBlocks = blocosi.Select(CreateRelatedBlock).ToList(),
-                    OrigBlocks = blocoso.Select(CreateRelatedBlock).ToList()
-                }
-            };
-        }
 
-        public void ApplyTo(Configuration configuration, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso)
+        public void ApplyTo(Configuration configuration, LegacyConfigurationState state, List<Block> blocks, List<Block> blocosi, List<Block> blocoso)
         {
-            arranjos.allBaseLayer.Clear();
-            arranjos.allNewLayerComposition.Clear();
-            arranjos.allNewLayer.Clear();
-            arranjos.conversor.Clear();
-            arranjos.layerRemove.Clear();
-            arranjos.listLISPCommand.Clear();
-            arranjos.allExplodeLayers.Clear();
+            state.BaseLayers.Clear();
+            state.NewLayerDefinitions.Clear();
+            state.NewLayerNames.Clear();
+            state.ConversionRules.Clear();
+            state.RemoveRules.Clear();
+            state.LispCommands.Clear();
+            state.ExplodeLayers.Clear();
             blocks.Clear();
             blocosi.Clear();
             blocoso.Clear();
@@ -302,15 +210,15 @@ namespace ConversorDrawind
             configuration.Scale.TextSize = scale.ScaleTextSize;
 
             configuration.Lines.LineTypeScale = BasicLayers?.LtScale ?? configuration.Lines.LineTypeScale;
-            arranjos.allBaseLayer.AddRange(BasicLayers?.BaseLayers ?? new List<string>());
+            state.BaseLayers.AddRange(BasicLayers?.BaseLayers ?? new List<string>());
             configuration.Lines.BaseLineTypes = (BasicLines?.BaseLines ?? new List<string>()).ToList();
             configuration.Catalogs.FilterLineTypes = configuration.Lines.BaseLineTypes.ToList();
-            arranjos.allNewLayerComposition.AddRange(NewLayers?.Layers ?? new List<string>());
+            state.NewLayerDefinitions.AddRange(NewLayers?.Layers ?? new List<string>());
 
-            ApplyTextStyles(arranjos, textConfig);
+            ApplyTextStyles(state, textConfig);
 
-            foreach (string layer in arranjos.allNewLayerComposition)
-                arranjos.allNewLayer.Add(layer.Split(':').First());
+            foreach (string layer in state.NewLayerDefinitions)
+                state.NewLayerNames.Add(layer.Split(':').First());
 
             foreach (string line in RemoveLayers?.Layers ?? new List<string>())
             {
@@ -318,35 +226,35 @@ namespace ConversorDrawind
                 Filter filter = new Filter(configuration.Catalogs);
                 filter.layerBase = st[0];
                 filter.SetConjunto(st[1]);
-                arranjos.layerRemove.Add(filter);
+                state.RemoveRules.Add(filter);
             }
 
-            arranjos.conversor.AddRange(Converters?.Items ?? new List<string>());
-            arranjos.listLISPCommand.AddRange(Commands?.Items ?? new List<string>());
+            state.ConversionRules.AddRange(Converters?.Items ?? new List<string>());
+            state.LispCommands.AddRange(Commands?.Items ?? new List<string>());
 
             var blockConfig = BlockConfig ?? new BlockConfigXml();
             configuration.Blocks.TeklaBlockPath = blockConfig.DirectoryTeklaConversion;
             configuration.Blocks.CadBlockPath = blockConfig.DirectoryCadConversion;
-            arranjos.allExplodeLayers.AddRange((blockConfig.LayerExplode ?? string.Empty).Split(';'));
+            state.ExplodeLayers.AddRange((blockConfig.LayerExplode ?? string.Empty).Split(';'));
 
             blocks.AddRange((blockConfig.TeklaBlocks ?? new List<BlockXml>()).Select(CreateTeklaBlock));
             blocosi.AddRange((blockConfig.CadBlocks ?? new List<BlockXml>()).Select(CreateRelatedBlock));
             blocoso.AddRange((blockConfig.OrigBlocks ?? new List<BlockXml>()).Select(CreateRelatedBlock));
         }
 
-        private void ApplyTextStyles(Arranjos arranjos, TextConfigXml textConfig)
+        private void ApplyTextStyles(LegacyConfigurationState state, TextConfigXml textConfig)
         {
-            arranjos.allTextSyles.Clear();
+            state.TextStyles.Clear();
 
             if (NewTextStyles?.TextStyles != null && NewTextStyles.TextStyles.Count > 0)
             {
-                arranjos.allTextSyles.AddRange(NewTextStyles.TextStyles);
+                state.TextStyles.AddRange(NewTextStyles.TextStyles);
                 return;
             }
 
             if (!string.IsNullOrWhiteSpace(textConfig.Font))
             {
-                arranjos.allTextSyles.Add(textConfig.TextStyleName + ":" +
+                state.TextStyles.Add(textConfig.TextStyleName + ":" +
                     textConfig.Font + ":" +
                     textConfig.Italic + ":" +
                     textConfig.Bold + ":" +
@@ -356,7 +264,7 @@ namespace ConversorDrawind
                 return;
             }
 
-            arranjos.allTextSyles.Add(Defaults.LegacyTextStyle());
+            state.TextStyles.Add(Defaults.LegacyTextStyle());
         }
 
         private static BlockXml CreateTeklaBlock(Block block)
@@ -736,6 +644,7 @@ namespace ConversorDrawind
         public List<string> Tags { get; set; } = new List<string>();
     }
 }
+
 
 
 

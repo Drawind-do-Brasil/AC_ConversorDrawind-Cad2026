@@ -1,19 +1,15 @@
 ﻿using Autodesk.AutoCAD.Interop;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 namespace ConversorDrawind
 {
-   public  static class LoadFiles
+    public static class LoadFiles
     {
         private static bool _RunCommand = false;
 
-        public  static void LoadFile(string file, AcadDocument acadDocument)
+        public static void LoadFile(string file, AcadDocument acadDocument)
         {
             try
             {
@@ -27,7 +23,7 @@ namespace ConversorDrawind
                         {
                             ext = Path.GetExtension(file);
                             if (ext.ToUpper() == ".DLL")
-                               SendCommand("NETLOAD " + file + "\n", acadDocument);
+                                SendCommand("NETLOAD " + file + "\n", acadDocument);
                             else
                                 SendCommand("(load  \"" + file.Replace("\\", "\\\\") + "\")\n", acadDocument);
                         }

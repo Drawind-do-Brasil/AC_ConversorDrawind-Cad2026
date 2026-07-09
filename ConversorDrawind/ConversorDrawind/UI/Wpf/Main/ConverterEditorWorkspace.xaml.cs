@@ -1,8 +1,8 @@
+using ConversorDrawind.UI.Wpf.Layers;
+using ConversorDrawind.UI.Wpf.TextStyles;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using ConversorDrawind.UI.Wpf.Layers;
-using ConversorDrawind.UI.Wpf.TextStyles;
 
 namespace ConversorDrawind.UI.Wpf.Main
 {
