@@ -1,3 +1,5 @@
+using ConversorDrawind.Commands.Services.Styles;
+
 namespace ConversorDrawind.Commands
 {
     internal sealed class ConversionWorkflow
@@ -38,7 +40,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartCreatingTextStyles,
-                DrawingStyleOperations.CreateTextSyles,
+                StyleOperations.CreateTextSyles,
                 LogContext.PrepararConversao,
                 Localization.WarningCouldNotCreateTextStyles,
                 Localization.ErrorCreatingTextStyles + "\n");

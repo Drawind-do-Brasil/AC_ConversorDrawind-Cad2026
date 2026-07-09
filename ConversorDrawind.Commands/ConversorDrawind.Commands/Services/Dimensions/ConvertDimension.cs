@@ -2,6 +2,7 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
+using ConversorDrawind.Commands.Services.Styles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,7 @@ namespace ConversorDrawind.Commands
  
         public void ConvertByInventor()
         {
-            DrawingStyleOperations.CreateDimstyle2();
+            StyleOperations.CreateDimstyle2();
             ObjectId[] ids = LayerSelectionQueries.Filter("ALL", "DIMENSION", "ALL", "ALL");
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database acCurDb = documentContext.Database;
@@ -67,7 +68,7 @@ namespace ConversorDrawind.Commands
             document = documentContext.Document;
             database = documentContext.Database;
             editor = documentContext.Editor;
-            ObjectId ds = DrawingStyleOperations.CreateDimstyle();
+            ObjectId ds = StyleOperations.CreateDimstyle();
 
             using (transaction = database.TransactionManager.MyStartTransaction())
             {

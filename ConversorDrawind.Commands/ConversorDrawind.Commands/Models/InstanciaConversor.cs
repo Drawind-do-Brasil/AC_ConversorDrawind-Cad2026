@@ -1,5 +1,6 @@
 ﻿using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
+using ConversorDrawind.Commands.Services.Styles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,7 @@ namespace ConversorDrawind.Commands
                         text.Height = conversor.NewAltura;
                     if (conversor.NewLargura > 0)
                         text.WidthFactor = conversor.NewLargura;
-                    text.TextStyleId = DrawingStyleOperations.GetTextSyleByName(conversor.TextSyle);
+                    text.TextStyleId = StyleOperations.GetTextSyleByName(conversor.TextSyle);
                     text.Oblique = GetObliqueByTextStyle(conversor.TextSyle);
                 }
                 entity.DowngradeOpen();

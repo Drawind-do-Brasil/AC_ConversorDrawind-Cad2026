@@ -1,4 +1,5 @@
 using Autodesk.AutoCAD.DatabaseServices;
+using ConversorDrawind.Commands.Services.Styles;
 
 namespace ConversorDrawind.Commands
 {
@@ -8,7 +9,7 @@ namespace ConversorDrawind.Commands
         {
             ObjectsInBlock objectsInBlock = ReadEntities(blockTableRecord);
             objectsInBlock.matrix3d = blockReference.BlockTransform;
-            objectsInBlock.textStyle = DrawingStyleOperations.GetTextSyleByName(Configuration.Config.Text.DefaultStyleName);
+            objectsInBlock.textStyle = StyleOperations.GetTextSyleByName(Configuration.Config.Text.DefaultStyleName);
             objectsInBlock.dimStyle = dimStyle;
             return objectsInBlock;
         }

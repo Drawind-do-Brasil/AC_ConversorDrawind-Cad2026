@@ -1,8 +1,8 @@
 using Autodesk.AutoCAD.DatabaseServices;
 
-namespace ConversorDrawind.Commands
+namespace ConversorDrawind.Commands.Services.Styles
 {
-    static class DrawingStyleOperations
+    static class StyleOperations
     {
         public static Autodesk.AutoCAD.GraphicsInterface.FontDescriptor UpdateTextFont(string font, bool italic, bool negrito)
         {

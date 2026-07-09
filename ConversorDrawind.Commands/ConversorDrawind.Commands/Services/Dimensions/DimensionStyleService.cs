@@ -1,4 +1,5 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
+using ConversorDrawind.Commands.Services.Styles;
 
 namespace ConversorDrawind.Commands
 {
@@ -94,7 +95,7 @@ namespace ConversorDrawind.Commands
 
         private static void ApplyConfiguredStyle(DimStyleTableRecord dimStyleTableRecord, Configuration configuration)
         {
-            dimStyleTableRecord.Dimtxsty = DrawingStyleOperations.GetTextSyleByName(configuration.Text.DefaultStyleName);
+            dimStyleTableRecord.Dimtxsty = StyleOperations.GetTextSyleByName(configuration.Text.DefaultStyleName);
             dimStyleTableRecord.Dimtxt = configuration.Text.DefaultSize;
             dimStyleTableRecord.Dimscale = configuration.Dimensions.Scale;
             dimStyleTableRecord.Dimdec = configuration.Dimensions.Precision;
@@ -105,8 +106,8 @@ namespace ConversorDrawind.Commands
             dimStyleTableRecord.Dimtih = configuration.Dimensions.TextRelativeToDimensionLine;
             dimStyleTableRecord.Dimtix = configuration.Dimensions.ForceTextInside;
             dimStyleTableRecord.Dimtofl = configuration.Dimensions.ForceDimensionLine;
-            dimStyleTableRecord.Dimblk = DrawingStyleOperations.GetArrowObjectId(
-                DrawingStyleOperations.GetArrowBlockNameString(configuration.Dimensions.ArrowType));
+            dimStyleTableRecord.Dimblk = StyleOperations.GetArrowObjectId(
+                StyleOperations.GetArrowBlockNameString(configuration.Dimensions.ArrowType));
             dimStyleTableRecord.Dimasz = configuration.Dimensions.ArrowSize;
             dimStyleTableRecord.Dimgap = configuration.Dimensions.InternalTextOffset;
             dimStyleTableRecord.Dimclrt = LayerSetupOperations.GetColorForName(configuration.Dimensions.TextColor);
@@ -123,7 +124,7 @@ namespace ConversorDrawind.Commands
             dimStyleTableRecord.Dimclrt = LayerSetupOperations.GetColorForName(configuration.Dimensions.TextColor);
             dimStyleTableRecord.Dimclre = LayerSetupOperations.GetColorForName(configuration.Dimensions.LineColor);
             dimStyleTableRecord.Dimclrd = LayerSetupOperations.GetColorForName(configuration.Dimensions.LineColor);
-            dimStyleTableRecord.Dimtxsty = DrawingStyleOperations.GetTextSyleByName(configuration.Text.DefaultStyleName);
+            dimStyleTableRecord.Dimtxsty = StyleOperations.GetTextSyleByName(configuration.Text.DefaultStyleName);
             dimStyleTableRecord.Dimatfit = 3;
         }
     }

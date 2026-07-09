@@ -1,6 +1,7 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
+using ConversorDrawind.Commands.Services.Styles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,13 +57,13 @@ namespace ConversorDrawind.Commands
                                 if (AnalisePoint(rotatedDimension, rotatedDimension.DimLinePoint))
                                 {
                                     rotatedDimension.Dimsah = true;
-                                rotatedDimension.Dimblk2 = DrawingStyleOperations.GetArrowObjectId(tipoSeta);
+                                rotatedDimension.Dimblk2 = StyleOperations.GetArrowObjectId(tipoSeta);
                                 }
                                 if (AnalisePoint(rotatedDimension, point))
                                 {
                                     ObjectId ids = rotatedDimension.Dimblk2;
                                     rotatedDimension.Dimsah = true;
-                                rotatedDimension.Dimblk1 = DrawingStyleOperations.GetArrowObjectId(tipoSeta);
+                                rotatedDimension.Dimblk1 = StyleOperations.GetArrowObjectId(tipoSeta);
                                     rotatedDimension.Dimblk2 = ids;
 
                                 }

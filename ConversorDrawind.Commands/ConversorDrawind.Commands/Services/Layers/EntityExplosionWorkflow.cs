@@ -1,5 +1,6 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
+using ConversorDrawind.Commands.Services.Styles;
 using System;
 using System.Linq;
 
@@ -64,11 +65,6 @@ namespace ConversorDrawind.Commands
             }
         }
 
-        public static void ExplodeRadialDimenstionLarge()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new EntityExplodeService(documentContext, ConversionLog.Write).ExplodeRadialDimensionLarge();
-        }
 
         public static void ExplodeObjects()
         {
@@ -92,7 +88,7 @@ namespace ConversorDrawind.Commands
             ExplodeObjectsInv1(myMtexts);
             myMtexts = LayerSelectionQueries.Filter("ALL", "ALL", "ALL", "ALL");
             ExplodeObjectsInv2(myMtexts);
-            DrawingStyleOperations.UpdateDimensionPrecision();
+            StyleOperations.UpdateDimensionPrecision();
         }
 
         public static void ExplodeObjectsInv1(ObjectId[] mtexts)
