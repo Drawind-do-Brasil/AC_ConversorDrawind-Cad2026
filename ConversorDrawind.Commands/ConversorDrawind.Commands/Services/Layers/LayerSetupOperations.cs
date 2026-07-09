@@ -12,12 +12,6 @@ namespace ConversorDrawind.Commands
             LayerRepository.CreateAndAssignAll(documentContext, RuntimeConfigurationState.NewLayerCompositions);
         }
 
-        public static ObjectId CreateAndAssignALayer(string nome)
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            return LayerRepository.CreateAndAssignByName(documentContext, RuntimeConfigurationState.NewLayerCompositions, nome);
-        }
-
         public static Color GetColorForName(string color)
         {
             return ColorResolver.Resolve(color);

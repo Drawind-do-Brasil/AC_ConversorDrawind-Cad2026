@@ -19,19 +19,11 @@ namespace ConversorDrawind.Commands
             return new LayerSelectionService(entitySelector, ConversionLog.Write).FilterLayers(layers);
         }
 
-        public static SelectionFilter FilterText(string LayerName)
-        {
-            return new SelectionFilter(LayerFilterFactory.TextAndMTextOnLayer(LayerName));
-        }
-
-        public static SelectionFilter FilterText2(params string[] LayerName)
+        public static SelectionFilter FilterTexts(params string[] LayerName)
         {
             return new SelectionFilter(LayerFilterFactory.TextAndMTextOnLayers(LayerName));
         }
 
-        public static SelectionFilter FilterTextTeste(string LayerName)
-        {
-            return new SelectionFilter(LayerFilterFactory.TextAndInsertOnLayer(LayerName));
-        }
+
     }
 }

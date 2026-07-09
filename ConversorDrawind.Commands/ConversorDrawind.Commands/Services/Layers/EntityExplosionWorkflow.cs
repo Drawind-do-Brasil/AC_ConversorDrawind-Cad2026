@@ -1,71 +1,11 @@
 using Autodesk.AutoCAD.DatabaseServices;
-using Autodesk.AutoCAD.EditorInput;
 using ConversorDrawind.Commands.Services.Styles;
-using System;
 using System.Linq;
 
 namespace ConversorDrawind.Commands
 {
     static class EntityExplosionWorkflow
     {
-        public static void ConvertLayersNewRecursive(ObjectId id, Transaction trans)
-        {
-            Entity obj = (Entity)trans.GetObject(id, OpenMode.ForRead);
-            if (obj == null)
-                return;
-
-            if (Configuration.Config.General.ConverterType == 1 &&
-                string.Equals(obj.Id.ObjectClass.DxfName, "MTEXT", StringComparison.OrdinalIgnoreCase))
-            {
-                ExplodeObjects(new ObjectId[] { id });
-            }
-
-            if (string.Equals(obj.Id.ObjectClass.DxfName, "INSERT", StringComparison.OrdinalIgnoreCase))
-            {
-                BlockReference bref = (BlockReference)obj;
-                BlockTableRecord block = (BlockTableRecord)trans.GetObject(bref.BlockTableRecord, OpenMode.ForRead);
-                BlockTableRecordEnumerator benum = block.GetEnumerator();
-
-                while (benum.MoveNext())
-                {
-                    ConvertLayersNewRecursive(benum.Current, trans);
-                }
-            }
-
-            InstanciaConversor.ConvertInstance(obj);
-        }
-
-        public static void ConvertLayersNew()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database acCurDb = documentContext.Database;
-            IEntitySelector entitySelector = new AcadEntitySelector(documentContext.Editor);
-            PromptSelectionResult promptSelectionResult = entitySelector.SelectAll();
-            ObjectId[] objectIdList = null;
-
-            using (Transaction transaction = acCurDb.TransactionManager.MyStartTransaction())
-            {
-                try
-                {
-                    if (promptSelectionResult.Status == PromptStatus.OK)
-                        objectIdList = promptSelectionResult.Value.GetObjectIds();
-
-                    if (objectIdList != null)
-                    {
-                        foreach (ObjectId id in objectIdList)
-                        {
-                            ConvertLayersNewRecursive(id, transaction);
-                        }
-                    }
-                }
-                finally
-                {
-                    transaction.MyCommit();
-                }
-            }
-        }
-
-
         public static void ExplodeObjects()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();

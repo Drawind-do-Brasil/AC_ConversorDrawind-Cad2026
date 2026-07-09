@@ -141,7 +141,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartConvertingLayers,
-                EntityExplosionWorkflow.ConvertLayersNew,
+                LayerConversionWorkflow.ConvertLayers,
                 LogContext.PublicarArquivo,
                 Localization.WarningCouldNotConvertLayers,
                 Localization.ErrorConvertingLayers + "\n");
