@@ -79,8 +79,8 @@ namespace ConversorDrawindDLL
             clone.widthfactor = source.widthfactor;
             clone.tag = source.tag;
             clone.modify = source.modify;
-            clone.p1 = new Point(source.p1);
-            clone.p2 = new Point(source.p2);
+            clone.p1 = new ConversorDrawind.Point(source.p1);
+            clone.p2 = new ConversorDrawind.Point(source.p2);
             clone.filtro = CloneFilter(source.filtro);
             clone.text = source.text;
             clone.indiceRelacao = source.indiceRelacao;

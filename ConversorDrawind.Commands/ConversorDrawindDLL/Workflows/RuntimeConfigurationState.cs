@@ -116,8 +116,8 @@ namespace ConversorDrawindDLL
             {
                 tag = source.Name,
                 modify = source.Modify,
-                p1 = new Point(source.Point1.X, source.Point1.Y, source.Point1.Z),
-                p2 = new Point(source.Point2.X, source.Point2.Y, source.Point2.Z),
+                p1 = new ConversorDrawind.Point(source.Point1.X, source.Point1.Y, source.Point1.Z),
+                p2 = new ConversorDrawind.Point(source.Point2.X, source.Point2.Y, source.Point2.Z),
                 filtro = ToFilter(source.Filter),
                 widthfactor = global::ConversorDrawind.LegacyConfigurationParsers.FormatDouble(source.WidthFactor),
                 indiceRelacao = source.RelatedIndex,
