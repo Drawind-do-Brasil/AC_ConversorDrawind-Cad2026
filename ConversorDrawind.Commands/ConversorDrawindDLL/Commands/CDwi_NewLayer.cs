@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_NewLayer")]
+        [CommandMethod("CDwi_NewLayer")]
         public void CDwi_NewLayer()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();

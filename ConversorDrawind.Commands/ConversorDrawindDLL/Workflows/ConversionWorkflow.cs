@@ -17,7 +17,7 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Criando novos layers ",
+                Localization.StartCreatingLayers,
                 () =>
                 {
                     if (Configuration.Config.General.ConverterType == 0 && Configuration.Config.Lines.LineTypeScale != 0)
@@ -25,8 +25,8 @@ namespace ConversorDrawindDLL
                     ConvertLayer.CreateAndAssignALayer();
                 },
                 LogContext.PrepararConversao,
-                "Não foi possível criar os novos layers.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao criar os novos layers...\n");
+                Localization.WarningCouldNotCreateLayers,
+                Localization.ErrorCreatingLayers + "\n");
         }
 
         internal void CreateTextStylesIfNeeded()
@@ -37,11 +37,11 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Criando novos estilos de textos ",
+                Localization.StartCreatingTextStyles,
                 ConvertLayer.CreateTextSyles,
                 LogContext.PrepararConversao,
-                "Não foi possível criar os novos estilos de textos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao criar os novos  estilos de textos...\n");
+                Localization.WarningCouldNotCreateTextStyles,
+                Localization.ErrorCreatingTextStyles + "\n");
         }
 
         internal void ConvertDimensionsIfEnabled()
@@ -50,15 +50,15 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Convertendo as dimensões ",
+                Localization.StartConvertingDimensions,
                 () =>
                 {
                     scaleWorkflow.ApplyDimensionScale(Configuration.Config.Dimensions.Scale);
                     new ConvertDimension().ConvertD();
                 },
                 LogContext.CarregarConfiguracaoTemporaria,
-                "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao convertar as dimensões...\n");
+                Localization.WarningCouldNotConvertDimensions,
+                Localization.ErrorConvertingDimensions + "\n");
         }
 
         internal void RunTeklaInverseConversionIfNeeded()
@@ -67,18 +67,18 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Explodindo os blocos ",
+                Localization.StartExplodingBlocks,
                 ConvertLayer.ExplodeObjectsInv,
                 LogContext.CarregarLayer,
-                "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao explodir os blocos...\n");
+                Localization.WarningCouldNotExplodeBlocks,
+                Localization.ErrorExplodingBlocks + "\n");
 
             stepRunner.Run(
-                "Convertendo as dimensões ",
+                Localization.StartConvertingDimensions,
                 () => new ConvertDimension().ConvertDInv(),
                 LogContext.CarregarLinetype,
-                "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao convertar as dimensões...\n");
+                Localization.WarningCouldNotConvertDimensions,
+                Localization.ErrorConvertingDimensions + "\n");
         }
 
         internal void ExplodeBlocksIfConfigured()
@@ -91,11 +91,11 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Explodindo os blocos ",
+                Localization.StartExplodingBlocks,
                 ConvertLayer.ExplodeObjects,
                 LogContext.CriarBloco,
-                "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao explodir os blocos...\n");
+                Localization.WarningCouldNotExplodeBlocks,
+                Localization.ErrorExplodingBlocks + "\n");
         }
 
         internal void AddDmBlockIfEnabled()
@@ -104,11 +104,11 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Adicionando bloco DM ",
+                Localization.StartAddingDmBlock,
                 DocumentManager.AddBlockDM,
                 LogContext.PrepararConversao,
-                "Não foi possível adicionar o bloco DM.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao adicionar bloco DM...\n");
+                Localization.WarningCouldNotAddDmBlock,
+                Localization.ErrorAddingDmBlock + "\n");
         }
 
         internal void DeleteTeklaStructuresIfEnabled()
@@ -117,7 +117,7 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Excluindo a palavra \"Tekla structures\" ",
+                Localization.StartDeletingTeklaStructuresWord,
                 () =>
                 {
                     ConvertLayer.DeletingTekla(Configuration.Config.Layers.TeklaDrawingSheetLayer);
@@ -125,7 +125,7 @@ namespace ConversorDrawindDLL
                 },
                 LogContext.FinalizarConversao,
                 string.Empty,
-                "Descrição: Erro ao excluir a palavra \"Tekla structures\"...\n");
+                Localization.ErrorDeletingTeklaStructuresWord + "\n");
         }
 
         internal void ConvertLayersIfEnabled()
@@ -134,11 +134,11 @@ namespace ConversorDrawindDLL
                 return;
 
             stepRunner.Run(
-                "Convertendo os layers ",
+                Localization.StartConvertingLayers,
                 ConvertLayer.ConvertLayersNew,
                 LogContext.PublicarArquivo,
-                "Não foi possível converter os layers.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao converter os layers...\n");
+                Localization.WarningCouldNotConvertLayers,
+                Localization.ErrorConvertingLayers + "\n");
         }
     }
 }

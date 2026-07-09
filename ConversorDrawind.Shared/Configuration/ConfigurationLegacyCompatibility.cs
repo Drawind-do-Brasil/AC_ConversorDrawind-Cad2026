@@ -7,12 +7,12 @@ namespace ConversorDrawind
         private static readonly IConfigurationRepository ConfigurationRepository = new TxmlConfigurationRepository();
         private static double referenceFormatSize = 841;
 
-        private PointEspecial scalePoint1 = new PointEspecial(0, 0, 0);
-        private PointEspecial scalePoint2 = new PointEspecial(0, 0, 0);
+        private Point scalePoint1 = new Point(0, 0, 0);
+        private Point scalePoint2 = new Point(0, 0, 0);
         private Point3DConfiguration syncedScalePoint1 = new Point3DConfiguration();
         private Point3DConfiguration syncedScalePoint2 = new Point3DConfiguration();
-        private PointEspecial automaticScalePoint1 = new PointEspecial(0, 0, 0);
-        private PointEspecial automaticScalePoint2 = new PointEspecial(0, 0, 0);
+        private Point automaticScalePoint1 = new Point(0, 0, 0);
+        private Point automaticScalePoint2 = new Point(0, 0, 0);
 
         public static double INTREFTamFormato
         {
@@ -119,16 +119,16 @@ namespace ConversorDrawind
         public bool EXTSCALEManual { get { return Scale.Manual; } set { Scale.Manual = value; } }
 
         [Obsolete("Use Scale.Point1.")]
-        public PointEspecial EXTSCALEp1 { get { return scalePoint1; } set { SetScalePoint1(value); } }
+        public Point EXTSCALEp1 { get { return scalePoint1; } set { SetScalePoint1(value); } }
 
         [Obsolete("Use Scale.Point2.")]
-        public PointEspecial EXTSCALEp2 { get { return scalePoint2; } set { SetScalePoint2(value); } }
+        public Point EXTSCALEp2 { get { return scalePoint2; } set { SetScalePoint2(value); } }
 
         [Obsolete("Use a dedicated automatic scale calibration model.")]
-        public PointEspecial EXTSCALEAp1 { get { return automaticScalePoint1; } set { automaticScalePoint1 = value ?? new PointEspecial(0, 0, 0); } }
+        public Point EXTSCALEAp1 { get { return automaticScalePoint1; } set { automaticScalePoint1 = value ?? new Point(0, 0, 0); } }
 
         [Obsolete("Use a dedicated automatic scale calibration model.")]
-        public PointEspecial EXTSCALEAp2 { get { return automaticScalePoint2; } set { automaticScalePoint2 = value ?? new PointEspecial(0, 0, 0); } }
+        public Point EXTSCALEAp2 { get { return automaticScalePoint2; } set { automaticScalePoint2 = value ?? new Point(0, 0, 0); } }
 
         [Obsolete("Use Scale.Layer.")]
         public string EXTSCALELayer { get { return Scale.Layer; } set { Scale.Layer = value ?? string.Empty; } }
@@ -237,22 +237,22 @@ namespace ConversorDrawind
             Dimensions.ReferenceFormatSize = referenceFormatSize;
         }
 
-        private void SetScalePoint1(PointEspecial value)
+        private void SetScalePoint1(Point value)
         {
-            scalePoint1 = value ?? new PointEspecial(0, 0, 0);
+            scalePoint1 = value ?? new Point(0, 0, 0);
             Scale.Point1 = ToPointConfiguration(scalePoint1);
             syncedScalePoint1 = ToPointConfiguration(scalePoint1);
         }
 
-        private void SetScalePoint2(PointEspecial value)
+        private void SetScalePoint2(Point value)
         {
-            scalePoint2 = value ?? new PointEspecial(0, 0, 0);
+            scalePoint2 = value ?? new Point(0, 0, 0);
             Scale.Point2 = ToPointConfiguration(scalePoint2);
             syncedScalePoint2 = ToPointConfiguration(scalePoint2);
         }
 
         private static void SyncScalePoint(
-            ref PointEspecial legacyPoint,
+            ref Point legacyPoint,
             ref Point3DConfiguration syncedPoint,
             Action<Point3DConfiguration> setModelPoint,
             Func<Point3DConfiguration> getModelPoint)
@@ -274,15 +274,15 @@ namespace ConversorDrawind
             }
         }
 
-        private static PointEspecial ToPointEspecial(Point3DConfiguration point)
+        private static Point ToPointEspecial(Point3DConfiguration point)
         {
             point = point ?? new Point3DConfiguration();
-            return new PointEspecial(point.X, point.Y, point.Z);
+            return new Point(point.X, point.Y, point.Z);
         }
 
-        private static Point3DConfiguration ToPointConfiguration(PointEspecial point)
+        private static Point3DConfiguration ToPointConfiguration(Point point)
         {
-            point = point ?? new PointEspecial(0, 0, 0);
+            point = point ?? new Point(0, 0, 0);
             return new Point3DConfiguration { X = point.X, Y = point.Y, Z = point.Z };
         }
 

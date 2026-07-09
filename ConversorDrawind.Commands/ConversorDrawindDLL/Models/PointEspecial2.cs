@@ -30,7 +30,7 @@ namespace ConversorDrawindDLL
             Z = point.Z;
         }
 
-        public PointEspecial2(global::ConversorDrawind.PointEspecial point)
+        public PointEspecial2(global::ConversorDrawind.Point point)
         {
             X = point.X;
             Y = point.Y;

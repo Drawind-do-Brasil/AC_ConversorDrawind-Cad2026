@@ -194,7 +194,7 @@ namespace ConversorDrawindDLL
         {
             PurgeSymbolTableRecords(
                 database => database.DimStyleTableId,
-                "Purging Dimension Styles: ",
+                Localization.MessagePurgingDimensionStyles,
                 LogContext.RemoverReferenciasDeTabela,
                 LogContext.RemoverReferenciasDeTabela);
         }
@@ -203,7 +203,7 @@ namespace ConversorDrawindDLL
         {
             PurgeSymbolTableRecords(
                 database => database.TextStyleTableId,
-                "Purging Text Styles: ",
+                Localization.MessagePurgingTextStyles,
                 LogContext.RemoverReferenciasDeTabela,
                 LogContext.RemoverReferenciasDeTabela);
         }
@@ -212,7 +212,7 @@ namespace ConversorDrawindDLL
         {
             PurgeSymbolTableRecords(
                 database => database.LinetypeTableId,
-                "Purging Line Types: ",
+                Localization.MessagePurgingLineTypes,
                 LogContext.RemoverReferenciasDeTabela,
                 LogContext.RemoverReferenciasDeTabela);
         }
@@ -221,7 +221,7 @@ namespace ConversorDrawindDLL
         {
             PurgeSymbolTableRecords(
                 database => database.LayerTableId,
-                "Purging Layers: ",
+                Localization.MessagePurgingLayers,
                 LogContext.RemoverReferenciasDeTabela,
                 LogContext.RemoverReferenciasDeTabela);
         }
@@ -230,7 +230,7 @@ namespace ConversorDrawindDLL
         {
             PurgeSymbolTableRecords(
                 database => database.BlockTableId,
-                "Purging Blocks: ",
+                Localization.MessagePurgingBlocks,
                 LogContext.RemoverReferenciasDeTabela,
                 LogContext.RemoverReferenciasDeTabela);
         }

@@ -259,14 +259,14 @@ namespace ConversorDrawind
             return result;
         }
 
-        private static Point3DConfiguration ToPoint(PointEspecial point)
+        private static Point3DConfiguration ToPoint(Point point)
         {
             return new Point3DConfiguration { X = point.X, Y = point.Y, Z = point.Z };
         }
 
-        private static PointEspecial ToPointEspecial(Point3DConfiguration point)
+        private static Point ToPointEspecial(Point3DConfiguration point)
         {
-            return new PointEspecial(point.X, point.Y, point.Z);
+            return new Point(point.X, point.Y, point.Z);
         }
 
         private static Point3DConfiguration CopyPoint(Point3DConfiguration point)

@@ -350,9 +350,9 @@ namespace ConversorDrawind
             };
         }
 
-        private static Point3DConfiguration ToPoint(PointEspecial point)
+        private static Point3DConfiguration ToPoint(Point point)
         {
-            point = point ?? new PointEspecial(0, 0, 0);
+            point = point ?? new Point(0, 0, 0);
             return new Point3DConfiguration { X = point.X, Y = point.Y, Z = point.Z };
         }
     }

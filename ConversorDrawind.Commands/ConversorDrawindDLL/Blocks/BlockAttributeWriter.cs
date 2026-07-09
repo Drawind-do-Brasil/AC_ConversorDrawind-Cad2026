@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 
             if (tags.Length != values.Length)
             {
-                throw new System.Exception("A lista contem um número diferente de elementos. Erro...");
+                throw new System.Exception(Localization.MessageAttributeListSizeMismatch);
             }
 
             for (int i = 0; i < tags.Length; i++)

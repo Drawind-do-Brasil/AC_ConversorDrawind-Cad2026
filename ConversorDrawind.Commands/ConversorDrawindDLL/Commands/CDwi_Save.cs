@@ -22,7 +22,7 @@ namespace ConversorDrawindDLL
             Database database = documentContext.Database;
             {
 
-                PromptKeywordOptions pko = new PromptKeywordOptions("Tipo: ");
+                PromptKeywordOptions pko = new PromptKeywordOptions(Localization.PromptType);
                 pko.AllowNone = true;
                 pko.Keywords.Add("DWG");
                 pko.Keywords.Add("DXF");
@@ -39,17 +39,17 @@ namespace ConversorDrawindDLL
 
             }
             {
-                PromptKeywordOptions pko = new PromptKeywordOptions("Fechar: ");
+                PromptKeywordOptions pko = new PromptKeywordOptions(Localization.PromptClose);
                 pko.AllowNone = true;
-                pko.Keywords.Add("Sim");
-                pko.Keywords.Add("Não");
-                pko.Keywords.Default = "Sim";
+                pko.Keywords.Add(Localization.KeywordYes);
+                pko.Keywords.Add(Localization.KeywordNo);
+                pko.Keywords.Default = Localization.KeywordYes;
                 PromptResult tipoOperacao = editor.GetKeywords(pko);
                 if (tipoOperacao.Status == PromptStatus.Cancel)
                 {
                     return;
                 }
-                if (tipoOperacao.StringResult == "Sim")
+                if (tipoOperacao.StringResult == Localization.KeywordYes)
                 {
                     document.CloseAndDiscard();
                     document.Dispose();

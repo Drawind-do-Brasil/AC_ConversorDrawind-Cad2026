@@ -52,7 +52,7 @@ namespace ConversorDrawindDLL
                         catch (Autodesk.AutoCAD.Runtime.Exception ex)
                         {
                             logError(eraseLogContext, ex.Message);
-                            Application.ShowAlertDialog("Erro:\n" + ex.Message);
+                            Application.ShowAlertDialog(Localization.AlertErrorPrefix + "\n" + ex.Message);
                         }
                     }
                     messenger.WriteMessage("\n");

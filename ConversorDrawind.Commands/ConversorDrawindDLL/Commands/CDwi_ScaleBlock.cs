@@ -30,10 +30,10 @@ namespace ConversorDrawindDLL
 
 
             stepRunner.Run(
-                "Colocando o formato na escala real... ",
+                Localization.StartScalingFormat,
                 () =>
                 {
-                    string newdate = editor.GetString("Digite o nome do bloco: ").StringResult.Replace("*******", " ");
+                    string newdate = editor.GetString(Localization.PromptBlockName).StringResult.Replace("*******", " ");
                     double scale = escalaFinal = scaleWorkflow.ReadLineTypeScale();
                     ConvertLayer.ScaleDrawingInv(scale, new List<Block>() { new Block(newdate) });
                     object ptMax2 = GetNewMax();
@@ -41,9 +41,9 @@ namespace ConversorDrawindDLL
                     ConvertLayer.Zoom((Point3d)ptMin2, (Point3d)ptMax2);
                 },
                 LogContext.DefinirEscalaDoBloco,
-                "Não foi possível colocar o formato na escala real!",
-                "Descrição: Erro ao tentar colocar o formato na escala real...\n",
-                "... Completado.\n");
+                Localization.WarningCouldNotScaleFormat,
+                Localization.ErrorScalingFormat + "\n",
+                Localization.MessageCompleted + "\n");
         }
     }
 }

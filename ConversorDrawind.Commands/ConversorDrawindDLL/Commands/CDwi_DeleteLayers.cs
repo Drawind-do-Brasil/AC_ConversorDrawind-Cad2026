@@ -24,12 +24,12 @@ namespace ConversorDrawindDLL
                 IEditorMessenger messenger = new AcadEditorMessenger(editor);
                 using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
                 {
-                    messenger.WriteMessage("Removendo layers desnecessários... ");
+                    messenger.WriteMessage(Localization.StartRemovingUnusedLayers);
                     try
                     {
                         ConvertBlocks.DeleteLayerNew(RuntimeConfigurationState.LayerRemove.ToList());
                         ConvertBlocks.DeleteLayer(RuntimeConfigurationState.LayerRemove.ToList());
-                        messenger.WriteMessage("... Completado.\n");
+                        messenger.WriteMessage(Localization.MessageCompleted + "\n");
                     }
                     catch (System.Exception e)
                     {

@@ -29,7 +29,7 @@ namespace ConversorDrawindDLL
                 ConversionMessages.ShowWarningIfEnabled);
 
             stepRunner.Run(
-                "Colocando o desenho na escala real... ",
+                Localization.StartScalingDrawing,
                 () =>
                 {
                     escalaFinal = ConvertLayer.GetScaleDrawing(escalaCapiturada);
@@ -76,9 +76,9 @@ namespace ConversorDrawindDLL
                     ConvertLayer.Zoom(ptMin, new Point3d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal, ptMax.Z * escalaFinal));
                 },
                 LogContext.CapturarEscalaDoDesenho,
-                "Não foi possível colocar o desenho na escala real!",
-                "Descrição: Erro ao tentar colocar o desenho na escala real...\n",
-                "... Completado.\n");
+                Localization.WarningCouldNotScaleDrawing,
+                Localization.ErrorScalingDrawing + "\n",
+                Localization.MessageCompleted + "\n");
 
 
         }

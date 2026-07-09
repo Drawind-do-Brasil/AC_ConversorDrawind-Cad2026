@@ -24,7 +24,7 @@ namespace ConversorDrawindDLL
             //editor.WriteMessage("TESTE" + document.Name);
             try
             {
-                messenger.WriteMessage("Capturando textos do formato ");
+                messenger.WriteMessage(Localization.StartCapturingFormatTexts);
                 if (Configuration.Config.General.ConverterType == 0)
                 {
                     ConvertBlocks.SetStartPointOverride(ConvertBlocks.GetFormatStartPoint(Configuration.Config.Layers.BlockAttributeLayer));
@@ -33,13 +33,13 @@ namespace ConversorDrawindDLL
                 }
                 else
                     ConvertBlocks.GeTTextInv(RuntimeConfigurationState.InventorBlocks);
-                messenger.WriteMessage("... Completado.\n");
+                messenger.WriteMessage(Localization.MessageCompleted + "\n");
             }
             catch (System.Exception e)
             {
                 Conversor.EscreverLog(LogContext.CapturarTextosDoFormato, e);
-                messenger.WriteMessage("... Erro. \n" +
-                            "Descrição: Erro ao capturar os textos no formato...\n");
+                messenger.WriteMessage(Localization.MessageFailedPrefix + " \n" +
+                            Localization.ErrorCapturingFormatTexts + "\n");
             }
             finally
             {

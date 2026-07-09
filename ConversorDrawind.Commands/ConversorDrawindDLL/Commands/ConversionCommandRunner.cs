@@ -36,9 +36,9 @@ namespace ConversorDrawindDLL
 
         internal void WriteStartupBanner(IEditorMessenger messenger)
         {
-            messenger.WriteMessage("\nConversor Drawind 2011 @ 2016 - Versão 2016 - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.\n");
-            messenger.WriteMessage("Desenvolvido por Nayara Ferreira de Jesus.\n");
-            messenger.WriteMessage("Compatível com Autocad 2023.\n");
+            messenger.WriteMessage("\n" + Localization.AppCopyright + "\n");
+            messenger.WriteMessage(Localization.AppDevelopedBy + "\n");
+            messenger.WriteMessage(Localization.AppCompatibilityAutoCad2023 + "\n");
         }
 
         internal void InitializeLogger(Document document, ref string logDirectory, ref string logFileName)

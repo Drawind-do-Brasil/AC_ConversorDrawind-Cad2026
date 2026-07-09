@@ -54,7 +54,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
             }
         }
 
-        private static string FormatPoints(PointEspecial p1, PointEspecial p2)
+        private static string FormatPoints(Point p1, Point p2)
         {
             return p1.X.ToString().Replace(',', '.') + "," +
                    p1.Y.ToString().Replace(',', '.') + "," +
@@ -145,8 +145,8 @@ namespace ConversorDrawind.UI.Wpf.Blocks
                 LoadDrawingBlock();
                 if (isContinueOp1 && drawingBlock != null)
                 {
-                    PointEspecial p1 = new PointEspecial();
-                    PointEspecial p2 = new PointEspecial();
+                    Point p1 = new Point();
+                    Point p2 = new Point();
                     drawingBlock.Get2Point(ref p1, ref p2);
                     string points = FormatPoints(p1, p2);
                     foreach (BlockAttributeRow selectedRow in SelectedRows())
@@ -199,8 +199,8 @@ namespace ConversorDrawind.UI.Wpf.Blocks
                 string[] pts = row.Xyz.Split(';');
                 string[] pts1 = pts[0].Split(',');
                 string[] pts2 = pts[1].Split(',');
-                tag.p1 = new PointEspecial(Convert.ToDouble(pts1[0].Replace('.', ',')), Convert.ToDouble(pts1[1].Replace('.', ',')), Convert.ToDouble(pts1[2].Replace('.', ',')));
-                tag.p2 = new PointEspecial(Convert.ToDouble(pts2[0].Replace('.', ',')), Convert.ToDouble(pts2[1].Replace('.', ',')), Convert.ToDouble(pts2[2].Replace('.', ',')));
+                tag.p1 = new Point(Convert.ToDouble(pts1[0].Replace('.', ',')), Convert.ToDouble(pts1[1].Replace('.', ',')), Convert.ToDouble(pts1[2].Replace('.', ',')));
+                tag.p2 = new Point(Convert.ToDouble(pts2[0].Replace('.', ',')), Convert.ToDouble(pts2[1].Replace('.', ',')), Convert.ToDouble(pts2[2].Replace('.', ',')));
 
                 string[] layer = row.Filter.Split(';');
                 tag.filtro.SetConjunto(layer[1]);

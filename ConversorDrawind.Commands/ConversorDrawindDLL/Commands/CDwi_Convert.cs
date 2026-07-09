@@ -50,11 +50,11 @@ namespace ConversorDrawindDLL
             commandRunner.WriteStartupBanner(commandContext.Messenger);
 
             stepRunner.Run(
-                "Extraindo os blocos ",
+                Localization.StartExtractingBlocks,
                 InitialConversionLayer,
                 LogContext.ConverterDesenho,
-                "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao extrair os layers dos blocos...\n");
+                Localization.WarningCouldNotExtractBlockLayers,
+                Localization.ErrorExtractingBlockLayers + "\n");
 
             extentsWorkflow.RefreshAndZoom();
 
@@ -81,11 +81,11 @@ namespace ConversorDrawindDLL
             workflow.CreateTextStylesIfNeeded();
 
             stepRunner.Run(
-                "Movendo para origem ",
+                Localization.StartMoveToOrigin,
                 extentsWorkflow.MoveToOriginAndRefreshZoom,
                 LogContext.ConverterDesenho,
-                "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao extrair os layers dos blocos...\n");
+                Localization.WarningCouldNotExtractBlockLayers,
+                Localization.ErrorExtractingBlockLayers + "\n");
 
 
             workflow.ConvertDimensionsIfEnabled();

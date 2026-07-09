@@ -1,4 +1,4 @@
-﻿namespace ConversorDrawindDLL
+namespace ConversorDrawindDLL
 {
     partial class ScaleForm
     {
@@ -42,7 +42,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(150, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Informe a escala do desenho: ";
+            this.label1.Text = Localization.FormScalePrompt;
             // 
             // scaleB
             // 
@@ -60,7 +60,7 @@
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(75, 23);
             this.OK.TabIndex = 1;
-            this.OK.Text = "OK";
+            this.OK.Text = Localization.ButtonOk;
             this.OK.UseVisualStyleBackColor = true;
             this.OK.Click += new System.EventHandler(this.OK_Click);
             // 
@@ -71,7 +71,7 @@
             this.Cancela.Name = "Cancela";
             this.Cancela.Size = new System.Drawing.Size(75, 23);
             this.Cancela.TabIndex = 2;
-            this.Cancela.Text = "Cancelar";
+            this.Cancela.Text = Localization.ButtonCancel;
             this.Cancela.UseVisualStyleBackColor = true;
             this.Cancela.Click += new System.EventHandler(this.Cancela_Click);
             // 
@@ -90,7 +90,7 @@
             this.MaximizeBox = false;
             this.Name = "ScaleForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Escala";
+            this.Text = Localization.FormScaleTitle;
             this.ResumeLayout(false);
             this.PerformLayout();
 

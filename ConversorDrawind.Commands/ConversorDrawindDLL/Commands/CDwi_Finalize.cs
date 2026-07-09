@@ -28,18 +28,18 @@ namespace ConversorDrawindDLL
             if (Configuration.Config.Dimensions.FixArrow)
             {
                 stepRunner.Run(
-                    "Consertando setas das dimensões... ",
+                    Localization.StartFixingDimensionArrows,
                     CDwi_ConsertarSetaSeta,
                     LogContext.FinalizarConversao,
                     string.Empty,
-                    "Descrição: Erro ao tentar consertar as setas das dimensões...\n",
-                    "... Completado.\n");
+                    Localization.ErrorFixingDimensionArrows + "\n",
+                    Localization.MessageCompleted + "\n");
             }
 
             if (Configuration.Config.General.Purge)
             {
                 stepRunner.Run(
-                    "Purgando desenho... ",
+                    Localization.StartPurgingDrawing,
                     () =>
                     {
                         ConvertLayer.PurgeUnreferencedBlocks();
@@ -49,17 +49,17 @@ namespace ConversorDrawindDLL
                         ConvertLayer.PurgeTextSyles();
                     },
                     LogContext.SalvarDesenho,
-                    "Não foi possível remover layers, blocos e tipo de linhas desnessessario .nVerifique se a conversão ocorreu normalmente.",
-                    "Descrição: Erro ao tentar purgar o desenho...\n",
-                    "... Completado.\n");
+                    Localization.WarningCouldNotPurgeDrawing,
+                    Localization.ErrorPurgingDrawing + "\n",
+                    Localization.MessageCompleted + "\n");
             }
 
             TimeSpan ts = DateTime.Now.Subtract(timeini);
             editor.Regen();
-            messenger.WriteMessage("\nConversão: " + conversor + "\tUsuário: " + Environment.UserName + "\tTempo: " + ts.Hours + "h:" + ts.Minutes + "mm:" + ts.Seconds + "s:" + ts.Milliseconds + "ms\n");
-            messenger.WriteMessage("Conversor Drawind 2011 @ 2016 - Versão 2016 - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.\n");
-            messenger.WriteMessage("Desenvolvido por Nayara Ferreira de Jesus.\n");
-            messenger.WriteMessage("Conversão finalizada.\n");
+            messenger.WriteMessage("\n" + Localization.FormatConversionSummary(conversor, Environment.UserName, ts) + "\n");
+            messenger.WriteMessage(Localization.AppCopyright + "\n");
+            messenger.WriteMessage(Localization.AppDevelopedBy + "\n");
+            messenger.WriteMessage(Localization.MessageConversionFinished + "\n");
         }
     }
 }

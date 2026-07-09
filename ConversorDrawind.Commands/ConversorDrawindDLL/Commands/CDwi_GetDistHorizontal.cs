@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_GetDistHorizontal")]
+        [CommandMethod("CDwi_GetDistHorizontal")]
         public static void CDwi_GetDistHorizontal()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureHorizontalDistance();

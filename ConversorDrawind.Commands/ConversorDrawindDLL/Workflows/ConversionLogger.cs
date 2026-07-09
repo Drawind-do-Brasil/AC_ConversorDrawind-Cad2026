@@ -18,14 +18,14 @@ namespace ConversorDrawindDLL
             {
                 directory = Path.GetDirectoryName(document.Name);
                 fileName = ResolveLogFileName(directory, fileName);
-                AppendLine(fileName, "Log de erros internos da conversao: " + Environment.UserDomainName + " " + Environment.UserName + " " + DateTime.Now);
+                AppendLine(fileName, Localization.MessageInternalConversionLogHeader + ": " + Environment.UserDomainName + " " + Environment.UserName + " " + DateTime.Now);
             }
             else
             {
                 fileName = ResolveLogFileName(directory, fileName);
             }
 
-            AppendLine(fileName, "Drawing: " + document.Name);
+            AppendLine(fileName, Localization.MessageDrawingPrefix + " " + document.Name);
         }
 
         internal static void Write(string directory, string fileName, string context, string detail)
@@ -36,8 +36,8 @@ namespace ConversorDrawindDLL
 
         private static string FormatLine(string context, string detail)
         {
-            string safeContext = string.IsNullOrWhiteSpace(context) ? "Falha sem contexto informado" : context.Trim();
-            string safeDetail = string.IsNullOrWhiteSpace(detail) ? "Sem detalhes" : detail.Trim();
+            string safeContext = string.IsNullOrWhiteSpace(context) ? Localization.MessageNoLogContext : context.Trim();
+            string safeDetail = string.IsNullOrWhiteSpace(detail) ? Localization.MessageNoLogDetails : detail.Trim();
 
             return safeContext + " : " + safeDetail;
         }

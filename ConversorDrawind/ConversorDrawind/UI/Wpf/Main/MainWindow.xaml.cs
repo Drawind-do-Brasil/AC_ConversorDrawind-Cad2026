@@ -1037,8 +1037,8 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            PointEspecial p1 = new PointEspecial();
-            PointEspecial p2 = new PointEspecial();
+            Point p1 = new Point();
+            Point p2 = new Point();
             drawing.Get2Point(ref p1, ref p2);
 
             if (drawing.Status() == "ERROR")
@@ -1083,7 +1083,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             return scaleDrawing;
         }
 
-        private void SetScalePointFields(PointEspecial p1, PointEspecial p2)
+        private void SetScalePointFields(Point p1, Point p2)
         {
             EditorView.ScaleP1XTextBox.Text = Convert.ToString(p1.X);
             EditorView.ScaleP1YTextBox.Text = Convert.ToString(p1.Y);

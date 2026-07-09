@@ -26,7 +26,7 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    PromptPointOptions promptPointOptions = new PromptPointOptions("Selecione um ponto: ");
+                    PromptPointOptions promptPointOptions = new PromptPointOptions(Localization.PromptSelectPoint);
                     promptPointOptions.AllowNone = false;
 
                     PromptPointResult promptPointResult = editor.GetPoint(promptPointOptions);
@@ -57,8 +57,8 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    Point3d firstPoint = editor.GetPoint("Selecione o primeiro ponto: ").Value;
-                    Point3d secondPoint = editor.GetCorner("\nSelecione o segundo ponto: ", firstPoint).Value;
+                    Point3d firstPoint = editor.GetPoint(Localization.PromptSelectFirstPoint).Value;
+                    Point3d secondPoint = editor.GetCorner(Localization.PromptSelectSecondPoint, firstPoint).Value;
 
                     WriteTempFile(
                         "ConvertTo.Point2Info",
@@ -85,7 +85,7 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    PromptEntityOptions promptEntityOptions = new PromptEntityOptions("Selecione um objeto: ");
+                    PromptEntityOptions promptEntityOptions = new PromptEntityOptions(Localization.PromptSelectObject);
                     promptEntityOptions.AllowNone = false;
                     promptEntityOptions.SetRejectMessage("");
                     PromptEntityResult promptEntityResult = editor.GetEntity(promptEntityOptions);
@@ -115,7 +115,7 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    PromptEntityOptions promptEntityOptions = new PromptEntityOptions("Selecione um objeto: ");
+                    PromptEntityOptions promptEntityOptions = new PromptEntityOptions(Localization.PromptSelectObject);
                     promptEntityOptions.AllowNone = false;
                     promptEntityOptions.SetRejectMessage("");
                     PromptEntityResult promptEntityResult = editor.GetEntity(promptEntityOptions);
@@ -156,12 +156,12 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    PromptPointOptions promptPointOptions = new PromptPointOptions("Selecione o 1° ponto: ");
+                    PromptPointOptions promptPointOptions = new PromptPointOptions(Localization.PromptSelectFirstDistancePoint);
                     promptPointOptions.AllowNone = false;
 
                     PromptPointResult promptPointResult = editor.GetPoint(promptPointOptions);
 
-                    PromptPointOptions promptPointOptions2 = new PromptPointOptions("Selecione o 2° ponto: ");
+                    PromptPointOptions promptPointOptions2 = new PromptPointOptions(Localization.PromptSelectSecondDistancePoint);
                     promptPointOptions2.AllowNone = false;
 
                     PromptPointResult promptPointResult2 = editor.GetPoint(promptPointOptions2);

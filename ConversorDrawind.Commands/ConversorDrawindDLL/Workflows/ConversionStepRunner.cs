@@ -24,7 +24,7 @@ namespace ConversorDrawindDLL
             string logContext,
             string warningMessage,
             string errorDescription,
-            string completedMessage = "... completado.\n")
+            string completedMessage = null)
         {
             if (action == null)
                 throw new ArgumentNullException(nameof(action));
@@ -33,7 +33,7 @@ namespace ConversorDrawindDLL
             {
                 messenger.WriteMessage(startMessage);
                 action();
-                messenger.WriteMessage(completedMessage);
+                messenger.WriteMessage(completedMessage ?? Localization.MessageCompletedLowercase + "\n");
             }
             catch (Exception e)
             {
@@ -42,7 +42,7 @@ namespace ConversorDrawindDLL
                 if (!string.IsNullOrEmpty(warningMessage))
                     showWarning(warningMessage);
 
-                messenger.WriteMessage("... Erro. \n" + errorDescription);
+                messenger.WriteMessage(Localization.MessageFailedPrefix + " \n" + errorDescription);
             }
         }
     }

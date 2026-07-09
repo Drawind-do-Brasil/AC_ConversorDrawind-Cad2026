@@ -29,13 +29,13 @@ namespace ConversorDrawindDLL
                     else
                         ConvertBlocks.SetText2(RuntimeConfigurationState.InventorBlocks, RuntimeConfigurationState.OriginalBlocks);
 
-                    messenger.WriteMessage("Editando o novo bloco ... Completado.\n");
+                    messenger.WriteMessage(Localization.StartEditingNewBlock + Localization.MessageCompleted + "\n");
                 }
                 catch (System.Exception e)
                 {
                     Conversor.EscreverLog(LogContext.EditarNovoBloco, e.Message);
-                    messenger.WriteMessage("Editando o novo bloco ... Erro. \n" +
-                                    "Descrição: Erro ao editar o novo bloco...\n");
+                    messenger.WriteMessage(Localization.StartEditingNewBlock + Localization.MessageFailedPrefix + " \n" +
+                                    Localization.ErrorEditingNewBlock + "\n");
                     if (Configuration.Config.General.ShowMessages)
                     {
                         string nomeBlocos = "";
@@ -46,8 +46,8 @@ namespace ConversorDrawindDLL
                         nomeBlocos = nomeBlocos.Trim();
                         nomeBlocos = nomeBlocos.Trim(',');
                         FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
-                            "Não foi possível atributar o formato. \nOs blocos ou atributos dentro dos blocos não correspondem ao especificado.\nNomes dos blocos especificados: " + nomeBlocos + ".",
-                                             "Erro",
+                            Localization.WarningCouldNotAttributeFormat(nomeBlocos),
+                                             Localization.TitleError,
                                              FORMS.MessageBoxButtons.OK,
                                              FORMS.MessageBoxIcon.Warning,
                                              FORMS.MessageBoxDefaultButton.Button1);

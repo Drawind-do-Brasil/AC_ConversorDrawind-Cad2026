@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_Get2Point")]
+        [CommandMethod("CDwi_Get2Point")]
         public static void CDwi_Get2Point()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureTwoPoints();

@@ -11,7 +11,7 @@ namespace ConversorDrawindDLL
 
             FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
                 message,
-                "Erro",
+                Localization.TitleError,
                 FORMS.MessageBoxButtons.OK,
                 FORMS.MessageBoxIcon.Warning,
                 FORMS.MessageBoxDefaultButton.Button1);

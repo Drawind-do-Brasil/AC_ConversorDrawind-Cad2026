@@ -2,27 +2,27 @@
 
 namespace ConversorDrawind
 {
-    public class PointEspecial : ICloneable
+    public class Point : ICloneable
     {
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
 
-        public PointEspecial()
+        public Point()
         {
             this.X = 0;
             this.Y = 0;
             this.Z = 0;
         }
 
-        public PointEspecial(double X, double Y, double Z)
+        public Point(double X, double Y, double Z)
         {
             this.X = X;
             this.Y = Y;
             this.Z = Z;
         }
 
-        public PointEspecial(PointEspecial point)
+        public Point(Point point)
         {
             X = point.X;
             Y = point.Y;

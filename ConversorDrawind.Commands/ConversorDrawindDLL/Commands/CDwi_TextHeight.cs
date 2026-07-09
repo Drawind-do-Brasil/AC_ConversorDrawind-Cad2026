@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_TextHeight")]
+        [CommandMethod("CDwi_TextHeight")]
         public static void CDwi_TextHeight()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureTextHeight();

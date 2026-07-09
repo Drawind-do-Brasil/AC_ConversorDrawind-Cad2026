@@ -83,7 +83,7 @@ namespace ConversorDrawind
         private static extern bool SetForegroundWindow(IntPtr hWnd);
         private IntPtr _hWnd;
 
-        public void Get2Point(ref PointEspecial p1, ref PointEspecial p2)
+        public void Get2Point(ref Point p1, ref Point p2)
         {
             try
             {
@@ -104,11 +104,11 @@ namespace ConversorDrawind
                     {
                         StreamReader sr = new StreamReader(arq);
                         string[] myPointS = sr.ReadLine().Split(';');
-                        p1 = new PointEspecial(Math.Round(Convert.ToDouble(myPointS[0].Replace('.', ',')), 2),
+                        p1 = new Point(Math.Round(Convert.ToDouble(myPointS[0].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPointS[1].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPointS[2].Replace('.', ',')), 2));
                         string[] myPoint2S = sr.ReadLine().Split(';');
-                        p2 = new PointEspecial(Math.Round(Convert.ToDouble(myPoint2S[0].Replace('.', ',')), 2),
+                        p2 = new Point(Math.Round(Convert.ToDouble(myPoint2S[0].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPoint2S[1].Replace('.', ',')), 2),
                                             Math.Round(Convert.ToDouble(myPoint2S[2].Replace('.', ',')), 2));
 

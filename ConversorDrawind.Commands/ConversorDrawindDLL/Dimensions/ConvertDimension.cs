@@ -120,7 +120,7 @@ namespace ConversorDrawindDLL
                 catch (System.Exception e)
                 {
                     Conversor.EscreverLog(LogContext.ConverterCotaLinear, e.Message);
-                    throw new System.InvalidOperationException("Nao foi possivel converter a cota linear: entidade invalida.");
+                    throw new System.InvalidOperationException(Localization.MessageInvalidLinearDimensionEntity);
                 }
                 finally
                 {

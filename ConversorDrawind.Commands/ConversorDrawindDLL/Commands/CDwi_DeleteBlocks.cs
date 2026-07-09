@@ -22,11 +22,11 @@ namespace ConversorDrawindDLL
             IEditorMessenger messenger = new AcadEditorMessenger(editor);
             using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
             {
-                messenger.WriteMessage("Removendo blocos antigo.... ");
+                messenger.WriteMessage(Localization.StartRemovingOldBlocks);
                 try
                 {
                     ConvertBlocks.DeleteBlocks(RuntimeConfigurationState.OriginalBlocks);
-                    messenger.WriteMessage("... Completado.\n");
+                    messenger.WriteMessage(Localization.MessageCompleted + "\n");
                 }
                 catch (System.Exception e)
                 {
