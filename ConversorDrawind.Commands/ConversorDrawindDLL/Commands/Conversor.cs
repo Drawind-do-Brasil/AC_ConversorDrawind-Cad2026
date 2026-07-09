@@ -119,8 +119,8 @@ namespace ConversorDrawindDLL
         }
         
 
-        [CommandMethod("DRAWINDCAD_Convert")]
-        public static void DRAWINDCAD_ConvertToDimension()
+        [CommandMethod("CDwi_Convert")]
+        public static void CDwi_ConvertToDimension()
         {    
             NewMin = new myPoint(double.MaxValue, double.MaxValue, double.MaxValue);
         NewMax = new myPoint(double.MinValue, double.MinValue, double.MinValue);
@@ -254,8 +254,8 @@ namespace ConversorDrawindDLL
             }
         }
 
-        [CommandMethod("DRAWINDCAD_Save")]
-        public static void DRAWINDCAD_Save()
+        [CommandMethod("CDwi_Save")]
+        public static void CDwi_Save()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Document document = documentContext.Document;
@@ -299,8 +299,8 @@ namespace ConversorDrawindDLL
             }
 
         }
-        [CommandMethod("DRAWINDCAD_Scale")]
-        public static void DRAWINDCAD_ConvertToScale()
+        [CommandMethod("CDwi_Scale")]
+        public static void CDwi_ConvertToScale()
         {
 
             IAcadDocumentContext documentContext = new AcadDocumentContext();
@@ -369,8 +369,8 @@ namespace ConversorDrawindDLL
 
         }
 
-        [CommandMethod("DRAWINDCAD_ScaleBlock")]
-        public static void DRAWINDCAD_ConvertToScaleInv()
+        [CommandMethod("CDwi_ScaleBlock")]
+        public static void CDwi_ConvertToScaleInv()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Document document = documentContext.Document;
@@ -403,8 +403,8 @@ namespace ConversorDrawindDLL
         }
 
 
-        [CommandMethod("DRAWINDCAD_Finalize")]
-        public static void DRAWINDCAD_Message()
+        [CommandMethod("CDwi_Finalize")]
+        public static void CDwi_Message()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Document document = documentContext.Document;
@@ -419,7 +419,7 @@ namespace ConversorDrawindDLL
             {
                 stepRunner.Run(
                     "Consertando setas das dimensões... ",
-                    DRAWINDCAD_ConsertarSetaSeta,
+                    CDwi_ConsertarSetaSeta,
                     "Erro 26",
                     string.Empty,
                     "Descrição: Erro ao tentar consertar as setas das dimensões...\n",
@@ -831,40 +831,40 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             return false;
         }
 
-        [CommandMethod("DRAWINDCAD_GetPoint")]
-        public static void DRAWINDCAD_GetPoint()
+        [CommandMethod("CDwi_GetPoint")]
+        public static void CDwi_GetPoint()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CapturePoint();
         }
 
-        [CommandMethod("DRAWINDCAD_Get2Point")]
-        public static void DRAWINDCAD_Get2Point()
+        [CommandMethod("CDwi_Get2Point")]
+        public static void CDwi_Get2Point()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureTwoPoints();
         }
 
 
-        [CommandMethod("DRAWINDCAD_GetLayer")]
-        public static void DRAWINDCAD_GetLayer()
+        [CommandMethod("CDwi_GetLayer")]
+        public static void CDwi_GetLayer()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureLayer();
         }
 
-        [CommandMethod("DRAWINDCAD_TextHeight")]
-        public static void DRAWINDCAD_TextHeight()
+        [CommandMethod("CDwi_TextHeight")]
+        public static void CDwi_TextHeight()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureTextHeight();
         }
 
 
-        [CommandMethod("DRAWINDCAD_GetDistHorizontal")]
-        public static void DRAWINDCAD_GetDistHorizontal()
+        [CommandMethod("CDwi_GetDistHorizontal")]
+        public static void CDwi_GetDistHorizontal()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureHorizontalDistance();
         }
 
-        [CommandMethod("DRAWINDCAD_GetDistVertical")]
-        public static void DRAWINDCAD_GetDistVertical()
+        [CommandMethod("CDwi_GetDistVertical")]
+        public static void CDwi_GetDistVertical()
         {
             new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureVerticalDistance();
         }
@@ -885,8 +885,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             //database.SaveAs(path, DwgVersion.AC1009);
 
         }
-        [CommandMethod("DRAWINDCAD_GetAttributeText")]
-        public static void DRAWINDCAD_GetAttributeText()
+        [CommandMethod("CDwi_GetAttributeText")]
+        public static void CDwi_GetAttributeText()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Document document = documentContext.Document;
@@ -920,8 +920,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
 
         }
 
-        [CommandMethod("DRAWINDCAD_DeleteLayers")]
-        public static void DRAWINDCAD_DeleteLayers()
+        [CommandMethod("CDwi_DeleteLayers")]
+        public static void CDwi_DeleteLayers()
         {
             if (Arranjos.Arrj.LayerRemove.Count > 0)
             {
@@ -951,8 +951,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             }
         }
 
-        [CommandMethod("DRAWINDCAD_DeleteBlocks")]
-        public static void DRAWINDCAD_DeleteBlocks()
+        [CommandMethod("CDwi_DeleteBlocks")]
+        public static void CDwi_DeleteBlocks()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
@@ -977,8 +977,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             }
         }
 
-        [CommandMethod("DRAWINDCAD_AttributeBlock")]
-        public static void DRAWINDCAD_AttributeBlock()
+        [CommandMethod("CDwi_AttributeBlock")]
+        public static void CDwi_AttributeBlock()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
@@ -1028,8 +1028,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         /// <summary>
         /// 
         /// </summary>
-        [CommandMethod("DRAWINDCAD_LoadLayer")]
-        public void DRAWINDCAD_LoadLayer()
+        [CommandMethod("CDwi_LoadLayer")]
+        public void CDwi_LoadLayer()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
@@ -1065,8 +1065,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             }
         }
 
-        [CommandMethod("DRAWINDCAD_LoadLineType")]
-        public void DRAWINDCAD_LoadLineType()
+        [CommandMethod("CDwi_LoadLineType")]
+        public void CDwi_LoadLineType()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
@@ -1103,8 +1103,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         }
 
 
-        [CommandMethod("DRAWINDCAD_NewLayer")]
-        public void DRAWINDCAD_NewLayer()
+        [CommandMethod("CDwi_NewLayer")]
+        public void CDwi_NewLayer()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
@@ -1148,8 +1148,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         }
 
 
-        [CommandMethod("DRAWINDCAD_GetBlocks")]
-        public void DRAWINDCAD_GetBlocks()
+        [CommandMethod("CDwi_GetBlocks")]
+        public void CDwi_GetBlocks()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database database = documentContext.Database;
@@ -1222,7 +1222,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                 return null;
             }
         }
-        public static void DRAWINDCAD_ConsertarSetaSeta()
+        public static void CDwi_ConsertarSetaSeta()
         {
             try
             {

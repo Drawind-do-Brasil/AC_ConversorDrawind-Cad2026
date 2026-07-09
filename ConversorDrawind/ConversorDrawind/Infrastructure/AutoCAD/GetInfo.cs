@@ -96,7 +96,7 @@ namespace ConversorDrawind
                     SetForegroundWindow(_hWnd);
                     acadApplication.WindowState = ACCOMMON.AcWindowState.acMax;
 
-                    LoadFiles.SendCommand("DRAWINDCAD_Get2Point\n", acadDocument);
+                    LoadFiles.SendCommand("CDwi_Get2Point\n", acadDocument);
 
                     string arq = Path.GetTempPath();
                     if (!Directory.Exists(arq))
@@ -133,7 +133,7 @@ namespace ConversorDrawind
             {
                 using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.SendCommand("DRAWINDCAD_GetBlocks\n", acadDocument);
+                    LoadFiles.SendCommand("CDwi_GetBlocks\n", acadDocument);
 
                     if (!Directory.Exists(Path.GetTempPath() + "ConversorDrawindTemp"))
                         Directory.CreateDirectory(Path.GetTempPath() + "ConversorDrawindTemp");

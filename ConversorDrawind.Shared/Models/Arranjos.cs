@@ -9,46 +9,7 @@ namespace ConversorDrawind
     {
         private static string[] colors = new string[] { "ALL", "BYLAYER", "BYBLOCK", "BLUE", "CYAN", "GREEN", "MAGENTA", "RED", "WHITE", "YELLOW" };
         private static string[] objects = new string[] { "ALL", "TEXT", "LINE", "ARC", "CIRCLE", "HATCH", "DIMENSION", "MTEXT", "LWPOLYLINE", "SPLINE", "ATTDEF" , "SOLID", "POINT"};
-        private static string[] linesTekla = new string[] { "0", 
-            "BOLT", 
-            "BOLT MARK",
-            "BOLT_MARK",
-            "BOLTS",
-            "COMPONENT",
-            "COMPONENT MARK",
-            "CONNECTION MARK",
-            "DETAIL_MARKS",
-            "DIMENSION",
-            "DRAWING SHEET",
-            "DRAWING_TABLE",
-            "GRAPHIC OBJECT",
-            "GRAPHICAL_OBJECT",
-            "GRID",
-            "GRIDS",
-            "LEVEL TEXT",
-            "LINKED OBJECT",
-            "MARK",
-            "MARKS",
-            "MODEL OBJECT",
-            "NEIGHBOUR PART MARK",
-            "OTHER OBJECT TYPE", 
-            "PART", 
-            "PART MARK",
-            "REINFORCEMENT MARK",
-            "REINFORCING BAR",
-            "REVISION TEXT",
-            "SECTION",
-            "SECTION_MARKS",
-            "SYMBOL TEXT", 
-            "TEXT",
-            "VIEW_LABEL",
-            "VIEWPORT LAYER",
-            "WELD",
-            "WELD_MARKS",
-     
-            "LINKED OBJECT" , 
-            "NEIGHBOUR PART MARK"
-};
+       
         public static string defaultTextStyle = "TEXTO:RomanS:false:false:2.5:1:0";
 
         public static List<string> DefaultColors()

@@ -159,7 +159,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 }
                 using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.SendCommand("DRAWINDCAD_LoadLineType\n", acadDocument);
+                    LoadFiles.SendCommand("CDwi_LoadLineType\n", acadDocument);
                     acadDocument.Close(false);
                     acadApplication.Quit();
                 }

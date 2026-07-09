@@ -77,7 +77,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
                 using (MessageFilter.ScopedRegistration())
                 {
-                    LoadFiles.SendCommand("DRAWINDCAD_NewLayer\n", acadDocument);
+                    LoadFiles.SendCommand("CDwi_NewLayer\n", acadDocument);
                 }
             }
             catch (Exception e)

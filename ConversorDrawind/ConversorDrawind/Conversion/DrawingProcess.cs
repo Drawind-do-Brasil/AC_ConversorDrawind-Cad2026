@@ -392,10 +392,10 @@ namespace ConversorDrawind
                 try
                 {
                     myClass.SendCommand("ZOOM E\n");
-                    myClass.SendCommand("DRAWINDCAD_Convert\n");
+                    myClass.SendCommand("CDwi_Convert\n");
                     if (parametros.configuration.General.ExchangeFormat)
                     {
-                        myClass.SendCommand("DRAWINDCAD_GetAttributeText\n");
+                        myClass.SendCommand("CDwi_GetAttributeText\n");
 
                         myClass.acadDocument = myClass._desenhoAtributado;
                         ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
@@ -433,7 +433,7 @@ namespace ConversorDrawind
                             if (listPosterior.Count() > 0)
                             {
                                 string comando = listPosterior.First().blockName.Replace(" ", "*******");
-                                myClass.SendCommand("DRAWINDCAD_ScaleBlock\n" + comando + "\n");
+                                myClass.SendCommand("CDwi_ScaleBlock\n" + comando + "\n");
                             }
                         }
 
@@ -443,24 +443,24 @@ namespace ConversorDrawind
 
                         }
 
-                        myClass.SendCommand("DRAWINDCAD_AttributeBlock\n");
+                        myClass.SendCommand("CDwi_AttributeBlock\n");
 
                         if (parametros.configuration.General.SourceMode == 1)
                         {
-                            myClass.SendCommand("DRAWINDCAD_DeleteBlocks\n");
+                            myClass.SendCommand("CDwi_DeleteBlocks\n");
                         }
                     }
 
                     if (parametros.configuration.General.ConvertLayers)
                     {
-                        myClass.SendCommand("DRAWINDCAD_DeleteLayers\n");
+                        myClass.SendCommand("CDwi_DeleteLayers\n");
                     }
 
                     if (parametros.configuration.General.ApplyDrawingScale)
                     {
                         ApplicationRuntime.ControladorT2 = false;
 
-                        myClass.SendCommand("DRAWINDCAD_Scale\n");
+                        myClass.SendCommand("CDwi_Scale\n");
 
                         ApplicationRuntime.ControladorT2 = true;
                     }
@@ -499,7 +499,7 @@ namespace ConversorDrawind
                         }
                     }
 
-                    myClass.SendCommand("DRAWINDCAD_Finalize\n");
+                    myClass.SendCommand("CDwi_Finalize\n");
                     ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
 
                 }
@@ -715,7 +715,7 @@ namespace ConversorDrawind
                     Directory.CreateDirectory(arq);
                 arq += "TempImporBlocks.Temp";
 
-                myClass.SendCommand("DRAWINDCAD_GetBlocks\n");
+                myClass.SendCommand("CDwi_GetBlocks\n");
 
                 if (File.Exists(arq))
                 {
