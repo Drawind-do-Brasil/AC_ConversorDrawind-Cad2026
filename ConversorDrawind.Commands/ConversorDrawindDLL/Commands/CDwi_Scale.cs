@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_Scale")]
+        [CommandMethod("CDwi_Scale")]
         public static void CDwi_ConvertToScale()
         {
 

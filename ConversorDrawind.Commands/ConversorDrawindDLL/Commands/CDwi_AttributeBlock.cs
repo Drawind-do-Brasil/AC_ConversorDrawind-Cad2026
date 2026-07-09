@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_AttributeBlock")]
+        [CommandMethod("CDwi_AttributeBlock")]
         public static void CDwi_AttributeBlock()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();

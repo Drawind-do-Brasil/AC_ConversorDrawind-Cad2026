@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_DeleteLayers")]
+        [CommandMethod("CDwi_DeleteLayers")]
         public static void CDwi_DeleteLayers()
         {
             if (RuntimeConfigurationState.LayerRemove.Count > 0)

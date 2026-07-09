@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_ScaleBlock")]
+        [CommandMethod("CDwi_ScaleBlock")]
         public static void CDwi_ConvertToScaleInv()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();

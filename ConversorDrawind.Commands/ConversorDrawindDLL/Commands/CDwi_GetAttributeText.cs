@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_GetAttributeText")]
+        [CommandMethod("CDwi_GetAttributeText")]
         public static void CDwi_GetAttributeText()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
@@ -21,7 +21,6 @@ namespace ConversorDrawindDLL
             Editor editor = documentContext.Editor;
             IEditorMessenger messenger = new AcadEditorMessenger(editor);
 
-            //editor.WriteMessage("TESTE" + document.Name);
             try
             {
                 messenger.WriteMessage(Localization.StartCapturingFormatTexts);

@@ -13,9 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-/// <summary>
-        /// 
-        /// </summary>
+
         [CommandMethod("CDwi_LoadLayer")]
         public void CDwi_LoadLayer()
         {

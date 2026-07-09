@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_Finalize")]
+        [CommandMethod("CDwi_Finalize")]
         public static void CDwi_Message()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();

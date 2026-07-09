@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_DeleteBlocks")]
+        [CommandMethod("CDwi_DeleteBlocks")]
         public static void CDwi_DeleteBlocks()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();

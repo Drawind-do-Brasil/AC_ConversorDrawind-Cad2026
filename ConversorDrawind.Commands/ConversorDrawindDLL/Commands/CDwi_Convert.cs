@@ -13,7 +13,7 @@ namespace ConversorDrawindDLL
 {
     public partial class Conversor
     {
-[CommandMethod("CDwi_Convert")]
+        [CommandMethod("CDwi_Convert")]
         public static void CDwi_ConvertToDimension()
         {
             ConversionSession.Reset();
@@ -60,9 +60,6 @@ namespace ConversorDrawindDLL
             commandRunner.InitializeLogger(document, ref logDirectory, ref logFileName);
             ConversionSession.SetLogFile(logDirectory, logFileName);
 
-
-
-
             string converterName = ConversionSession.ConverterName;
             commandRunner.LoadTempConfiguration(Configuration.Config, ref converterName);
             ConversionSession.ConverterName = converterName;
@@ -70,12 +67,6 @@ namespace ConversorDrawindDLL
             double? capturedScale = new DrawingScaleDetectionService(documentContext, entitySelector).CaptureScale();
             if (capturedScale.HasValue)
                 ConversionSession.CapturedScale = capturedScale.Value;
-            //idLayer = ConvertLayer.CreateAndAssignALayer(Configuration.Config.Dimensions.Layer);
-
-
-
-
-
 
             systemVariables.Set("DWGCHECK", 1);
 
@@ -102,8 +93,6 @@ namespace ConversorDrawindDLL
             workflow.DeleteTeklaStructuresIfEnabled();
 
             workflow.ConvertLayersIfEnabled();
-
-
 
         }
     }
