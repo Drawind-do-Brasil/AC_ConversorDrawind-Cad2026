@@ -7,7 +7,7 @@ namespace ConversorDrawind.UI.Wpf.Status
         public StatusWindow()
         {
             InitializeComponent();
-            VersionText.Text = Properties.Settings.Default.Versao;
+            VersionText.Text = ApplicationInfo.ProgramVersionText;
         }
 
         public void UpdateStatus(string status)

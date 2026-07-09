@@ -5,8 +5,8 @@ namespace ConversorDrawindDLL
 {
     internal static class Localization
     {
-        internal static string AppCopyright => "Conversor Drawind 2011 a 2016 - Versão 2016 - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.";
-        internal static string AppDevelopedBy => "Desenvolvido por Nayara Ferreira de Jesus.";
+        internal static string AppCopyright => ApplicationInfo.CopyrightText;
+        internal static string AppDevelopedBy => $"Desenvolvido por {ApplicationInfo.DeveloperName}.";
         internal static string AppCompatibilityAutoCad => $"Compatível com {ApplicationInfo.AutoCadDisplayName}.";
         internal static string TitleError => "Erro";
         internal static string AlertErrorPrefix => "Erro:";

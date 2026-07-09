@@ -73,7 +73,7 @@ namespace ConversorDrawind.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Versão 2023")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Versão 1.0.0.1")]
         public string Versao {
             get {
                 return ((string)(this["Versao"]));

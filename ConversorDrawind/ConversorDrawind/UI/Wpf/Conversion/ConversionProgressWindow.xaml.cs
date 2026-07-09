@@ -17,7 +17,7 @@ namespace ConversorDrawind.UI.Wpf.Conversion
         public ConversionProgressWindow(Param1 p)
         {
             InitializeComponent();
-            VersionTextBlock.Text = Properties.Settings.Default.Versao;
+            VersionTextBlock.Text = ApplicationInfo.ProgramVersionText;
             parametros = p;
             startTime = DateTime.Now;
 

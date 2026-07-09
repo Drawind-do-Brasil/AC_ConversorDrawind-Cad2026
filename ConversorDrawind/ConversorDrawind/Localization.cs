@@ -2,11 +2,11 @@ namespace ConversorDrawind
 {
     public static class Localization
     {
-        public static string AppTitle => "Conversor Drawind";
-        public static string AppMainWindowTitle => $"Conversor Drawind - {ApplicationInfo.AutoCadDisplayName}";
+        public static string AppTitle => ApplicationInfo.ProgramName;
+        public static string AppMainWindowTitle => $"{ApplicationInfo.ProgramName} - {ApplicationInfo.AutoCadDisplayName}";
         public static string AppCompatibilityText => $"Compatível com {ApplicationInfo.AutoCadDisplayName}";
-        public static string AppDevelopedByText => "Desenvolvido por Nayara Ferreira de Jesus.";
-        public static string AppCopyrightText => "Copyright © 2026 Drawind do Brasil";
+        public static string AppDevelopedByText => $"Desenvolvido por {ApplicationInfo.DeveloperName}.";
+        public static string AppCopyrightText => ApplicationInfo.CopyrightText;
 
         public static string ButtonOk => "OK";
         public static string ButtonSave => "Salvar";
