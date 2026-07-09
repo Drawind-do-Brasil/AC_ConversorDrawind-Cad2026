@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.Colors;
+﻿using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -14,14 +14,14 @@ namespace ConversorDrawindDLL
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             IEntitySelector entitySelector = new AcadEntitySelector(documentContext.Editor);
-            return new LayerSelectionService(entitySelector, Conversor.EscreverLog).Filter(LayerName, Start, ColorName, LinetypeName);
+            return new LayerSelectionService(entitySelector, ConversionLog.Write).Filter(LayerName, Start, ColorName, LinetypeName);
         }
 
         public static ObjectId[] FilterLayers(params string[] layers)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             IEntitySelector entitySelector = new AcadEntitySelector(documentContext.Editor);
-            return new LayerSelectionService(entitySelector, Conversor.EscreverLog).FilterLayers(layers);
+            return new LayerSelectionService(entitySelector, ConversionLog.Write).FilterLayers(layers);
         }
 
 
@@ -119,7 +119,7 @@ namespace ConversorDrawindDLL
 
             catch (Exception e)
             {
-                Conversor.EscreverLog(LogContext.ConverterEntidadePorLayer, e.Message);
+                ConversionLog.Write(LogContext.ConverterEntidadePorLayer, e.Message);
             }
             finally
             {
@@ -132,19 +132,19 @@ namespace ConversorDrawindDLL
         public static void ExplodeRadialDimenstionLarge()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new EntityExplodeService(documentContext, Conversor.EscreverLog).ExplodeRadialDimensionLarge();
+            new EntityExplodeService(documentContext, ConversionLog.Write).ExplodeRadialDimensionLarge();
         }
 
         public static void ExplodeObjects()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new EntityExplodeService(documentContext, Conversor.EscreverLog).ExplodeAllBlockReferences();
+            new EntityExplodeService(documentContext, ConversionLog.Write).ExplodeAllBlockReferences();
         }
 
         public static void ExplodeObjects(ObjectId[] mtexts)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new EntityExplodeService(documentContext, Conversor.EscreverLog).ExplodeMTextAndBlocks(mtexts);
+            new EntityExplodeService(documentContext, ConversionLog.Write).ExplodeMTextAndBlocks(mtexts);
         }
 
         public static void ExplodeObjectsInv()
@@ -157,25 +157,25 @@ namespace ConversorDrawindDLL
             ExplodeObjectsInv1(myMtexts);
             myMtexts = Filter("ALL", "ALL", "ALL", "ALL");
             ExplodeObjectsInv2(myMtexts);
-            UPDATE_DIMENSTION();
+            UpdateDimensionPrecision();
         }
 
         public static void ExplodeObjectsInv1(ObjectId[] mtexts)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new EntityExplodeService(documentContext, Conversor.EscreverLog).ExplodeInverseKnownTypes(mtexts);
+            new EntityExplodeService(documentContext, ConversionLog.Write).ExplodeInverseKnownTypes(mtexts);
         }
 
         public static void ExplodeObjectsInv2(ObjectId[] mtexts)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new EntityExplodeService(documentContext, Conversor.EscreverLog).ExplodeImpDimensions(mtexts);
+            new EntityExplodeService(documentContext, ConversionLog.Write).ExplodeImpDimensions(mtexts);
         }
 
-        public static void UPDATE_DIMENSTION()
+        public static void UpdateDimensionPrecision()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new DimensionPrecisionService(ConvertLayer.Filter, documentContext, Conversor.EscreverLog).UpdateDimensionPrecision();
+            new DimensionPrecisionService(ConvertLayer.Filter, documentContext, ConversionLog.Write).UpdateDimensionPrecision();
         }
 
         private static void PurgeSymbolTableRecords(
@@ -186,7 +186,7 @@ namespace ConversorDrawindDLL
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             IEditorMessenger messenger = new AcadEditorMessenger(documentContext.Editor);
-            new SymbolTablePurgeService(documentContext, messenger, Conversor.EscreverLog)
+            new SymbolTablePurgeService(documentContext, messenger, ConversionLog.Write)
                 .PurgeSymbolTableRecords(getTableId, message, eraseLogContext, purgeLogContext);
         }
 
@@ -250,7 +250,7 @@ namespace ConversorDrawindDLL
         public static void CreateTextSyles()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            TextStyleService.CreateStyles(documentContext, RuntimeConfigurationState.TextStyles, Conversor.EscreverLog);
+            TextStyleService.CreateStyles(documentContext, RuntimeConfigurationState.TextStyles, ConversionLog.Write);
         }
 
         public static ObjectId CreateDimstyle()
@@ -274,7 +274,7 @@ namespace ConversorDrawindDLL
                 "DIMBLK",
                 documentContext,
                 systemVariables,
-                Conversor.EscreverLog,
+                ConversionLog.Write,
                 LogContext.CriarEstilosDeTexto);
         }
 
@@ -287,7 +287,7 @@ namespace ConversorDrawindDLL
                 tipo,
                 documentContext,
                 systemVariables,
-                Conversor.EscreverLog,
+                ConversionLog.Write,
                 LogContext.CriarEstiloDeCota);
         }
 
@@ -303,19 +303,19 @@ namespace ConversorDrawindDLL
 
         public static void Zoom()
         {
-            Point3d pontoMax = Conversor.GetNewMax();
-            Point3d pontoMin = Conversor.GetNewMin();
+            Point3d pontoMax = ConversionSession.MaxPoint3d;
+            Point3d pontoMin = ConversionSession.MinPoint3d;
             Zoom(pontoMin, pontoMax);
         }
 
         public static void Zoom(Point3d pMin, Point3d pMax)
         {
-            new ZoomService(new AcadDocumentContext(), Conversor.EscreverLog).Zoom(pMin, pMax);
+            new ZoomService(new AcadDocumentContext(), ConversionLog.Write).Zoom(pMin, pMax);
         }
 
         private static void Scale(ObjectId id, Point3d basept, double scale)
         {
-            new EntityScaleService(Conversor.EscreverLog).Scale(id, basept, scale);
+            new EntityScaleService(ConversionLog.Write).Scale(id, basept, scale);
         }
 
         public static SelectionFilter FilterText(string LayerName)
@@ -416,7 +416,7 @@ namespace ConversorDrawindDLL
                      }
                      catch (System.Exception e)
                      {
-                         Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
+                         ConversionLog.Write(LogContext.LimparCamadasTekla, e.Message);
                      }
                      finally
                      {
@@ -487,7 +487,7 @@ namespace ConversorDrawindDLL
                             }
                             catch (System.Exception e)
                             {
-                                Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
+                                ConversionLog.Write(LogContext.LimparCamadasTekla, e.Message);
                             }
                             finally
                             {
@@ -503,7 +503,7 @@ namespace ConversorDrawindDLL
                     Editor editor = documentContext.Editor;
                     Database acCurDb = documentContext.Database;
 
-                    object ptMin = Conversor.GetNewMin();
+                    object ptMin = ConversionSession.MinPoint3d;
 
                     Point3d pIni = ConvertBlocks.GetStartPoint();
                     double escala1p1 = 1;
@@ -552,7 +552,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (System.Exception e)
                         {
-                            Conversor.EscreverLog(LogContext.MoverDesenhoParaOrigem, e.Message);
+                            ConversionLog.Write(LogContext.MoverDesenhoParaOrigem, e.Message);
                         }
 
                         finally
@@ -583,8 +583,8 @@ namespace ConversorDrawindDLL
 
         public static double ScaleDrawing(double scale)
         {
-            Point3d ptMax = Conversor.GetNewMax();
-            Point3d ptMin = Conversor.GetNewMin();
+            Point3d ptMax = ConversionSession.MaxPoint3d;
+            Point3d ptMin = ConversionSession.MinPoint3d;
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Editor editor = documentContext.Editor;
             Database acCurDb = documentContext.Database;
@@ -609,8 +609,8 @@ namespace ConversorDrawindDLL
             Database acCurDb = documentContext.Database;
 
             List<ObjectId> myIDs = new List<ObjectId>();
-            object ptMax = Conversor.GetNewMax();
-            object ptMin = Conversor.GetNewMin();
+            object ptMax = ConversionSession.MaxPoint3d;
+            object ptMin = ConversionSession.MinPoint3d;
             Point3d pIni = ConvertBlocks.GetStartPoint();
 
 
@@ -625,7 +625,7 @@ namespace ConversorDrawindDLL
             }
             catch (System.Exception e)
             {
-                Conversor.EscreverLog(LogContext.ZoomNoDesenho, e.Message);
+                ConversionLog.Write(LogContext.ZoomNoDesenho, e.Message);
             }
 
             foreach (ObjectId item in myIDs)
@@ -643,3 +643,4 @@ namespace ConversorDrawindDLL
         }
     }
 }
+

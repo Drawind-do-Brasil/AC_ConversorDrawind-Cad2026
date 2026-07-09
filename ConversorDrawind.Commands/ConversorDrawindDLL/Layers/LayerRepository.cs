@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 using System;
 using System.Collections.Generic;
 
@@ -25,7 +25,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.CriarCamada, e.Message);
+                    ConversionLog.Write(LogContext.CriarCamada, e.Message);
                 }
                 finally
                 {
@@ -62,7 +62,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.RemoverCamada, e.Message);
+                    ConversionLog.Write(LogContext.RemoverCamada, e.Message);
                 }
                 finally
                 {
@@ -100,3 +100,4 @@ namespace ConversorDrawindDLL
         }
     }
 }
+

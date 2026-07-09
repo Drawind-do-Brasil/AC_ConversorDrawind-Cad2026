@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -16,7 +16,7 @@ namespace ConversorDrawindDLL
         [CommandMethod("CDwi_GetLayer")]
         public static void CDwi_GetLayer()
         {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureLayer();
+            new DrawingInfoCommandService(new AcadDocumentContext(), ConversionLog.Write).CaptureLayer();
         }
     }
 }

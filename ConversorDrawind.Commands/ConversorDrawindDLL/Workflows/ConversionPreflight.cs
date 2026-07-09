@@ -1,4 +1,4 @@
-using System.IO;
+﻿using System.IO;
 
 namespace ConversorDrawindDLL
 {
@@ -30,8 +30,9 @@ namespace ConversorDrawindDLL
             }
             catch (System.Exception e)
             {
-                Conversor.EscreverLog(LogContext.CarregarConfiguracaoTemporaria, e.Message);
+                ConversionLog.Write(LogContext.CarregarConfiguracaoTemporaria, e.Message);
             }
         }
     }
 }
+

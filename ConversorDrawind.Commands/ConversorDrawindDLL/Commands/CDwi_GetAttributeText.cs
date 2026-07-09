@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -37,7 +37,7 @@ namespace ConversorDrawindDLL
             }
             catch (System.Exception e)
             {
-                Conversor.EscreverLog(LogContext.CapturarTextosDoFormato, e);
+                ConversionLog.Write(LogContext.CapturarTextosDoFormato, e);
                 messenger.WriteMessage(Localization.MessageFailedPrefix + " \n" +
                             Localization.ErrorCapturingFormatTexts + "\n");
             }

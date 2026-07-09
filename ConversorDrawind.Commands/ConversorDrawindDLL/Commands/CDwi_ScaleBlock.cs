@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -24,7 +24,7 @@ namespace ConversorDrawindDLL
             ScaleWorkflow scaleWorkflow = new ScaleWorkflow(systemVariables);
             ConversionStepRunner stepRunner = new ConversionStepRunner(
                 new AcadEditorMessenger(editor),
-                Conversor.EscreverLog,
+                ConversionLog.Write,
                 ConversionMessages.ShowWarningIfEnabled);
 
 
@@ -34,11 +34,9 @@ namespace ConversorDrawindDLL
                 () =>
                 {
                     string newdate = editor.GetString(Localization.PromptBlockName).StringResult.Replace("*******", " ");
-                    double scale = escalaFinal = scaleWorkflow.ReadLineTypeScale();
+                    double scale = ConversionSession.AppliedScale = scaleWorkflow.ReadLineTypeScale();
                     ConvertLayer.ScaleDrawingInv(scale, new List<Block>() { new Block(newdate) });
-                    object ptMax2 = GetNewMax();
-                    object ptMin2 = GetNewMin();
-                    ConvertLayer.Zoom((Point3d)ptMin2, (Point3d)ptMax2);
+                    ConvertLayer.Zoom(ConversionSession.MinPoint3d, ConversionSession.MaxPoint3d);
                 },
                 LogContext.DefinirEscalaDoBloco,
                 Localization.WarningCouldNotScaleFormat,

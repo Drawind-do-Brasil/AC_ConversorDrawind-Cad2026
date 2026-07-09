@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using System;
 
@@ -50,7 +50,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
+                    ConversionLog.Write(LogContext.LimparCamadasTekla, e.Message);
                 }
                 finally
                 {
@@ -92,7 +92,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
+                    ConversionLog.Write(LogContext.LimparCamadasTekla, e.Message);
                 }
                 finally
                 {
@@ -109,3 +109,4 @@ namespace ConversorDrawindDLL
         }
     }
 }
+

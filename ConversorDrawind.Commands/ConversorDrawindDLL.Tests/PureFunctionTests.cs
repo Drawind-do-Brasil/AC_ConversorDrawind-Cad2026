@@ -103,52 +103,48 @@ public sealed class PureFunctionTests
     }
 
     [Fact]
-    public void EscreverLog_DevePreservarFormatoAtual()
+    public void ConversionLog_DevePreservarFormatoAtual()
     {
-        string oldDirectory = Conversor.LOG_Diretorio;
-        string oldFileName = Conversor.LOG_FileName;
+        string oldDirectory = ConversionSession.LogDirectory;
+        string oldFileName = ConversionSession.LogFileName;
 
         using var workspace = TestWorkspace.Create();
         string logFile = workspace.GetFile("Conversor.log");
 
         try
         {
-            Conversor.LOG_Diretorio = workspace.Root;
-            Conversor.LOG_FileName = logFile;
+            ConversionSession.SetLogFile(workspace.Root, logFile);
 
-            Conversor.EscreverLog("Operacao de teste", "Detalhe");
+            ConversionLog.Write("Operacao de teste", "Detalhe");
 
             Assert.Equal("Operacao de teste : Detalhe", File.ReadAllText(logFile, Encoding.UTF8).Trim());
         }
         finally
         {
-            Conversor.LOG_Diretorio = oldDirectory;
-            Conversor.LOG_FileName = oldFileName;
+            ConversionSession.SetLogFile(oldDirectory, oldFileName);
         }
     }
 
     [Fact]
-    public void EscreverLog_ComExcecao_DeveRegistrarContextoLegivel()
+    public void ConversionLog_ComExcecao_DeveRegistrarContextoLegivel()
     {
-        string oldDirectory = Conversor.LOG_Diretorio;
-        string oldFileName = Conversor.LOG_FileName;
+        string oldDirectory = ConversionSession.LogDirectory;
+        string oldFileName = ConversionSession.LogFileName;
 
         using var workspace = TestWorkspace.Create();
         string logFile = workspace.GetFile("Conversor.log");
 
         try
         {
-            Conversor.LOG_Diretorio = workspace.Root;
-            Conversor.LOG_FileName = logFile;
+            ConversionSession.SetLogFile(workspace.Root, logFile);
 
-            Conversor.EscreverLog(LogContext.CapturarTextosDoFormato, new InvalidOperationException("Detalhe"));
+            ConversionLog.Write(LogContext.CapturarTextosDoFormato, new InvalidOperationException("Detalhe"));
 
             Assert.Equal("Capturar textos do formato : Detalhe", File.ReadAllText(logFile, Encoding.UTF8).Trim());
         }
         finally
         {
-            Conversor.LOG_Diretorio = oldDirectory;
-            Conversor.LOG_FileName = oldFileName;
+            ConversionSession.SetLogFile(oldDirectory, oldFileName);
         }
     }
 

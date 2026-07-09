@@ -34,7 +34,7 @@ namespace ConversorDrawindDLL
 
                     try
                     {
-                        ObjectId[] objectIdList = Filter1(editor);
+                        ObjectId[] objectIdList = new BlockSelectionService(new AcadEntitySelector(editor)).SelectBlockReferences();
                         if (objectIdList != null)
                         {
                             foreach (ObjectId id1 in objectIdList)

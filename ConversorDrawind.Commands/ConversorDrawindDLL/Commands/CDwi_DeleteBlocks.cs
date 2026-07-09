@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -30,7 +30,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.RemoverBlocos, e.Message);
+                    ConversionLog.Write(LogContext.RemoverBlocos, e.Message);
                 }
                 finally
                 {

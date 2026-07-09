@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -22,14 +22,17 @@ namespace ConversorDrawindDLL
             IEditorMessenger messenger = new AcadEditorMessenger(editor);
             ConversionStepRunner stepRunner = new ConversionStepRunner(
                 messenger,
-                Conversor.EscreverLog,
+                ConversionLog.Write,
                 ConversionMessages.ShowWarningIfEnabled);
 
             if (Configuration.Config.Dimensions.FixArrow)
             {
                 stepRunner.Run(
                     Localization.StartFixingDimensionArrows,
-                    CDwi_ConsertarSetaSeta,
+                    () => FixArrow.ConsetaSetaSeta(
+                        Configuration.Config.Dimensions.FixArrowType,
+                        ConversionSession.AppliedScale,
+                        Configuration.Config.Dimensions.FixArrowFactor),
                     LogContext.FinalizarConversao,
                     string.Empty,
                     Localization.ErrorFixingDimensionArrows + "\n",
@@ -54,9 +57,9 @@ namespace ConversorDrawindDLL
                     Localization.MessageCompleted + "\n");
             }
 
-            TimeSpan ts = DateTime.Now.Subtract(timeini);
+            TimeSpan ts = DateTime.Now.Subtract(ConversionSession.StartedAt);
             editor.Regen();
-            messenger.WriteMessage("\n" + Localization.FormatConversionSummary(conversor, Environment.UserName, ts) + "\n");
+            messenger.WriteMessage("\n" + Localization.FormatConversionSummary(ConversionSession.ConverterName, Environment.UserName, ts) + "\n");
             messenger.WriteMessage(Localization.AppCopyright + "\n");
             messenger.WriteMessage(Localization.AppDevelopedBy + "\n");
             messenger.WriteMessage(Localization.MessageConversionFinished + "\n");

@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -85,7 +85,7 @@ namespace ConversorDrawindDLL
                     }
                     catch (System.Exception e)
                     {
-                        Conversor.EscreverLog(LogContext.VerificarBlocoRelacionado, e.Message);
+                        ConversionLog.Write(LogContext.VerificarBlocoRelacionado, e.Message);
                     }
                     finally
                     {
@@ -167,7 +167,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.ConverterBlocos, e.Message);
+                    ConversionLog.Write(LogContext.ConverterBlocos, e.Message);
                 }
                 finally
                 {
@@ -193,7 +193,7 @@ namespace ConversorDrawindDLL
         public static void GeTTextInv(List<Block> Block)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new BlockAttributeReader(documentContext, FilterBlock, Conversor.EscreverLog)
+            new BlockAttributeReader(documentContext, FilterBlock, ConversionLog.Write)
                 .CaptureAttributesFromBlocks(Block);
         }
 
@@ -225,7 +225,7 @@ namespace ConversorDrawindDLL
 
         public static void ChangingAttibutes(ObjectId[] objectIdList, Block block)
         {
-            BlockAttributeWriter.ChangeAttributes(objectIdList, block, Conversor.EscreverLog);
+            BlockAttributeWriter.ChangeAttributes(objectIdList, block, ConversionLog.Write);
         }
 
 
@@ -237,7 +237,7 @@ namespace ConversorDrawindDLL
                 objectIdList,
                 block,
                 blockClassi,
-                Conversor.EscreverLog);
+                ConversionLog.Write);
         }
 
 
@@ -246,7 +246,7 @@ namespace ConversorDrawindDLL
             if (HasStartPointOverride)
                 return StartPointOverride;
 
-            return Conversor.GetNewMin();
+            return ConversionSession.MinPoint3d;
         }
 
         public static void SetStartPointOverride(Point3d startPoint)
@@ -271,7 +271,7 @@ namespace ConversorDrawindDLL
             if (TryGetMinimumEntityPointFromLayer(layerName, out startPoint))
                 return startPoint;
 
-            startPoint = Conversor.GetNewMin();
+            startPoint = ConversionSession.MinPoint3d;
             if (FormatStartPointService.IsValidPoint(startPoint))
                 return startPoint;
 
@@ -342,7 +342,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.RemoverBlocos, e.Message);
+                    ConversionLog.Write(LogContext.RemoverBlocos, e.Message);
                     found = false;
                 }
                 finally
@@ -398,7 +398,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.ConverterBlocos, e.Message);
+                    ConversionLog.Write(LogContext.ConverterBlocos, e.Message);
                     found = false;
                 }
                 finally
@@ -462,14 +462,14 @@ namespace ConversorDrawindDLL
         public static void DeleteLayerNew(List<Filter> layers)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, Conversor.EscreverLog)
+            new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, ConversionLog.Write)
                 .DeleteLayerObjectsInBlocks(layers);
         }
 
         public static void DeleteLayer(List<Filter> layers)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, Conversor.EscreverLog)
+            new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, ConversionLog.Write)
                 .DeleteLayerObjects(layers);
         }
 
@@ -477,10 +477,11 @@ namespace ConversorDrawindDLL
         public static void DeleteBlocks(List<Block> blockClassi)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, Conversor.EscreverLog)
+            new BlockDeletionService(documentContext, FilterBlock, ConvertLayer.Filter, ConversionLog.Write)
                 .DeleteRelatedBlocks(blockClassi);
         }
 
 
     }
 }
+

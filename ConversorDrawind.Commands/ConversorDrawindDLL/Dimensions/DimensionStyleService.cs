@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.DatabaseServices;
+﻿using Autodesk.AutoCAD.DatabaseServices;
 
 namespace ConversorDrawindDLL
 {
@@ -29,7 +29,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.CriarEstiloDeCota, e.Message);
+                    ConversionLog.Write(LogContext.CriarEstiloDeCota, e.Message);
                 }
                 finally
                 {
@@ -60,7 +60,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog(LogContext.AplicarEstiloDeCota, e.Message);
+                    ConversionLog.Write(LogContext.AplicarEstiloDeCota, e.Message);
                 }
                 finally
                 {
@@ -128,3 +128,4 @@ namespace ConversorDrawindDLL
         }
     }
 }
+

@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -25,22 +25,23 @@ namespace ConversorDrawindDLL
             ScaleWorkflow scaleWorkflow = new ScaleWorkflow(systemVariables);
             ConversionStepRunner stepRunner = new ConversionStepRunner(
                 new AcadEditorMessenger(editor),
-                Conversor.EscreverLog,
+                ConversionLog.Write,
                 ConversionMessages.ShowWarningIfEnabled);
 
             stepRunner.Run(
                 Localization.StartScalingDrawing,
                 () =>
                 {
-                    escalaFinal = ConvertLayer.GetScaleDrawing(escalaCapiturada);
+                    ConversionSession.AppliedScale = ConvertLayer.GetScaleDrawing(ConversionSession.CapturedScale);
 
-                    ConvertLayer.ScaleDrawing(escalaFinal);
+                    ConvertLayer.ScaleDrawing(ConversionSession.AppliedScale);
                     if (Configuration.Config.General.ConverterType == 1)
-                        UPDATE_DIMENSTION(escalaFinal);
-                    scaleWorkflow.ApplyDrawingScale(Configuration.Config.Lines.LineTypeScale, Configuration.Config.Dimensions.Scale, escalaFinal);
-                    Point3d ptMax = GetNewMax();
-                    Point3d ptMin = GetNewMin();
-                    database.Limmax = new Point2d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal);
+                        new DimensionScaleService(ConvertLayer.Filter, documentContext, ConversionLog.Write)
+                            .ApplyScale(ConversionSession.AppliedScale);
+                    scaleWorkflow.ApplyDrawingScale(Configuration.Config.Lines.LineTypeScale, Configuration.Config.Dimensions.Scale, ConversionSession.AppliedScale);
+                    Point3d ptMax = ConversionSession.MaxPoint3d;
+                    Point3d ptMin = ConversionSession.MinPoint3d;
+                    database.Limmax = new Point2d(ptMax.X * ConversionSession.AppliedScale, ptMax.Y * ConversionSession.AppliedScale);
                     database.Limmin = new Point2d(ptMin.X, ptMin.Y);
 
                     using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
@@ -49,7 +50,7 @@ namespace ConversorDrawindDLL
                         {
                             ViewportTableRecord acVportTblRec = acTrans.GetObject(document.Editor.ActiveViewportId, OpenMode.ForWrite) as ViewportTableRecord;
                             acVportTblRec.GridEnabled = true;
-                            acVportTblRec.GridIncrements = new Point2d(escalaFinal * 10, escalaFinal * 10);
+                            acVportTblRec.GridIncrements = new Point2d(ConversionSession.AppliedScale * 10, ConversionSession.AppliedScale * 10);
                             document.Editor.UpdateTiledViewportsFromDatabase();
                             if (Configuration.Config.General.ConverterType == 0)
                             {
@@ -59,13 +60,13 @@ namespace ConversorDrawindDLL
                                 {
                                     dimStyleTableRecord = acTrans.GetObject(dimStyleTable[Configuration.Config.Dimensions.StyleName],
                                                           OpenMode.ForWrite) as DimStyleTableRecord;
-                                    dimStyleTableRecord.Dimscale = Configuration.Config.Dimensions.Scale * escalaFinal;
+                                    dimStyleTableRecord.Dimscale = Configuration.Config.Dimensions.Scale * ConversionSession.AppliedScale;
                                 }
                             }
                         }
                         catch (System.Exception e)
                         {
-                            Conversor.EscreverLog(LogContext.CapturarEscalaDoDesenho, e.Message);
+                            ConversionLog.Write(LogContext.CapturarEscalaDoDesenho, e.Message);
                         }
                         finally
                         {
@@ -73,7 +74,7 @@ namespace ConversorDrawindDLL
                         }
                     }
 
-                    ConvertLayer.Zoom(ptMin, new Point3d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal, ptMax.Z * escalaFinal));
+                    ConvertLayer.Zoom(ptMin, new Point3d(ptMax.X * ConversionSession.AppliedScale, ptMax.Y * ConversionSession.AppliedScale, ptMax.Z * ConversionSession.AppliedScale));
                 },
                 LogContext.CapturarEscalaDoDesenho,
                 Localization.WarningCouldNotScaleDrawing,

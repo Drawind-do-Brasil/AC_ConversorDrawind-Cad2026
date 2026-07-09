@@ -1,4 +1,4 @@
-using Autodesk.AutoCAD.ApplicationServices;
+﻿using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -16,18 +16,19 @@ namespace ConversorDrawindDLL
 [CommandMethod("CDwi_Convert")]
         public static void CDwi_ConvertToDimension()
         {
-            NewMin = new ConversorDrawind.Point(double.MaxValue, double.MaxValue, double.MaxValue);
-            NewMax = new ConversorDrawind.Point(double.MinValue, double.MinValue, double.MinValue);
-
-            timeini = DateTime.Now;
-            //Main Instances
-            escalaCapiturada = -1;
-            escalaFinal = 1;
+            ConversionSession.Reset();
 
             IAcadDocumentContext documentContext = new AcadDocumentContext();
+            IEntitySelector entitySelector = new AcadEntitySelector(documentContext.Editor);
+            DrawingExtentsService extentsService = new DrawingExtentsService(
+                documentContext,
+                entitySelector,
+                ConversionSession.DrawingMinPoint,
+                ConversionSession.DrawingMaxPoint);
+            EntityMoveService moveService = new EntityMoveService(documentContext, entitySelector);
             ConversionCommandRunner commandRunner = new ConversionCommandRunner(
                 documentContext,
-                Conversor.EscreverLog,
+                ConversionLog.Write,
                 ConversionMessages.ShowWarningIfEnabled);
             ConversionCommandContext commandContext = commandRunner.CreateContext();
             Document document = commandContext.DocumentContext.Document;
@@ -36,22 +37,17 @@ namespace ConversorDrawindDLL
             ConversionStepRunner stepRunner = commandContext.StepRunner;
             ConversionWorkflow workflow = new ConversionWorkflow(stepRunner, scaleWorkflow);
             ConversionExtentsWorkflow extentsWorkflow = new ConversionExtentsWorkflow(
-                GETREALMAXMIN,
-                GetNewMin,
-                GetNewMax,
-                MoveToOrigin,
-                point => NewMin = point,
-                (x, y, z) =>
-                {
-                    NewMax.X = x;
-                    NewMax.Y = y;
-                    NewMax.Z = z;
-                });
+                extentsService.Refresh,
+                () => ConversionSession.MinPoint3d,
+                () => ConversionSession.MaxPoint3d,
+                () => moveService.MoveAllToOrigin(ConversionSession.MinPoint3d),
+                ConversionSession.SetMinPoint,
+                ConversionSession.SetMaxPoint);
             commandRunner.WriteStartupBanner(commandContext.Messenger);
 
             stepRunner.Run(
                 Localization.StartExtractingBlocks,
-                InitialConversionLayer,
+                () => new InitialBlockLayerService(documentContext, entitySelector, ConversionLog.Write).ConvertBlockLayers(),
                 LogContext.ConverterDesenho,
                 Localization.WarningCouldNotExtractBlockLayers,
                 Localization.ErrorExtractingBlockLayers + "\n");
@@ -59,14 +55,21 @@ namespace ConversorDrawindDLL
             extentsWorkflow.RefreshAndZoom();
 
 
-            commandRunner.InitializeLogger(document, ref LOG_Diretorio, ref LOG_FileName);
+            string logDirectory = ConversionSession.LogDirectory;
+            string logFileName = ConversionSession.LogFileName;
+            commandRunner.InitializeLogger(document, ref logDirectory, ref logFileName);
+            ConversionSession.SetLogFile(logDirectory, logFileName);
 
 
 
 
-            commandRunner.LoadTempConfiguration(Configuration.Config, ref conversor);
+            string converterName = ConversionSession.ConverterName;
+            commandRunner.LoadTempConfiguration(Configuration.Config, ref converterName);
+            ConversionSession.ConverterName = converterName;
 
-            GETSCALE();
+            double? capturedScale = new DrawingScaleDetectionService(documentContext, entitySelector).CaptureScale();
+            if (capturedScale.HasValue)
+                ConversionSession.CapturedScale = capturedScale.Value;
             //idLayer = ConvertLayer.CreateAndAssignALayer(Configuration.Config.Dimensions.Layer);
 
 
@@ -105,3 +108,4 @@ namespace ConversorDrawindDLL
         }
     }
 }
+
