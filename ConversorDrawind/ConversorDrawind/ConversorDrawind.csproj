@@ -51,6 +51,36 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="UI\Wpf\Main\MainWindow.Blocks.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.ConverterSelection.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.Dimensions.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.EditorState.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.Explosion.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.Layers.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.Lifecycle.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.Lisp.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+    <Compile Update="UI\Wpf\Main\MainWindow.Template.cs">
+      <DependentUpon>MainWindow.xaml.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="Autodesk.AutoCAD.Interop">
       <HintPath>C:\Program Files\Autodesk\AutoCAD 2026\Autodesk.AutoCAD.Interop.dll</HintPath>
       <EmbedInteropTypes>true</EmbedInteropTypes>
