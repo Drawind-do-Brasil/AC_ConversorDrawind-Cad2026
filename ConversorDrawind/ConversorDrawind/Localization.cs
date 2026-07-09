@@ -247,6 +247,7 @@ namespace ConversorDrawind
         public static string MessageCannotAddStyle => "Não é possível adicionar este estilo, pois esse nome já existe!";
         public static string MessageCannotRemoveStyle => "Não é possível remover este estilo, pois é necessário manter pelo menos um estilo!";
         public static string MessageDeleteSelectedRow => "Deseja realmente excluir a linha selecionada?";
+        public static string MessageTemplateChangedConfirmSwitch => "O template atual possui alterações não salvas. Deseja trocar de template mesmo assim?";
         public static string MessageLayerAlreadyExists => "O layer já existe!";
         public static string MessageUpdateExistingLayers => "Deseja atualizar os layers que já existem?\nObservação: o layer '0' sempre é atualizado.";
         public static string MessageSomeLayersNotAdded => "Alguns layers não foram adicionados porque existem layers com o mesmo nome na lista.";

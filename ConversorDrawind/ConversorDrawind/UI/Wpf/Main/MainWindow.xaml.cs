@@ -37,6 +37,8 @@ namespace ConversorDrawind.UI.Wpf.Main
         private string scaleDrawingPath = string.Empty;
         private bool isInitializing;
         private bool isSynchronizingConverterSelection;
+        private string loadedConverterName = string.Empty;
+        private StatusConversorItem loadedConverterStatus;
 
         public MainWindow()
         {
@@ -188,12 +190,36 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void SelectConverterFromList()
         {
-            if (!isInitializing && !isSynchronizingConverterSelection && ConverterView.ConvertersListBox.SelectedItem is string selected) { LoadConverter(selected); SelectLoadedConverter(selected); }
+            if (isInitializing || isSynchronizingConverterSelection || !(ConverterView.ConvertersListBox.SelectedItem is string selected))
+            {
+                return;
+            }
+
+            if (!ConfirmDiscardTemplateChanges())
+            {
+                RestoreLoadedConverterSelection();
+                return;
+            }
+
+            LoadConverter(selected);
+            SelectLoadedConverter(selected);
         }
 
         private void SelectConverterFromEditor()
         {
-            if (!isInitializing && !isSynchronizingConverterSelection && EditorView.ConverterComboBox.SelectedItem is string selected) { LoadConverter(selected); SelectLoadedConverter(selected); }
+            if (isInitializing || isSynchronizingConverterSelection || !(EditorView.ConverterComboBox.SelectedItem is string selected))
+            {
+                return;
+            }
+
+            if (!ConfirmDiscardTemplateChanges())
+            {
+                RestoreLoadedConverterSelection();
+                return;
+            }
+
+            LoadConverter(selected);
+            SelectLoadedConverter(selected);
         }
 
         private void LoadConverter(string converterName)
@@ -205,6 +231,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             ConfigurationCompatibilityMapper.ApplyBlocksToLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, converterName);
+            loadedConverterName = converterName;
+            loadedConverterStatus = CurrentStatus;
         }
 
         private void SelectLoadedConverter(string converterName)
@@ -230,6 +258,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             listBlocksOrig.Clear();
             EditorView.ConverterNameTextBox.Text = string.Empty;
             LoadConfigurationToControls();
+            loadedConverterName = string.Empty;
+            loadedConverterStatus = null;
         }
 
         private void SaveConverter()
@@ -242,6 +272,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             LoadConverterLists();
             SelectLoadedConverter(name);
             UserSettingsService.SaveLastConverter(CurrentStatus, name);
+            loadedConverterName = name;
+            loadedConverterStatus = CurrentStatus;
         }
 
         private void ImportConverter()
@@ -253,6 +285,60 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.ConverterNameTextBox.Text = Path.GetFileNameWithoutExtension(dialog.FileName);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, EditorView.ConverterNameTextBox.Text);
+            loadedConverterName = string.Empty;
+            loadedConverterStatus = null;
+        }
+
+        private bool ConfirmDiscardTemplateChanges()
+        {
+            if (!HasLoadedTemplateChanged())
+            {
+                return true;
+            }
+
+            return WpfMessageBox.Show(
+                Localization.MessageTemplateChangedConfirmSwitch,
+                Localization.TitleWarningNoExclamation,
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning) == MessageBoxResult.Yes;
+        }
+
+        private bool HasLoadedTemplateChanged()
+        {
+            if (string.IsNullOrWhiteSpace(loadedConverterName) || loadedConverterStatus == null)
+            {
+                return false;
+            }
+
+            string savedPath = ConverterFileService.GetTxmlPath(loadedConverterName, loadedConverterStatus);
+            if (!File.Exists(savedPath))
+            {
+                return false;
+            }
+
+            ReadConfigurationFromControls();
+            ConfigurationCompatibilityMapper.ApplyBlocksFromLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
+
+            global::ConversorDrawind.Configuration savedConfiguration = ConverterFileService.LoadConverter(loadedConverterName, loadedConverterStatus);
+            string currentXml = StructuredConfigurationXmlWriter.CreateDocument(configuration.ToConverterConfiguration()).ToString();
+            string savedXml = StructuredConfigurationXmlWriter.CreateDocument(savedConfiguration.ToConverterConfiguration()).ToString();
+
+            return !string.Equals(currentXml, savedXml, StringComparison.Ordinal);
+        }
+
+        private void RestoreLoadedConverterSelection()
+        {
+            isSynchronizingConverterSelection = true;
+            try
+            {
+                ConverterView.ConvertersListBox.SelectedItem = string.IsNullOrWhiteSpace(loadedConverterName) ? null : loadedConverterName;
+                EditorView.ConverterComboBox.SelectedItem = string.IsNullOrWhiteSpace(loadedConverterName) ? null : loadedConverterName;
+                EditorView.ConverterNameTextBox.Text = loadedConverterName ?? string.Empty;
+            }
+            finally
+            {
+                isSynchronizingConverterSelection = false;
+            }
         }
 
         private void ConvertSelectedDrawings()
