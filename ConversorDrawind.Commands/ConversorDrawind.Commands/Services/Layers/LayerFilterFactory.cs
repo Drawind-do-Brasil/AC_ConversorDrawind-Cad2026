@@ -5,6 +5,12 @@ namespace ConversorDrawind.Commands
 {
     internal static class LayerFilterFactory
     {
+        private static readonly string[] GeneralEntityTypes =
+        {
+            "INSERT", "CIRCLE", "LINE", "TEXT", "ARC", "HATCH", "DIMENSION",
+            "MTEXT", "LWPOLYLINE", "SPLINE", "ATTDEF", "SOLID", "POINT"
+        };
+
         internal static TypedValue[] TextAndMTextOnLayer(string layerName)
         {
             return TextTypesOnLayer(layerName, "TEXT", "MTEXT");
@@ -101,6 +107,82 @@ namespace ConversorDrawind.Commands
                 new TypedValue((int)DxfCode.Start, "INSERT"),
                 new TypedValue((int)DxfCode.Operator, "or>"),
                 new TypedValue((int)DxfCode.Operator, "and>")
+            };
+        }
+
+        internal static TypedValue[] LayerProperties(string layerName, string start, string linetypeName)
+        {
+            List<TypedValue> typedValues = new List<TypedValue>
+            {
+                new TypedValue((int)DxfCode.Operator, "<and")
+            };
+
+            if (layerName != "ALL")
+            {
+                typedValues.Add(new TypedValue((int)DxfCode.LayerName, layerName));
+            }
+
+            if (start != "ALL")
+            {
+                typedValues.Add(new TypedValue((int)DxfCode.Start, start));
+            }
+
+            if (linetypeName != "ALL")
+            {
+                typedValues.Add(new TypedValue((int)DxfCode.LinetypeName, linetypeName));
+            }
+
+            typedValues.Add(new TypedValue((int)DxfCode.Operator, "and>"));
+            return typedValues.ToArray();
+        }
+
+        internal static TypedValue[] Layers(params string[] layers)
+        {
+            List<TypedValue> typedValues = new List<TypedValue>
+            {
+                new TypedValue((int)DxfCode.Operator, "<and"),
+                new TypedValue((int)DxfCode.Operator, "<or")
+            };
+
+            foreach (string layer in layers)
+            {
+                typedValues.Add(new TypedValue((int)DxfCode.LayerName, layer));
+            }
+
+            typedValues.Add(new TypedValue((int)DxfCode.Operator, "or>"));
+            typedValues.Add(new TypedValue((int)DxfCode.Operator, "and>"));
+            return typedValues.ToArray();
+        }
+
+        internal static TypedValue[] TeklaDrawingSheetInsert()
+        {
+            return new[]
+            {
+                new TypedValue((int)DxfCode.Operator, "<and"),
+                new TypedValue((int)DxfCode.Operator, "<or"),
+                new TypedValue((int)DxfCode.LayerName, "ALL"),
+                new TypedValue((int)DxfCode.LayerName, "DrawingSheet"),
+                new TypedValue((int)DxfCode.LayerName, "Drawing Sheet"),
+                new TypedValue((int)DxfCode.LayerName, "Drawing_Sheet"),
+                new TypedValue((int)DxfCode.Operator, "or>"),
+                new TypedValue((int)DxfCode.Start, "INSERT"),
+                new TypedValue((int)DxfCode.Operator, "and>")
+            };
+        }
+
+        internal static TypedValue[] GeneralDrawingEntities()
+        {
+            return new[]
+            {
+                new TypedValue((int)DxfCode.Start, string.Join(", ", GeneralEntityTypes))
+            };
+        }
+
+        internal static TypedValue[] ScaleDetectionEntities()
+        {
+            return new[]
+            {
+                new TypedValue((int)DxfCode.Start, "INSERT, TEXT, MTEXT")
             };
         }
 

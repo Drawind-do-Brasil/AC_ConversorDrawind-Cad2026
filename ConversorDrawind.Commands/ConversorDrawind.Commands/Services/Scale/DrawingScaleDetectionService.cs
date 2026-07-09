@@ -19,15 +19,10 @@ namespace ConversorDrawind.Commands
 
         internal double? CaptureScale()
         {
-            TypedValue[] filterValues =
-            {
-                new TypedValue((int)DxfCode.Start, "INSERT, TEXT, MTEXT")
-            };
-
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.StartTransaction())
             {
-                PromptSelectionResult selectionResult = entitySelector.SelectAll(new SelectionFilter(filterValues));
+                PromptSelectionResult selectionResult = entitySelector.SelectAll(new SelectionFilter(LayerFilterFactory.ScaleDetectionEntities()));
                 if (selectionResult.Status != PromptStatus.OK)
                 {
                     transaction.Commit();

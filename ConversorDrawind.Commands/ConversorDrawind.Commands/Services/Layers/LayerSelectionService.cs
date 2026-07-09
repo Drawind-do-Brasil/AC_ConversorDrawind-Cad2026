@@ -1,7 +1,6 @@
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using System;
-using System.Collections.Generic;
 
 namespace ConversorDrawind.Commands
 {
@@ -20,20 +19,7 @@ namespace ConversorDrawind.Commands
         {
             try
             {
-                List<TypedValue> typedValues = new List<TypedValue>();
-
-                typedValues.Add(new TypedValue((int)DxfCode.Operator, "<and"));
-                if (layerName != "ALL")
-                    typedValues.Add(new TypedValue((int)DxfCode.LayerName, layerName));
-
-                if (start != "ALL")
-                    typedValues.Add(new TypedValue((int)DxfCode.Start, start));
-
-                if (linetypeName != "ALL")
-                    typedValues.Add(new TypedValue((int)DxfCode.LinetypeName, linetypeName));
-
-                typedValues.Add(new TypedValue((int)DxfCode.Operator, "and>"));
-                return SelectAll(new SelectionFilter(typedValues.ToArray()));
+                return SelectAll(new SelectionFilter(LayerFilterFactory.LayerProperties(layerName, start, linetypeName)));
             }
             catch (Exception e)
             {
@@ -46,17 +32,7 @@ namespace ConversorDrawind.Commands
         {
             try
             {
-                List<TypedValue> typedValues = new List<TypedValue>();
-
-                typedValues.Add(new TypedValue((int)DxfCode.Operator, "<and"));
-                typedValues.Add(new TypedValue((int)DxfCode.Operator, "<or"));
-                foreach (string item in layers)
-                {
-                    typedValues.Add(new TypedValue((int)DxfCode.LayerName, item));
-                }
-                typedValues.Add(new TypedValue((int)DxfCode.Operator, "or>"));
-                typedValues.Add(new TypedValue((int)DxfCode.Operator, "and>"));
-                return SelectAll(new SelectionFilter(typedValues.ToArray()));
+                return SelectAll(new SelectionFilter(LayerFilterFactory.Layers(layers)));
             }
             catch (Exception e)
             {

@@ -3,18 +3,11 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using ConversorDrawind;
 using System;
-using System.Collections.Generic;
 
 namespace ConversorDrawind.Commands
 {
     internal sealed class DrawingExtentsService
     {
-        private static readonly string[] GeneralEntityTypes =
-        {
-            "INSERT", "CIRCLE", "LINE", "TEXT", "ARC", "HATCH", "DIMENSION",
-            "MTEXT", "LWPOLYLINE", "SPLINE", "ATTDEF", "SOLID", "POINT"
-        };
-
         private readonly IAcadDocumentContext documentContext;
         private readonly IEntitySelector entitySelector;
         private readonly Point minPoint;
@@ -47,30 +40,12 @@ namespace ConversorDrawind.Commands
 
         internal bool TryRefreshTeklaDrawingSheet()
         {
-            List<TypedValue> filterValues = new List<TypedValue>
-            {
-                new TypedValue((int)DxfCode.Operator, "<and"),
-                new TypedValue((int)DxfCode.Operator, "<or"),
-                new TypedValue((int)DxfCode.LayerName, "ALL"),
-                new TypedValue((int)DxfCode.LayerName, "DrawingSheet"),
-                new TypedValue((int)DxfCode.LayerName, "Drawing Sheet"),
-                new TypedValue((int)DxfCode.LayerName, "Drawing_Sheet"),
-                new TypedValue((int)DxfCode.Operator, "or>"),
-                new TypedValue((int)DxfCode.Start, "INSERT"),
-                new TypedValue((int)DxfCode.Operator, "and>")
-            };
-
-            return Refresh(new SelectionFilter(filterValues.ToArray()), includeBlockLinesOnly: true);
+            return Refresh(new SelectionFilter(LayerFilterFactory.TeklaDrawingSheetInsert()), includeBlockLinesOnly: true);
         }
 
         internal void RefreshGeneral()
         {
-            TypedValue[] filterValues =
-            {
-                new TypedValue((int)DxfCode.Start, string.Join(", ", GeneralEntityTypes))
-            };
-
-            Refresh(new SelectionFilter(filterValues), includeBlockLinesOnly: false);
+            Refresh(new SelectionFilter(LayerFilterFactory.GeneralDrawingEntities()), includeBlockLinesOnly: false);
         }
 
         internal Point3d GetMinPoint()
