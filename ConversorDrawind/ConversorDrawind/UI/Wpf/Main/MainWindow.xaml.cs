@@ -28,9 +28,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private readonly ObservableCollection<string> allExplodeLayerNames = new ObservableCollection<string>();
         private readonly ObservableCollection<string> selectedExplodeLayerNames = new ObservableCollection<string>();
         private global::ConversorDrawind.Configuration configuration = new global::ConversorDrawind.Configuration();
-        private List<Block> listBlocks = new List<Block>();
-        private List<Block> listBlocksInv = new List<Block>();
-        private List<Block> listBlocksOrig = new List<Block>();
         private GetInfo teklaDrawingBlock;
         private string teklaDrawingBlockPath = string.Empty;
         private GetInfo scaleDrawing;
@@ -225,10 +222,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void LoadConverter(string converterName)
         {
             configuration = ConverterFileService.LoadConverter(converterName, CurrentStatus);
-            listBlocks = new List<Block>();
-            listBlocksInv = new List<Block>();
-            listBlocksOrig = new List<Block>();
-            ConfigurationCompatibilityMapper.ApplyBlocksToLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, converterName);
             loadedConverterName = converterName;
@@ -253,9 +246,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void NewConverter()
         {
             configuration = new global::ConversorDrawind.Configuration();
-            listBlocks.Clear();
-            listBlocksInv.Clear();
-            listBlocksOrig.Clear();
             EditorView.ConverterNameTextBox.Text = string.Empty;
             LoadConfigurationToControls();
             loadedConverterName = string.Empty;
@@ -267,7 +257,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             string name = EditorView.ConverterNameTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(name)) { WpfMessageBox.Show(Localization.MessageEnterConverterNameBeforeSave, Localization.AppTitle); return; }
             ReadConfigurationFromControls();
-            ConfigurationCompatibilityMapper.ApplyBlocksFromLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
             ConverterFileService.SaveConverter(name, CurrentStatus, configuration);
             LoadConverterLists();
             SelectLoadedConverter(name);
@@ -281,7 +270,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             OpenFileDialog dialog = new OpenFileDialog { Filter = Localization.FilterTemplateXml };
             if (dialog.ShowDialog(this) != true) return;
             configuration = ConverterFileService.LoadConverter(dialog.FileName, CurrentStatus);
-            ConfigurationCompatibilityMapper.ApplyBlocksToLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
             EditorView.ConverterNameTextBox.Text = Path.GetFileNameWithoutExtension(dialog.FileName);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, EditorView.ConverterNameTextBox.Text);
@@ -317,7 +305,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
 
             ReadConfigurationFromControls();
-            ConfigurationCompatibilityMapper.ApplyBlocksFromLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
 
             global::ConversorDrawind.Configuration savedConfiguration = ConverterFileService.LoadConverter(loadedConverterName, loadedConverterStatus);
             string currentXml = StructuredConfigurationXmlWriter.CreateDocument(configuration.ToConverterConfiguration()).ToString();
@@ -943,41 +930,41 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void RefreshTeklaBlocksView()
         {
             teklaBlockNames.Clear();
-            foreach (Block block in listBlocks)
+            foreach (BlockDefinition block in configuration.Blocks.TeklaBlocks)
             {
-                teklaBlockNames.Add(block.blockName);
+                teklaBlockNames.Add(block.Name);
             }
         }
 
         private void RefreshCadBlocksView()
         {
             cadBlockNames.Clear();
-            foreach (Block block in listBlocksInv)
+            foreach (BlockDefinition block in configuration.Blocks.CadBlocks)
             {
-                cadBlockNames.Add(block.blockName);
+                cadBlockNames.Add(block.Name);
             }
         }
 
         private void RefreshOriginalBlocksView()
         {
             originalBlockNames.Clear();
-            foreach (Block block in listBlocksOrig)
+            foreach (BlockDefinition block in configuration.Blocks.OriginalBlocks)
             {
-                originalBlockNames.Add(block.blockName);
+                originalBlockNames.Add(block.Name);
             }
         }
 
         private void RefreshRelationView()
         {
             blockRelations.Clear();
-            foreach (Block original in listBlocksOrig)
+            foreach (BlockDefinition original in configuration.Blocks.OriginalBlocks)
             {
-                if (string.IsNullOrWhiteSpace(original.blockNameRelacao))
+                if (string.IsNullOrWhiteSpace(original.RelatedName))
                 {
                     continue;
                 }
 
-                blockRelations.Add(original.blockNameRelacao + "    = >    " + original.blockName);
+                blockRelations.Add(original.RelatedName + "    = >    " + original.Name);
             }
         }
 
@@ -1003,7 +990,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             GetInfo drawingBlock = OpenDrawingBlock(filePath);
             if (drawingBlock == null)
             {
-                listBlocks.Clear();
+                configuration.Blocks.TeklaBlocks.Clear();
                 teklaDrawingBlockPath = string.Empty;
                 RefreshTeklaBlocksView();
                 UpdateRelationControls();
@@ -1013,7 +1000,9 @@ namespace ConversorDrawind.UI.Wpf.Main
             DisposeTeklaDrawingBlock();
             teklaDrawingBlock = drawingBlock;
             teklaDrawingBlockPath = filePath;
-            listBlocks = DeduplicateBlocks(drawingBlock.GetListBlocks());
+            configuration.Blocks.TeklaBlocks = DeduplicateBlocks(drawingBlock.GetListBlocks())
+                .Select(ConfigurationCompatibilityMapper.ToBlockDefinition)
+                .ToList();
             RefreshTeklaBlocksView();
             UpdateRelationControls();
         }
@@ -1038,7 +1027,9 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            listBlocksInv = blocks;
+            configuration.Blocks.CadBlocks = blocks
+                .Select(ConfigurationCompatibilityMapper.ToBlockDefinition)
+                .ToList();
             ResetBlockRelationsState();
             RefreshBlockViews();
             UpdateRelationControls();
@@ -1064,7 +1055,9 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            listBlocksOrig = blocks;
+            configuration.Blocks.OriginalBlocks = blocks
+                .Select(ConfigurationCompatibilityMapper.ToBlockDefinition)
+                .ToList();
             ResetBlockRelationsState();
             RefreshBlockViews();
             UpdateRelationControls();
@@ -1194,20 +1187,29 @@ namespace ConversorDrawind.UI.Wpf.Main
                 .ToList();
         }
 
+        private static void ResetTagReference(BlockDefinition block)
+        {
+            foreach (BlockTagDefinition tag in block.Tags ?? new List<BlockTagDefinition>())
+            {
+                tag.RelatedIndex = -1;
+                tag.IsAssociated = false;
+            }
+        }
+
         private void ResetBlockRelationsState()
         {
-            foreach (Block block in listBlocksInv)
+            foreach (BlockDefinition block in configuration.Blocks.CadBlocks)
             {
-                block.blockNameRelacao = string.Empty;
-                block.ResetTagReference();
-                block.cor = Color.Black;
+                block.RelatedName = string.Empty;
+                ResetTagReference(block);
+                block.ColorArgb = Color.Black.ToArgb();
             }
 
-            foreach (Block block in listBlocksOrig)
+            foreach (BlockDefinition block in configuration.Blocks.OriginalBlocks)
             {
-                block.blockNameRelacao = string.Empty;
-                block.ResetTagReference();
-                block.cor = Color.Black;
+                block.RelatedName = string.Empty;
+                ResetTagReference(block);
+                block.ColorArgb = Color.Black.ToArgb();
             }
 
             blockRelations.Clear();
@@ -1215,7 +1217,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void EditTeklaBlock()
         {
-            int index = GetSelectedBlockIndex(EditorView.TeklaBlocksListBox, listBlocks);
+            int index = GetSelectedBlockIndex(EditorView.TeklaBlocksListBox, configuration.Blocks.TeklaBlocks);
             if (index < 0)
             {
                 return;
@@ -1227,7 +1229,8 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            using (AttFormat dialog = new AttFormat(listBlocks[index], configuration, teklaDrawingBlock))
+            Block editableBlock = ConfigurationCompatibilityMapper.ToLegacyBlock(configuration.Blocks.TeklaBlocks[index]);
+            using (AttFormat dialog = new AttFormat(editableBlock, configuration, teklaDrawingBlock))
             {
                 if (dialog.ShowDialog() != UiDialogResult.OK)
                 {
@@ -1235,63 +1238,66 @@ namespace ConversorDrawind.UI.Wpf.Main
                 }
 
                 teklaDrawingBlock = dialog.myDrawingBlock;
+                configuration.Blocks.TeklaBlocks[index] = ConfigurationCompatibilityMapper.ToBlockDefinition(editableBlock);
                 RefreshTeklaBlocksView();
             }
         }
 
         private void RemoveTeklaBlock()
         {
-            int index = GetSelectedBlockIndex(EditorView.TeklaBlocksListBox, listBlocks);
-            if (index < 0 || index >= listBlocks.Count)
+            int index = GetSelectedBlockIndex(EditorView.TeklaBlocksListBox, configuration.Blocks.TeklaBlocks);
+            if (index < 0 || index >= configuration.Blocks.TeklaBlocks.Count)
             {
                 return;
             }
 
-            listBlocks.RemoveAt(index);
+            configuration.Blocks.TeklaBlocks.RemoveAt(index);
             RefreshTeklaBlocksView();
         }
 
         private void RelateSelectedBlocks()
         {
-            int cadIndex = GetSelectedBlockIndex(EditorView.CadBlocksListBox, listBlocksInv);
-            int originalIndex = GetSelectedBlockIndex(EditorView.OriginalBlocksListBox, listBlocksOrig);
+            int cadIndex = GetSelectedBlockIndex(EditorView.CadBlocksListBox, configuration.Blocks.CadBlocks);
+            int originalIndex = GetSelectedBlockIndex(EditorView.OriginalBlocksListBox, configuration.Blocks.OriginalBlocks);
             if (cadIndex < 0 || originalIndex < 0)
             {
                 return;
             }
 
-            Block cadBlock = listBlocksInv[cadIndex];
-            Block originalBlock = listBlocksOrig[originalIndex];
-            if (!string.IsNullOrWhiteSpace(originalBlock.blockNameRelacao) || IsCadBlockAlreadyRelated(cadBlock.blockName))
+            BlockDefinition cadBlock = configuration.Blocks.CadBlocks[cadIndex];
+            BlockDefinition originalBlock = configuration.Blocks.OriginalBlocks[originalIndex];
+            if (!string.IsNullOrWhiteSpace(originalBlock.RelatedName) || IsCadBlockAlreadyRelated(cadBlock.Name))
             {
                 return;
             }
 
-            originalBlock.blockNameRelacao = cadBlock.blockName;
-            originalBlock.cor = Color.LightGray;
-            cadBlock.cor = Color.LightGray;
+            originalBlock.RelatedName = cadBlock.Name;
+            originalBlock.ColorArgb = Color.LightGray.ToArgb();
+            cadBlock.ColorArgb = Color.LightGray.ToArgb();
 
             RefreshBlockViews();
-            SelectRelatedBlocks(cadBlock.blockName, originalBlock.blockName);
+            SelectRelatedBlocks(cadBlock.Name, originalBlock.Name);
             UpdateRelationControls();
         }
 
         private void EditBlockRelationParameters()
         {
-            if (!TryGetSelectedRelation(out Block cadBlock, out Block originalBlock, out int cadIndex, out int originalIndex))
+            if (!TryGetSelectedRelation(out BlockDefinition cadBlock, out BlockDefinition originalBlock, out int cadIndex, out int originalIndex))
             {
                 return;
             }
 
-            using (AttFormatInventor dialog = new AttFormatInventor(cadBlock, originalBlock))
+            using (AttFormatInventor dialog = new AttFormatInventor(
+                ConfigurationCompatibilityMapper.ToLegacyBlock(cadBlock),
+                ConfigurationCompatibilityMapper.ToLegacyBlock(originalBlock)))
             {
                 if (dialog.ShowDialog() != UiDialogResult.OK)
                 {
                     return;
                 }
 
-                listBlocksInv[cadIndex] = dialog.Inventor;
-                listBlocksOrig[originalIndex] = dialog.Original;
+                configuration.Blocks.CadBlocks[cadIndex] = ConfigurationCompatibilityMapper.ToBlockDefinition(dialog.Inventor);
+                configuration.Blocks.OriginalBlocks[originalIndex] = ConfigurationCompatibilityMapper.ToBlockDefinition(dialog.Original);
                 RefreshBlockViews();
                 SelectRelatedBlocks(dialog.Inventor.blockName, dialog.Original.blockName);
             }
@@ -1299,19 +1305,19 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void RemoveSelectedRelation()
         {
-            if (!TryGetSelectedRelation(out Block cadBlock, out Block originalBlock, out int cadIndex, out int originalIndex))
+            if (!TryGetSelectedRelation(out BlockDefinition cadBlock, out BlockDefinition originalBlock, out int cadIndex, out int originalIndex))
             {
                 return;
             }
 
-            originalBlock.blockNameRelacao = string.Empty;
-            originalBlock.ResetTagReference();
-            originalBlock.cor = Color.Black;
-            cadBlock.ResetTagReference();
-            cadBlock.cor = Color.Black;
+            originalBlock.RelatedName = string.Empty;
+            ResetTagReference(originalBlock);
+            originalBlock.ColorArgb = Color.Black.ToArgb();
+            ResetTagReference(cadBlock);
+            cadBlock.ColorArgb = Color.Black.ToArgb();
 
             RefreshBlockViews();
-            SelectRelatedBlocks(cadBlock.blockName, originalBlock.blockName);
+            SelectRelatedBlocks(cadBlock.Name, originalBlock.Name);
             UpdateRelationControls();
         }
 
@@ -1336,34 +1342,34 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private bool CanRelateSelectedBlocks()
         {
-            int cadIndex = GetSelectedBlockIndex(EditorView.CadBlocksListBox, listBlocksInv);
-            int originalIndex = GetSelectedBlockIndex(EditorView.OriginalBlocksListBox, listBlocksOrig);
+            int cadIndex = GetSelectedBlockIndex(EditorView.CadBlocksListBox, configuration.Blocks.CadBlocks);
+            int originalIndex = GetSelectedBlockIndex(EditorView.OriginalBlocksListBox, configuration.Blocks.OriginalBlocks);
             if (cadIndex < 0 || originalIndex < 0)
             {
                 return false;
             }
 
-            Block cadBlock = listBlocksInv[cadIndex];
-            Block originalBlock = listBlocksOrig[originalIndex];
-            return string.IsNullOrWhiteSpace(originalBlock.blockNameRelacao) && !IsCadBlockAlreadyRelated(cadBlock.blockName);
+            BlockDefinition cadBlock = configuration.Blocks.CadBlocks[cadIndex];
+            BlockDefinition originalBlock = configuration.Blocks.OriginalBlocks[originalIndex];
+            return string.IsNullOrWhiteSpace(originalBlock.RelatedName) && !IsCadBlockAlreadyRelated(cadBlock.Name);
         }
 
         private bool IsCadBlockAlreadyRelated(string cadBlockName)
         {
-            return listBlocksOrig.Any(block => string.Equals(block.blockNameRelacao, cadBlockName, StringComparison.OrdinalIgnoreCase));
+            return configuration.Blocks.OriginalBlocks.Any(block => string.Equals(block.RelatedName, cadBlockName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private int GetSelectedBlockIndex(System.Windows.Controls.ListBox listBox, List<Block> blocks)
+        private int GetSelectedBlockIndex(System.Windows.Controls.ListBox listBox, List<BlockDefinition> blocks)
         {
             if (!(listBox.SelectedItem is string selectedName))
             {
                 return -1;
             }
 
-            return blocks.FindIndex(block => string.Equals(block.blockName, selectedName, StringComparison.OrdinalIgnoreCase));
+            return blocks.FindIndex(block => string.Equals(block.Name, selectedName, StringComparison.OrdinalIgnoreCase));
         }
 
-        private bool TryGetSelectedRelation(out Block cadBlock, out Block originalBlock, out int cadIndex, out int originalIndex)
+        private bool TryGetSelectedRelation(out BlockDefinition cadBlock, out BlockDefinition originalBlock, out int cadIndex, out int originalIndex)
         {
             cadBlock = null;
             originalBlock = null;
@@ -1381,22 +1387,22 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return false;
             }
 
-            cadIndex = listBlocksInv.FindIndex(block => string.Equals(block.blockName, parts[0], StringComparison.OrdinalIgnoreCase));
-            originalIndex = listBlocksOrig.FindIndex(block => string.Equals(block.blockName, parts[1], StringComparison.OrdinalIgnoreCase));
+            cadIndex = configuration.Blocks.CadBlocks.FindIndex(block => string.Equals(block.Name, parts[0], StringComparison.OrdinalIgnoreCase));
+            originalIndex = configuration.Blocks.OriginalBlocks.FindIndex(block => string.Equals(block.Name, parts[1], StringComparison.OrdinalIgnoreCase));
             if (cadIndex < 0 || originalIndex < 0)
             {
                 return false;
             }
 
-            cadBlock = listBlocksInv[cadIndex];
-            originalBlock = listBlocksOrig[originalIndex];
+            cadBlock = configuration.Blocks.CadBlocks[cadIndex];
+            originalBlock = configuration.Blocks.OriginalBlocks[originalIndex];
             return true;
         }
 
         private void SelectRelatedBlocks(string cadBlockName, string originalBlockName)
         {
-            int cadIndex = listBlocksInv.FindIndex(block => string.Equals(block.blockName, cadBlockName, StringComparison.OrdinalIgnoreCase));
-            int originalIndex = listBlocksOrig.FindIndex(block => string.Equals(block.blockName, originalBlockName, StringComparison.OrdinalIgnoreCase));
+            int cadIndex = configuration.Blocks.CadBlocks.FindIndex(block => string.Equals(block.Name, cadBlockName, StringComparison.OrdinalIgnoreCase));
+            int originalIndex = configuration.Blocks.OriginalBlocks.FindIndex(block => string.Equals(block.Name, originalBlockName, StringComparison.OrdinalIgnoreCase));
             if (cadIndex >= 0)
             {
                 EditorView.CadBlocksListBox.SelectedIndex = cadIndex;

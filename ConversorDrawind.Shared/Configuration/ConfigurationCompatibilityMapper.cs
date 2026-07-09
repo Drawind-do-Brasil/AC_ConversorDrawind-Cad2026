@@ -103,37 +103,6 @@ namespace ConversorDrawind
             return result;
         }
 
-
-        public static void ApplyBlocksToLegacyLists(
-            Configuration source,
-            List<Block> teklaBlocks,
-            List<Block> cadBlocks,
-            List<Block> originalBlocks)
-        {
-            source = source ?? new Configuration();
-            source.EnsureDefaults();
-
-            teklaBlocks.Clear();
-            cadBlocks.Clear();
-            originalBlocks.Clear();
-
-            teklaBlocks.AddRange(source.Blocks.TeklaBlocks.Select(ToBlock));
-            cadBlocks.AddRange(source.Blocks.CadBlocks.Select(ToBlock));
-            originalBlocks.AddRange(source.Blocks.OriginalBlocks.Select(ToBlock));
-        }
-
-        public static void ApplyBlocksFromLegacyLists(
-            Configuration target,
-            List<Block> teklaBlocks,
-            List<Block> cadBlocks,
-            List<Block> originalBlocks)
-        {
-            target = target ?? new Configuration();
-            target.Blocks.TeklaBlocks = (teklaBlocks ?? new List<Block>()).Select(ToBlockDefinition).ToList();
-            target.Blocks.CadBlocks = (cadBlocks ?? new List<Block>()).Select(ToBlockDefinition).ToList();
-            target.Blocks.OriginalBlocks = (originalBlocks ?? new List<Block>()).Select(ToBlockDefinition).ToList();
-        }
-
         private static LayerRemoveRule ToRemoveRule(Filter filter)
         {
             return new LayerRemoveRule { Filter = ToEntityFilter(filter) };
@@ -166,14 +135,15 @@ namespace ConversorDrawind
             return result;
         }
 
-        private static BlockDefinition ToBlockDefinition(Block block)
+        public static BlockDefinition ToBlockDefinition(Block block)
         {
+            block = block ?? new Block();
             return new BlockDefinition
             {
                 Name = block.blockName,
                 RelatedName = block.blockNameRelacao,
                 ColorArgb = block.cor.ToArgb(),
-                Tags = block.listTags.Select(ToTagDefinition).ToList()
+                Tags = (block.listTags ?? new List<TagBlock>()).Select(ToTagDefinition).ToList()
             };
         }
 
@@ -218,15 +188,16 @@ namespace ConversorDrawind
             };
         }
 
-        private static Block ToBlock(BlockDefinition source)
+        public static Block ToLegacyBlock(BlockDefinition source)
         {
+            source = source ?? new BlockDefinition();
             Block result = new Block
             {
                 blockName = source.Name,
                 blockNameRelacao = source.RelatedName,
                 cor = Color.FromArgb(source.ColorArgb)
             };
-            result.listTags.AddRange(source.Tags.Select(ToTagBlock));
+            result.listTags.AddRange((source.Tags ?? new List<BlockTagDefinition>()).Select(ToTagBlock));
             return result;
         }
 
