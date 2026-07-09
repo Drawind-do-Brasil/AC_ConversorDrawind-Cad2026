@@ -55,11 +55,13 @@ namespace ConversorDrawind
             return string.IsNullOrWhiteSpace(Runtime.TempDirectory) ? DefaultTempDirectory : Runtime.TempDirectory;
         }
 
-        public Configuration ToConverterConfiguration()
+#pragma warning disable CS0618
+        public ConverterConfiguration ToConverterConfiguration()
         {
             SyncCompatibilityState();
-            return new Configuration(this);
+            return new ConverterConfiguration(this);
         }
+#pragma warning restore CS0618
 
         public void Apply(Configuration source)
         {

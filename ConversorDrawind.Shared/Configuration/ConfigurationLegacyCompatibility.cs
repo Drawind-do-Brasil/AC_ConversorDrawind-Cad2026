@@ -237,7 +237,7 @@ namespace ConversorDrawind
         [Obsolete("Use ConverterFileService.SaveConverter or IConfigurationRepository.Save.")]
         public void SaveXML(string file, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso, StatusConversorItem statusConversorItem)
         {
-            Configuration configuration = ConfigurationCompatibilityMapper.FromLegacyState(this, arranjos, blocks, blocosi, blocoso);
+            ConverterConfiguration configuration = ConfigurationCompatibilityMapper.FromLegacyState(this, arranjos, blocks, blocosi, blocoso);
             ConfigurationRepository.Save(file, statusConversorItem, configuration);
         }
 

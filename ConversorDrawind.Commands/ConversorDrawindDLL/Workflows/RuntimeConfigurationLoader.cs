@@ -14,8 +14,11 @@ namespace ConversorDrawindDLL
             var blocksInv = new List<global::ConversorDrawind.Block>();
             var blocksOrig = new List<global::ConversorDrawind.Block>();
 
-            global::ConversorDrawind.Configuration structuredConfiguration =
-                global::ConversorDrawind.ConverterConfigurationReader.Load(file);
+#pragma warning disable CS0618
+            global::ConversorDrawind.ConverterConfiguration structuredConfiguration =
+                new global::ConversorDrawind.ConverterConfiguration(
+                    global::ConversorDrawind.ConverterConfigurationReader.Load(file));
+#pragma warning restore CS0618
 
             global::ConversorDrawind.ConfigurationCompatibilityMapper.ApplyToLegacyState(
                 structuredConfiguration,
