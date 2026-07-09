@@ -173,7 +173,7 @@ namespace ConversorDrawindDLL
             commandRunner.LoadTempConfiguration(Configuration.Config, ref conversor);
 
             GETSCALE();
-            //idLayer = ConvertLayer.CreateAndAssignALayer(Configuration.Config.EXTDIMlayer);
+            //idLayer = ConvertLayer.CreateAndAssignALayer(Configuration.Config.Dimensions.Layer);
 
            
        
@@ -321,9 +321,9 @@ namespace ConversorDrawindDLL
                     escalaFinal = ConvertLayer.GetScaleDrawing(escalaCapiturada);
 
                     ConvertLayer.ScaleDrawing(escalaFinal);
-                    if (Configuration.Config.ConvTekla0ConvInv1 == 1)
+                    if (Configuration.Config.General.ConverterType == 1)
                         UPDATE_DIMENSTION(escalaFinal);
-                    scaleWorkflow.ApplyDrawingScale(Configuration.Config.EXTLINELtscale, Configuration.Config.EXTDIMScale, escalaFinal);
+                    scaleWorkflow.ApplyDrawingScale(Configuration.Config.Lines.LineTypeScale, Configuration.Config.Dimensions.Scale, escalaFinal);
                     Point3d ptMax = GetNewMax();
                     Point3d ptMin = GetNewMin();
                     database.Limmax = new Point2d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal);
@@ -337,15 +337,15 @@ namespace ConversorDrawindDLL
                             acVportTblRec.GridEnabled = true;
                             acVportTblRec.GridIncrements = new Point2d(escalaFinal * 10, escalaFinal * 10);
                             document.Editor.UpdateTiledViewportsFromDatabase();
-                            if (Configuration.Config.ConvTekla0ConvInv1 == 0)
+                            if (Configuration.Config.General.ConverterType == 0)
                             {
                                 DimStyleTable dimStyleTable = (DimStyleTable)acTrans.GetObject(database.DimStyleTableId, OpenMode.ForRead);
                                 DimStyleTableRecord dimStyleTableRecord = null;
-                                if (dimStyleTable.Has(Configuration.Config.EXTDIMStyleName) == true)
+                                if (dimStyleTable.Has(Configuration.Config.Dimensions.StyleName) == true)
                                 {
-                                    dimStyleTableRecord = acTrans.GetObject(dimStyleTable[Configuration.Config.EXTDIMStyleName],
+                                    dimStyleTableRecord = acTrans.GetObject(dimStyleTable[Configuration.Config.Dimensions.StyleName],
                                                           OpenMode.ForWrite) as DimStyleTableRecord;
-                                    dimStyleTableRecord.Dimscale = Configuration.Config.EXTDIMScale * escalaFinal;
+                                    dimStyleTableRecord.Dimscale = Configuration.Config.Dimensions.Scale * escalaFinal;
                                 }
                             }
                         }
@@ -415,7 +415,7 @@ namespace ConversorDrawindDLL
                 Conversor.EscreverLog,
                 ConversionMessages.ShowWarningIfEnabled);
 
-            if (Configuration.Config.EXTDIMCorrigeSeta)
+            if (Configuration.Config.Dimensions.FixArrow)
             {
                 stepRunner.Run(
                     "Consertando setas das dimensões... ",
@@ -426,7 +426,7 @@ namespace ConversorDrawindDLL
                     "... Completado.\n");
             }
 
-            if (Configuration.Config.EXTCONFIsPurge)
+            if (Configuration.Config.General.Purge)
             {
                 stepRunner.Run(
                     "Purgando desenho... ",
@@ -807,16 +807,16 @@ namespace ConversorDrawindDLL
         }
 private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         {
-            if (!string.Equals(text.Layer, Configuration.Config.EXTSCALELayer, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(text.Layer, Configuration.Config.Scale.Layer, StringComparison.OrdinalIgnoreCase))
                 return false;
             if (ConvertBlocks.CheckPoint(positionInSpace,
-                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEp1.X, Configuration.Config.EXTSCALEp1.Y, Configuration.Config.EXTSCALEp1.Z)),
-                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEp2.X, Configuration.Config.EXTSCALEp2.Y, Configuration.Config.EXTSCALEp2.Z))))
+                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.Scale.Point1.X, Configuration.Config.Scale.Point1.Y, Configuration.Config.Scale.Point1.Z)),
+                      ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.Scale.Point2.X, Configuration.Config.Scale.Point2.Y, Configuration.Config.Scale.Point2.Z))))
 
             {
-                int arredondamento = Configuration.Config.EXTSCALETextSizeString.Split(',').Last().Length;
-                if (text.Height > Configuration.Config.EXTSCALETextSize - 0.2 &&
-                    text.Height < Configuration.Config.EXTSCALETextSize + 0.2)
+                int arredondamento = Configuration.Config.Scale.TextSize.ToString().Split(',').Last().Length;
+                if (text.Height > Configuration.Config.Scale.TextSize - 0.2 &&
+                    text.Height < Configuration.Config.Scale.TextSize + 0.2)
                 {
                     string[] temp = text.TextString.Split(':');
                     double escalaConvertida = 0;
@@ -897,10 +897,10 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             try
             {
                 messenger.WriteMessage("Capturando textos do formato ");
-                if (Configuration.Config.ConvTekla0ConvInv1 == 0)
+                if (Configuration.Config.General.ConverterType == 0)
                 {
-                    ConvertBlocks.SetStartPointOverride(ConvertBlocks.GetFormatStartPoint(Configuration.Config.LayerBlockAttribute));
-                    ConvertBlocks.GeTTextNew(Configuration.Config.LayerBlockAttribute);
+                    ConvertBlocks.SetStartPointOverride(ConvertBlocks.GetFormatStartPoint(Configuration.Config.Layers.BlockAttributeLayer));
+                    ConvertBlocks.GeTTextNew(Configuration.Config.Layers.BlockAttributeLayer);
                     ConvertBlocks.GeTText();
                 }
                 else
@@ -988,7 +988,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
             {
                 try
                 {
-                    if (Configuration.Config.ConvTekla0ConvInv1 == 0)
+                    if (Configuration.Config.General.ConverterType == 0)
                         ConvertBlocks.SetText(Arranjos.ListBlocks);
                     else
                         ConvertBlocks.SetText2(Arranjos.ListBlocksInv, Arranjos.ListBlocksOrig);
@@ -1000,7 +1000,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                     Conversor.EscreverLog("Erro 39", e.Message);
                     messenger.WriteMessage("Editando o novo bloco ... Erro. \n" +
                                     "Descrição: Erro ao editar o novo bloco...\n");
-                    if (Configuration.Config.PROGRAMMessage)
+                    if (Configuration.Config.General.ShowMessages)
                     {
                         string nomeBlocos = "";
                         foreach (var item in Arranjos.ListBlocks)
@@ -1226,7 +1226,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         {
             try
             {
-                FixArrow.ConsetaSetaSeta(Configuration.Config.EXTDIMCorrigeSetaTipoSeta, escalaFinal, Configuration.Config.EXTDIMCorrigeSetaFactor);
+                FixArrow.ConsetaSetaSeta(Configuration.Config.Dimensions.FixArrowType, escalaFinal, Configuration.Config.Dimensions.FixArrowFactor);
             }
 
             catch (System.Exception e)

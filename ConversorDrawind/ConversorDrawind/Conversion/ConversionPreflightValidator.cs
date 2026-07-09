@@ -1,4 +1,4 @@
-﻿using System.IO;
+using System.IO;
 
 namespace ConversorDrawind
 {
@@ -20,12 +20,12 @@ namespace ConversorDrawind
     {
         public static ConversionPreflightResult ValidateFormatPath(Configuration configuration)
         {
-            if (!configuration.EXTCONFIsExchangeFormat)
+            if (!configuration.General.ExchangeFormat)
                 return ConversionPreflightResult.Success;
 
-            string formatPath = configuration.EXTCONFOrigem == 1
-                ? configuration.EXTCONFCaminhoBlocoInv
-                : configuration.PROGRAMblockFormatoCaminho;
+            string formatPath = configuration.General.SourceMode == 1
+                ? configuration.Blocks.CadBlockPath
+                : configuration.Blocks.TeklaBlockPath;
 
             if (!File.Exists(formatPath))
                 return new ConversionPreflightResult(false, formatPath);

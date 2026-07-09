@@ -32,7 +32,7 @@ namespace ConversorDrawindDLL
             Entity obj = (Entity)trans.GetObject(id, OpenMode.ForRead);
             if (obj == null)
                 return;
-            if (Configuration.Config.ConvTekla0ConvInv1 == 1 &&
+            if (Configuration.Config.General.ConverterType == 1 &&
                 string.Equals(obj.Id.ObjectClass.DxfName, "MTEXT", StringComparison.OrdinalIgnoreCase))
             {
                 ExplodeObjects(new ObjectId[] { id });
@@ -395,13 +395,13 @@ namespace ConversorDrawindDLL
                                 if (obj.GetType() == typeof(DBText))
                                 {
                                     DBText text = obj as DBText;
-                                    if (string.Equals(Configuration.Config.EXTSCALELayer, text.Layer, StringComparison.OrdinalIgnoreCase) && ConvertBlocks.CheckPoint(text.Position,
+                                    if (string.Equals(Configuration.Config.Scale.Layer, text.Layer, StringComparison.OrdinalIgnoreCase) && ConvertBlocks.CheckPoint(text.Position,
                    ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp1.X, Configuration.Config.EXTSCALEAp1.Y, Configuration.Config.EXTSCALEAp1.Z)),
                    ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp2.X, Configuration.Config.EXTSCALEAp2.Y, Configuration.Config.EXTSCALEAp2.Z))))
                                     {
-                                        int arredondamento = Configuration.Config.EXTSCALETextSizeString.Split(',').Last().Length;
-                                        if (text.Height > Configuration.Config.EXTSCALETextSize - 0.2 &&
-                                            text.Height < Configuration.Config.EXTSCALETextSize + 0.2)
+                                        int arredondamento = Configuration.Config.Scale.TextSize.ToString().Split(',').Last().Length;
+                                        if (text.Height > Configuration.Config.Scale.TextSize - 0.2 &&
+                                            text.Height < Configuration.Config.Scale.TextSize + 0.2)
                                         {
                                             string[] temp = text.TextString.Split(':');
                                             double escalaConvertida = 0;
@@ -467,13 +467,13 @@ namespace ConversorDrawindDLL
                                         if (obj.GetType() == typeof(DBText))
                                         {
                                             DBText text = obj as DBText;
-                                            if (string.Equals(Configuration.Config.EXTSCALELayer, text.Layer, StringComparison.OrdinalIgnoreCase) && ConvertBlocks.CheckPoint(text.Position,
+                                            if (string.Equals(Configuration.Config.Scale.Layer, text.Layer, StringComparison.OrdinalIgnoreCase) && ConvertBlocks.CheckPoint(text.Position,
                            ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp1.X, Configuration.Config.EXTSCALEAp1.Y, Configuration.Config.EXTSCALEAp1.Z)),
                            ConvertBlocks.GetPTReal(new Point3d(Configuration.Config.EXTSCALEAp2.X, Configuration.Config.EXTSCALEAp2.Y, Configuration.Config.EXTSCALEAp2.Z))))
                                             {
-                                                int arredondamento = Configuration.Config.EXTSCALETextSizeString.Split(',').Last().Length;
-                                                if (text.Height > Configuration.Config.EXTSCALETextSize - 0.2 &&
-                                                    text.Height < Configuration.Config.EXTSCALETextSize + 0.2)
+                                                int arredondamento = Configuration.Config.Scale.TextSize.ToString().Split(',').Last().Length;
+                                                if (text.Height > Configuration.Config.Scale.TextSize - 0.2 &&
+                                                    text.Height < Configuration.Config.Scale.TextSize + 0.2)
                                                 {
                                                     string[] temp = text.TextString.Split(':');
                                                     double escalaConvertida = 0;
@@ -521,24 +521,24 @@ namespace ConversorDrawindDLL
                     {
                         try
                         {
-                            if (!Configuration.Config.EXTSCALEManual)
+                            if (!Configuration.Config.Scale.Manual)
                             {
                                 List<ObjectId> myIDsScale = new List<ObjectId>();
 
 
                                 PromptSelectionResult psr = entitySelector.SelectWindow(pq1,
                                                                                         pq2,
-                                                                                        FilterTextTeste(Configuration.Config.EXTSCALELayer));
+                                                                                        FilterTextTeste(Configuration.Config.Scale.Layer));
                                 if (psr.Status == PromptStatus.OK)
                                     myIDsScale.AddRange(psr.Value.GetObjectIds());
                                 if (myIDsScale.Count > 0)
                                 {
 
                                     DBText dBObject = acTrans.GetObject(myIDsScale.First(), OpenMode.ForRead) as DBText;
-                                    int arredondamento = Configuration.Config.EXTSCALETextSizeString.Split(',').Last().Length;
+                                    int arredondamento = Configuration.Config.Scale.TextSize.ToString().Split(',').Last().Length;
 
-                                    if (dBObject.Height > Configuration.Config.EXTSCALETextSize - 0.2 &&
-                                                  dBObject.Height < Configuration.Config.EXTSCALETextSize + 0.2)
+                                    if (dBObject.Height > Configuration.Config.Scale.TextSize - 0.2 &&
+                                                  dBObject.Height < Configuration.Config.Scale.TextSize + 0.2)
 
                                     {
                                         string[] temp = dBObject.TextString.Split(':');
@@ -570,10 +570,10 @@ namespace ConversorDrawindDLL
             Point3d pIni = ConvertBlocks.GetStartPoint();
             double scaleDesenho = 1;
 
-            if (Configuration.Config.EXTSCALEManual || scale <= 0)
+            if (Configuration.Config.Scale.Manual || scale <= 0)
             {
-                Zoom(GetPointDiference(pIni, new Point3d(Configuration.Config.EXTSCALEp1.X, Configuration.Config.EXTSCALEp1.Y, Configuration.Config.EXTSCALEp1.Z), scaleDesenho),
-                     GetPointDiference(pIni, new Point3d(Configuration.Config.EXTSCALEp2.X, Configuration.Config.EXTSCALEp2.Y, Configuration.Config.EXTSCALEp2.Z), scaleDesenho));
+                Zoom(GetPointDiference(pIni, new Point3d(Configuration.Config.Scale.Point1.X, Configuration.Config.Scale.Point1.Y, Configuration.Config.Scale.Point1.Z), scaleDesenho),
+                     GetPointDiference(pIni, new Point3d(Configuration.Config.Scale.Point2.X, Configuration.Config.Scale.Point2.Y, Configuration.Config.Scale.Point2.Z), scaleDesenho));
                 ScaleForm scaleF = new ScaleForm();
                 scaleF.TopMost = true;
                 scaleF.ShowDialog();

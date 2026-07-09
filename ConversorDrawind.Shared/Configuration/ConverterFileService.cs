@@ -52,7 +52,7 @@ namespace ConversorDrawind
             List<Block> blocksOrig,
             StatusConversorItem statusConversorItem)
         {
-            ConverterConfiguration structuredConfiguration = ConfigurationCompatibilityMapper.FromLegacyState(configuration, arranjos, blocks, blocksInv, blocksOrig);
+            Configuration structuredConfiguration = ConfigurationCompatibilityMapper.FromLegacyState(configuration, arranjos, blocks, blocksInv, blocksOrig);
             SaveConverter(converterName, statusConversorItem, new Configuration(structuredConfiguration));
         }
 

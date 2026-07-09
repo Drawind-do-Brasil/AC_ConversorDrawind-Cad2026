@@ -14,7 +14,7 @@ namespace ConversorDrawindDLL
             var blocksInv = new List<global::ConversorDrawind.Block>();
             var blocksOrig = new List<global::ConversorDrawind.Block>();
 
-            global::ConversorDrawind.ConverterConfiguration structuredConfiguration =
+            global::ConversorDrawind.Configuration structuredConfiguration =
                 global::ConversorDrawind.ConverterConfigurationReader.Load(file);
 
             global::ConversorDrawind.ConfigurationCompatibilityMapper.ApplyToLegacyState(
@@ -55,9 +55,8 @@ namespace ConversorDrawindDLL
             Arranjos.ListBlocksInv.AddRange(blocksInv.Select(CloneBlock));
             Arranjos.ListBlocksOrig.AddRange(blocksOrig.Select(CloneBlock));
 
-            configuration.EXTTEXTSize = ResolveTextSize(source.allTextSyles, configuration.EXTTEXTStyleName);
-            configuration.EXTSCALETextSizeString = configuration.EXTSCALETextSize.ToString();
-
+            configuration.Text.DefaultSize = ResolveTextSize(source.allTextSyles, configuration.Text.DefaultStyleName);
+            
             InstanciaConversor.ConversorInstancias.Clear();
             InstanciaConversor.ConversorInstancias.AddRange(Arranjos.Arrj.Conversor.Select(item => new InstanciaConversor(item)));
         }

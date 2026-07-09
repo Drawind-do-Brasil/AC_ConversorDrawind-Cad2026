@@ -1,4 +1,4 @@
-﻿using Microsoft.Win32;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -263,7 +263,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void ConfigureAdvancedDimensionArrow()
         {
-            using (ConfAvancadaDeCota f = new ConfAvancadaDeCota(configuration.EXTDIMCorrigeSeta, configuration.EXTDIMCorrigeSetaTipoSeta, configuration.EXTDIMCorrigeSetaFactor)) if (f.ShowDialog() == UiDialogResult.OK) { configuration.EXTDIMCorrigeSeta = f.EXTDIMCorrigeSeta; configuration.EXTDIMCorrigeSetaTipoSeta = f.EXTDIMCorrigeSetaTipoSeta; configuration.EXTDIMCorrigeSetaFactor = f.EXTDIMCorrigeSetaFactor; }
+            using (ConfAvancadaDeCota f = new ConfAvancadaDeCota(configuration.Dimensions.FixArrow, configuration.Dimensions.FixArrowType, configuration.Dimensions.FixArrowFactor)) if (f.ShowDialog() == UiDialogResult.OK) { configuration.Dimensions.FixArrow = f.EXTDIMCorrigeSeta; configuration.Dimensions.FixArrowType = f.EXTDIMCorrigeSetaTipoSeta; configuration.Dimensions.FixArrowFactor = f.EXTDIMCorrigeSetaFactor; }
         }
 
         private void AddOtherDimensionColor(ComboBox targetComboBox)
@@ -287,21 +287,21 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void PopulateDimensionComboBoxes()
         {
-            SetComboItems(EditorView.DimensionLayerComboBox, arranjos.allNewLayer, configuration.EXTDIMlayer);
-            SetComboItems(EditorView.DimensionLineColorComboBox, arranjos.allcolor.Skip(1), configuration.EXTDIMColorLine);
-            SetComboItems(EditorView.DimensionTextColorComboBox, arranjos.allcolor.Skip(1), configuration.EXTDIMColorText);
-            SetComboItems(EditorView.DimensionArrowTypeComboBox, DimensionArrowTypes(), configuration.EXTDIMSeta);
-            SetComboItems(EditorView.DimensionTextStyleComboBox, TextStyleNames(), configuration.EXTTEXTStyleName);
-            SetComboItems(EditorView.DimensionLinearPrecisionComboBox, Enumerable.Range(0, 9).Select(i => Convert.ToString(i)), Convert.ToString(configuration.EXTDIMPrecision));
-            SetComboItems(EditorView.DimensionAngularPrecisionComboBox, Enumerable.Range(0, 9).Select(i => Convert.ToString(i)), Convert.ToString(configuration.EXTDIMAngularPrecision));
-            SetComboItems(EditorView.DimensionLinearUnitComboBox, Enumerable.Range(1, 6).Select(i => Convert.ToString(i)), Convert.ToString(configuration.EXTDIMUnit));
-            SetComboItems(EditorView.DimensionAngularUnitComboBox, Enumerable.Range(1, 6).Select(i => Convert.ToString(i)), Convert.ToString(configuration.EXTDIMAngularUnit));
-            SetComboItems(EditorView.DimensionOutsideAlignComboBox, BooleanOptions(), Convert.ToString(configuration.EXTDIMOutsideAlign));
-            SetComboItems(EditorView.DimensionLineForcedComboBox, BooleanOptions(), Convert.ToString(configuration.EXTDIMLineForced));
-            SetComboItems(EditorView.DimensionTextInsideComboBox, BooleanOptions(), Convert.ToString(configuration.EXTDIMTextForced));
-            SetComboItems(EditorView.DimensionTextAlignmentComboBox, BooleanOptions(), Convert.ToString(configuration.EXTDIMDimensionPosition));
-            SetComboItems(EditorView.DimensionTextPlacementComboBox, Enumerable.Range(0, 5).Select(i => Convert.ToString(i)), Convert.ToString(configuration.EXTDIMTad));
-            SetComboItems(EditorView.DimensionBaseLayerComboBox, DimensionBaseLayers(), configuration.EXTDIMBaseLayer);
+            SetComboItems(EditorView.DimensionLayerComboBox, arranjos.allNewLayer, configuration.Dimensions.Layer);
+            SetComboItems(EditorView.DimensionLineColorComboBox, arranjos.allcolor.Skip(1), configuration.Dimensions.LineColor);
+            SetComboItems(EditorView.DimensionTextColorComboBox, arranjos.allcolor.Skip(1), configuration.Dimensions.TextColor);
+            SetComboItems(EditorView.DimensionArrowTypeComboBox, DimensionArrowTypes(), configuration.Dimensions.ArrowType);
+            SetComboItems(EditorView.DimensionTextStyleComboBox, TextStyleNames(), configuration.Text.DefaultStyleName);
+            SetComboItems(EditorView.DimensionLinearPrecisionComboBox, Enumerable.Range(0, 9).Select(i => Convert.ToString(i)), Convert.ToString(configuration.Dimensions.Precision));
+            SetComboItems(EditorView.DimensionAngularPrecisionComboBox, Enumerable.Range(0, 9).Select(i => Convert.ToString(i)), Convert.ToString(configuration.Dimensions.AngularPrecision));
+            SetComboItems(EditorView.DimensionLinearUnitComboBox, Enumerable.Range(1, 6).Select(i => Convert.ToString(i)), Convert.ToString(configuration.Dimensions.Unit));
+            SetComboItems(EditorView.DimensionAngularUnitComboBox, Enumerable.Range(1, 6).Select(i => Convert.ToString(i)), Convert.ToString(configuration.Dimensions.AngularUnit));
+            SetComboItems(EditorView.DimensionOutsideAlignComboBox, BooleanOptions(), Convert.ToString(configuration.Dimensions.OutsideAlign));
+            SetComboItems(EditorView.DimensionLineForcedComboBox, BooleanOptions(), Convert.ToString(configuration.Dimensions.ForceDimensionLine));
+            SetComboItems(EditorView.DimensionTextInsideComboBox, BooleanOptions(), Convert.ToString(configuration.Dimensions.ForceTextInside));
+            SetComboItems(EditorView.DimensionTextAlignmentComboBox, BooleanOptions(), Convert.ToString(configuration.Dimensions.TextRelativeToDimensionLine));
+            SetComboItems(EditorView.DimensionTextPlacementComboBox, Enumerable.Range(0, 5).Select(i => Convert.ToString(i)), Convert.ToString(configuration.Dimensions.TextVerticalPosition));
+            SetComboItems(EditorView.DimensionBaseLayerComboBox, DimensionBaseLayers(), configuration.Dimensions.BaseLayer);
         }
 
         private void SetComboItems(ComboBox comboBox, IEnumerable<string> values, string selectedValue)
@@ -400,9 +400,9 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void PopulateEditorComboBoxes()
         {
-            SetComboItems(EditorView.TeklaTextLayerComboBox, PreferredLayerFirst("DRAWING SHEET"), configuration.LayerTeklaString);
-            SetComboItems(EditorView.FormatBlockLayerComboBox, PreferredLayerFirst("OTHER OBJECT TYPE"), configuration.LayerBlockAttribute);
-            SetComboItems(EditorView.ScaleLayerComboBox, arranjos.allNewLayer.Concat(arranjos.allBaseLayer), configuration.EXTSCALELayer);
+            SetComboItems(EditorView.TeklaTextLayerComboBox, PreferredLayerFirst("DRAWING SHEET"), configuration.Layers.TeklaDrawingSheetLayer);
+            SetComboItems(EditorView.FormatBlockLayerComboBox, PreferredLayerFirst("OTHER OBJECT TYPE"), configuration.Layers.BlockAttributeLayer);
+            SetComboItems(EditorView.ScaleLayerComboBox, arranjos.allNewLayer.Concat(arranjos.allBaseLayer), configuration.Scale.Layer);
         }
 
         private void ClientLayersConfigurationChanged(object sender, EventArgs e)
@@ -702,64 +702,64 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void LoadConfigurationToControls()
         {
             DisposeTeklaDrawingBlock();
-            ConverterView.TemplateCommentsTextBox.Text = configuration.EXTCONFComments ?? string.Empty;
-            EditorView.AddCommentsTextBox.Text = configuration.EXTCONFComments ?? string.Empty;
-            EditorView.ConvertDimensionsCheckBox.IsChecked = configuration.EXTCONFIsConvertDimension;
-            EditorView.ConvertLayersCheckBox.IsChecked = configuration.EXTCONFIsConvertLayer;
-            EditorView.ScaleDrawingCheckBox.IsChecked = configuration.EXTCONFIsPutOnTheScaleDrawing;
-            EditorView.AttributeFormatCheckBox.IsChecked = configuration.EXTCONFIsExchangeFormat;
-            EditorView.RunCommandsCheckBox.IsChecked = configuration.EXTCONFIsExecuteLISP;
-            EditorView.ShowErrorMessagesCheckBox.IsChecked = configuration.PROGRAMMessage;
-            EditorView.DeleteTeklaCheckBox.IsChecked = configuration.EXTCONFIsDeleteTeklaStructures;
-            EditorView.PurgeCheckBox.IsChecked = configuration.EXTCONFIsPurge;
-            EditorView.ExplodeCheckBox.IsChecked = configuration.EXTCONFInventorExplode;
-            EditorView.ExplodeBlocksCheckBox.IsChecked = configuration.ExplodeBlocks;
-            EditorView.DmBlockCheckBox.IsChecked = configuration.DMBlock;
-            EditorView.TeklaOriginRadio.IsChecked = configuration.EXTCONFOrigem == 0;
-            EditorView.CadOriginRadio.IsChecked = configuration.EXTCONFOrigem != 0;
-            EditorView.AttributedFormatPathTextBox.Text = configuration.PROGRAMblockFormatoCaminho;
-            EditorView.CadBlocksPathTextBox.Text = configuration.EXTCONFCaminhoBlocoInv;
-            EditorView.OriginalBlocksPathTextBox.Text = configuration.EXTCONFCaminhoBlocoInv;
+            ConverterView.TemplateCommentsTextBox.Text = configuration.Comments ?? string.Empty;
+            EditorView.AddCommentsTextBox.Text = configuration.Comments ?? string.Empty;
+            EditorView.ConvertDimensionsCheckBox.IsChecked = configuration.General.ConvertDimensions;
+            EditorView.ConvertLayersCheckBox.IsChecked = configuration.General.ConvertLayers;
+            EditorView.ScaleDrawingCheckBox.IsChecked = configuration.General.ApplyDrawingScale;
+            EditorView.AttributeFormatCheckBox.IsChecked = configuration.General.ExchangeFormat;
+            EditorView.RunCommandsCheckBox.IsChecked = configuration.General.ExecuteLisp;
+            EditorView.ShowErrorMessagesCheckBox.IsChecked = configuration.General.ShowMessages;
+            EditorView.DeleteTeklaCheckBox.IsChecked = configuration.General.DeleteTeklaStructures;
+            EditorView.PurgeCheckBox.IsChecked = configuration.General.Purge;
+            EditorView.ExplodeCheckBox.IsChecked = configuration.General.InventorExplode;
+            EditorView.ExplodeBlocksCheckBox.IsChecked = configuration.General.ExplodeBlocks;
+            EditorView.DmBlockCheckBox.IsChecked = configuration.Blocks.DimensionBlockEnabled;
+            EditorView.TeklaOriginRadio.IsChecked = configuration.General.SourceMode == 0;
+            EditorView.CadOriginRadio.IsChecked = configuration.General.SourceMode != 0;
+            EditorView.AttributedFormatPathTextBox.Text = configuration.Blocks.TeklaBlockPath;
+            EditorView.CadBlocksPathTextBox.Text = configuration.Blocks.CadBlockPath;
+            EditorView.OriginalBlocksPathTextBox.Text = configuration.Blocks.CadBlockPath;
             EditorView.ClientLayersControl.LoadArranjos(arranjos);
             EditorView.ClientTextStylesControl.LoadArranjos(arranjos);
             PopulateEditorComboBoxes();
             RefreshLayerRuleRows();
             RefreshRemoveLayerViews();
             RefreshExplodeLayerViews();
-            EditorView.TeklaTextLayerComboBox.Text = configuration.LayerTeklaString;
-            EditorView.FormatBlockLayerComboBox.Text = configuration.LayerBlockAttribute;
-            EditorView.LayerLtScaleTextBox.Text = Convert.ToString(configuration.EXTLINELtscale);
+            EditorView.TeklaTextLayerComboBox.Text = configuration.Layers.TeklaDrawingSheetLayer;
+            EditorView.FormatBlockLayerComboBox.Text = configuration.Layers.BlockAttributeLayer;
+            EditorView.LayerLtScaleTextBox.Text = Convert.ToString(configuration.Lines.LineTypeScale);
             PopulateDimensionComboBoxes();
-            EditorView.DimensionLayerComboBox.Text = configuration.EXTDIMlayer;
-            EditorView.DimensionStyleTextBox.Text = configuration.EXTDIMStyleName;
-            EditorView.DimensionLineColorComboBox.Text = configuration.EXTDIMColorLine;
-            EditorView.DimensionTextColorComboBox.Text = configuration.EXTDIMColorText;
-            EditorView.DimensionArrowTypeComboBox.Text = configuration.EXTDIMSeta;
-            EditorView.DimensionTextStyleComboBox.Text = configuration.EXTTEXTStyleName;
-            EditorView.DimensionScaleTextBox.Text = Convert.ToString(configuration.EXTDIMScale);
-            EditorView.DimensionArrowSizeTextBox.Text = Convert.ToString(configuration.EXTDIMSizeSeta);
-            EditorView.DimensionOffsetTextBox.Text = Convert.ToString(configuration.EXTDIMOffsetLineFromRefPoint);
-            EditorView.DimensionLineExtTextBox.Text = Convert.ToString(configuration.EXTDIMDIMEX);
-            EditorView.DimensionLinearPrecisionComboBox.Text = Convert.ToString(configuration.EXTDIMPrecision);
-            EditorView.DimensionAngularPrecisionComboBox.Text = Convert.ToString(configuration.EXTDIMAngularPrecision);
-            EditorView.DimensionLinearUnitComboBox.Text = Convert.ToString(configuration.EXTDIMUnit);
-            EditorView.DimensionAngularUnitComboBox.Text = Convert.ToString(configuration.EXTDIMAngularUnit);
-            EditorView.DimensionOutsideAlignComboBox.Text = Convert.ToString(configuration.EXTDIMOutsideAlign);
-            EditorView.DimensionLineForcedComboBox.Text = Convert.ToString(configuration.EXTDIMLineForced);
-            EditorView.DimensionTextInsideComboBox.Text = Convert.ToString(configuration.EXTDIMTextForced);
-            EditorView.DimensionTextAlignmentComboBox.Text = Convert.ToString(configuration.EXTDIMDimensionPosition);
-            EditorView.DimensionTextPlacementComboBox.Text = Convert.ToString(configuration.EXTDIMTad);
-            EditorView.DimensionBaseLayerComboBox.Text = configuration.EXTDIMBaseLayer;
-            EditorView.ManualScaleRadio.IsChecked = configuration.EXTSCALEManual;
-            EditorView.AutoScaleRadio.IsChecked = !configuration.EXTSCALEManual;
-            EditorView.ScaleP1XTextBox.Text = Convert.ToString(configuration.EXTSCALEp1.X);
-            EditorView.ScaleP1YTextBox.Text = Convert.ToString(configuration.EXTSCALEp1.Y);
-            EditorView.ScaleP1ZTextBox.Text = Convert.ToString(configuration.EXTSCALEp1.Z);
-            EditorView.ScaleP2XTextBox.Text = Convert.ToString(configuration.EXTSCALEp2.X);
-            EditorView.ScaleP2YTextBox.Text = Convert.ToString(configuration.EXTSCALEp2.Y);
-            EditorView.ScaleP2ZTextBox.Text = Convert.ToString(configuration.EXTSCALEp2.Z);
-            EditorView.ScaleLayerComboBox.Text = configuration.EXTSCALELayer;
-            EditorView.ScaleTextSizeTextBox.Text = Convert.ToString(configuration.EXTSCALETextSize);
+            EditorView.DimensionLayerComboBox.Text = configuration.Dimensions.Layer;
+            EditorView.DimensionStyleTextBox.Text = configuration.Dimensions.StyleName;
+            EditorView.DimensionLineColorComboBox.Text = configuration.Dimensions.LineColor;
+            EditorView.DimensionTextColorComboBox.Text = configuration.Dimensions.TextColor;
+            EditorView.DimensionArrowTypeComboBox.Text = configuration.Dimensions.ArrowType;
+            EditorView.DimensionTextStyleComboBox.Text = configuration.Text.DefaultStyleName;
+            EditorView.DimensionScaleTextBox.Text = Convert.ToString(configuration.Dimensions.Scale);
+            EditorView.DimensionArrowSizeTextBox.Text = Convert.ToString(configuration.Dimensions.ArrowSize);
+            EditorView.DimensionOffsetTextBox.Text = Convert.ToString(configuration.Dimensions.OffsetLineFromReferencePoint);
+            EditorView.DimensionLineExtTextBox.Text = Convert.ToString(configuration.Dimensions.ExtensionLineOffset);
+            EditorView.DimensionLinearPrecisionComboBox.Text = Convert.ToString(configuration.Dimensions.Precision);
+            EditorView.DimensionAngularPrecisionComboBox.Text = Convert.ToString(configuration.Dimensions.AngularPrecision);
+            EditorView.DimensionLinearUnitComboBox.Text = Convert.ToString(configuration.Dimensions.Unit);
+            EditorView.DimensionAngularUnitComboBox.Text = Convert.ToString(configuration.Dimensions.AngularUnit);
+            EditorView.DimensionOutsideAlignComboBox.Text = Convert.ToString(configuration.Dimensions.OutsideAlign);
+            EditorView.DimensionLineForcedComboBox.Text = Convert.ToString(configuration.Dimensions.ForceDimensionLine);
+            EditorView.DimensionTextInsideComboBox.Text = Convert.ToString(configuration.Dimensions.ForceTextInside);
+            EditorView.DimensionTextAlignmentComboBox.Text = Convert.ToString(configuration.Dimensions.TextRelativeToDimensionLine);
+            EditorView.DimensionTextPlacementComboBox.Text = Convert.ToString(configuration.Dimensions.TextVerticalPosition);
+            EditorView.DimensionBaseLayerComboBox.Text = configuration.Dimensions.BaseLayer;
+            EditorView.ManualScaleRadio.IsChecked = configuration.Scale.Manual;
+            EditorView.AutoScaleRadio.IsChecked = !configuration.Scale.Manual;
+            EditorView.ScaleP1XTextBox.Text = Convert.ToString(configuration.Scale.Point1.X);
+            EditorView.ScaleP1YTextBox.Text = Convert.ToString(configuration.Scale.Point1.Y);
+            EditorView.ScaleP1ZTextBox.Text = Convert.ToString(configuration.Scale.Point1.Z);
+            EditorView.ScaleP2XTextBox.Text = Convert.ToString(configuration.Scale.Point2.X);
+            EditorView.ScaleP2YTextBox.Text = Convert.ToString(configuration.Scale.Point2.Y);
+            EditorView.ScaleP2ZTextBox.Text = Convert.ToString(configuration.Scale.Point2.Z);
+            EditorView.ScaleLayerComboBox.Text = configuration.Scale.Layer;
+            EditorView.ScaleTextSizeTextBox.Text = Convert.ToString(configuration.Scale.TextSize);
             lispCommands.Clear();
             foreach (string command in arranjos.listLISPCommand)
             {
@@ -771,55 +771,55 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void ReadConfigurationFromControls()
         {
-            configuration.EXTCONFComments = EditorView.AddCommentsTextBox.Text;
-            configuration.EXTCONFIsConvertDimension = EditorView.ConvertDimensionsCheckBox.IsChecked == true;
-            configuration.EXTCONFIsConvertLayer = EditorView.ConvertLayersCheckBox.IsChecked == true;
-            configuration.EXTCONFIsPutOnTheScaleDrawing = EditorView.ScaleDrawingCheckBox.IsChecked == true;
-            configuration.EXTCONFIsExchangeFormat = EditorView.AttributeFormatCheckBox.IsChecked == true;
-            configuration.EXTCONFIsExecuteLISP = EditorView.RunCommandsCheckBox.IsChecked == true;
-            configuration.PROGRAMMessage = EditorView.ShowErrorMessagesCheckBox.IsChecked == true;
-            configuration.EXTCONFIsDeleteTeklaStructures = EditorView.DeleteTeklaCheckBox.IsChecked == true;
-            configuration.EXTCONFIsPurge = EditorView.PurgeCheckBox.IsChecked == true;
-            configuration.EXTCONFInventorExplode = EditorView.ExplodeCheckBox.IsChecked == true;
-            configuration.ExplodeBlocks = EditorView.ExplodeBlocksCheckBox.IsChecked == true;
-            configuration.DMBlock = EditorView.DmBlockCheckBox.IsChecked == true;
-            configuration.EXTCONFOrigem = EditorView.TeklaOriginRadio.IsChecked == true ? 0 : 1;
-            configuration.PROGRAMblockFormatoCaminho = EditorView.AttributedFormatPathTextBox.Text;
-            configuration.EXTCONFCaminhoBlocoInv = string.IsNullOrWhiteSpace(EditorView.OriginalBlocksPathTextBox.Text)
+            configuration.Comments = EditorView.AddCommentsTextBox.Text;
+            configuration.General.ConvertDimensions = EditorView.ConvertDimensionsCheckBox.IsChecked == true;
+            configuration.General.ConvertLayers = EditorView.ConvertLayersCheckBox.IsChecked == true;
+            configuration.General.ApplyDrawingScale = EditorView.ScaleDrawingCheckBox.IsChecked == true;
+            configuration.General.ExchangeFormat = EditorView.AttributeFormatCheckBox.IsChecked == true;
+            configuration.General.ExecuteLisp = EditorView.RunCommandsCheckBox.IsChecked == true;
+            configuration.General.ShowMessages = EditorView.ShowErrorMessagesCheckBox.IsChecked == true;
+            configuration.General.DeleteTeklaStructures = EditorView.DeleteTeklaCheckBox.IsChecked == true;
+            configuration.General.Purge = EditorView.PurgeCheckBox.IsChecked == true;
+            configuration.General.InventorExplode = EditorView.ExplodeCheckBox.IsChecked == true;
+            configuration.General.ExplodeBlocks = EditorView.ExplodeBlocksCheckBox.IsChecked == true;
+            configuration.Blocks.DimensionBlockEnabled = EditorView.DmBlockCheckBox.IsChecked == true;
+            configuration.General.SourceMode = EditorView.TeklaOriginRadio.IsChecked == true ? 0 : 1;
+            configuration.Blocks.TeklaBlockPath = EditorView.AttributedFormatPathTextBox.Text;
+            configuration.Blocks.CadBlockPath = string.IsNullOrWhiteSpace(EditorView.OriginalBlocksPathTextBox.Text)
                 ? EditorView.CadBlocksPathTextBox.Text
                 : EditorView.OriginalBlocksPathTextBox.Text;
-            configuration.LayerTeklaString = EditorView.TeklaTextLayerComboBox.Text;
-            configuration.LayerBlockAttribute = EditorView.FormatBlockLayerComboBox.Text;
-            configuration.EXTLINELtscale = ReadDouble(EditorView.LayerLtScaleTextBox.Text, configuration.EXTLINELtscale);
-            configuration.EXTDIMlayer = EditorView.DimensionLayerComboBox.Text;
-            configuration.EXTDIMStyleName = EditorView.DimensionStyleTextBox.Text;
-            configuration.EXTDIMColorLine = EditorView.DimensionLineColorComboBox.Text;
-            configuration.EXTDIMColorText = EditorView.DimensionTextColorComboBox.Text;
-            configuration.EXTDIMSeta = EditorView.DimensionArrowTypeComboBox.Text;
-            configuration.EXTTEXTStyleName = EditorView.DimensionTextStyleComboBox.Text;
-            configuration.EXTDIMScale = ReadDouble(EditorView.DimensionScaleTextBox.Text, configuration.EXTDIMScale);
-            configuration.EXTDIMSizeSeta = ReadDouble(EditorView.DimensionArrowSizeTextBox.Text, configuration.EXTDIMSizeSeta);
-            configuration.EXTDIMOffsetLineFromRefPoint = ReadDouble(EditorView.DimensionOffsetTextBox.Text, configuration.EXTDIMOffsetLineFromRefPoint);
-            configuration.EXTDIMDIMEX = ReadDouble(EditorView.DimensionLineExtTextBox.Text, configuration.EXTDIMDIMEX);
-            configuration.EXTDIMPrecision = ReadInt(EditorView.DimensionLinearPrecisionComboBox.Text, configuration.EXTDIMPrecision);
-            configuration.EXTDIMAngularPrecision = ReadInt(EditorView.DimensionAngularPrecisionComboBox.Text, configuration.EXTDIMAngularPrecision);
-            configuration.EXTDIMUnit = ReadInt(EditorView.DimensionLinearUnitComboBox.Text, configuration.EXTDIMUnit);
-            configuration.EXTDIMAngularUnit = ReadInt(EditorView.DimensionAngularUnitComboBox.Text, configuration.EXTDIMAngularUnit);
-            configuration.EXTDIMOutsideAlign = ReadBool(EditorView.DimensionOutsideAlignComboBox.Text, configuration.EXTDIMOutsideAlign);
-            configuration.EXTDIMLineForced = ReadBool(EditorView.DimensionLineForcedComboBox.Text, configuration.EXTDIMLineForced);
-            configuration.EXTDIMTextForced = ReadBool(EditorView.DimensionTextInsideComboBox.Text, configuration.EXTDIMTextForced);
-            configuration.EXTDIMDimensionPosition = ReadBool(EditorView.DimensionTextAlignmentComboBox.Text, configuration.EXTDIMDimensionPosition);
-            configuration.EXTDIMTad = ReadInt(EditorView.DimensionTextPlacementComboBox.Text, configuration.EXTDIMTad);
-            configuration.EXTDIMBaseLayer = EditorView.DimensionBaseLayerComboBox.Text;
-            configuration.EXTSCALEManual = EditorView.ManualScaleRadio.IsChecked == true;
-            configuration.EXTSCALEp1.X = ReadDouble(EditorView.ScaleP1XTextBox.Text, configuration.EXTSCALEp1.X);
-            configuration.EXTSCALEp1.Y = ReadDouble(EditorView.ScaleP1YTextBox.Text, configuration.EXTSCALEp1.Y);
-            configuration.EXTSCALEp1.Z = ReadDouble(EditorView.ScaleP1ZTextBox.Text, configuration.EXTSCALEp1.Z);
-            configuration.EXTSCALEp2.X = ReadDouble(EditorView.ScaleP2XTextBox.Text, configuration.EXTSCALEp2.X);
-            configuration.EXTSCALEp2.Y = ReadDouble(EditorView.ScaleP2YTextBox.Text, configuration.EXTSCALEp2.Y);
-            configuration.EXTSCALEp2.Z = ReadDouble(EditorView.ScaleP2ZTextBox.Text, configuration.EXTSCALEp2.Z);
-            configuration.EXTSCALELayer = EditorView.ScaleLayerComboBox.Text;
-            configuration.EXTSCALETextSize = ReadDouble(EditorView.ScaleTextSizeTextBox.Text, configuration.EXTSCALETextSize);
+            configuration.Layers.TeklaDrawingSheetLayer = EditorView.TeklaTextLayerComboBox.Text;
+            configuration.Layers.BlockAttributeLayer = EditorView.FormatBlockLayerComboBox.Text;
+            configuration.Lines.LineTypeScale = ReadDouble(EditorView.LayerLtScaleTextBox.Text, configuration.Lines.LineTypeScale);
+            configuration.Dimensions.Layer = EditorView.DimensionLayerComboBox.Text;
+            configuration.Dimensions.StyleName = EditorView.DimensionStyleTextBox.Text;
+            configuration.Dimensions.LineColor = EditorView.DimensionLineColorComboBox.Text;
+            configuration.Dimensions.TextColor = EditorView.DimensionTextColorComboBox.Text;
+            configuration.Dimensions.ArrowType = EditorView.DimensionArrowTypeComboBox.Text;
+            configuration.Text.DefaultStyleName = EditorView.DimensionTextStyleComboBox.Text;
+            configuration.Dimensions.Scale = ReadDouble(EditorView.DimensionScaleTextBox.Text, configuration.Dimensions.Scale);
+            configuration.Dimensions.ArrowSize = ReadDouble(EditorView.DimensionArrowSizeTextBox.Text, configuration.Dimensions.ArrowSize);
+            configuration.Dimensions.OffsetLineFromReferencePoint = ReadDouble(EditorView.DimensionOffsetTextBox.Text, configuration.Dimensions.OffsetLineFromReferencePoint);
+            configuration.Dimensions.ExtensionLineOffset = ReadDouble(EditorView.DimensionLineExtTextBox.Text, configuration.Dimensions.ExtensionLineOffset);
+            configuration.Dimensions.Precision = ReadInt(EditorView.DimensionLinearPrecisionComboBox.Text, configuration.Dimensions.Precision);
+            configuration.Dimensions.AngularPrecision = ReadInt(EditorView.DimensionAngularPrecisionComboBox.Text, configuration.Dimensions.AngularPrecision);
+            configuration.Dimensions.Unit = ReadInt(EditorView.DimensionLinearUnitComboBox.Text, configuration.Dimensions.Unit);
+            configuration.Dimensions.AngularUnit = ReadInt(EditorView.DimensionAngularUnitComboBox.Text, configuration.Dimensions.AngularUnit);
+            configuration.Dimensions.OutsideAlign = ReadBool(EditorView.DimensionOutsideAlignComboBox.Text, configuration.Dimensions.OutsideAlign);
+            configuration.Dimensions.ForceDimensionLine = ReadBool(EditorView.DimensionLineForcedComboBox.Text, configuration.Dimensions.ForceDimensionLine);
+            configuration.Dimensions.ForceTextInside = ReadBool(EditorView.DimensionTextInsideComboBox.Text, configuration.Dimensions.ForceTextInside);
+            configuration.Dimensions.TextRelativeToDimensionLine = ReadBool(EditorView.DimensionTextAlignmentComboBox.Text, configuration.Dimensions.TextRelativeToDimensionLine);
+            configuration.Dimensions.TextVerticalPosition = ReadInt(EditorView.DimensionTextPlacementComboBox.Text, configuration.Dimensions.TextVerticalPosition);
+            configuration.Dimensions.BaseLayer = EditorView.DimensionBaseLayerComboBox.Text;
+            configuration.Scale.Manual = EditorView.ManualScaleRadio.IsChecked == true;
+            configuration.Scale.Point1.X = ReadDouble(EditorView.ScaleP1XTextBox.Text, configuration.Scale.Point1.X);
+            configuration.Scale.Point1.Y = ReadDouble(EditorView.ScaleP1YTextBox.Text, configuration.Scale.Point1.Y);
+            configuration.Scale.Point1.Z = ReadDouble(EditorView.ScaleP1ZTextBox.Text, configuration.Scale.Point1.Z);
+            configuration.Scale.Point2.X = ReadDouble(EditorView.ScaleP2XTextBox.Text, configuration.Scale.Point2.X);
+            configuration.Scale.Point2.Y = ReadDouble(EditorView.ScaleP2YTextBox.Text, configuration.Scale.Point2.Y);
+            configuration.Scale.Point2.Z = ReadDouble(EditorView.ScaleP2ZTextBox.Text, configuration.Scale.Point2.Z);
+            configuration.Scale.Layer = EditorView.ScaleLayerComboBox.Text;
+            configuration.Scale.TextSize = ReadDouble(EditorView.ScaleTextSizeTextBox.Text, configuration.Scale.TextSize);
             EditorView.ClientLayersControl.ApplyRowsToArranjos(false);
             EditorView.ClientTextStylesControl.ApplyRowsToArranjos();
             SaveLayerRuleRowsToArranjos();
@@ -1075,12 +1075,12 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.ScaleP2YTextBox.Text = Convert.ToString(p2.Y);
             EditorView.ScaleP2ZTextBox.Text = Convert.ToString(p2.Z);
 
-            configuration.EXTSCALEp1.X = p1.X;
-            configuration.EXTSCALEp1.Y = p1.Y;
-            configuration.EXTSCALEp1.Z = p1.Z;
-            configuration.EXTSCALEp2.X = p2.X;
-            configuration.EXTSCALEp2.Y = p2.Y;
-            configuration.EXTSCALEp2.Z = p2.Z;
+            configuration.Scale.Point1.X = p1.X;
+            configuration.Scale.Point1.Y = p1.Y;
+            configuration.Scale.Point1.Z = p1.Z;
+            configuration.Scale.Point2.X = p2.X;
+            configuration.Scale.Point2.Y = p2.Y;
+            configuration.Scale.Point2.Z = p2.Z;
         }
 
         private List<Block> DeduplicateBlocks(List<Block> blocks)

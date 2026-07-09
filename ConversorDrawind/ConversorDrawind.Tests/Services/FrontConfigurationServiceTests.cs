@@ -30,7 +30,7 @@ public sealed class FrontConfigurationServiceTests
         var result = ConversionPreflightValidator.ValidateFormatPath(configuration);
 
         Assert.False(result.CanConvert);
-        Assert.Equal(configuration.PROGRAMblockFormatoCaminho, result.MissingFormatPath);
+        Assert.Equal(configuration.Blocks.TeklaBlockPath, result.MissingFormatPath);
     }
 
     [Fact]

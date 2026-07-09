@@ -6,7 +6,7 @@ namespace ConversorDrawindDLL
     {
         internal static void ShowWarningIfEnabled(string message)
         {
-            if (!Configuration.Config.PROGRAMMessage)
+            if (!Configuration.Config.General.ShowMessages)
                 return;
 
             FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },

@@ -13,15 +13,15 @@ namespace ConversorDrawindDLL
 
         internal void CreateLayersIfEnabled()
         {
-            if (!Configuration.Config.EXTCONFIsConvertLayer)
+            if (!Configuration.Config.General.ConvertLayers)
                 return;
 
             stepRunner.Run(
                 "Criando novos layers ",
                 () =>
                 {
-                    if (Configuration.Config.ConvTekla0ConvInv1 == 0 && Configuration.Config.EXTLINELtscale != 0)
-                        scaleWorkflow.ApplyLineTypeScale(Configuration.Config.EXTLINELtscale);
+                    if (Configuration.Config.General.ConverterType == 0 && Configuration.Config.Lines.LineTypeScale != 0)
+                        scaleWorkflow.ApplyLineTypeScale(Configuration.Config.Lines.LineTypeScale);
                     ConvertLayer.CreateAndAssignALayer();
                 },
                 "Erro 13",
@@ -31,9 +31,9 @@ namespace ConversorDrawindDLL
 
         internal void CreateTextStylesIfNeeded()
         {
-            if (!Configuration.Config.EXTCONFIsConvertLayer &&
-                !Configuration.Config.EXTCONFIsConvertDimension &&
-                Configuration.Config.ConvTekla0ConvInv1 != 1)
+            if (!Configuration.Config.General.ConvertLayers &&
+                !Configuration.Config.General.ConvertDimensions &&
+                Configuration.Config.General.ConverterType != 1)
                 return;
 
             stepRunner.Run(
@@ -46,14 +46,14 @@ namespace ConversorDrawindDLL
 
         internal void ConvertDimensionsIfEnabled()
         {
-            if (!Configuration.Config.EXTCONFIsConvertDimension || Configuration.Config.ConvTekla0ConvInv1 != 0)
+            if (!Configuration.Config.General.ConvertDimensions || Configuration.Config.General.ConverterType != 0)
                 return;
 
             stepRunner.Run(
                 "Convertendo as dimensões ",
                 () =>
                 {
-                    scaleWorkflow.ApplyDimensionScale(Configuration.Config.EXTDIMScale);
+                    scaleWorkflow.ApplyDimensionScale(Configuration.Config.Dimensions.Scale);
                     new ConvertDimension().ConvertD();
                 },
                 "Erro 15",
@@ -63,7 +63,7 @@ namespace ConversorDrawindDLL
 
         internal void RunTeklaInverseConversionIfNeeded()
         {
-            if (Configuration.Config.ConvTekla0ConvInv1 != 1)
+            if (Configuration.Config.General.ConverterType != 1)
                 return;
 
             stepRunner.Run(
@@ -83,11 +83,11 @@ namespace ConversorDrawindDLL
 
         internal void ExplodeBlocksIfConfigured()
         {
-            if ((!Configuration.Config.EXTCONFIsDeleteTeklaStructures &&
-                 !Configuration.Config.EXTCONFIsConvertLayer &&
-                 !Configuration.Config.EXTCONFIsPutOnTheScaleDrawing) ||
-                !Configuration.Config.ExplodeBlocks ||
-                Configuration.Config.ConvTekla0ConvInv1 != 0)
+            if ((!Configuration.Config.General.DeleteTeklaStructures &&
+                 !Configuration.Config.General.ConvertLayers &&
+                 !Configuration.Config.General.ApplyDrawingScale) ||
+                !Configuration.Config.General.ExplodeBlocks ||
+                Configuration.Config.General.ConverterType != 0)
                 return;
 
             stepRunner.Run(
@@ -100,7 +100,7 @@ namespace ConversorDrawindDLL
 
         internal void AddDmBlockIfEnabled()
         {
-            if (!Configuration.Config.DMBlock)
+            if (!Configuration.Config.Blocks.DimensionBlockEnabled)
                 return;
 
             stepRunner.Run(
@@ -113,14 +113,14 @@ namespace ConversorDrawindDLL
 
         internal void DeleteTeklaStructuresIfEnabled()
         {
-            if (!Configuration.Config.EXTCONFIsDeleteTeklaStructures || Configuration.Config.ConvTekla0ConvInv1 != 0)
+            if (!Configuration.Config.General.DeleteTeklaStructures || Configuration.Config.General.ConverterType != 0)
                 return;
 
             stepRunner.Run(
                 "Excluindo a palavra \"Tekla structures\" ",
                 () =>
                 {
-                    ConvertLayer.DeletingTekla(Configuration.Config.LayerTeklaString);
+                    ConvertLayer.DeletingTekla(Configuration.Config.Layers.TeklaDrawingSheetLayer);
                     ConvertLayer.DeletingTekla();
                 },
                 "Erro 19",
@@ -130,7 +130,7 @@ namespace ConversorDrawindDLL
 
         internal void ConvertLayersIfEnabled()
         {
-            if (!Configuration.Config.EXTCONFIsConvertLayer)
+            if (!Configuration.Config.General.ConvertLayers)
                 return;
 
             stepRunner.Run(

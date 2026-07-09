@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -139,67 +139,67 @@ namespace ConversorDrawind
         {
             return new ConfigurationXmlDocument
             {
-                Comments = new CommentsXml { Text = configuration.EXTCONFComments },
+                Comments = new CommentsXml { Text = configuration.Comments },
                 BasicConfig = new BasicConfigXml
                 {
-                    TeklaOrCad = configuration.EXTCONFOrigem,
-                    ConvertDimensions = configuration.EXTCONFIsConvertDimension,
-                    ConvertLayers = configuration.EXTCONFIsConvertLayer,
-                    ExchangeFormat = configuration.EXTCONFIsExchangeFormat,
-                    Scale = configuration.EXTCONFIsPutOnTheScaleDrawing,
-                    LispOrDll = configuration.EXTCONFIsExecuteLISP,
-                    Purge = configuration.EXTCONFIsPurge,
-                    Message = configuration.PROGRAMMessage,
-                    DeleteTeklaStructures = configuration.EXTCONFIsDeleteTeklaStructures,
-                    ExplodeBlocks = configuration.ExplodeBlocks,
-                    LayerTeklaString = configuration.LayerTeklaString,
-                    LayerBlockAttribute = configuration.LayerBlockAttribute,
-                    CadExplode = configuration.EXTCONFInventorExplode,
-                    DmBlock = configuration.DMBlock,
+                    TeklaOrCad = configuration.General.SourceMode,
+                    ConvertDimensions = configuration.General.ConvertDimensions,
+                    ConvertLayers = configuration.General.ConvertLayers,
+                    ExchangeFormat = configuration.General.ExchangeFormat,
+                    Scale = configuration.General.ApplyDrawingScale,
+                    LispOrDll = configuration.General.ExecuteLisp,
+                    Purge = configuration.General.Purge,
+                    Message = configuration.General.ShowMessages,
+                    DeleteTeklaStructures = configuration.General.DeleteTeklaStructures,
+                    ExplodeBlocks = configuration.General.ExplodeBlocks,
+                    LayerTeklaString = configuration.Layers.TeklaDrawingSheetLayer,
+                    LayerBlockAttribute = configuration.Layers.BlockAttributeLayer,
+                    CadExplode = configuration.General.InventorExplode,
+                    DmBlock = configuration.Blocks.DimensionBlockEnabled,
                     DmBlockSpecified = true
                 },
                 DimensionConfig = new DimensionConfigXml
                 {
-                    DimGeralHabilit = configuration.EXTDIMGERALHabilit,
-                    DimLayer = configuration.EXTDIMlayer,
-                    DimLineColor = configuration.EXTDIMColorLine,
-                    DimTextColor = configuration.EXTDIMColorText,
-                    DimStyle = configuration.EXTDIMStyleName,
-                    DimArrowType = configuration.EXTDIMSeta,
-                    DimScale = configuration.EXTDIMScale,
-                    DimPrecision = configuration.EXTDIMPrecision,
-                    DimAngularPrecision = configuration.EXTDIMAngularPrecision,
-                    DimUnit = configuration.EXTDIMUnit,
-                    DimAngularUnit = configuration.EXTDIMAngularUnit,
-                    DimArrowSize = configuration.EXTDIMSizeSeta,
-                    DimOffset = configuration.EXTDIMOffsetLineFromRefPoint,
-                    DimOutsideAling = configuration.EXTDIMOutsideAlign,
-                    DimTad = configuration.EXTDIMTad,
-                    DimPosition = configuration.EXTDIMDimensionPosition,
-                    DimTextForced = configuration.EXTDIMTextForced,
-                    DimLineForced = configuration.EXTDIMLineForced,
-                    DimDimex = configuration.EXTDIMDIMEX,
-                    DimBaseLayer = configuration.EXTDIMBaseLayer,
-                    DimArrowFix = configuration.EXTDIMCorrigeSeta,
-                    DimArrowFixType = configuration.EXTDIMCorrigeSetaTipoSeta,
-                    DimArrowFactor = configuration.EXTDIMCorrigeSetaFactor
+                    DimGeralHabilit = configuration.Dimensions.Enabled,
+                    DimLayer = configuration.Dimensions.Layer,
+                    DimLineColor = configuration.Dimensions.LineColor,
+                    DimTextColor = configuration.Dimensions.TextColor,
+                    DimStyle = configuration.Dimensions.StyleName,
+                    DimArrowType = configuration.Dimensions.ArrowType,
+                    DimScale = configuration.Dimensions.Scale,
+                    DimPrecision = configuration.Dimensions.Precision,
+                    DimAngularPrecision = configuration.Dimensions.AngularPrecision,
+                    DimUnit = configuration.Dimensions.Unit,
+                    DimAngularUnit = configuration.Dimensions.AngularUnit,
+                    DimArrowSize = configuration.Dimensions.ArrowSize,
+                    DimOffset = configuration.Dimensions.OffsetLineFromReferencePoint,
+                    DimOutsideAling = configuration.Dimensions.OutsideAlign,
+                    DimTad = configuration.Dimensions.TextVerticalPosition,
+                    DimPosition = configuration.Dimensions.TextRelativeToDimensionLine,
+                    DimTextForced = configuration.Dimensions.ForceTextInside,
+                    DimLineForced = configuration.Dimensions.ForceDimensionLine,
+                    DimDimex = configuration.Dimensions.ExtensionLineOffset,
+                    DimBaseLayer = configuration.Dimensions.BaseLayer,
+                    DimArrowFix = configuration.Dimensions.FixArrow,
+                    DimArrowFixType = configuration.Dimensions.FixArrowType,
+                    DimArrowFactor = configuration.Dimensions.FixArrowFactor
                 },
-                TextConfig = new TextConfigXml { TextStyleName = configuration.EXTTEXTStyleName },
+                TextConfig = new TextConfigXml { TextStyleName = configuration.Text.DefaultStyleName },
                 ScaleConfig = new ScaleConfigXml
                 {
-                    ScaleMode = configuration.EXTSCALEManual,
-                    ScaleP1X = configuration.EXTSCALEp1.X,
-                    ScaleP1Y = configuration.EXTSCALEp1.Y,
-                    ScaleP1Z = configuration.EXTSCALEp1.Z,
-                    ScaleP2X = configuration.EXTSCALEp2.X,
-                    ScaleP2Y = configuration.EXTSCALEp2.Y,
-                    ScaleP2Z = configuration.EXTSCALEp2.Z,
-                    ScaleLayer = configuration.EXTSCALELayer,
-                    ScaleTextSize = configuration.EXTSCALETextSize
+                    ScaleMode = configuration.Scale.Manual,
+                    ScaleP1X = configuration.Scale.Point1.X,
+                    ScaleP1Y = configuration.Scale.Point1.Y,
+                    ScaleP1Z = configuration.Scale.Point1.Z,
+                    ScaleP2X = configuration.Scale.Point2.X,
+                    ScaleP2Y = configuration.Scale.Point2.Y,
+                    ScaleP2Z = configuration.Scale.Point2.Z,
+                    ScaleLayer = configuration.Scale.Layer,
+                    ScaleTextSize = configuration.Scale.TextSize
                 },
                 BasicLayers = new BasicLayersXml
                 {
-                    LtScale = configuration.EXTLINELtscale,
+                    LtScale = configuration.Lines.LineTypeScale,
                     BaseLayers = arranjos.allBaseLayer.ToList()
                 },
                 BasicLines = new BasicLinesXml { BaseLines = arranjos.allLineType1.ToList() },
@@ -218,8 +218,8 @@ namespace ConversorDrawind
                 Commands = new CommandsXml { Items = arranjos.listLISPCommand.ToList() },
                 BlockConfig = new BlockConfigXml
                 {
-                    DirectoryTeklaConversion = configuration.PROGRAMblockFormatoCaminho,
-                    DirectoryCadConversion = configuration.EXTCONFCaminhoBlocoInv,
+                    DirectoryTeklaConversion = configuration.Blocks.TeklaBlockPath,
+                    DirectoryCadConversion = configuration.Blocks.CadBlockPath,
                     LayerExplode = string.Join(";", arranjos.allExplodeLayers),
                     TeklaBlocks = blocks.Select(CreateTeklaBlock).ToList(),
                     CadBlocks = blocosi.Select(CreateRelatedBlock).ToList(),
@@ -242,66 +242,66 @@ namespace ConversorDrawind
             blocosi.Clear();
             blocoso.Clear();
 
-            configuration.EXTCONFComments = Comments?.Text ?? string.Empty;
+            configuration.Comments = Comments?.Text ?? string.Empty;
 
             var basic = BasicConfig ?? new BasicConfigXml();
-            configuration.EXTCONFOrigem = basic.TeklaOrCad;
-            configuration.ConvTekla0ConvInv1 = basic.TeklaOrCad;
-            configuration.EXTCONFIsConvertDimension = basic.ConvertDimensions;
-            configuration.EXTCONFIsConvertLayer = basic.ConvertLayers;
-            configuration.EXTCONFIsExchangeFormat = basic.ExchangeFormat;
-            configuration.EXTCONFIsPutOnTheScaleDrawing = basic.Scale;
-            configuration.EXTCONFIsExecuteLISP = basic.LispOrDll;
-            configuration.EXTCONFIsPurge = basic.Purge;
-            configuration.PROGRAMMessage = basic.Message;
-            configuration.EXTCONFIsDeleteTeklaStructures = basic.DeleteTeklaStructures;
-            configuration.ExplodeBlocks = basic.ExplodeBlocks;
-            configuration.LayerTeklaString = basic.LayerTeklaString;
-            configuration.LayerBlockAttribute = basic.LayerBlockAttribute;
-            configuration.EXTCONFInventorExplode = basic.CadExplode;
+            configuration.General.SourceMode = basic.TeklaOrCad;
+            configuration.General.ConverterType = basic.TeklaOrCad;
+            configuration.General.ConvertDimensions = basic.ConvertDimensions;
+            configuration.General.ConvertLayers = basic.ConvertLayers;
+            configuration.General.ExchangeFormat = basic.ExchangeFormat;
+            configuration.General.ApplyDrawingScale = basic.Scale;
+            configuration.General.ExecuteLisp = basic.LispOrDll;
+            configuration.General.Purge = basic.Purge;
+            configuration.General.ShowMessages = basic.Message;
+            configuration.General.DeleteTeklaStructures = basic.DeleteTeklaStructures;
+            configuration.General.ExplodeBlocks = basic.ExplodeBlocks;
+            configuration.Layers.TeklaDrawingSheetLayer = basic.LayerTeklaString;
+            configuration.Layers.BlockAttributeLayer = basic.LayerBlockAttribute;
+            configuration.General.InventorExplode = basic.CadExplode;
             if (basic.DmBlockSpecified)
-                configuration.DMBlock = basic.DmBlock;
+                configuration.Blocks.DimensionBlockEnabled = basic.DmBlock;
 
             var dimension = DimensionConfig ?? new DimensionConfigXml();
-            configuration.EXTDIMGERALHabilit = dimension.DimGeralHabilit;
-            configuration.EXTDIMlayer = dimension.DimLayer;
-            configuration.EXTDIMColorLine = dimension.DimLineColor;
-            configuration.EXTDIMColorText = dimension.DimTextColor;
-            configuration.EXTDIMStyleName = dimension.DimStyle;
-            configuration.EXTDIMSeta = dimension.DimArrowType;
-            configuration.EXTDIMScale = dimension.DimScale;
-            configuration.EXTDIMPrecision = dimension.DimPrecision;
-            configuration.EXTDIMAngularPrecision = dimension.DimAngularPrecision;
-            configuration.EXTDIMUnit = dimension.DimUnit;
-            configuration.EXTDIMAngularUnit = dimension.DimAngularUnit;
-            configuration.EXTDIMSizeSeta = dimension.DimArrowSize;
-            configuration.EXTDIMOffsetLineFromRefPoint = dimension.DimOffset;
-            configuration.EXTDIMOutsideAlign = dimension.DimOutsideAling;
-            configuration.EXTDIMTad = dimension.DimTad;
-            configuration.EXTDIMDimensionPosition = dimension.DimPosition;
-            configuration.EXTDIMTextForced = dimension.DimTextForced;
-            configuration.EXTDIMLineForced = dimension.DimLineForced;
-            configuration.EXTDIMDIMEX = dimension.DimDimex;
-            configuration.EXTDIMBaseLayer = dimension.DimBaseLayer;
-            configuration.EXTDIMCorrigeSeta = dimension.DimArrowFix;
-            configuration.EXTDIMCorrigeSetaTipoSeta = dimension.DimArrowFixType;
-            configuration.EXTDIMCorrigeSetaFactor = dimension.DimArrowFactor;
+            configuration.Dimensions.Enabled = dimension.DimGeralHabilit;
+            configuration.Dimensions.Layer = dimension.DimLayer;
+            configuration.Dimensions.LineColor = dimension.DimLineColor;
+            configuration.Dimensions.TextColor = dimension.DimTextColor;
+            configuration.Dimensions.StyleName = dimension.DimStyle;
+            configuration.Dimensions.ArrowType = dimension.DimArrowType;
+            configuration.Dimensions.Scale = dimension.DimScale;
+            configuration.Dimensions.Precision = dimension.DimPrecision;
+            configuration.Dimensions.AngularPrecision = dimension.DimAngularPrecision;
+            configuration.Dimensions.Unit = dimension.DimUnit;
+            configuration.Dimensions.AngularUnit = dimension.DimAngularUnit;
+            configuration.Dimensions.ArrowSize = dimension.DimArrowSize;
+            configuration.Dimensions.OffsetLineFromReferencePoint = dimension.DimOffset;
+            configuration.Dimensions.OutsideAlign = dimension.DimOutsideAling;
+            configuration.Dimensions.TextVerticalPosition = dimension.DimTad;
+            configuration.Dimensions.TextRelativeToDimensionLine = dimension.DimPosition;
+            configuration.Dimensions.ForceTextInside = dimension.DimTextForced;
+            configuration.Dimensions.ForceDimensionLine = dimension.DimLineForced;
+            configuration.Dimensions.ExtensionLineOffset = dimension.DimDimex;
+            configuration.Dimensions.BaseLayer = dimension.DimBaseLayer;
+            configuration.Dimensions.FixArrow = dimension.DimArrowFix;
+            configuration.Dimensions.FixArrowType = dimension.DimArrowFixType;
+            configuration.Dimensions.FixArrowFactor = dimension.DimArrowFactor;
 
             var textConfig = TextConfig ?? new TextConfigXml();
-            configuration.EXTTEXTStyleName = textConfig.TextStyleName;
+            configuration.Text.DefaultStyleName = textConfig.TextStyleName;
 
             var scale = ScaleConfig ?? new ScaleConfigXml();
-            configuration.EXTSCALEManual = scale.ScaleMode;
-            configuration.EXTSCALEp1.X = scale.GetPoint1X();
-            configuration.EXTSCALEp1.Y = scale.GetPoint1Y();
-            configuration.EXTSCALEp1.Z = scale.GetPoint1Z();
-            configuration.EXTSCALEp2.X = scale.GetPoint2X();
-            configuration.EXTSCALEp2.Y = scale.GetPoint2Y();
-            configuration.EXTSCALEp2.Z = scale.GetPoint2Z();
-            configuration.EXTSCALELayer = scale.ScaleLayer;
-            configuration.EXTSCALETextSize = scale.ScaleTextSize;
+            configuration.Scale.Manual = scale.ScaleMode;
+            configuration.Scale.Point1.X = scale.GetPoint1X();
+            configuration.Scale.Point1.Y = scale.GetPoint1Y();
+            configuration.Scale.Point1.Z = scale.GetPoint1Z();
+            configuration.Scale.Point2.X = scale.GetPoint2X();
+            configuration.Scale.Point2.Y = scale.GetPoint2Y();
+            configuration.Scale.Point2.Z = scale.GetPoint2Z();
+            configuration.Scale.Layer = scale.ScaleLayer;
+            configuration.Scale.TextSize = scale.ScaleTextSize;
 
-            configuration.EXTLINELtscale = BasicLayers?.LtScale ?? configuration.EXTLINELtscale;
+            configuration.Lines.LineTypeScale = BasicLayers?.LtScale ?? configuration.Lines.LineTypeScale;
             arranjos.allBaseLayer.AddRange(BasicLayers?.BaseLayers ?? new List<string>());
             arranjos.allLineType1.AddRange(BasicLines?.BaseLines ?? new List<string>());
             arranjos.allNewLayerComposition.AddRange(NewLayers?.Layers ?? new List<string>());
@@ -324,8 +324,8 @@ namespace ConversorDrawind
             arranjos.listLISPCommand.AddRange(Commands?.Items ?? new List<string>());
 
             var blockConfig = BlockConfig ?? new BlockConfigXml();
-            configuration.PROGRAMblockFormatoCaminho = blockConfig.DirectoryTeklaConversion;
-            configuration.EXTCONFCaminhoBlocoInv = blockConfig.DirectoryCadConversion;
+            configuration.Blocks.TeklaBlockPath = blockConfig.DirectoryTeklaConversion;
+            configuration.Blocks.CadBlockPath = blockConfig.DirectoryCadConversion;
             arranjos.allExplodeLayers.AddRange((blockConfig.LayerExplode ?? string.Empty).Split(';'));
 
             blocks.AddRange((blockConfig.TeklaBlocks ?? new List<BlockXml>()).Select(CreateTeklaBlock));

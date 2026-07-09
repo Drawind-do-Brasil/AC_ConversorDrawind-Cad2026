@@ -52,7 +52,7 @@ namespace ConversorDrawind
 
     public static class ConverterConfigurationReader
     {
-        public static ConverterConfiguration Load(string file)
+        public static Configuration Load(string file)
         {
             XDocument document = XDocument.Load(file);
             string version = (string)document.Root.Attribute("VERSION");
@@ -65,7 +65,7 @@ namespace ConversorDrawind
 
     public static class LegacyConfigurationXmlReader
     {
-        public static ConverterConfiguration Load(string file)
+        public static Configuration Load(string file)
         {
             Configuration configuration = new Configuration();
             Arranjos arranjos = new Arranjos();
@@ -88,13 +88,13 @@ namespace ConversorDrawind
 
     public static class StructuredConfigurationXmlWriter
     {
-        public static void Save(string file, ConverterConfiguration configuration)
+        public static void Save(string file, Configuration configuration)
         {
             string directory = Path.GetDirectoryName(file);
             if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
                 Directory.CreateDirectory(directory);
 
-            XDocument document = CreateDocument(configuration ?? new ConverterConfiguration());
+            XDocument document = CreateDocument(configuration ?? new Configuration());
             XmlWriterSettings settings = new XmlWriterSettings
             {
                 Encoding = new UTF8Encoding(false),
@@ -107,7 +107,7 @@ namespace ConversorDrawind
             }
         }
 
-        public static XDocument CreateDocument(ConverterConfiguration configuration)
+        public static XDocument CreateDocument(Configuration configuration)
         {
             return new XDocument(
                 new XElement("CONVERSOR",
@@ -327,10 +327,10 @@ namespace ConversorDrawind
 
     public static class StructuredConfigurationXmlReader
     {
-        public static ConverterConfiguration Read(XDocument document)
+        public static Configuration Read(XDocument document)
         {
             XElement root = document.Root;
-            ConverterConfiguration result = new ConverterConfiguration();
+            Configuration result = new Configuration();
 
             result.Comments = S(root.Element("COMMENTS"), "TEXT");
             ReadGeneral(root.Element("GENERAL"), result.General);

@@ -32,7 +32,7 @@ public sealed class DrawingProcessServiceTests
 
         Assert.Equal("tekla.dwg", DrawingProcessPaths.GetExchangeFormatPath(configuration));
 
-        configuration.EXTCONFOrigem = 1;
+        configuration.General.SourceMode = 1;
 
         Assert.Equal("cad.dwg", DrawingProcessPaths.GetExchangeFormatPath(configuration));
     }

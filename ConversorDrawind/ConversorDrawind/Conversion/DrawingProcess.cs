@@ -1,4 +1,4 @@
-ï»¿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -145,9 +145,9 @@ namespace ConversorDrawind
             }
 
             if (lastComException != null)
-                throw new InvalidOperationException("NÃ£o foi possÃ­vel iniciar o AutoCAD 2026 via COM. Verifique se o AutoCAD 2026 estÃ¡ instalado, ativado e registrado no Windows.", lastComException);
+                throw new InvalidOperationException("Não foi possível iniciar o AutoCAD 2026 via COM. Verifique se o AutoCAD 2026 está instalado, ativado e registrado no Windows.", lastComException);
 
-            throw new InvalidOperationException("AutoCAD 2026 nÃ£o encontrado no registro COM do Windows.");
+            throw new InvalidOperationException("AutoCAD 2026 não encontrado no registro COM do Windows.");
         }
 
 
@@ -183,7 +183,7 @@ namespace ConversorDrawind
                     myClass.acadDocument = myClass._desenhoAtual.First();
                     ComRetry.Invoke(() => myClass.acadDocument.WindowState = ACCOMMON.AcWindowState.acMax);
 
-                    if (parametros.configuration.EXTCONFIsExchangeFormat)
+                    if (parametros.configuration.General.ExchangeFormat)
                     {
                         try
                         {
@@ -195,7 +195,7 @@ namespace ConversorDrawind
                         }
                         catch (Exception)
                         {
-                            throw new ArgumentException("NÃ£o foi possÃ­vel encontrar o formato atributado: " + parametros.configuration.PROGRAMblockFormatoCaminho);
+                            throw new ArgumentException("Não foi possível encontrar o formato atributado: " + parametros.configuration.Blocks.TeklaBlockPath);
                         }
                     }
                 }
@@ -259,7 +259,7 @@ namespace ConversorDrawind
                 Thread.Sleep(CommandPollMs);
             }
 
-            throw new TimeoutException("Tempo limite aguardando execuÃ§Ã£o do comando: " + commandName);
+            throw new TimeoutException("Tempo limite aguardando execução do comando: " + commandName);
         }
 
         public void LoadFile(string file)
@@ -334,7 +334,7 @@ namespace ConversorDrawind
                     if (myClass.acadApplication == null)
                         return;
 
-                    if (parametros.configuration.EXTCONFIsExchangeFormat && myClass._desenhoAtributado != null)
+                    if (parametros.configuration.General.ExchangeFormat && myClass._desenhoAtributado != null)
                     {
                         myClass.acadDocument = myClass._desenhoAtributado;
                         ComRetry.Invoke(() => myClass.acadDocument.Close(false));
@@ -393,7 +393,7 @@ namespace ConversorDrawind
                 {
                     myClass.SendCommand("ZOOM E\n");
                     myClass.SendCommand("DRAWINDCAD_Convert\n");
-                    if (parametros.configuration.EXTCONFIsExchangeFormat)
+                    if (parametros.configuration.General.ExchangeFormat)
                     {
                         myClass.SendCommand("DRAWINDCAD_GetAttributeText\n");
 
@@ -409,7 +409,7 @@ namespace ConversorDrawind
                         myClass.SendCommand("REGEN\n");
                         string pasteClipPoint = GetPasteClipInsertionPoint();
 
-                        if (parametros.configuration.EXTCONFOrigem == 1)
+                        if (parametros.configuration.General.SourceMode == 1)
                         {
 
                             List<Block> listAnterior = GetListBlocksS();
@@ -445,18 +445,18 @@ namespace ConversorDrawind
 
                         myClass.SendCommand("DRAWINDCAD_AttributeBlock\n");
 
-                        if (parametros.configuration.EXTCONFOrigem == 1)
+                        if (parametros.configuration.General.SourceMode == 1)
                         {
                             myClass.SendCommand("DRAWINDCAD_DeleteBlocks\n");
                         }
                     }
 
-                    if (parametros.configuration.EXTCONFIsConvertLayer)
+                    if (parametros.configuration.General.ConvertLayers)
                     {
                         myClass.SendCommand("DRAWINDCAD_DeleteLayers\n");
                     }
 
-                    if (parametros.configuration.EXTCONFIsPutOnTheScaleDrawing)
+                    if (parametros.configuration.General.ApplyDrawingScale)
                     {
                         ApplicationRuntime.ControladorT2 = false;
 
@@ -466,7 +466,7 @@ namespace ConversorDrawind
                     }
 
 
-                    if (parametros.configuration.EXTCONFIsExecuteLISP)
+                    if (parametros.configuration.General.ExecuteLisp)
                     {
                         ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
                         try
@@ -779,7 +779,7 @@ namespace ConversorDrawind
             if (TryGetPtMin(out x, out y, out z))
                 return FormatPoint(x, y, z);
 
-            if (TryGetMinimumPointFromLayer(parametros.configuration.LayerBlockAttribute, out x, out y, out z))
+            if (TryGetMinimumPointFromLayer(parametros.configuration.Layers.BlockAttributeLayer, out x, out y, out z))
                 return FormatPoint(x, y, z);
 
             return "0,0,0";

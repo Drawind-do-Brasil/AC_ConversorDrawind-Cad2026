@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace ConversorDrawind
@@ -22,9 +22,9 @@ namespace ConversorDrawind
 
         public static string GetExchangeFormatPath(Configuration configuration)
         {
-            return configuration.EXTCONFOrigem == 0
-                ? configuration.PROGRAMblockFormatoCaminho
-                : configuration.EXTCONFCaminhoBlocoInv;
+            return configuration.General.SourceMode == 0
+                ? configuration.Blocks.TeklaBlockPath
+                : configuration.Blocks.CadBlockPath;
         }
 
         public static void EnsureConvertedLogDirectory()

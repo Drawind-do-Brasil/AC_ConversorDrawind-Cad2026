@@ -1,4 +1,4 @@
-ï»¿using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
@@ -60,7 +60,7 @@ namespace ConversorDrawindDLL
                         Dimension d = myEntity as Dimension;
                         if (d != null)
                         {
-                            d.Layer = Configuration.Config.EXTDIMlayer;
+                            d.Layer = Configuration.Config.Dimensions.Layer;
                             /*
                             if (d.Dimblk1s.ToUpper() == "DOT")
                             {
@@ -135,7 +135,7 @@ namespace ConversorDrawindDLL
         /// <returns></returns>
         private ObjectId[] FilterDimension()
         {
-            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertOnLayer(Configuration.Config.EXTDIMBaseLayer));
+            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertOnLayer(Configuration.Config.Dimensions.BaseLayer));
             IEntitySelector entitySelector = new AcadEntitySelector(editor);
             ObjectId[] objectIdList = entitySelector.SelectAll(selectionFilter).Value.GetObjectIds();
             return objectIdList;
@@ -158,7 +158,7 @@ namespace ConversorDrawindDLL
 
                 ObjectsInBlock objectsInBlock = GetObjectsInBlock(blockTableRecord);
                 objectsInBlock.matrix3d = blockReference.BlockTransform;
-                objectsInBlock.textStyle = ConvertLayer.GetTextSyleByName(Configuration.Config.EXTTEXTStyleName);
+                objectsInBlock.textStyle = ConvertLayer.GetTextSyleByName(Configuration.Config.Text.DefaultStyleName);
                 objectsInBlock.dimStyle = ds;
 
                 bool IsDimensionTangent = false;
@@ -170,23 +170,23 @@ namespace ConversorDrawindDLL
 
                     if (IsDimensionTangent)
                     {
-                        //Ã‰ uma cota tangante
+                        //É uma cota tangante
                     }
 
                     else if (objectsInBlock.hatchList.Count > 0)
                     {
-                        //Ã‰ uma cota em raio 
+                        //É uma cota em raio 
                     }
 
                     else if (objectsInBlock.arcList.Count > 0)
                     {
-                        //Ã‰ uma cota angular ou em arco]
+                        //É uma cota angular ou em arco]
                         ConvertArcDimension(objectsInBlock, ref blockTableRecord);
                     }
 
                     else
                     {
-                        //Ã‰ uma cota linear ou elevaÃ§Ã£o
+                        //É uma cota linear ou elevação
                         /*
                         ConvertToLayer.Zoom(blockReference.GeometricExtents.MinPoint.TransformBy(objectsInBlock.matrix3d), 
                             blockReference.GeometricExtents.MaxPoint.TransformBy(objectsInBlock.matrix3d));
@@ -449,8 +449,8 @@ namespace ConversorDrawindDLL
                         pTInternal.Rotation = rotation2;
                         pTInternal.WidthFactor = objectsInBlock.dBTextList[i].WidthFactor;
                         pTInternal.TextStyleId = objectsInBlock.textStyle;
-                        pTInternal.Layer = Configuration.Config.EXTDIMlayer;
-                        pTInternal.Color = ConvertLayer.GetColorForName( Configuration.Config.EXTDIMColorText);
+                        pTInternal.Layer = Configuration.Config.Dimensions.Layer;
+                        pTInternal.Color = ConvertLayer.GetColorForName( Configuration.Config.Dimensions.TextColor);
                         pTInternal.Position = tPPInternal;
                        
                         pTInternal.AdjustAlignment(database);
@@ -606,7 +606,7 @@ namespace ConversorDrawindDLL
                         if (objectsInBlock.arcList[j].StartPoint.DistanceTo(objectsInBlock.arcList[j].EndPoint) > distX)
                             distX = objectsInBlock.arcList[j].StartPoint.DistanceTo(objectsInBlock.arcList[j].EndPoint);
                     }
-                    if (distX <  Configuration.Config.EXTDIMSizeSeta * 2)
+                    if (distX <  Configuration.Config.Dimensions.ArrowSize * 2)
                     {
                         CreateAngularDimension3(dimensionProperties,
                                               objectsInBlock.dimStyle);
@@ -689,8 +689,8 @@ namespace ConversorDrawindDLL
             Line line = DimensionEntityFactory.CreateLine(
                 p1,
                 p2,
-                Configuration.Config.EXTDIMlayer,
-                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine));
+                Configuration.Config.Dimensions.Layer,
+                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
             blockTableRecord.AppendEntity(line);
             transaction.AddNewlyCreatedDBObject(line, true);
         }
@@ -706,8 +706,8 @@ namespace ConversorDrawindDLL
             RotatedDimension rotatedDimension = DimensionEntityFactory.CreateRotatedDimension(
                 dimensionProperties,
                 dimStyle,
-                Configuration.Config.EXTDIMlayer,
-                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine));
+                Configuration.Config.Dimensions.Layer,
+                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
             blockTableRecord.AppendEntity(rotatedDimension);
             transaction.AddNewlyCreatedDBObject(rotatedDimension, true);
           
@@ -726,8 +726,8 @@ namespace ConversorDrawindDLL
             Point3AngularDimension lineAngularDimension2 = DimensionEntityFactory.CreateAngularDimension(
                 dimensionProperties,
                 dimStyle,
-                Configuration.Config.EXTDIMlayer,
-                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine));
+                Configuration.Config.Dimensions.Layer,
+                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
             blockTableRecord.AppendEntity(lineAngularDimension2);
             transaction.AddNewlyCreatedDBObject(lineAngularDimension2, true);
 
@@ -742,9 +742,9 @@ namespace ConversorDrawindDLL
             Point3AngularDimension lineAngularDimension2 = DimensionEntityFactory.CreateAngularDimensionWithLargeGap(
                 dimensionProperties,
                 dimStyle,
-                Configuration.Config.EXTDIMlayer,
-                ConvertLayer.GetColorForName(Configuration.Config.EXTDIMColorLine),
-                Configuration.Config.EXTDIMSizeSeta);
+                Configuration.Config.Dimensions.Layer,
+                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor),
+                Configuration.Config.Dimensions.ArrowSize);
             blockTableRecord.AppendEntity(lineAngularDimension2);
             transaction.AddNewlyCreatedDBObject(lineAngularDimension2, true);
 
@@ -868,7 +868,7 @@ namespace ConversorDrawindDLL
             // the lenghts of the two lines the point is actually  
             // on the line segment.  
 
-            // if the point isnâ€™t on the line, return null  
+            // if the point isn’t on the line, return null  
             if (Math.Abs(len1 - segmentLen1) > 0.01 || Math.Abs(len2 - segmentLen2) > 0.01)
                 return null;
 
@@ -881,16 +881,16 @@ namespace ConversorDrawindDLL
         {
             Matrix3d blockTransform = blockReference.BlockTransform;
 
-            // Obter o vetor direÃ§Ã£o da linha
+            // Obter o vetor direção da linha
             Vector3d lineDirection = line.EndPoint.TransformBy(blockTransform) - line.StartPoint.TransformBy(blockTransform);
 
-            // Obter o vetor direÃ§Ã£o do texto
+            // Obter o vetor direção do texto
             Vector3d textDirection = text.AlignmentPoint.TransformBy(blockTransform) - text.Position.TransformBy(blockTransform);
 
-            // Verificar se o vetor direÃ§Ã£o do texto Ã© perpendicular ao vetor direÃ§Ã£o da linha
+            // Verificar se o vetor direção do texto é perpendicular ao vetor direção da linha
             double angle = lineDirection.GetAngleTo(textDirection);
 
-            // Verificar se o Ã¢ngulo entre as linhas Ã© prÃ³ximo de 90 graus
+            // Verificar se o ângulo entre as linhas é próximo de 90 graus
             const double tolerance = 1e-10;
             var resultado = angle - Math.PI / 2;
             var resultado2 = lineDirection.IsParallelTo(textDirection);
@@ -907,7 +907,7 @@ namespace ConversorDrawindDLL
 
             double angle = lineADirection.GetAngleTo(lineBDirection);
 
-            // Verificar se o Ã¢ngulo entre as linhas Ã© prÃ³ximo de 90 graus
+            // Verificar se o ângulo entre as linhas é próximo de 90 graus
             const double tolerance = 0.01;
 
             var degreeAngle = RadianToDegree(angle);

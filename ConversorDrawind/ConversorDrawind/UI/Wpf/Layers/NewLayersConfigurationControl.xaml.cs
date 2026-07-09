@@ -229,7 +229,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     loadThread.Join();
                     ApplicationRuntime.StopStatusThread(statusThread);
 
-                    string filetxt = new global::ConversorDrawind.Configuration().GetPROGRAMDirectoryTemp() + "TempImporNewLayer.Temp";
+                    string filetxt = new global::ConversorDrawind.Configuration().GetTempDirectory() + "TempImporNewLayer.Temp";
                     if (File.Exists(filetxt))
                     {
                         using (StreamReader streamReader = new StreamReader(filetxt, Encoding.UTF8, true))

@@ -16,7 +16,7 @@ namespace ConversorDrawindDLL
                     DimStyleTableRecord dimStyleTableRecord = GetOrCreateStyleRecord(
                         dimStyleTable,
                         transaction,
-                        configuration.EXTDIMStyleName);
+                        configuration.Dimensions.StyleName);
 
                     ApplyConfiguredStyle(dimStyleTableRecord, configuration);
                     id = dimStyleTableRecord.ObjectId;
@@ -94,36 +94,36 @@ namespace ConversorDrawindDLL
 
         private static void ApplyConfiguredStyle(DimStyleTableRecord dimStyleTableRecord, Configuration configuration)
         {
-            dimStyleTableRecord.Dimtxsty = ConvertLayer.GetTextSyleByName(configuration.EXTTEXTStyleName);
-            dimStyleTableRecord.Dimtxt = configuration.EXTTEXTSize;
-            dimStyleTableRecord.Dimscale = configuration.EXTDIMScale;
-            dimStyleTableRecord.Dimdec = configuration.EXTDIMPrecision;
-            dimStyleTableRecord.Dimadec = configuration.EXTDIMAngularPrecision;
-            dimStyleTableRecord.Dimlunit = configuration.EXTDIMUnit;
-            dimStyleTableRecord.Dimaunit = configuration.EXTDIMAngularUnit;
-            dimStyleTableRecord.Dimtad = configuration.EXTDIMTad;
-            dimStyleTableRecord.Dimtih = configuration.EXTDIMDimensionPosition;
-            dimStyleTableRecord.Dimtix = configuration.EXTDIMTextForced;
-            dimStyleTableRecord.Dimtofl = configuration.EXTDIMLineForced;
+            dimStyleTableRecord.Dimtxsty = ConvertLayer.GetTextSyleByName(configuration.Text.DefaultStyleName);
+            dimStyleTableRecord.Dimtxt = configuration.Text.DefaultSize;
+            dimStyleTableRecord.Dimscale = configuration.Dimensions.Scale;
+            dimStyleTableRecord.Dimdec = configuration.Dimensions.Precision;
+            dimStyleTableRecord.Dimadec = configuration.Dimensions.AngularPrecision;
+            dimStyleTableRecord.Dimlunit = configuration.Dimensions.Unit;
+            dimStyleTableRecord.Dimaunit = configuration.Dimensions.AngularUnit;
+            dimStyleTableRecord.Dimtad = configuration.Dimensions.TextVerticalPosition;
+            dimStyleTableRecord.Dimtih = configuration.Dimensions.TextRelativeToDimensionLine;
+            dimStyleTableRecord.Dimtix = configuration.Dimensions.ForceTextInside;
+            dimStyleTableRecord.Dimtofl = configuration.Dimensions.ForceDimensionLine;
             dimStyleTableRecord.Dimblk = ConvertLayer.GetArrowObjectId(
-                ConvertLayer.GetArrowBlockNameString(configuration.EXTDIMSeta));
-            dimStyleTableRecord.Dimasz = configuration.EXTDIMSizeSeta;
-            dimStyleTableRecord.Dimgap = configuration.INTDIMTextOffset;
-            dimStyleTableRecord.Dimclrt = ConvertLayer.GetColorForName(configuration.EXTDIMColorText);
-            dimStyleTableRecord.Dimclre = ConvertLayer.GetColorForName(configuration.EXTDIMColorLine);
-            dimStyleTableRecord.Dimclrd = ConvertLayer.GetColorForName(configuration.EXTDIMColorLine);
-            dimStyleTableRecord.Dimexo = configuration.EXTDIMOffsetLineFromRefPoint;
-            dimStyleTableRecord.Dimtmove = configuration.EXTDIMTextMove;
-            dimStyleTableRecord.Dimtoh = configuration.EXTDIMOutsideAlign;
-            dimStyleTableRecord.Dimexe = configuration.EXTDIMDIMEX;
+                ConvertLayer.GetArrowBlockNameString(configuration.Dimensions.ArrowType));
+            dimStyleTableRecord.Dimasz = configuration.Dimensions.ArrowSize;
+            dimStyleTableRecord.Dimgap = configuration.Dimensions.InternalTextOffset;
+            dimStyleTableRecord.Dimclrt = ConvertLayer.GetColorForName(configuration.Dimensions.TextColor);
+            dimStyleTableRecord.Dimclre = ConvertLayer.GetColorForName(configuration.Dimensions.LineColor);
+            dimStyleTableRecord.Dimclrd = ConvertLayer.GetColorForName(configuration.Dimensions.LineColor);
+            dimStyleTableRecord.Dimexo = configuration.Dimensions.OffsetLineFromReferencePoint;
+            dimStyleTableRecord.Dimtmove = configuration.Dimensions.TextMove;
+            dimStyleTableRecord.Dimtoh = configuration.Dimensions.OutsideAlign;
+            dimStyleTableRecord.Dimexe = configuration.Dimensions.ExtensionLineOffset;
         }
 
         private static void ApplyCommonStyleUpdates(DimStyleTableRecord dimStyleTableRecord, Configuration configuration)
         {
-            dimStyleTableRecord.Dimclrt = ConvertLayer.GetColorForName(configuration.EXTDIMColorText);
-            dimStyleTableRecord.Dimclre = ConvertLayer.GetColorForName(configuration.EXTDIMColorLine);
-            dimStyleTableRecord.Dimclrd = ConvertLayer.GetColorForName(configuration.EXTDIMColorLine);
-            dimStyleTableRecord.Dimtxsty = ConvertLayer.GetTextSyleByName(configuration.EXTTEXTStyleName);
+            dimStyleTableRecord.Dimclrt = ConvertLayer.GetColorForName(configuration.Dimensions.TextColor);
+            dimStyleTableRecord.Dimclre = ConvertLayer.GetColorForName(configuration.Dimensions.LineColor);
+            dimStyleTableRecord.Dimclrd = ConvertLayer.GetColorForName(configuration.Dimensions.LineColor);
+            dimStyleTableRecord.Dimtxsty = ConvertLayer.GetTextSyleByName(configuration.Text.DefaultStyleName);
             dimStyleTableRecord.Dimatfit = 3;
         }
     }

@@ -125,18 +125,18 @@ namespace ConversorDrawindDLL
 
         private ConversionSettings(Configuration configuration)
         {
-            Comments = configuration.EXTCONFComments;
-            ConversionMode = configuration.ConvTekla0ConvInv1;
-            ConvertDimension = configuration.EXTCONFIsConvertDimension;
-            ConvertLayer = configuration.EXTCONFIsConvertLayer;
-            ExchangeFormat = configuration.EXTCONFIsExchangeFormat;
-            PutOnTheScaleDrawing = configuration.EXTCONFIsPutOnTheScaleDrawing;
-            ExecuteLisp = configuration.EXTCONFIsExecuteLISP;
-            Purge = configuration.EXTCONFIsPurge;
-            ShowMessages = configuration.PROGRAMMessage;
-            DeleteTeklaStructures = configuration.EXTCONFIsDeleteTeklaStructures;
-            InventorExplode = configuration.EXTCONFInventorExplode;
-            LineTypeScale = configuration.EXTLINELtscale;
+            Comments = configuration.Comments;
+            ConversionMode = configuration.General.ConverterType;
+            ConvertDimension = configuration.General.ConvertDimensions;
+            ConvertLayer = configuration.General.ConvertLayers;
+            ExchangeFormat = configuration.General.ExchangeFormat;
+            PutOnTheScaleDrawing = configuration.General.ApplyDrawingScale;
+            ExecuteLisp = configuration.General.ExecuteLisp;
+            Purge = configuration.General.Purge;
+            ShowMessages = configuration.General.ShowMessages;
+            DeleteTeklaStructures = configuration.General.DeleteTeklaStructures;
+            InventorExplode = configuration.General.InventorExplode;
+            LineTypeScale = configuration.Lines.LineTypeScale;
         }
 
         internal static ConversionSettings From(Configuration configuration)
@@ -184,12 +184,12 @@ namespace ConversorDrawindDLL
 
         private BlockConversionPlan(Configuration configuration)
         {
-            TeklaFormatBlockPath = configuration.PROGRAMblockFormatoCaminho;
-            InventorFormatBlockPath = configuration.EXTCONFCaminhoBlocoInv;
-            ExchangeDmBlock = configuration.DMBlock;
-            ExplodeBlocks = configuration.ExplodeBlocks;
-            TeklaSheetLayer = configuration.LayerTeklaString;
-            BlockAttributeLayer = configuration.LayerBlockAttribute;
+            TeklaFormatBlockPath = configuration.Blocks.TeklaBlockPath;
+            InventorFormatBlockPath = configuration.Blocks.CadBlockPath;
+            ExchangeDmBlock = configuration.Blocks.DimensionBlockEnabled;
+            ExplodeBlocks = configuration.General.ExplodeBlocks;
+            TeklaSheetLayer = configuration.Layers.TeklaDrawingSheetLayer;
+            BlockAttributeLayer = configuration.Layers.BlockAttributeLayer;
             TeklaBlocks = ConversionContext.CopyBlocks(Arranjos.ListBlocks);
             InventorBlocks = ConversionContext.CopyBlocks(Arranjos.ListBlocksInv);
             OriginalBlocks = ConversionContext.CopyBlocks(Arranjos.ListBlocksOrig);
@@ -231,31 +231,31 @@ namespace ConversorDrawindDLL
 
         private DimensionConversionSettings(Configuration configuration)
         {
-            Layer = configuration.EXTDIMlayer;
-            BaseLayer = configuration.EXTDIMBaseLayer;
-            StyleName = configuration.EXTDIMStyleName;
-            TextStyleName = configuration.EXTTEXTStyleName;
-            TextSize = configuration.EXTTEXTSize;
-            Scale = configuration.EXTDIMScale;
-            Precision = configuration.EXTDIMPrecision;
-            AngularPrecision = configuration.EXTDIMAngularPrecision;
-            Unit = configuration.EXTDIMUnit;
-            AngularUnit = configuration.EXTDIMAngularUnit;
-            ArrowType = configuration.EXTDIMSeta;
-            ArrowSize = configuration.EXTDIMSizeSeta;
-            TextColor = configuration.EXTDIMColorText;
-            LineColor = configuration.EXTDIMColorLine;
-            OffsetLineFromRefPoint = configuration.EXTDIMOffsetLineFromRefPoint;
-            TextMove = configuration.EXTDIMTextMove;
-            OutsideAlign = configuration.EXTDIMOutsideAlign;
-            Tad = configuration.EXTDIMTad;
-            DimensionPosition = configuration.EXTDIMDimensionPosition;
-            TextForced = configuration.EXTDIMTextForced;
-            LineForced = configuration.EXTDIMLineForced;
-            Dimex = configuration.EXTDIMDIMEX;
-            FixArrow = configuration.EXTDIMCorrigeSeta;
-            FixArrowType = configuration.EXTDIMCorrigeSetaTipoSeta;
-            FixArrowFactor = configuration.EXTDIMCorrigeSetaFactor;
+            Layer = configuration.Dimensions.Layer;
+            BaseLayer = configuration.Dimensions.BaseLayer;
+            StyleName = configuration.Dimensions.StyleName;
+            TextStyleName = configuration.Text.DefaultStyleName;
+            TextSize = configuration.Text.DefaultSize;
+            Scale = configuration.Dimensions.Scale;
+            Precision = configuration.Dimensions.Precision;
+            AngularPrecision = configuration.Dimensions.AngularPrecision;
+            Unit = configuration.Dimensions.Unit;
+            AngularUnit = configuration.Dimensions.AngularUnit;
+            ArrowType = configuration.Dimensions.ArrowType;
+            ArrowSize = configuration.Dimensions.ArrowSize;
+            TextColor = configuration.Dimensions.TextColor;
+            LineColor = configuration.Dimensions.LineColor;
+            OffsetLineFromRefPoint = configuration.Dimensions.OffsetLineFromReferencePoint;
+            TextMove = configuration.Dimensions.TextMove;
+            OutsideAlign = configuration.Dimensions.OutsideAlign;
+            Tad = configuration.Dimensions.TextVerticalPosition;
+            DimensionPosition = configuration.Dimensions.TextRelativeToDimensionLine;
+            TextForced = configuration.Dimensions.ForceTextInside;
+            LineForced = configuration.Dimensions.ForceDimensionLine;
+            Dimex = configuration.Dimensions.ExtensionLineOffset;
+            FixArrow = configuration.Dimensions.FixArrow;
+            FixArrowType = configuration.Dimensions.FixArrowType;
+            FixArrowFactor = configuration.Dimensions.FixArrowFactor;
         }
 
         internal static DimensionConversionSettings From(Configuration configuration)
@@ -275,12 +275,12 @@ namespace ConversorDrawindDLL
 
         private ScaleConversionSettings(Configuration configuration)
         {
-            Manual = configuration.EXTSCALEManual;
-            Point1 = new PointEspecial2(configuration.EXTSCALEp1);
-            Point2 = new PointEspecial2(configuration.EXTSCALEp2);
-            Layer = configuration.EXTSCALELayer;
-            TextSize = configuration.EXTSCALETextSize;
-            TextSizeString = configuration.EXTSCALETextSizeString;
+            Manual = configuration.Scale.Manual;
+            Point1 = new PointEspecial2(configuration.Scale.Point1.X, configuration.Scale.Point1.Y, configuration.Scale.Point1.Z);
+            Point2 = new PointEspecial2(configuration.Scale.Point2.X, configuration.Scale.Point2.Y, configuration.Scale.Point2.Z);
+            Layer = configuration.Scale.Layer;
+            TextSize = configuration.Scale.TextSize;
+            TextSizeString = configuration.Scale.TextSize.ToString();
         }
 
         internal static ScaleConversionSettings From(Configuration configuration)

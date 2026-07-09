@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using System.Xml.Linq;
 using ConversorDrawind;
@@ -80,10 +80,10 @@ public sealed class ConfigurationCharacterizationTests
 
         configuration.LoadXML("AMG_003_A1", arranjos, blocks, blocksInv, blocksOrig, workspace.Status);
 
-        Assert.Equal(0, configuration.EXTCONFOrigem);
-        Assert.True(configuration.EXTCONFIsExchangeFormat);
-        Assert.Equal("DWI-DIM", configuration.EXTDIMlayer);
-        Assert.Equal("DWI-100", configuration.EXTTEXTStyleName);
+        Assert.Equal(0, configuration.General.SourceMode);
+        Assert.True(configuration.General.ExchangeFormat);
+        Assert.Equal("DWI-DIM", configuration.Dimensions.Layer);
+        Assert.Equal("DWI-100", configuration.Text.DefaultStyleName);
         Assert.Contains("DWI01:RED:CONTINUOUS", arranjos.allNewLayerComposition);
         Assert.NotEmpty(arranjos.allBaseLayer);
         Assert.NotEmpty(arranjos.allLineType1);
@@ -325,53 +325,53 @@ internal static class ConfigurationSnapshot
     {
         var lines = new List<string>
         {
-            "EXTCONFComments=" + configuration.EXTCONFComments,
-            "EXTCONFOrigem=" + configuration.EXTCONFOrigem.ToString(CultureInfo.InvariantCulture),
-            "EXTCONFIsConvertDimension=" + configuration.EXTCONFIsConvertDimension,
-            "EXTCONFIsConvertLayer=" + configuration.EXTCONFIsConvertLayer,
-            "EXTCONFIsExchangeFormat=" + configuration.EXTCONFIsExchangeFormat,
-            "EXTCONFIsPutOnTheScaleDrawing=" + configuration.EXTCONFIsPutOnTheScaleDrawing,
-            "EXTCONFIsExecuteLISP=" + configuration.EXTCONFIsExecuteLISP,
-            "EXTCONFIsPurge=" + configuration.EXTCONFIsPurge,
-            "PROGRAMMessage=" + configuration.PROGRAMMessage,
-            "EXTCONFIsDeleteTeklaStructures=" + configuration.EXTCONFIsDeleteTeklaStructures,
-            "ExplodeBlocks=" + configuration.ExplodeBlocks,
-            "LayerTeklaString=" + configuration.LayerTeklaString,
-            "LayerBlockAttribute=" + configuration.LayerBlockAttribute,
-            "EXTCONFInventorExplode=" + configuration.EXTCONFInventorExplode,
-            "EXTDIMGERALHabilit=" + configuration.EXTDIMGERALHabilit,
-            "EXTDIMlayer=" + configuration.EXTDIMlayer,
-            "EXTDIMColorLine=" + configuration.EXTDIMColorLine,
-            "EXTDIMColorText=" + configuration.EXTDIMColorText,
-            "EXTDIMStyleName=" + configuration.EXTDIMStyleName,
-            "EXTDIMSeta=" + configuration.EXTDIMSeta,
-            "EXTDIMScale=" + Format(configuration.EXTDIMScale),
-            "EXTDIMPrecision=" + configuration.EXTDIMPrecision.ToString(CultureInfo.InvariantCulture),
-            "EXTDIMAngularPrecision=" + configuration.EXTDIMAngularPrecision.ToString(CultureInfo.InvariantCulture),
-            "EXTDIMUnit=" + configuration.EXTDIMUnit.ToString(CultureInfo.InvariantCulture),
-            "EXTDIMAngularUnit=" + configuration.EXTDIMAngularUnit.ToString(CultureInfo.InvariantCulture),
-            "EXTDIMSizeSeta=" + Format(configuration.EXTDIMSizeSeta),
-            "EXTDIMOffsetLineFromRefPoint=" + Format(configuration.EXTDIMOffsetLineFromRefPoint),
-            "EXTDIMOutsideAlign=" + configuration.EXTDIMOutsideAlign,
-            "EXTDIMTad=" + configuration.EXTDIMTad.ToString(CultureInfo.InvariantCulture),
-            "EXTDIMDimensionPosition=" + configuration.EXTDIMDimensionPosition,
-            "EXTDIMTextForced=" + configuration.EXTDIMTextForced,
-            "EXTDIMLineForced=" + configuration.EXTDIMLineForced,
-            "EXTDIMDIMEX=" + Format(configuration.EXTDIMDIMEX),
-            "EXTDIMBaseLayer=" + configuration.EXTDIMBaseLayer,
-            "EXTDIMCorrigeSeta=" + configuration.EXTDIMCorrigeSeta,
-            "EXTDIMCorrigeSetaTipoSeta=" + configuration.EXTDIMCorrigeSetaTipoSeta,
-            "EXTDIMCorrigeSetaFactor=" + Format(configuration.EXTDIMCorrigeSetaFactor),
-            "EXTTEXTStyleName=" + configuration.EXTTEXTStyleName,
-            "EXTSCALEManual=" + configuration.EXTSCALEManual,
-            "EXTSCALEp1=" + Point(configuration.EXTSCALEp1),
-            "EXTSCALEp2=" + Point(configuration.EXTSCALEp2),
-            "EXTSCALELayer=" + configuration.EXTSCALELayer,
-            "EXTSCALETextSize=" + Format(configuration.EXTSCALETextSize),
-            "EXTLINELtscale=" + Format(configuration.EXTLINELtscale),
-            "PROGRAMblockFormatoCaminho=" + configuration.PROGRAMblockFormatoCaminho,
-            "EXTCONFCaminhoBlocoInv=" + configuration.EXTCONFCaminhoBlocoInv,
-            "DMBlock=" + configuration.DMBlock,
+            "EXTCONFComments=" + configuration.Comments,
+            "EXTCONFOrigem=" + configuration.General.SourceMode.ToString(CultureInfo.InvariantCulture),
+            "EXTCONFIsConvertDimension=" + configuration.General.ConvertDimensions,
+            "EXTCONFIsConvertLayer=" + configuration.General.ConvertLayers,
+            "EXTCONFIsExchangeFormat=" + configuration.General.ExchangeFormat,
+            "EXTCONFIsPutOnTheScaleDrawing=" + configuration.General.ApplyDrawingScale,
+            "EXTCONFIsExecuteLISP=" + configuration.General.ExecuteLisp,
+            "EXTCONFIsPurge=" + configuration.General.Purge,
+            "PROGRAMMessage=" + configuration.General.ShowMessages,
+            "EXTCONFIsDeleteTeklaStructures=" + configuration.General.DeleteTeklaStructures,
+            "ExplodeBlocks=" + configuration.General.ExplodeBlocks,
+            "LayerTeklaString=" + configuration.Layers.TeklaDrawingSheetLayer,
+            "LayerBlockAttribute=" + configuration.Layers.BlockAttributeLayer,
+            "EXTCONFInventorExplode=" + configuration.General.InventorExplode,
+            "EXTDIMGERALHabilit=" + configuration.Dimensions.Enabled,
+            "EXTDIMlayer=" + configuration.Dimensions.Layer,
+            "EXTDIMColorLine=" + configuration.Dimensions.LineColor,
+            "EXTDIMColorText=" + configuration.Dimensions.TextColor,
+            "EXTDIMStyleName=" + configuration.Dimensions.StyleName,
+            "EXTDIMSeta=" + configuration.Dimensions.ArrowType,
+            "EXTDIMScale=" + Format(configuration.Dimensions.Scale),
+            "EXTDIMPrecision=" + configuration.Dimensions.Precision.ToString(CultureInfo.InvariantCulture),
+            "EXTDIMAngularPrecision=" + configuration.Dimensions.AngularPrecision.ToString(CultureInfo.InvariantCulture),
+            "EXTDIMUnit=" + configuration.Dimensions.Unit.ToString(CultureInfo.InvariantCulture),
+            "EXTDIMAngularUnit=" + configuration.Dimensions.AngularUnit.ToString(CultureInfo.InvariantCulture),
+            "EXTDIMSizeSeta=" + Format(configuration.Dimensions.ArrowSize),
+            "EXTDIMOffsetLineFromRefPoint=" + Format(configuration.Dimensions.OffsetLineFromReferencePoint),
+            "EXTDIMOutsideAlign=" + configuration.Dimensions.OutsideAlign,
+            "EXTDIMTad=" + configuration.Dimensions.TextVerticalPosition.ToString(CultureInfo.InvariantCulture),
+            "EXTDIMDimensionPosition=" + configuration.Dimensions.TextRelativeToDimensionLine,
+            "EXTDIMTextForced=" + configuration.Dimensions.ForceTextInside,
+            "EXTDIMLineForced=" + configuration.Dimensions.ForceDimensionLine,
+            "EXTDIMDIMEX=" + Format(configuration.Dimensions.ExtensionLineOffset),
+            "EXTDIMBaseLayer=" + configuration.Dimensions.BaseLayer,
+            "EXTDIMCorrigeSeta=" + configuration.Dimensions.FixArrow,
+            "EXTDIMCorrigeSetaTipoSeta=" + configuration.Dimensions.FixArrowType,
+            "EXTDIMCorrigeSetaFactor=" + Format(configuration.Dimensions.FixArrowFactor),
+            "EXTTEXTStyleName=" + configuration.Text.DefaultStyleName,
+            "EXTSCALEManual=" + configuration.Scale.Manual,
+            "EXTSCALEp1=" + Point(configuration.Scale.Point1),
+            "EXTSCALEp2=" + Point(configuration.Scale.Point2),
+            "EXTSCALELayer=" + configuration.Scale.Layer,
+            "EXTSCALETextSize=" + Format(configuration.Scale.TextSize),
+            "EXTLINELtscale=" + Format(configuration.Lines.LineTypeScale),
+            "PROGRAMblockFormatoCaminho=" + configuration.Blocks.TeklaBlockPath,
+            "EXTCONFCaminhoBlocoInv=" + configuration.Blocks.CadBlockPath,
+            "DMBlock=" + configuration.Blocks.DimensionBlockEnabled,
             "allBaseLayer=" + Join(arranjos.allBaseLayer),
             "allLineType1=" + Join(arranjos.allLineType1),
             "allNewLayer=" + Join(arranjos.allNewLayer),
@@ -415,7 +415,7 @@ internal static class ConfigurationSnapshot
         return filter.layerBase + ";" + filter.GetConjunto();
     }
 
-    private static string Point(PointEspecial point)
+    private static string Point(Point3DConfiguration point)
     {
         return Format(point.X) + ";" + Format(point.Y) + ";" + Format(point.Z);
     }

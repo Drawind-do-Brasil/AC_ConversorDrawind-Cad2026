@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml.Serialization;
@@ -111,7 +111,7 @@ namespace ConversorDrawind
             if (!File.Exists(directory))
             {
                 StreamWriter sw = new StreamWriter(directory);
-                sw.WriteLine(configuration.PROGRAMDbLin);
+                sw.WriteLine(configuration.Runtime.DbLineTypePath);
                 sw.Close();
             }
 

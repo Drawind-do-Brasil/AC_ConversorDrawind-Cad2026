@@ -6,108 +6,108 @@ namespace ConversorDrawind
 {
     public static class ConfigurationCompatibilityMapper
     {
-        public static ConverterConfiguration FromLegacyState(
+        public static Configuration FromLegacyState(
             Configuration configuration,
             Arranjos arranjos,
             List<Block> teklaBlocks,
             List<Block> cadBlocks,
             List<Block> originalBlocks)
         {
-            ConverterConfiguration result = new ConverterConfiguration();
+            Configuration result = new Configuration();
 
-            result.Comments = configuration.EXTCONFComments;
-            result.General.SourceMode = configuration.EXTCONFOrigem;
-            result.General.ConverterType = configuration.ConvTekla0ConvInv1;
-            result.General.ConvertDimensions = configuration.EXTCONFIsConvertDimension;
-            result.General.ConvertLayers = configuration.EXTCONFIsConvertLayer;
-            result.General.ExchangeFormat = configuration.EXTCONFIsExchangeFormat;
-            result.General.ExchangeLm = configuration.EXTCONFIsExchangeLM;
-            result.General.ApplyDrawingScale = configuration.EXTCONFIsPutOnTheScaleDrawing;
-            result.General.ExecuteLisp = configuration.EXTCONFIsExecuteLISP;
-            result.General.ExecuteDll = configuration.EXTCONFIsExecuteDLL;
-            result.General.FirstRunMode = configuration.EXTCONFIsFirstRum;
-            result.General.DeleteTeklaStructures = configuration.EXTCONFIsDeleteTeklaStructures;
-            result.General.Purge = configuration.EXTCONFIsPurge;
-            result.General.ShowMessages = configuration.PROGRAMMessage;
-            result.General.ExplodeBlocks = configuration.ExplodeBlocks;
-            result.General.InventorExplode = configuration.EXTCONFInventorExplode;
+            result.Comments = configuration.Comments;
+            result.General.SourceMode = configuration.General.SourceMode;
+            result.General.ConverterType = configuration.General.ConverterType;
+            result.General.ConvertDimensions = configuration.General.ConvertDimensions;
+            result.General.ConvertLayers = configuration.General.ConvertLayers;
+            result.General.ExchangeFormat = configuration.General.ExchangeFormat;
+            result.General.ExchangeLm = configuration.General.ExchangeLm;
+            result.General.ApplyDrawingScale = configuration.General.ApplyDrawingScale;
+            result.General.ExecuteLisp = configuration.General.ExecuteLisp;
+            result.General.ExecuteDll = configuration.General.ExecuteDll;
+            result.General.FirstRunMode = configuration.General.FirstRunMode;
+            result.General.DeleteTeklaStructures = configuration.General.DeleteTeklaStructures;
+            result.General.Purge = configuration.General.Purge;
+            result.General.ShowMessages = configuration.General.ShowMessages;
+            result.General.ExplodeBlocks = configuration.General.ExplodeBlocks;
+            result.General.InventorExplode = configuration.General.InventorExplode;
 
             result.Dimensions.ReferenceFormatSize = Configuration.INTREFTamFormato;
-            result.Dimensions.InternalLengthCharFactor = configuration.INTFactorLengthChar;
-            result.Dimensions.InternalTextOffset = configuration.INTDIMTextOffset;
-            result.Dimensions.Enabled = configuration.EXTDIMGERALHabilit;
-            result.Dimensions.Layer = configuration.EXTDIMlayer;
-            result.Dimensions.BaseLayer = configuration.EXTDIMBaseLayer;
-            result.Dimensions.LineColor = configuration.EXTDIMColorLine;
-            result.Dimensions.TextColor = configuration.EXTDIMColorText;
-            result.Dimensions.StyleName = configuration.EXTDIMStyleName;
-            result.Dimensions.ArrowType = configuration.EXTDIMSeta;
-            result.Dimensions.ArrowType1 = configuration.EXTDIMSeta1;
-            result.Dimensions.ArrowType2 = configuration.EXTDIMSeta2;
-            result.Dimensions.Scale = configuration.EXTDIMScale;
-            result.Dimensions.Precision = configuration.EXTDIMPrecision;
-            result.Dimensions.AngularPrecision = configuration.EXTDIMAngularPrecision;
-            result.Dimensions.Unit = configuration.EXTDIMUnit;
-            result.Dimensions.AngularUnit = configuration.EXTDIMAngularUnit;
-            result.Dimensions.ArrowSize = configuration.EXTDIMSizeSeta;
-            result.Dimensions.TextVerticalPosition = configuration.EXTDIMTad;
-            result.Dimensions.TextRelativeToDimensionLine = configuration.EXTDIMDimensionPosition;
-            result.Dimensions.ForceTextInside = configuration.EXTDIMTextForced;
-            result.Dimensions.ForceDimensionLine = configuration.EXTDIMLineForced;
-            result.Dimensions.OffsetLineFromReferencePoint = configuration.EXTDIMOffsetLineFromRefPoint;
-            result.Dimensions.TextMove = configuration.EXTDIMTextMove;
-            result.Dimensions.OutsideAlign = configuration.EXTDIMOutsideAlign;
-            result.Dimensions.ExtensionLineOffset = configuration.EXTDIMDIMEX;
-            result.Dimensions.FixArrow = configuration.EXTDIMCorrigeSeta;
-            result.Dimensions.FixArrowType = configuration.EXTDIMCorrigeSetaTipoSeta;
-            result.Dimensions.FixArrowFactor = configuration.EXTDIMCorrigeSetaFactor;
+            result.Dimensions.InternalLengthCharFactor = configuration.Dimensions.InternalLengthCharFactor;
+            result.Dimensions.InternalTextOffset = configuration.Dimensions.InternalTextOffset;
+            result.Dimensions.Enabled = configuration.Dimensions.Enabled;
+            result.Dimensions.Layer = configuration.Dimensions.Layer;
+            result.Dimensions.BaseLayer = configuration.Dimensions.BaseLayer;
+            result.Dimensions.LineColor = configuration.Dimensions.LineColor;
+            result.Dimensions.TextColor = configuration.Dimensions.TextColor;
+            result.Dimensions.StyleName = configuration.Dimensions.StyleName;
+            result.Dimensions.ArrowType = configuration.Dimensions.ArrowType;
+            result.Dimensions.ArrowType1 = configuration.Dimensions.ArrowType1;
+            result.Dimensions.ArrowType2 = configuration.Dimensions.ArrowType2;
+            result.Dimensions.Scale = configuration.Dimensions.Scale;
+            result.Dimensions.Precision = configuration.Dimensions.Precision;
+            result.Dimensions.AngularPrecision = configuration.Dimensions.AngularPrecision;
+            result.Dimensions.Unit = configuration.Dimensions.Unit;
+            result.Dimensions.AngularUnit = configuration.Dimensions.AngularUnit;
+            result.Dimensions.ArrowSize = configuration.Dimensions.ArrowSize;
+            result.Dimensions.TextVerticalPosition = configuration.Dimensions.TextVerticalPosition;
+            result.Dimensions.TextRelativeToDimensionLine = configuration.Dimensions.TextRelativeToDimensionLine;
+            result.Dimensions.ForceTextInside = configuration.Dimensions.ForceTextInside;
+            result.Dimensions.ForceDimensionLine = configuration.Dimensions.ForceDimensionLine;
+            result.Dimensions.OffsetLineFromReferencePoint = configuration.Dimensions.OffsetLineFromReferencePoint;
+            result.Dimensions.TextMove = configuration.Dimensions.TextMove;
+            result.Dimensions.OutsideAlign = configuration.Dimensions.OutsideAlign;
+            result.Dimensions.ExtensionLineOffset = configuration.Dimensions.ExtensionLineOffset;
+            result.Dimensions.FixArrow = configuration.Dimensions.FixArrow;
+            result.Dimensions.FixArrowType = configuration.Dimensions.FixArrowType;
+            result.Dimensions.FixArrowFactor = configuration.Dimensions.FixArrowFactor;
 
-            result.Text.DefaultStyleName = configuration.EXTTEXTStyleName;
-            result.Text.DefaultSize = configuration.EXTTEXTSize;
+            result.Text.DefaultStyleName = configuration.Text.DefaultStyleName;
+            result.Text.DefaultSize = configuration.Text.DefaultSize;
             result.Text.Styles = arranjos.allTextSyles.Select(LegacyConfigurationParsers.ParseTextStyleDefinition).ToList();
 
-            result.Scale.Manual = configuration.EXTSCALEManual;
-            result.Scale.Point1 = ToPoint(configuration.EXTSCALEp1);
-            result.Scale.Point2 = ToPoint(configuration.EXTSCALEp2);
-            result.Scale.Layer = configuration.EXTSCALELayer;
-            result.Scale.TextSize = configuration.EXTSCALETextSize;
+            result.Scale.Manual = configuration.Scale.Manual;
+            result.Scale.Point1 = CopyPoint(configuration.Scale.Point1);
+            result.Scale.Point2 = CopyPoint(configuration.Scale.Point2);
+            result.Scale.Layer = configuration.Scale.Layer;
+            result.Scale.TextSize = configuration.Scale.TextSize;
 
-            result.Layers.TeklaDrawingSheetLayer = configuration.LayerTeklaString;
-            result.Layers.BlockAttributeLayer = configuration.LayerBlockAttribute;
+            result.Layers.TeklaDrawingSheetLayer = configuration.Layers.TeklaDrawingSheetLayer;
+            result.Layers.BlockAttributeLayer = configuration.Layers.BlockAttributeLayer;
             result.Layers.BaseLayers = arranjos.allBaseLayer.ToList();
             result.Layers.NewLayers = arranjos.allNewLayerComposition.Select(LegacyConfigurationParsers.ParseLayerDefinition).ToList();
             result.Layers.RemoveRules = arranjos.layerRemove.Select(ToRemoveRule).ToList();
             result.Layers.ConversionRules = arranjos.conversor.Select(LegacyConfigurationParsers.ParseLayerConversionRule).ToList();
             result.Layers.ExplodeLayers = arranjos.allExplodeLayers.Where(item => !string.IsNullOrEmpty(item)).ToList();
 
-            result.Lines.LineTypeScale = configuration.EXTLINELtscale;
+            result.Lines.LineTypeScale = configuration.Lines.LineTypeScale;
             result.Lines.BaseLineTypes = arranjos.allLineType1.ToList();
 
             result.Commands.LispCommands = arranjos.listLISPCommand.ToList();
             result.Commands.DllCommands = arranjos.listDLLCommand.ToList();
 
-            result.Blocks.TeklaBlockPath = configuration.PROGRAMblockFormatoCaminho;
-            result.Blocks.CadBlockPath = configuration.EXTCONFCaminhoBlocoInv;
-            result.Blocks.DimensionBlockEnabled = configuration.DMBlock;
+            result.Blocks.TeklaBlockPath = configuration.Blocks.TeklaBlockPath;
+            result.Blocks.CadBlockPath = configuration.Blocks.CadBlockPath;
+            result.Blocks.DimensionBlockEnabled = configuration.Blocks.DimensionBlockEnabled;
             result.Blocks.TeklaBlocks = teklaBlocks.Select(ToBlockDefinition).ToList();
             result.Blocks.CadBlocks = cadBlocks.Select(ToBlockDefinition).ToList();
             result.Blocks.OriginalBlocks = originalBlocks.Select(ToBlockDefinition).ToList();
 
-            result.Runtime.DbLineTypePath = configuration.PROGRAMDbLin;
-            result.Runtime.TempDirectory = configuration.GetPROGRAMDirectoryTemp();
+            result.Runtime.DbLineTypePath = configuration.Runtime.DbLineTypePath;
+            result.Runtime.TempDirectory = configuration.GetTempDirectory();
 
             return result;
         }
 
         public static void ApplyToLegacyState(
-            ConverterConfiguration source,
+            Configuration source,
             Configuration configuration,
             Arranjos arranjos,
             List<Block> teklaBlocks,
             List<Block> cadBlocks,
             List<Block> originalBlocks)
         {
-            source = source ?? new ConverterConfiguration();
+            source = source ?? new Configuration();
 
             arranjos.allBaseLayer.Clear();
             arranjos.allLineType1.Clear();
@@ -123,67 +123,67 @@ namespace ConversorDrawind
             cadBlocks.Clear();
             originalBlocks.Clear();
 
-            configuration.EXTCONFComments = source.Comments ?? string.Empty;
-            configuration.EXTCONFOrigem = source.General.SourceMode;
-            configuration.ConvTekla0ConvInv1 = source.General.ConverterType;
-            configuration.EXTCONFIsConvertDimension = source.General.ConvertDimensions;
-            configuration.EXTCONFIsConvertLayer = source.General.ConvertLayers;
-            configuration.EXTCONFIsExchangeFormat = source.General.ExchangeFormat;
-            configuration.EXTCONFIsExchangeLM = source.General.ExchangeLm;
-            configuration.EXTCONFIsPutOnTheScaleDrawing = source.General.ApplyDrawingScale;
-            configuration.EXTCONFIsExecuteLISP = source.General.ExecuteLisp;
-            configuration.EXTCONFIsExecuteDLL = source.General.ExecuteDll;
-            configuration.EXTCONFIsFirstRum = source.General.FirstRunMode;
-            configuration.EXTCONFIsDeleteTeklaStructures = source.General.DeleteTeklaStructures;
-            configuration.EXTCONFIsPurge = source.General.Purge;
-            configuration.PROGRAMMessage = source.General.ShowMessages;
-            configuration.ExplodeBlocks = source.General.ExplodeBlocks;
-            configuration.EXTCONFInventorExplode = source.General.InventorExplode;
+            configuration.Comments = source.Comments ?? string.Empty;
+            configuration.General.SourceMode = source.General.SourceMode;
+            configuration.General.ConverterType = source.General.ConverterType;
+            configuration.General.ConvertDimensions = source.General.ConvertDimensions;
+            configuration.General.ConvertLayers = source.General.ConvertLayers;
+            configuration.General.ExchangeFormat = source.General.ExchangeFormat;
+            configuration.General.ExchangeLm = source.General.ExchangeLm;
+            configuration.General.ApplyDrawingScale = source.General.ApplyDrawingScale;
+            configuration.General.ExecuteLisp = source.General.ExecuteLisp;
+            configuration.General.ExecuteDll = source.General.ExecuteDll;
+            configuration.General.FirstRunMode = source.General.FirstRunMode;
+            configuration.General.DeleteTeklaStructures = source.General.DeleteTeklaStructures;
+            configuration.General.Purge = source.General.Purge;
+            configuration.General.ShowMessages = source.General.ShowMessages;
+            configuration.General.ExplodeBlocks = source.General.ExplodeBlocks;
+            configuration.General.InventorExplode = source.General.InventorExplode;
 
             Configuration.INTREFTamFormato = source.Dimensions.ReferenceFormatSize;
-            configuration.INTFactorLengthChar = source.Dimensions.InternalLengthCharFactor;
-            configuration.INTDIMTextOffset = source.Dimensions.InternalTextOffset;
-            configuration.EXTDIMGERALHabilit = source.Dimensions.Enabled;
-            configuration.EXTDIMlayer = source.Dimensions.Layer;
-            configuration.EXTDIMBaseLayer = source.Dimensions.BaseLayer;
-            configuration.EXTDIMColorLine = source.Dimensions.LineColor;
-            configuration.EXTDIMColorText = source.Dimensions.TextColor;
-            configuration.EXTDIMStyleName = source.Dimensions.StyleName;
-            configuration.EXTDIMSeta = source.Dimensions.ArrowType;
-            configuration.EXTDIMSeta1 = source.Dimensions.ArrowType1;
-            configuration.EXTDIMSeta2 = source.Dimensions.ArrowType2;
-            configuration.EXTDIMScale = source.Dimensions.Scale;
-            configuration.EXTDIMPrecision = source.Dimensions.Precision;
-            configuration.EXTDIMAngularPrecision = source.Dimensions.AngularPrecision;
-            configuration.EXTDIMUnit = source.Dimensions.Unit;
-            configuration.EXTDIMAngularUnit = source.Dimensions.AngularUnit;
-            configuration.EXTDIMSizeSeta = source.Dimensions.ArrowSize;
-            configuration.EXTDIMTad = source.Dimensions.TextVerticalPosition;
-            configuration.EXTDIMDimensionPosition = source.Dimensions.TextRelativeToDimensionLine;
-            configuration.EXTDIMTextForced = source.Dimensions.ForceTextInside;
-            configuration.EXTDIMLineForced = source.Dimensions.ForceDimensionLine;
-            configuration.EXTDIMOffsetLineFromRefPoint = source.Dimensions.OffsetLineFromReferencePoint;
-            configuration.EXTDIMTextMove = source.Dimensions.TextMove;
-            configuration.EXTDIMOutsideAlign = source.Dimensions.OutsideAlign;
-            configuration.EXTDIMDIMEX = source.Dimensions.ExtensionLineOffset;
-            configuration.EXTDIMCorrigeSeta = source.Dimensions.FixArrow;
-            configuration.EXTDIMCorrigeSetaTipoSeta = source.Dimensions.FixArrowType;
-            configuration.EXTDIMCorrigeSetaFactor = source.Dimensions.FixArrowFactor;
+            configuration.Dimensions.InternalLengthCharFactor = source.Dimensions.InternalLengthCharFactor;
+            configuration.Dimensions.InternalTextOffset = source.Dimensions.InternalTextOffset;
+            configuration.Dimensions.Enabled = source.Dimensions.Enabled;
+            configuration.Dimensions.Layer = source.Dimensions.Layer;
+            configuration.Dimensions.BaseLayer = source.Dimensions.BaseLayer;
+            configuration.Dimensions.LineColor = source.Dimensions.LineColor;
+            configuration.Dimensions.TextColor = source.Dimensions.TextColor;
+            configuration.Dimensions.StyleName = source.Dimensions.StyleName;
+            configuration.Dimensions.ArrowType = source.Dimensions.ArrowType;
+            configuration.Dimensions.ArrowType1 = source.Dimensions.ArrowType1;
+            configuration.Dimensions.ArrowType2 = source.Dimensions.ArrowType2;
+            configuration.Dimensions.Scale = source.Dimensions.Scale;
+            configuration.Dimensions.Precision = source.Dimensions.Precision;
+            configuration.Dimensions.AngularPrecision = source.Dimensions.AngularPrecision;
+            configuration.Dimensions.Unit = source.Dimensions.Unit;
+            configuration.Dimensions.AngularUnit = source.Dimensions.AngularUnit;
+            configuration.Dimensions.ArrowSize = source.Dimensions.ArrowSize;
+            configuration.Dimensions.TextVerticalPosition = source.Dimensions.TextVerticalPosition;
+            configuration.Dimensions.TextRelativeToDimensionLine = source.Dimensions.TextRelativeToDimensionLine;
+            configuration.Dimensions.ForceTextInside = source.Dimensions.ForceTextInside;
+            configuration.Dimensions.ForceDimensionLine = source.Dimensions.ForceDimensionLine;
+            configuration.Dimensions.OffsetLineFromReferencePoint = source.Dimensions.OffsetLineFromReferencePoint;
+            configuration.Dimensions.TextMove = source.Dimensions.TextMove;
+            configuration.Dimensions.OutsideAlign = source.Dimensions.OutsideAlign;
+            configuration.Dimensions.ExtensionLineOffset = source.Dimensions.ExtensionLineOffset;
+            configuration.Dimensions.FixArrow = source.Dimensions.FixArrow;
+            configuration.Dimensions.FixArrowType = source.Dimensions.FixArrowType;
+            configuration.Dimensions.FixArrowFactor = source.Dimensions.FixArrowFactor;
 
-            configuration.EXTTEXTStyleName = source.Text.DefaultStyleName;
-            configuration.EXTTEXTSize = source.Text.DefaultSize;
+            configuration.Text.DefaultStyleName = source.Text.DefaultStyleName;
+            configuration.Text.DefaultSize = source.Text.DefaultSize;
             arranjos.allTextSyles.AddRange(source.Text.Styles.Select(LegacyConfigurationParsers.FormatTextStyleDefinition));
             if (arranjos.allTextSyles.Count == 0)
                 arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
 
-            configuration.EXTSCALEManual = source.Scale.Manual;
-            configuration.EXTSCALEp1 = ToPointEspecial(source.Scale.Point1);
-            configuration.EXTSCALEp2 = ToPointEspecial(source.Scale.Point2);
-            configuration.EXTSCALELayer = source.Scale.Layer;
-            configuration.EXTSCALETextSize = source.Scale.TextSize;
+            configuration.Scale.Manual = source.Scale.Manual;
+            configuration.Scale.Point1 = CopyPoint(source.Scale.Point1);
+            configuration.Scale.Point2 = CopyPoint(source.Scale.Point2);
+            configuration.Scale.Layer = source.Scale.Layer;
+            configuration.Scale.TextSize = source.Scale.TextSize;
 
-            configuration.LayerTeklaString = source.Layers.TeklaDrawingSheetLayer;
-            configuration.LayerBlockAttribute = source.Layers.BlockAttributeLayer;
+            configuration.Layers.TeklaDrawingSheetLayer = source.Layers.TeklaDrawingSheetLayer;
+            configuration.Layers.BlockAttributeLayer = source.Layers.BlockAttributeLayer;
             arranjos.allBaseLayer.AddRange(source.Layers.BaseLayers);
             arranjos.allLineType1.AddRange(source.Lines.BaseLineTypes);
             arranjos.allNewLayerComposition.AddRange(source.Layers.NewLayers.Select(LegacyConfigurationParsers.FormatLayerDefinition));
@@ -192,13 +192,13 @@ namespace ConversorDrawind
             arranjos.conversor.AddRange(source.Layers.ConversionRules.Select(LegacyConfigurationParsers.FormatLayerConversionRule));
             arranjos.allExplodeLayers.AddRange(source.Layers.ExplodeLayers);
 
-            configuration.EXTLINELtscale = source.Lines.LineTypeScale;
+            configuration.Lines.LineTypeScale = source.Lines.LineTypeScale;
             arranjos.listLISPCommand.AddRange(source.Commands.LispCommands);
             arranjos.listDLLCommand.AddRange(source.Commands.DllCommands);
 
-            configuration.PROGRAMblockFormatoCaminho = source.Blocks.TeklaBlockPath;
-            configuration.EXTCONFCaminhoBlocoInv = source.Blocks.CadBlockPath;
-            configuration.DMBlock = source.Blocks.DimensionBlockEnabled;
+            configuration.Blocks.TeklaBlockPath = source.Blocks.TeklaBlockPath;
+            configuration.Blocks.CadBlockPath = source.Blocks.CadBlockPath;
+            configuration.Blocks.DimensionBlockEnabled = source.Blocks.DimensionBlockEnabled;
             teklaBlocks.AddRange(source.Blocks.TeklaBlocks.Select(ToBlock));
             cadBlocks.AddRange(source.Blocks.CadBlocks.Select(ToBlock));
             originalBlocks.AddRange(source.Blocks.OriginalBlocks.Select(ToBlock));
@@ -296,6 +296,12 @@ namespace ConversorDrawind
         private static PointEspecial ToPointEspecial(Point3DConfiguration point)
         {
             return new PointEspecial(point.X, point.Y, point.Z);
+        }
+
+        private static Point3DConfiguration CopyPoint(Point3DConfiguration point)
+        {
+            point = point ?? new Point3DConfiguration();
+            return new Point3DConfiguration { X = point.X, Y = point.Y, Z = point.Z };
         }
     }
 }

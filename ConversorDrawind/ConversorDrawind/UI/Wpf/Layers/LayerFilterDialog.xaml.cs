@@ -167,7 +167,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         private void ImportTempLineTypes()
         {
-            string filetxt = new global::ConversorDrawind.Configuration().GetPROGRAMDirectoryTemp() + "TempImporLineType.Temp";
+            string filetxt = new global::ConversorDrawind.Configuration().GetTempDirectory() + "TempImporLineType.Temp";
             if (!File.Exists(filetxt))
             {
                 return;
