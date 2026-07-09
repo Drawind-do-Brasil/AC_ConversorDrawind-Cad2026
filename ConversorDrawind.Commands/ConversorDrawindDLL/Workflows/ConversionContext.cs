@@ -33,19 +33,14 @@ namespace ConversorDrawindDLL
 
         public static ConversionContext FromCurrent()
         {
-            return From(Configuration.Config, Arranjos.Arrj, ConvertBlocks.GetCurrentScaleReference());
+            return From(Configuration.Config, ConvertBlocks.GetCurrentScaleReference());
         }
 
-        public static ConversionContext From(Configuration configuration, Arranjos arranjos)
-        {
-            return From(configuration, arranjos, ConvertBlocks.GetCurrentScaleReference());
-        }
-
-        public static ConversionContext From(Configuration configuration, Arranjos arranjos, BlockScaleReference blockScale)
+        public static ConversionContext From(Configuration configuration, BlockScaleReference blockScale)
         {
             return new ConversionContext(
                 ConversionSettings.From(configuration),
-                LayerConversionPlan.From(arranjos),
+                LayerConversionPlan.From(configuration),
                 BlockConversionPlan.From(configuration),
                 DimensionConversionSettings.From(configuration),
                 ScaleConversionSettings.From(configuration),
@@ -154,19 +149,19 @@ namespace ConversorDrawindDLL
         public IReadOnlyList<string> ExplodeLayers { get; }
         public IReadOnlyList<string> TextStyles { get; }
 
-        private LayerConversionPlan(Arranjos arranjos)
+        private LayerConversionPlan(Configuration configuration)
         {
-            NewLayerCompositions = ConversionContext.CopyStrings(arranjos.AllNewLayerComposition);
-            ConverterLines = ConversionContext.CopyStrings(arranjos.Conversor);
-            LayersToRemove = ConversionContext.CopyFilters(arranjos.LayerRemove);
-            LispCommands = ConversionContext.CopyStrings(arranjos.ListLISPCommand);
-            ExplodeLayers = ConversionContext.CopyStrings(arranjos.AllExplodeLayers);
-            TextStyles = ConversionContext.CopyStrings(arranjos.AllTextSyles);
+            NewLayerCompositions = ConversionContext.CopyStrings(RuntimeConfigurationState.NewLayerCompositions);
+            ConverterLines = ConversionContext.CopyStrings(RuntimeConfigurationState.ConverterLines);
+            LayersToRemove = ConversionContext.CopyFilters(RuntimeConfigurationState.LayerRemove);
+            LispCommands = ConversionContext.CopyStrings(configuration.Commands.LispCommands);
+            ExplodeLayers = ConversionContext.CopyStrings(configuration.Layers.ExplodeLayers);
+            TextStyles = ConversionContext.CopyStrings(RuntimeConfigurationState.TextStyles);
         }
 
-        internal static LayerConversionPlan From(Arranjos arranjos)
+        internal static LayerConversionPlan From(Configuration configuration)
         {
-            return new LayerConversionPlan(arranjos);
+            return new LayerConversionPlan(configuration);
         }
     }
 
@@ -190,9 +185,9 @@ namespace ConversorDrawindDLL
             ExplodeBlocks = configuration.General.ExplodeBlocks;
             TeklaSheetLayer = configuration.Layers.TeklaDrawingSheetLayer;
             BlockAttributeLayer = configuration.Layers.BlockAttributeLayer;
-            TeklaBlocks = ConversionContext.CopyBlocks(Arranjos.ListBlocks);
-            InventorBlocks = ConversionContext.CopyBlocks(Arranjos.ListBlocksInv);
-            OriginalBlocks = ConversionContext.CopyBlocks(Arranjos.ListBlocksOrig);
+            TeklaBlocks = ConversionContext.CopyBlocks(RuntimeConfigurationState.TeklaBlocks);
+            InventorBlocks = ConversionContext.CopyBlocks(RuntimeConfigurationState.InventorBlocks);
+            OriginalBlocks = ConversionContext.CopyBlocks(RuntimeConfigurationState.OriginalBlocks);
         }
 
         internal static BlockConversionPlan From(Configuration configuration)

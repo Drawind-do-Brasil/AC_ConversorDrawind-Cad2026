@@ -1,5 +1,4 @@
 global using Configuration = ConversorDrawind.Configuration;
-global using Arranjos = ConversorDrawind.Arranjos;
 global using Block = ConversorDrawind.Block;
 global using Filter = ConversorDrawind.Filter;
 global using TagBlock = ConversorDrawind.TagBlock;

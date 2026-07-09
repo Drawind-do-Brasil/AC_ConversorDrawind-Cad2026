@@ -904,7 +904,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                     ConvertBlocks.GeTText();
                 }
                 else
-                    ConvertBlocks.GeTTextInv(Arranjos.ListBlocksInv);
+                    ConvertBlocks.GeTTextInv(RuntimeConfigurationState.InventorBlocks);
                 messenger.WriteMessage("... Completado.\n");
             }
             catch (System.Exception e)
@@ -923,7 +923,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         [CommandMethod("CDwi_DeleteLayers")]
         public static void CDwi_DeleteLayers()
         {
-            if (Arranjos.Arrj.LayerRemove.Count > 0)
+            if (RuntimeConfigurationState.LayerRemove.Count > 0)
             {
                 IAcadDocumentContext documentContext = new AcadDocumentContext();
                 Database database = documentContext.Database;
@@ -934,8 +934,8 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                     messenger.WriteMessage("Removendo layers desnecessários... ");
                     try
                     {
-                        ConvertBlocks.DeleteLayerNew(Arranjos.Arrj.LayerRemove);
-                        ConvertBlocks.DeleteLayer(Arranjos.Arrj.LayerRemove);
+                        ConvertBlocks.DeleteLayerNew(RuntimeConfigurationState.LayerRemove.ToList());
+                        ConvertBlocks.DeleteLayer(RuntimeConfigurationState.LayerRemove.ToList());
                         messenger.WriteMessage("... Completado.\n");
                     }
                     catch (System.Exception e)
@@ -963,7 +963,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                 messenger.WriteMessage("Removendo blocos antigo.... ");
                 try
                 {
-                    ConvertBlocks.DeleteBlocks(Arranjos.ListBlocksOrig);
+                    ConvertBlocks.DeleteBlocks(RuntimeConfigurationState.OriginalBlocks);
                     messenger.WriteMessage("... Completado.\n");
                 }
                 catch (System.Exception e)
@@ -989,9 +989,9 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                 try
                 {
                     if (Configuration.Config.General.ConverterType == 0)
-                        ConvertBlocks.SetText(Arranjos.ListBlocks);
+                        ConvertBlocks.SetText(RuntimeConfigurationState.TeklaBlocks);
                     else
-                        ConvertBlocks.SetText2(Arranjos.ListBlocksInv, Arranjos.ListBlocksOrig);
+                        ConvertBlocks.SetText2(RuntimeConfigurationState.InventorBlocks, RuntimeConfigurationState.OriginalBlocks);
 
                     messenger.WriteMessage("Editando o novo bloco ... Completado.\n");
                 }
@@ -1003,7 +1003,7 @@ private static bool ChecarEscala(DBText text, Point3d positionInSpace)
                     if (Configuration.Config.General.ShowMessages)
                     {
                         string nomeBlocos = "";
-                        foreach (var item in Arranjos.ListBlocks)
+                        foreach (var item in RuntimeConfigurationState.TeklaBlocks)
                         {
                             nomeBlocos = nomeBlocos + item.blockName + ", ";
                         }

@@ -48,45 +48,19 @@ namespace ConversorDrawind
             return new ArranjosDefaultValues().LinesTekla.ToList();
         }
 
-        [XmlIgnore]
-        public static Arranjos Arrj = new Arranjos();
 
-        [XmlIgnore]
-        public static List<Block> ListBlocks = new List<Block>();
-
-        [XmlIgnore]
-        public static List<Block> ListBlocksInv = new List<Block>();
-
-        [XmlIgnore]
-        public static List<Block> ListBlocksOrig = new List<Block>();
 
         public List<string> allBaseLayer = new List<string>();
         public List<string> allNewLayer = new List<string>();
         public List<string> allNewLayerComposition = new List<string>();
+        public List<string> allExplodeLayers = new List<string>();
+        public List<string> allTextSyles = new List<string>();
+
         public List<string> conversor = new List<string>();
         public List<Filter> layerRemove = new List<Filter>();
         public List<string> listLISPCommand = new List<string>();
         public List<string> listDLLCommand = new List<string>();
-        public List<string> allExplodeLayers = new List<string>();
-        public List<string> allTextSyles = new List<string>();
 
-        [XmlIgnore]
-        public List<string> AllNewLayerComposition { get { return allNewLayerComposition; } }
-
-        [XmlIgnore]
-        public List<string> Conversor { get { return conversor; } }
-
-        [XmlIgnore]
-        public List<Filter> LayerRemove { get { return layerRemove; } }
-
-        [XmlIgnore]
-        public List<string> ListLISPCommand { get { return listLISPCommand; } }
-
-        [XmlIgnore]
-        public List<string> AllExplodeLayers { get { return allExplodeLayers; } }
-
-        [XmlIgnore]
-        public List<string> AllTextSyles { get { return allTextSyles; } }
 
         public Arranjos()
         {

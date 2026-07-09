@@ -14,7 +14,7 @@ namespace ConversorDrawindDLL
             string textStyle = textStyles.FirstOrDefault(style =>
                 string.Equals(GetStyleName(style), styleName, StringComparison.OrdinalIgnoreCase));
 
-            return textStyle ?? Arranjos.defaultTextStyle;
+            return textStyle ?? "TEXTO:RomanS:false:false:2.5:1:0";
         }
 
         internal static double ResolveTextSize(IEnumerable<string> textStyles, string styleName)

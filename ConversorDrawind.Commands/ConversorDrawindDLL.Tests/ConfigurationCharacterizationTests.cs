@@ -19,11 +19,11 @@ public sealed class ConfigurationCharacterizationTests
         Configuration.Config.LoadXML(xmlPath);
 
         Assert.Equal(ExpectedSnapshot(), Snapshot());
-        Assert.Equal(2, Arranjos.Arrj.AllNewLayerComposition.Count);
-        Assert.Single(Arranjos.Arrj.AllTextSyles);
-        Assert.Single(Arranjos.ListBlocks);
-        Assert.Single(Arranjos.ListBlocksInv);
-        Assert.Single(Arranjos.ListBlocksOrig);
+        Assert.Equal(2, RuntimeConfigurationState.NewLayerCompositions.Count);
+        Assert.Single(RuntimeConfigurationState.TextStyles);
+        Assert.Single(RuntimeConfigurationState.TeklaBlocks);
+        Assert.Single(RuntimeConfigurationState.InventorBlocks);
+        Assert.Single(RuntimeConfigurationState.OriginalBlocks);
         Assert.Equal(2, InstanciaConversor.ConversorInstancias.Count);
     }
 
@@ -65,10 +65,10 @@ public sealed class ConfigurationCharacterizationTests
         Configuration.Config.LoadXML(xmlPath);
 
         var scaleReference = new BlockScaleReference(2, 841, new Point3d(10, 20, 30));
-        ConversionContext context = ConversionContext.From(Configuration.Config, Arranjos.Arrj, scaleReference);
+        ConversionContext context = ConversionContext.From(Configuration.Config, scaleReference);
 
-        Arranjos.Arrj.AllNewLayerComposition.Clear();
-        Arranjos.ListBlocks[0].blockName = "ALTERADO";
+        Configuration.Config.Layers.NewLayers.Clear();
+        RuntimeConfigurationState.TeklaBlocks[0].blockName = "ALTERADO";
         Configuration.Config.Dimensions.StyleName = "ALTERADO";
 
         Assert.Equal("NEW_A:WHITE:CONTINUOUS", context.Layers.NewLayerCompositions[0]);
@@ -254,15 +254,15 @@ public sealed class ConfigurationCharacterizationTests
             "PROGRAMblockFormatoCaminho=" + Configuration.Config.Blocks.TeklaBlockPath,
             "EXTCONFCaminhoBlocoInv=" + Configuration.Config.Blocks.CadBlockPath,
             "DMBlock=" + Configuration.Config.Blocks.DimensionBlockEnabled,
-            "allNewLayerComposition=" + string.Join("|", Arranjos.Arrj.AllNewLayerComposition),
-            "allTextSyles=" + string.Join("|", Arranjos.Arrj.AllTextSyles),
-            "conversor=" + string.Join("|", Arranjos.Arrj.Conversor),
-            "listLISPCommand=" + string.Join("|", Arranjos.Arrj.ListLISPCommand),
-            "allExplodeLayers=" + string.Join("|", Arranjos.Arrj.AllExplodeLayers),
-            "layerRemove=" + string.Join("|", Arranjos.Arrj.LayerRemove.Select(Filter)),
-            "blocks=" + string.Join("|", Arranjos.ListBlocks.Select(Block)),
-            "blocksInv=" + string.Join("|", Arranjos.ListBlocksInv.Select(Block)),
-            "blocksOrig=" + string.Join("|", Arranjos.ListBlocksOrig.Select(Block))
+            "allNewLayerComposition=" + string.Join("|", RuntimeConfigurationState.NewLayerCompositions),
+            "allTextSyles=" + string.Join("|", RuntimeConfigurationState.TextStyles),
+            "conversor=" + string.Join("|", RuntimeConfigurationState.ConverterLines),
+            "listLISPCommand=" + string.Join("|", RuntimeConfigurationState.LispCommands),
+            "allExplodeLayers=" + string.Join("|", RuntimeConfigurationState.ExplodeLayers),
+            "layerRemove=" + string.Join("|", RuntimeConfigurationState.LayerRemove.Select(Filter)),
+            "blocks=" + string.Join("|", RuntimeConfigurationState.TeklaBlocks.Select(Block)),
+            "blocksInv=" + string.Join("|", RuntimeConfigurationState.InventorBlocks.Select(Block)),
+            "blocksOrig=" + string.Join("|", RuntimeConfigurationState.OriginalBlocks.Select(Block))
         };
 
         return string.Join(Environment.NewLine, lines);
@@ -333,6 +333,13 @@ public sealed class ConfigurationCharacterizationTests
     }
 
     private static string Point(PointEspecial2 point)
+    {
+        return point.X.ToString("R", CultureInfo.InvariantCulture) + ";" +
+               point.Y.ToString("R", CultureInfo.InvariantCulture) + ";" +
+               point.Z.ToString("R", CultureInfo.InvariantCulture);
+    }
+
+    private static string Point(global::ConversorDrawind.Point3DConfiguration point)
     {
         return point.X.ToString("R", CultureInfo.InvariantCulture) + ";" +
                point.Y.ToString("R", CultureInfo.InvariantCulture) + ";" +

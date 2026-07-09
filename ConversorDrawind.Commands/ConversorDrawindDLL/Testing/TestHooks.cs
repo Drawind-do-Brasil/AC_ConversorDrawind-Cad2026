@@ -7,10 +7,7 @@ namespace ConversorDrawindDLL
             Configuration.INTREFTamFormato = 841;
             Configuration.Config = new Configuration();
 
-            Arranjos.Arrj = new Arranjos();
-            Arranjos.ListBlocks.Clear();
-            Arranjos.ListBlocksInv.Clear();
-            Arranjos.ListBlocksOrig.Clear();
+            RuntimeConfigurationState.ResetWorkingStateFromConfiguration();
 
             InstanciaConversor.ConversorInstancias.Clear();
 

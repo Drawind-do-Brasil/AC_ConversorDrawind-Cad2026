@@ -10,18 +10,12 @@ namespace ConversorDrawindDLL
     {
         public static Transaction MyStartTransaction(this TransactionManager transactionManager)
         {
-            /*int cont = transactionManager.NumberOfActiveTransactions;
-            if (cont > 0)
-            {
-                
-            }*/
             return transactionManager.StartTransaction();
         }
 
         public static void MyCommit(this Transaction transaction)
         {
             transaction.Commit();
-            //transaction.Dispose();
         }
     }
 }

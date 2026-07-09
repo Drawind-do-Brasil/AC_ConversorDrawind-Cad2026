@@ -115,7 +115,7 @@ namespace ConversorDrawindDLL
             {
                 try
                 {
-                    foreach (Block block in Arranjos.ListBlocks)
+                    foreach (Block block in RuntimeConfigurationState.TeklaBlocks)
                     {
                         foreach (TagBlock tag in block.listTags)
                         {
@@ -182,7 +182,7 @@ namespace ConversorDrawindDLL
         private static List<TagBlock> GetTagBlocksAtPoint(Point3d point)
         {
             List<TagBlock> list = new List<TagBlock>();
-            foreach (Block block in Arranjos.ListBlocks)
+            foreach (Block block in RuntimeConfigurationState.TeklaBlocks)
             {
                 list.AddRange(block.listTags.Where(tag => !tag.verifiqued && CheckPoint(point,
                     GetPTReal(new Point3d(tag.p1.X, tag.p1.Y, tag.p1.Z)),

@@ -14,7 +14,7 @@ public sealed class SharedConverterConfigurationTests
 
         foreach (string file in files)
         {
-            global::ConversorDrawind.ConverterConfiguration configuration =
+            global::ConversorDrawind.Configuration configuration =
                 global::ConversorDrawind.ConverterConfigurationReader.Load(file);
 
             Assert.NotNull(configuration);
@@ -27,7 +27,7 @@ public sealed class SharedConverterConfigurationTests
     public void StructuredWriter_DeveSalvarVersion2ELerNovamente()
     {
         string source = Path.Combine(TemplatesAtivosPath, "GERDAU_DWI-024.txml");
-        global::ConversorDrawind.ConverterConfiguration original =
+        global::ConversorDrawind.Configuration original =
             global::ConversorDrawind.ConverterConfigurationReader.Load(source);
 
         using TestWorkspace workspace = TestWorkspace.Create();
@@ -53,7 +53,7 @@ public sealed class SharedConverterConfigurationTests
             Assert.True(string.IsNullOrWhiteSpace(item.Value));
         });
 
-        global::ConversorDrawind.ConverterConfiguration roundtrip =
+        global::ConversorDrawind.Configuration roundtrip =
             global::ConversorDrawind.ConverterConfigurationReader.Load(output);
 
         Assert.Equal(original.Layers.NewLayers.Count, roundtrip.Layers.NewLayers.Count);

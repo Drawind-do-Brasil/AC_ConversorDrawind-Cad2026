@@ -11,7 +11,7 @@ namespace ConversorDrawindDLL
         static public List<InstanciaConversor> ConversorInstancias = new List<InstanciaConversor>();
         static double GetObliqueByTextStyle(string style)
         {
-            return TextStyleResolver.ResolveOblique(Arranjos.Arrj.AllTextSyles, style);
+            return TextStyleResolver.ResolveOblique(RuntimeConfigurationState.TextStyles, style);
         }
         static public void ConvertInstance(Entity entity)
         {
@@ -170,7 +170,7 @@ namespace ConversorDrawindDLL
             if (split3.Count() >= 6)
                 textSyle = split3[5];
             else
-                textSyle = Arranjos.Arrj.AllTextSyles.First().Split(':').First();
+                textSyle = RuntimeConfigurationState.TextStyles.First().Split(':').First();
             
 
         }

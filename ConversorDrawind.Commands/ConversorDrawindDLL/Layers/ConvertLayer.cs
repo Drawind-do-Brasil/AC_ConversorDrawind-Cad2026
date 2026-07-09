@@ -93,13 +93,13 @@ namespace ConversorDrawindDLL
         public static void CreateAndAssignALayer()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            LayerRepository.CreateAndAssignAll(documentContext, Arranjos.Arrj.AllNewLayerComposition);
+            LayerRepository.CreateAndAssignAll(documentContext, RuntimeConfigurationState.NewLayerCompositions);
         }
 
         public static ObjectId CreateAndAssignALayer(string nome)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            return LayerRepository.CreateAndAssignByName(documentContext, Arranjos.Arrj.AllNewLayerComposition, nome);
+            return LayerRepository.CreateAndAssignByName(documentContext, RuntimeConfigurationState.NewLayerCompositions, nome);
         }
 
         public static Color GetColorForName(string color)
@@ -151,9 +151,9 @@ namespace ConversorDrawindDLL
 
         public static void ExplodeObjectsInv()
         {
-            ObjectId[] myMtexts = FilterLayers(Arranjos.Arrj.AllExplodeLayers.ToArray());
+            ObjectId[] myMtexts = FilterLayers(RuntimeConfigurationState.ExplodeLayers.ToArray());
             ExplodeObjectsInv1(myMtexts);
-            myMtexts = FilterLayers(Arranjos.Arrj.AllExplodeLayers.ToArray());
+            myMtexts = FilterLayers(RuntimeConfigurationState.ExplodeLayers.ToArray());
             ExplodeObjectsInv1(myMtexts);
             myMtexts = Filter("ALL", "DIMENSION", "ALL", "ALL");
             ExplodeObjectsInv1(myMtexts);
@@ -244,7 +244,7 @@ namespace ConversorDrawindDLL
 
         public static ObjectId GetTextSyleByName(string name = null)
         {
-            name = TextStyleService.ResolveStyleNameOrDefault(name, Arranjos.Arrj.AllTextSyles);
+            name = TextStyleService.ResolveStyleNameOrDefault(name, RuntimeConfigurationState.TextStyles);
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             return TextStyleService.GetStyleIdByName(documentContext, name);
         }
@@ -252,7 +252,7 @@ namespace ConversorDrawindDLL
         public static void CreateTextSyles()
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-            TextStyleService.CreateStyles(documentContext, Arranjos.Arrj.AllTextSyles, Conversor.EscreverLog);
+            TextStyleService.CreateStyles(documentContext, RuntimeConfigurationState.TextStyles, Conversor.EscreverLog);
         }
  
         public static ObjectId CreateDimstyle()
