@@ -75,6 +75,11 @@
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="UI\Wpf\Main\Editor\" />
+    <Folder Include="UI\Wpf\Main\Converter\" />
+  </ItemGroup>
 </Project>
 
 

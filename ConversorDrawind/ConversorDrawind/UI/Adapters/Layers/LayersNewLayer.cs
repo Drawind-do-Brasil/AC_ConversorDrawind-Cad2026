@@ -5,13 +5,17 @@ namespace ConversorDrawind
     public sealed class LayersNewLayer : IDisposable
     {
         private readonly Configuration configuration;
-        public NewLayer novoLayer;
+        private NewLayer novoLayer;
 
-        public LayersNewLayer(string line, Configuration configuration)
+        public LayersNewLayer(LayerOutput value, Configuration configuration)
         {
             this.configuration = configuration ?? new Configuration();
-            novoLayer = new NewLayer(this.configuration);
-            novoLayer.SetConjunto(line);
+            novoLayer = ToNewLayer(value, this.configuration);
+        }
+
+        public LayerOutput LayerOutput
+        {
+            get { return ToLayerOutput(novoLayer); }
         }
 
         public UiDialogResult ShowDialog()
@@ -30,6 +34,34 @@ namespace ConversorDrawind
 
         public void Dispose()
         {
+        }
+
+        private static NewLayer ToNewLayer(LayerOutput value, Configuration configuration)
+        {
+            value = value ?? new LayerOutput();
+            return new NewLayer(configuration)
+            {
+                layer = value.LayerName,
+                cor = value.Color,
+                tipoLinha = value.LineType,
+                alturaTexto = value.TextContent,
+                larguraTexto = value.TextHeight,
+                estiloTexto = value.TextStyle
+            };
+        }
+
+        private static LayerOutput ToLayerOutput(NewLayer value)
+        {
+            value = value ?? new NewLayer(new Configuration());
+            return new LayerOutput
+            {
+                LayerName = value.layer,
+                Color = value.cor,
+                LineType = value.tipoLinha,
+                TextContent = value.alturaTexto,
+                TextHeight = value.larguraTexto,
+                TextStyle = value.estiloTexto
+            };
         }
     }
 }

@@ -9,13 +9,17 @@ namespace ConversorDrawind
         private bool disableText;
         private string lineType2Source;
 
-        public Filter filtro;
+        private Filter filtro;
 
-        public LayersFilter(string valor, Configuration configuration)
+        public LayersFilter(EntityFilter value, Configuration configuration)
         {
             this.configuration = configuration ?? new Configuration();
-            filtro = new Filter(this.configuration.Catalogs);
-            filtro.SetConjunto(valor);
+            filtro = ToFilter(value, this.configuration.Catalogs);
+        }
+
+        public EntityFilter EntityFilter
+        {
+            get { return ToEntityFilter(filtro); }
         }
 
         public void CarregarControlFilterCBLinhaTipo2(string line)
@@ -63,6 +67,36 @@ namespace ConversorDrawind
 
         public void Dispose()
         {
+        }
+
+        private static Filter ToFilter(EntityFilter value, CatalogConfiguration catalogs)
+        {
+            value = value ?? new EntityFilter();
+            return new Filter(catalogs)
+            {
+                layerBase = value.BaseLayer,
+                tipoObjeto = value.ObjectType,
+                cor = value.Color,
+                tipoLinha = value.LineType,
+                conteudoTexto = value.TextContent,
+                alturaTexto = value.TextHeight,
+                orientacao = string.IsNullOrWhiteSpace(value.Orientation) ? "ALL" : value.Orientation
+            };
+        }
+
+        private static EntityFilter ToEntityFilter(Filter value)
+        {
+            value = value ?? new Filter();
+            return new EntityFilter
+            {
+                BaseLayer = value.layerBase,
+                ObjectType = value.tipoObjeto,
+                Color = value.cor,
+                LineType = value.tipoLinha,
+                TextContent = value.conteudoTexto,
+                TextHeight = value.alturaTexto,
+                Orientation = string.IsNullOrWhiteSpace(value.orientacao) ? "ALL" : value.orientacao
+            };
         }
     }
 }

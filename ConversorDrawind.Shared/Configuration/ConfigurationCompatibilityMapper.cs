@@ -188,7 +188,7 @@ namespace ConversorDrawind
             };
         }
 
-        public static Block ToLegacyBlock(BlockDefinition source)
+        public static Block ToBlockModel(BlockDefinition source)
         {
             source = source ?? new BlockDefinition();
             Block result = new Block

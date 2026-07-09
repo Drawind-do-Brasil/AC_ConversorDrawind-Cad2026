@@ -517,7 +517,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void RefreshLayerRuleRows()
         {
             EditorView.LayerRulesGrid.ItemsSource = configuration.Layers.ConversionRules
-                .Select(CreateLayerRuleRow)
+                .Select(rule => new LayerRuleRow(rule))
                 .ToList();
         }
 
@@ -528,7 +528,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 .ToList();
 
             EditorView.RemoveLayersGrid.ItemsSource = configuration.Layers.RemoveRules
-                .Select(CreateRemoveLayerRow)
+                .Select(rule => new RemoveLayerRow(rule))
                 .ToList();
         }
 
@@ -545,43 +545,53 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.SelectedExplodeLayersListBox.ItemsSource = configuration.Layers.ExplodeLayers.ToList();
         }
 
-        private static LayerRuleRow CreateLayerRuleRow(LayerConversionRule rule)
+        private LayerConversionRule CreateDefaultLayerConversionRule()
         {
-            string item = LegacyConfigurationParsers.FormatLayerConversionRule(rule);
-            string[] parts = item.Split(new[] { ';' }, 3);
-            return parts.Length == 3
-                ? new LayerRuleRow(parts[0], parts[1], parts[2])
-                : new LayerRuleRow(string.Empty, string.Empty, string.Empty);
+            return new LayerConversionRule
+            {
+                Source = new EntityFilter
+                {
+                    BaseLayer = string.Empty,
+                    ObjectType = configuration.Catalogs.ObjectTypes.FirstOrDefault() ?? "ALL",
+                    Color = configuration.Catalogs.Colors.FirstOrDefault() ?? "ALL",
+                    LineType = configuration.Catalogs.FilterLineTypes.FirstOrDefault() ?? "ALL",
+                    TextContent = string.Empty,
+                    TextHeight = string.Empty,
+                    Orientation = "ALL"
+                },
+                Target = new LayerOutput
+                {
+                    LayerName = "0",
+                    Color = configuration.Catalogs.Colors.Skip(1).FirstOrDefault() ?? "BYLAYER",
+                    LineType = configuration.Catalogs.LayerLineTypes.FirstOrDefault() ?? "BYLAYER",
+                    TextContent = string.Empty,
+                    TextHeight = string.Empty,
+                    TextStyle = configuration.Text.Styles.FirstOrDefault()?.Name ?? configuration.Text.DefaultStyleName
+                }
+            };
         }
 
-        private static RemoveLayerRow CreateRemoveLayerRow(LayerRemoveRule rule)
+        private static LayerRemoveRule CreateDefaultRemoveLayerRule(string layer)
         {
-            string formatted = LegacyConfigurationParsers.FormatLayerRemoveRule(rule);
-            string[] parts = formatted.Split(new[] { ';' }, 2);
-            return parts.Length == 2
-                ? new RemoveLayerRow(parts[0], parts[1])
-                : new RemoveLayerRow(string.Empty, string.Empty);
-        }
-
-        private static LayerConversionRule ToLayerConversionRule(LayerRuleRow row)
-        {
-            return LegacyConfigurationParsers.ParseLayerConversionRule((row.BaseLayer ?? string.Empty) + ";" + (row.Filter ?? string.Empty) + ";" + (row.NewLayer ?? string.Empty));
-        }
-
-        private static LayerRemoveRule ToLayerRemoveRule(RemoveLayerRow row)
-        {
-            return LegacyConfigurationParsers.ParseLayerRemoveRule((row.Layer ?? string.Empty) + ";" + (row.Filter ?? string.Empty));
+            return new LayerRemoveRule
+            {
+                Filter = new EntityFilter
+                {
+                    BaseLayer = layer,
+                    ObjectType = "ALL",
+                    Color = "ALL",
+                    LineType = "ALL",
+                    TextContent = string.Empty,
+                    TextHeight = string.Empty,
+                    Orientation = "ALL"
+                }
+            };
         }
 
         private void AddLayerRule()
         {
-            Filter filter = new Filter(configuration.Catalogs);
-            filter.SetConjunto();
-            NewLayer newLayer = new NewLayer(configuration);
-            newLayer.SetConjunto();
-
             int insertIndex = EditorView.LayerRulesGrid.SelectedIndex >= 0 ? EditorView.LayerRulesGrid.SelectedIndex : configuration.Layers.ConversionRules.Count;
-            configuration.Layers.ConversionRules.Insert(insertIndex, ToLayerConversionRule(new LayerRuleRow(string.Empty, filter.GetConjunto(), newLayer.GetConjunto())));
+            configuration.Layers.ConversionRules.Insert(insertIndex, CreateDefaultLayerConversionRule());
             RefreshLayerRuleRows();
             EditorView.LayerRulesGrid.SelectedIndex = insertIndex;
         }
@@ -640,8 +650,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 {
                     if (dialog.ShowDialog() == UiDialogResult.OK)
                     {
-                        row.BaseLayer = dialog.layerBase;
-                        configuration.Layers.ConversionRules[selectedIndex] = ToLayerConversionRule(row);
+                        row.Rule.Source.BaseLayer = dialog.layerBase;
                         RefreshLayerRuleRows();
                         EditorView.LayerRulesGrid.SelectedIndex = selectedIndex;
                     }
@@ -649,12 +658,11 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
             else if (columnIndex == 1)
             {
-                using (LayersFilter dialog = new LayersFilter(row.Filter, configuration))
+                using (LayersFilter dialog = new LayersFilter(row.Rule.Source, configuration))
                 {
                     if (dialog.ShowDialog() == UiDialogResult.OK)
                     {
-                        row.Filter = dialog.filtro.GetConjunto();
-                        configuration.Layers.ConversionRules[selectedIndex] = ToLayerConversionRule(row);
+                        configuration.Layers.ConversionRules[selectedIndex].Source = dialog.EntityFilter;
                         RefreshLayerRuleRows();
                         EditorView.LayerRulesGrid.SelectedIndex = selectedIndex;
                     }
@@ -662,12 +670,11 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
             else if (columnIndex == 2)
             {
-                using (LayersNewLayer dialog = new LayersNewLayer(row.NewLayer, configuration))
+                using (LayersNewLayer dialog = new LayersNewLayer(row.Rule.Target, configuration))
                 {
                     if (dialog.ShowDialog() == UiDialogResult.OK)
                     {
-                        row.NewLayer = dialog.novoLayer.GetConjunto();
-                        configuration.Layers.ConversionRules[selectedIndex] = ToLayerConversionRule(row);
+                        configuration.Layers.ConversionRules[selectedIndex].Target = dialog.LayerOutput;
                         RefreshLayerRuleRows();
                         EditorView.LayerRulesGrid.SelectedIndex = selectedIndex;
                     }
@@ -677,15 +684,13 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void AddRemoveLayerRule()
         {
-            Filter filter = new Filter(configuration.Catalogs);
-            filter.SetConjunto2();
             foreach (string layer in EditorView.RemoveLayerBaseListBox.SelectedItems.OfType<string>())
             {
                 if (!configuration.Layers.RemoveRules
-                    .Select(CreateRemoveLayerRow)
+                    .Select(rule => new RemoveLayerRow(rule))
                     .Any(row => string.Equals(row.Layer, layer, StringComparison.OrdinalIgnoreCase)))
                 {
-                    configuration.Layers.RemoveRules.Add(ToLayerRemoveRule(new RemoveLayerRow(layer, filter.GetConjunto())));
+                    configuration.Layers.RemoveRules.Add(CreateDefaultRemoveLayerRule(layer));
                 }
             }
 
@@ -723,14 +728,18 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            using (LayersFilter dialog = new LayersFilter(row.Filter, configuration))
+            int index = EditorView.RemoveLayersGrid.SelectedIndex;
+            if (index < 0 || index >= configuration.Layers.RemoveRules.Count)
+            {
+                return;
+            }
+
+            using (LayersFilter dialog = new LayersFilter(row.Rule.Filter, configuration))
             {
                 dialog.DisableOrientacao();
                 if (dialog.ShowDialog() == UiDialogResult.OK)
                 {
-                    row.Filter = dialog.filtro.GetConjunto();
-                    int index = EditorView.RemoveLayersGrid.SelectedIndex;
-                    configuration.Layers.RemoveRules[index] = ToLayerRemoveRule(row);
+                    configuration.Layers.RemoveRules[index].Filter = dialog.EntityFilter;
                     RefreshRemoveLayerViews();
                     EditorView.RemoveLayersGrid.SelectedIndex = index;
                 }
@@ -959,7 +968,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void RefreshRelationView()
         {
-            List<string> relations = new List<string>();
+            List<BlockRelationRow> relations = new List<BlockRelationRow>();
             foreach (BlockDefinition original in configuration.Blocks.OriginalBlocks)
             {
                 if (string.IsNullOrWhiteSpace(original.RelatedName))
@@ -967,7 +976,12 @@ namespace ConversorDrawind.UI.Wpf.Main
                     continue;
                 }
 
-                relations.Add(original.RelatedName + "    = >    " + original.Name);
+                BlockDefinition cad = configuration.Blocks.CadBlocks
+                    .FirstOrDefault(block => string.Equals(block.Name, original.RelatedName, StringComparison.OrdinalIgnoreCase));
+                if (cad != null)
+                {
+                    relations.Add(new BlockRelationRow(cad, original));
+                }
             }
 
             EditorView.BlockRelationsListBox.ItemsSource = relations;
@@ -1234,7 +1248,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            Block editableBlock = ConfigurationCompatibilityMapper.ToLegacyBlock(configuration.Blocks.TeklaBlocks[index]);
+            Block editableBlock = ConfigurationCompatibilityMapper.ToBlockModel(configuration.Blocks.TeklaBlocks[index]);
             using (AttFormat dialog = new AttFormat(editableBlock, configuration, teklaDrawingBlock))
             {
                 if (dialog.ShowDialog() != UiDialogResult.OK)
@@ -1293,8 +1307,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
 
             using (AttFormatInventor dialog = new AttFormatInventor(
-                ConfigurationCompatibilityMapper.ToLegacyBlock(cadBlock),
-                ConfigurationCompatibilityMapper.ToLegacyBlock(originalBlock)))
+                ConfigurationCompatibilityMapper.ToBlockModel(cadBlock),
+                ConfigurationCompatibilityMapper.ToBlockModel(originalBlock)))
             {
                 if (dialog.ShowDialog() != UiDialogResult.OK)
                 {
@@ -1381,19 +1395,13 @@ namespace ConversorDrawind.UI.Wpf.Main
             cadIndex = -1;
             originalIndex = -1;
 
-            if (!(EditorView.BlockRelationsListBox.SelectedItem is string relation))
+            if (!(EditorView.BlockRelationsListBox.SelectedItem is BlockRelationRow relation))
             {
                 return false;
             }
 
-            string[] parts = relation.Split(new[] { "    = >    " }, StringSplitOptions.None);
-            if (parts.Length != 2)
-            {
-                return false;
-            }
-
-            cadIndex = configuration.Blocks.CadBlocks.FindIndex(block => string.Equals(block.Name, parts[0], StringComparison.OrdinalIgnoreCase));
-            originalIndex = configuration.Blocks.OriginalBlocks.FindIndex(block => string.Equals(block.Name, parts[1], StringComparison.OrdinalIgnoreCase));
+            cadIndex = configuration.Blocks.CadBlocks.IndexOf(relation.CadBlock);
+            originalIndex = configuration.Blocks.OriginalBlocks.IndexOf(relation.OriginalBlock);
             if (cadIndex < 0 || originalIndex < 0)
             {
                 return false;
@@ -1547,182 +1555,6 @@ namespace ConversorDrawind.UI.Wpf.Main
             base.OnClosed(e);
         }
 
-        public class LayerRuleRow
-        {
-            public LayerRuleRow(string baseLayer, string filter, string newLayer)
-            {
-                BaseLayer = baseLayer;
-                Filter = filter;
-                NewLayer = newLayer;
-            }
-
-            public string BaseLayer { get; set; }
-            public string Filter { get; set; }
-            public string NewLayer { get; set; }
-
-            public string FilterDisplay => FormatFilterDisplay(Filter);
-            public string NewLayerDisplay => FormatNewLayerDisplay(NewLayer);
-
-            private static string FormatFilterDisplay(string value)
-            {
-                string[] parts = SplitLegacyConjunto(value, 6);
-                if (parts == null)
-                {
-                    return value ?? string.Empty;
-                }
-
-                string line1 = "Objeto: " + parts[0] + "  |  Cor: " + parts[1];
-                string line2 = "Linha: " + parts[2] + "  |  Orientacao: " + parts[5];
-                string line3 = JoinDisplayParts(
-                    DisplayPart("Texto", parts[3]),
-                    DisplayPart("Altura", parts[4]));
-
-                return JoinDisplayLines(line1, line2, line3);
-            }
-
-            private static string FormatNewLayerDisplay(string value)
-            {
-                string[] parts = SplitLegacyConjunto(value, 6);
-                if (parts == null)
-                {
-                    return value ?? string.Empty;
-                }
-
-                string line1 = "Layer: " + parts[0] + "  |  Cor: " + parts[1];
-                string line2 = "Linha: " + parts[2] + "  |  Estilo: " + parts[5];
-                string line3 = JoinDisplayParts(
-                    DisplayPart("Altura", parts[3]),
-                    DisplayPart("Largura", parts[4]));
-
-                return JoinDisplayLines(line1, line2, line3);
-            }
-
-            private static string[] SplitLegacyConjunto(string value, int expectedParts)
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    return null;
-                }
-
-                string[] parts = value.Split(':');
-                if (parts.Length < expectedParts)
-                {
-                    return null;
-                }
-
-                return parts;
-            }
-
-            private static string DisplayPart(string label, string value)
-            {
-                return string.IsNullOrWhiteSpace(value) ? string.Empty : label + ": " + value;
-            }
-
-            private static string JoinDisplayParts(params string[] values)
-            {
-                return string.Join("  |  ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
-            }
-
-            private static string JoinDisplayLines(params string[] values)
-            {
-                return string.Join(Environment.NewLine, values.Where(value => !string.IsNullOrWhiteSpace(value)));
-            }
-        }
-
-        public class RemoveLayerRow
-        {
-            public RemoveLayerRow(string layer, string filter)
-            {
-                Layer = layer;
-                Filter = filter;
-            }
-
-            public string Layer { get; set; }
-            public string Filter { get; set; }
-            public string FilterDisplay => FormatFilterDisplay(Filter);
-
-            private static string FormatFilterDisplay(string value)
-            {
-                string[] parts = SplitLegacyConjunto(value, 6);
-                if (parts == null)
-                {
-                    return value ?? string.Empty;
-                }
-
-                string line1 = "Objeto: " + parts[0] + "  |  Cor: " + parts[1];
-                string line2 = "Linha: " + parts[2] + "  |  Orientacao: " + parts[5];
-                string line3 = JoinDisplayParts(
-                    DisplayPart("Texto", parts[3]),
-                    DisplayPart("Altura", parts[4]));
-
-                return JoinDisplayLines(line1, line2, line3);
-            }
-
-            private static string[] SplitLegacyConjunto(string value, int expectedParts)
-            {
-                if (string.IsNullOrWhiteSpace(value))
-                {
-                    return null;
-                }
-
-                string[] parts = value.Split(':');
-                if (parts.Length < expectedParts)
-                {
-                    return null;
-                }
-
-                return parts;
-            }
-
-            private static string DisplayPart(string label, string value)
-            {
-                return string.IsNullOrWhiteSpace(value) ? string.Empty : label + ": " + value;
-            }
-
-            private static string JoinDisplayParts(params string[] values)
-            {
-                return string.Join("  |  ", values.Where(value => !string.IsNullOrWhiteSpace(value)));
-            }
-
-            private static string JoinDisplayLines(params string[] values)
-            {
-                return string.Join(Environment.NewLine, values.Where(value => !string.IsNullOrWhiteSpace(value)));
-            }
-        }
-
-        public class LispCommandRow
-        {
-            public LispCommandRow(string name, string path, bool runOnlyAtEnd)
-            {
-                Name = name;
-                Path = path;
-                RunOnlyAtEnd = runOnlyAtEnd;
-            }
-
-            public string Name { get; set; }
-            public string Path { get; set; }
-            public bool RunOnlyAtEnd { get; set; }
-
-            public static LispCommandRow FromCommandEntry(string commandEntry)
-            {
-                string[] parts = (commandEntry ?? string.Empty).Split(new[] { '@' }, 3);
-                return new LispCommandRow(
-                    parts.Length > 0 ? parts[0] : string.Empty,
-                    parts.Length > 1 ? parts[1] : string.Empty,
-                    parts.Length == 3);
-            }
-
-            public string ToCommandEntry()
-            {
-                string entry = (Name ?? string.Empty) + "@" + (Path ?? string.Empty);
-                if (RunOnlyAtEnd)
-                {
-                    entry += "@True";
-                }
-
-                return entry;
-            }
-        }
     }
 }
 

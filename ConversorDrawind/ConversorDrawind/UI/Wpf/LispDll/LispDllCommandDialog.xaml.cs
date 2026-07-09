@@ -23,10 +23,10 @@ namespace ConversorDrawind.UI.Wpf.LispDll
                 return;
             }
 
-            string[] parts = commandEntry.Split(new[] { '@' }, 3);
-            CommandNameTextBox.Text = parts.Length > 0 ? parts[0] : string.Empty;
-            CommandPathTextBox.Text = parts.Length > 1 ? parts[1] : string.Empty;
-            RunOnlyAtEndCheckBox.IsChecked = parts.Length == 3;
+            LispDllCommandEntry entry = LispDllCommandEntry.Parse(commandEntry);
+            CommandNameTextBox.Text = entry.Name;
+            CommandPathTextBox.Text = entry.Path;
+            RunOnlyAtEndCheckBox.IsChecked = entry.RunOnlyAtEnd;
         }
 
         private void BrowseButtonClick(object sender, RoutedEventArgs e)
@@ -75,13 +75,12 @@ namespace ConversorDrawind.UI.Wpf.LispDll
 
         private string BuildCommandEntry()
         {
-            string entry = CommandNameTextBox.Text.Trim() + "@" + CommandPathTextBox.Text.Trim();
-            if (RunOnlyAtEndCheckBox.IsChecked == true)
+            return new LispDllCommandEntry
             {
-                entry += "@True";
-            }
-
-            return entry;
+                Name = CommandNameTextBox.Text,
+                Path = CommandPathTextBox.Text,
+                RunOnlyAtEnd = RunOnlyAtEndCheckBox.IsChecked == true
+            }.ToCommandEntry();
         }
 
         private void CancelButtonClick(object sender, RoutedEventArgs e)
