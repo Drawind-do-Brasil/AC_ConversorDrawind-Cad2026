@@ -121,7 +121,7 @@ namespace ConversorDrawindDLL
             if (File.Exists(file))
                 textStyleTableRecord.FileName = file;
 
-            textStyleTableRecord.ObliquingAngle = ConvertDimension.DegreeToRadian(textStyleDefinition.ObliquingAngleDegrees);
+            textStyleTableRecord.ObliquingAngle = DimensionGeometry.DegreeToRadian(textStyleDefinition.ObliquingAngleDegrees);
             textStyleTableRecord.TextSize = 0;
         }
     }

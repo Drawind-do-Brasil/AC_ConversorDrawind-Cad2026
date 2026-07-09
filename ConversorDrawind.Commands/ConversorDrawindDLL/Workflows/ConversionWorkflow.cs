@@ -54,7 +54,7 @@ namespace ConversorDrawindDLL
                 () =>
                 {
                     scaleWorkflow.ApplyDimensionScale(Configuration.Config.Dimensions.Scale);
-                    new ConvertDimension().ConvertD();
+                    new ConvertDimension().ConvertByTekla();
                 },
                 LogContext.CarregarConfiguracaoTemporaria,
                 Localization.WarningCouldNotConvertDimensions,
@@ -75,7 +75,7 @@ namespace ConversorDrawindDLL
 
             stepRunner.Run(
                 Localization.StartConvertingDimensions,
-                () => new ConvertDimension().ConvertDInv(),
+                () => new ConvertDimension().ConvertByInventor(),
                 LogContext.CarregarLinetype,
                 Localization.WarningCouldNotConvertDimensions,
                 Localization.ErrorConvertingDimensions + "\n");

@@ -26,7 +26,7 @@ namespace ConversorDrawindDLL
         internal static double ResolveOblique(IEnumerable<string> textStyles, string styleName)
         {
             string[] textStyleSplit = Resolve(textStyles, styleName).Split(':');
-            return ConvertDimension.DegreeToRadian(textStyleSplit[6].ToDouble());
+            return DimensionGeometry.DegreeToRadian(textStyleSplit[6].ToDouble());
         }
 
         private static string GetStyleName(string textStyle)
