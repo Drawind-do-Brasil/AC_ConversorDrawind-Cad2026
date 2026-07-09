@@ -2,7 +2,7 @@ using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal interface IAcadDocumentContext
     {

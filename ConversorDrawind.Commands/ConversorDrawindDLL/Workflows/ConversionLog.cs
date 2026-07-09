@@ -1,6 +1,6 @@
 using System;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class ConversionLog
     {

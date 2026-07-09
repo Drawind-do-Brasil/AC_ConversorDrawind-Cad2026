@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class ConversionLogger
     {

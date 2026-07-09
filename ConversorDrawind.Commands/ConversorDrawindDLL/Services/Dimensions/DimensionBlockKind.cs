@@ -1,4 +1,4 @@
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal enum DimensionBlockKind
     {

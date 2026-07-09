@@ -2,7 +2,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using System;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal sealed class BlockSelectionService
     {

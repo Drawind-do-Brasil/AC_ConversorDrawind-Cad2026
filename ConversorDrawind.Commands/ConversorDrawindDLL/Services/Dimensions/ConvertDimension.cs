@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     class ConvertDimension
     {

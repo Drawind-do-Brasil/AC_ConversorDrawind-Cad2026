@@ -4,7 +4,7 @@ using Autodesk.AutoCAD.Geometry;
 using System;
 using System.IO;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal sealed class DrawingInfoCommandService
     {

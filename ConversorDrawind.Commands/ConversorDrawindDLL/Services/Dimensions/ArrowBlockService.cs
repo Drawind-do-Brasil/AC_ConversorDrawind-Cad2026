@@ -2,7 +2,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using System;
 using System.Collections.Generic;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class ArrowBlockService
     {

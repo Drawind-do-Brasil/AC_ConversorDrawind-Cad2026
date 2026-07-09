@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     public partial class ScaleForm : Form
     {

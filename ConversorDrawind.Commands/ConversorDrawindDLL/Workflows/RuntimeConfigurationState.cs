@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class RuntimeConfigurationState
     {

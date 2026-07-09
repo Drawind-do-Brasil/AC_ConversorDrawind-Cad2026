@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
 
     public static class ObjectExtension

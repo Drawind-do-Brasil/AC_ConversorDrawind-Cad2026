@@ -1,7 +1,7 @@
 using System;
 using ConversorDrawind;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class Localization
     {

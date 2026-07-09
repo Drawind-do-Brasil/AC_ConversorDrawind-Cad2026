@@ -1,7 +1,7 @@
 using Autodesk.AutoCAD.ApplicationServices;
 using System;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal sealed class ConversionCommandRunner
     {

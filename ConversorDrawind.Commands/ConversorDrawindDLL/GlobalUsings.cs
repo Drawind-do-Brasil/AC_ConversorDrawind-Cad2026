@@ -1,1 +1,1 @@
-global using ConversorDrawindDLL;
+global using ConversorDrawind.Commands;

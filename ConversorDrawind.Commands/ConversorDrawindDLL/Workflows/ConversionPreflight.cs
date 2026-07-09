@@ -1,6 +1,6 @@
 ﻿using System.IO;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class ConversionPreflight
     {

@@ -2,7 +2,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using System;
 using System.IO;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal sealed class BlockDefinitionImportService
     {

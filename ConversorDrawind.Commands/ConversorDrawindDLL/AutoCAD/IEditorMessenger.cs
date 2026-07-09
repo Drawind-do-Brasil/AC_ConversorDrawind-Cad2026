@@ -1,6 +1,6 @@
 using Autodesk.AutoCAD.EditorInput;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal interface IEditorMessenger
     {

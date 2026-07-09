@@ -1,6 +1,6 @@
 using Autodesk.AutoCAD.ApplicationServices;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal interface ISystemVariableService
     {

@@ -9,7 +9,7 @@ using System.IO;
 using System.Linq;
 using FORMS = System.Windows.Forms;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     public partial class Conversor
     {

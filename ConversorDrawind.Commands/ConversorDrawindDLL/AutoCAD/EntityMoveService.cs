@@ -3,7 +3,7 @@ using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using System;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal sealed class EntityMoveService
     {

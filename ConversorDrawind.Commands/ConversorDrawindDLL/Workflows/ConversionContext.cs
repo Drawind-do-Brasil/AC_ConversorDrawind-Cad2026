@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Drawing;
 using System.Linq;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     public sealed class ConversionContext
     {

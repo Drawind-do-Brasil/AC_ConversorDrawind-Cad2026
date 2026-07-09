@@ -1,6 +1,6 @@
 using System.Linq;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class DimensionBlockClassifier
     {

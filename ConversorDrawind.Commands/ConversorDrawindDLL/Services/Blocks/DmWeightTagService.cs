@@ -2,7 +2,7 @@ using Autodesk.AutoCAD.DatabaseServices;
 using System;
 using System.Text.RegularExpressions;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal sealed class DmWeightTagService
     {

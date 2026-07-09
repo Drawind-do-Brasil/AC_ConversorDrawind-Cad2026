@@ -1,6 +1,6 @@
 ﻿using Autodesk.AutoCAD.DatabaseServices;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     public static class TransactionAnalizer
     {

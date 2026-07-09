@@ -1,6 +1,6 @@
 ﻿using Autodesk.AutoCAD.Geometry;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     class DimensionProperties
     {

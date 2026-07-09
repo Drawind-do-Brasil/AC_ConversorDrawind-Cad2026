@@ -1,6 +1,6 @@
 using FORMS = System.Windows.Forms;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal static class ConversionMessages
     {

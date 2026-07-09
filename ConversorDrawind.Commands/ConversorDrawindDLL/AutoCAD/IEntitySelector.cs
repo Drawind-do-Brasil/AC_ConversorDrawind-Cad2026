@@ -1,7 +1,7 @@
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     internal interface IEntitySelector
     {

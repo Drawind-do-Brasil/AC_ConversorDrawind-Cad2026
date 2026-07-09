@@ -1,4 +1,4 @@
-﻿namespace ConversorDrawindDLL
+﻿namespace ConversorDrawind.Commands
 {
     class PointEspecial1
     {

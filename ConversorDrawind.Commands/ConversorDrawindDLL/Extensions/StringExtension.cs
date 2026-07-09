@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     public static class StringExtension
     {

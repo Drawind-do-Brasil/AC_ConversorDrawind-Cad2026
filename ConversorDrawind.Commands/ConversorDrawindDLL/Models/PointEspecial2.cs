@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ConversorDrawindDLL
+namespace ConversorDrawind.Commands
 {
     public class PointEspecial2 : ICloneable
     {
