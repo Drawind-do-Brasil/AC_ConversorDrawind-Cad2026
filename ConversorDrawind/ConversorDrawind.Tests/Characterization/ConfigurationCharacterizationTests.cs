@@ -86,7 +86,7 @@ public sealed class ConfigurationCharacterizationTests
         Assert.Equal("DWI-100", configuration.Text.DefaultStyleName);
         Assert.Contains("DWI01:RED:CONTINUOUS", arranjos.allNewLayerComposition);
         Assert.NotEmpty(arranjos.allBaseLayer);
-        Assert.NotEmpty(arranjos.allLineType1);
+        Assert.NotEmpty(configuration.Lines.BaseLineTypes);
     }
 
     [Fact]
@@ -253,7 +253,8 @@ internal sealed class ConfigurationFixture
 
         var arranjos = new Arranjos();
         arranjos.allBaseLayer.Clear();
-        arranjos.allLineType1.Clear();
+        configuration.Lines.BaseLineTypes.Clear();
+        configuration.Catalogs.FilterLineTypes.Clear();
         arranjos.allNewLayer.Clear();
         arranjos.allNewLayerComposition.Clear();
         arranjos.allTextSyles.Clear();
@@ -263,7 +264,8 @@ internal sealed class ConfigurationFixture
         arranjos.allExplodeLayers.Clear();
 
         arranjos.allBaseLayer.AddRange(new[] { "LAYER_A", "LAYER_B" });
-        arranjos.allLineType1.AddRange(new[] { "CONTINUOUS", "HIDDEN" });
+        configuration.Lines.BaseLineTypes.AddRange(new[] { "CONTINUOUS", "HIDDEN" });
+        configuration.Catalogs.FilterLineTypes.AddRange(new[] { "CONTINUOUS", "HIDDEN" });
         arranjos.allNewLayerComposition.AddRange(new[] { "NEW_A:WHITE:CONTINUOUS", "NEW_B:RED:HIDDEN" });
         arranjos.allNewLayer.AddRange(new[] { "NEW_A", "NEW_B" });
         arranjos.allTextSyles.AddRange(new[] { "TEXTO_TESTE:RomanS:false:false:2.5:1:0" });
@@ -271,7 +273,7 @@ internal sealed class ConfigurationFixture
         arranjos.listLISPCommand.Add("(command \"zoom\" \"e\")");
         arranjos.allExplodeLayers.AddRange(new[] { "EXPLODE_A", "EXPLODE_B" });
 
-        var remove = new Filter(arranjos) { layerBase = "REMOVE_BASE" };
+        var remove = new Filter(configuration.Catalogs) { layerBase = "REMOVE_BASE" };
         remove.SetConjunto("TEXT:RED:HIDDEN:ABC:2.5:ALL");
         arranjos.layerRemove.Add(remove);
 
@@ -373,7 +375,7 @@ internal static class ConfigurationSnapshot
             "EXTCONFCaminhoBlocoInv=" + configuration.Blocks.CadBlockPath,
             "DMBlock=" + configuration.Blocks.DimensionBlockEnabled,
             "allBaseLayer=" + Join(arranjos.allBaseLayer),
-            "allLineType1=" + Join(arranjos.allLineType1),
+            "baseLineTypes=" + Join(configuration.Lines.BaseLineTypes),
             "allNewLayer=" + Join(arranjos.allNewLayer),
             "allNewLayerComposition=" + Join(arranjos.allNewLayerComposition),
             "allTextSyles=" + Join(arranjos.allTextSyles),

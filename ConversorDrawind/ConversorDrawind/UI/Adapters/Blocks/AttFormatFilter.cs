@@ -7,12 +7,12 @@ namespace ConversorDrawind
     {
         public Filter filtro;
 
-        private readonly Arranjos arranjos;
+        private readonly Configuration configuration;
 
-        public AttFormatFilter(string valor, Arranjos arranjos, string layer)
+        public AttFormatFilter(string valor, Configuration configuration, string layer)
         {
-            this.arranjos = arranjos;
-            filtro = new Filter(arranjos)
+            this.configuration = configuration ?? new Configuration();
+            filtro = new Filter(this.configuration.Catalogs)
             {
                 layerBase = layer
             };
@@ -21,7 +21,7 @@ namespace ConversorDrawind
 
         public UiDialogResult ShowDialog()
         {
-            BlockFilterDialog dialog = new BlockFilterDialog(arranjos, filtro);
+            BlockFilterDialog dialog = new BlockFilterDialog(configuration, filtro);
             bool? result = dialog.ShowDialog();
 
             if (result == true)

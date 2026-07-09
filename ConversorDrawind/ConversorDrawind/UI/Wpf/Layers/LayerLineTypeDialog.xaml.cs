@@ -8,12 +8,13 @@ namespace ConversorDrawind.UI.Wpf.Layers
     {
         private readonly List<string> lineTypes;
 
-        public LayerLineTypeDialog(string currentLineType, Arranjos arranjos)
+        public LayerLineTypeDialog(string currentLineType, CatalogConfiguration catalogs)
         {
             InitializeComponent();
 
-            lineTypes = arranjos.allLineType2
-                .Where(lineType => lineType != arranjos.lineTypeRemove.First() && lineType != arranjos.lineTypeRemove.Last())
+            catalogs = catalogs ?? new global::ConversorDrawind.Configuration().Catalogs;
+            lineTypes = catalogs.LayerLineTypes
+                .Where(lineType => !catalogs.RemovedLineTypes.Contains(lineType))
                 .ToList();
 
             LineType = lineTypes.FirstOrDefault(lineType => lineType.Split(',').First().ToUpper() == currentLineType);

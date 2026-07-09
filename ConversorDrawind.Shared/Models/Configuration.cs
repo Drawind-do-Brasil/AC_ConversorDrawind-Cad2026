@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace ConversorDrawind
 {
@@ -9,7 +11,7 @@ namespace ConversorDrawind
 
         public Configuration()
         {
-            EnsureRuntimeDefaults();
+            EnsureDefaults();
             InitializeCompatibilityState();
         }
 
@@ -32,8 +34,9 @@ namespace ConversorDrawind
             Commands = source.Commands ?? new CommandConfiguration();
             Blocks = source.Blocks ?? new BlockConfiguration();
             Runtime = source.Runtime ?? new RuntimeConfiguration();
+            Catalogs = source.Catalogs ?? new CatalogConfiguration();
 
-            EnsureRuntimeDefaults();
+            EnsureDefaults();
             InitializeCompatibilityState();
         }
 
@@ -49,6 +52,7 @@ namespace ConversorDrawind
         public CommandConfiguration Commands { get; set; } = new CommandConfiguration();
         public BlockConfiguration Blocks { get; set; } = new BlockConfiguration();
         public RuntimeConfiguration Runtime { get; set; } = new RuntimeConfiguration();
+        public CatalogConfiguration Catalogs { get; set; } = new CatalogConfiguration();
 
         public string GetTempDirectory()
         {
@@ -77,14 +81,32 @@ namespace ConversorDrawind
             Commands = source.Commands ?? new CommandConfiguration();
             Blocks = source.Blocks ?? new BlockConfiguration();
             Runtime = source.Runtime ?? new RuntimeConfiguration();
+            Catalogs = source.Catalogs ?? new CatalogConfiguration();
 
-            EnsureRuntimeDefaults();
+            EnsureDefaults();
             InitializeCompatibilityState();
         }
 
         partial void InitializeCompatibilityState();
 
         partial void SyncCompatibilityState();
+
+        public void EnsureDefaults()
+        {
+            if (General == null) General = new GeneralConfiguration();
+            if (Dimensions == null) Dimensions = new DimensionConfiguration();
+            if (Text == null) Text = new TextConfiguration();
+            if (Scale == null) Scale = new ScaleConfiguration();
+            if (Layers == null) Layers = new LayerConfiguration();
+            if (Lines == null) Lines = new LineConfiguration();
+            if (Commands == null) Commands = new CommandConfiguration();
+            if (Blocks == null) Blocks = new BlockConfiguration();
+            if (Runtime == null) Runtime = new RuntimeConfiguration();
+            if (Catalogs == null) Catalogs = new CatalogConfiguration();
+
+            EnsureRuntimeDefaults();
+            EnsureCatalogDefaults();
+        }
 
         private void EnsureRuntimeDefaults()
         {
@@ -96,6 +118,87 @@ namespace ConversorDrawind
 
             if (string.IsNullOrWhiteSpace(Runtime.TempDirectory))
                 Runtime.TempDirectory = DefaultTempDirectory;
+        }
+
+        private void EnsureCatalogDefaults()
+        {
+            if (Catalogs.Colors == null) Catalogs.Colors = new List<string>();
+            if (Catalogs.ObjectTypes == null) Catalogs.ObjectTypes = new List<string>();
+            if (Catalogs.FilterLineTypes == null) Catalogs.FilterLineTypes = new List<string>();
+            if (Catalogs.LayerLineTypes == null) Catalogs.LayerLineTypes = new List<string>();
+            if (Catalogs.RemovedLineTypes == null) Catalogs.RemovedLineTypes = new List<string>();
+            if (Text.Styles == null) Text.Styles = new List<TextStyleDefinition>();
+            if (Layers.BaseLayers == null) Layers.BaseLayers = new List<string>();
+            if (Lines.BaseLineTypes == null) Lines.BaseLineTypes = new List<string>();
+
+            FillIfEmpty(Catalogs.Colors, Arranjos.DefaultColors());
+            FillIfEmpty(Catalogs.ObjectTypes, Arranjos.DefaultObjectTypes());
+            FillIfEmpty(Catalogs.FilterLineTypes, Arranjos.DefaultFilterLineTypes());
+            FillIfEmpty(Catalogs.LayerLineTypes, BuildDefaultLayerLineTypes());
+            FillIfEmpty(Catalogs.RemovedLineTypes, Arranjos.DefaultRemovedLineTypes());
+
+            FillIfEmpty(Text.Styles, new List<TextStyleDefinition>
+            {
+                LegacyConfigurationParsers.ParseTextStyleDefinition(Arranjos.defaultTextStyle)
+            });
+            FillIfEmpty(Layers.BaseLayers, Arranjos.DefaultBaseLayers());
+            FillIfEmpty(Lines.BaseLineTypes, Catalogs.FilterLineTypes);
+
+            if (Layers.NewLayers == null)
+                Layers.NewLayers = new List<LayerDefinition>();
+        }
+
+        private List<string> BuildDefaultLayerLineTypes()
+        {
+            List<string> result = Arranjos.DefaultLayerLineTypes();
+            foreach (string lineType in ReadLineTypeNames(GetLineTypeCatalogPath()))
+            {
+                if (!result.Contains(lineType))
+                    result.Add(lineType);
+            }
+
+            return result;
+        }
+
+        private string GetLineTypeCatalogPath()
+        {
+            string linPackPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "LinPack.nfj");
+            if (File.Exists(linPackPath))
+            {
+                string configuredPath = File.ReadLines(linPackPath).FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(configuredPath))
+                    return configuredPath;
+            }
+
+            return Runtime.DbLineTypePath;
+        }
+
+        private static IEnumerable<string> ReadLineTypeNames(string file)
+        {
+            if (string.IsNullOrWhiteSpace(file) || !File.Exists(file))
+                yield break;
+
+            foreach (string line in File.ReadLines(file))
+            {
+                if (line.Length > 0 && line[0] == '*')
+                    yield return line.Remove(0, 1);
+            }
+        }
+
+        private static void FillIfEmpty(List<string> target, IEnumerable<string> values)
+        {
+            if (target == null || target.Count > 0)
+                return;
+
+            target.AddRange(values.Where(value => !string.IsNullOrWhiteSpace(value)));
+        }
+
+        private static void FillIfEmpty(List<TextStyleDefinition> target, IEnumerable<TextStyleDefinition> values)
+        {
+            if (target == null || target.Count > 0)
+                return;
+
+            target.AddRange(values);
         }
     }
 }

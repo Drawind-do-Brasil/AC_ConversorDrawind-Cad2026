@@ -9,14 +9,17 @@ namespace ConversorDrawind.UI.Wpf.Layers
     public partial class WrongLineTypesDialog : Window
     {
         private readonly List<CorrecaoLinhas> wrongLines;
-        private readonly Arranjos arranjos;
+        private readonly global::ConversorDrawind.Configuration configuration;
+        private readonly CatalogConfiguration catalogs;
         private readonly ObservableCollection<WrongLineRow> rows = new ObservableCollection<WrongLineRow>();
 
-        public WrongLineTypesDialog(List<CorrecaoLinhas> linhasErradas, Arranjos arranjos)
+        public WrongLineTypesDialog(List<CorrecaoLinhas> linhasErradas, global::ConversorDrawind.Configuration configuration)
         {
             InitializeComponent();
             wrongLines = linhasErradas;
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new global::ConversorDrawind.Configuration();
+            this.configuration.EnsureDefaults();
+            catalogs = this.configuration.Catalogs;
             LoadRows();
             WrongLinesDataGrid.ItemsSource = rows;
         }
@@ -26,7 +29,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             for (int i = 0; i < wrongLines.Count; i++)
             {
                 bool linhaOK = false;
-                foreach (string line in arranjos.allLineType2)
+                foreach (string line in catalogs.LayerLineTypes)
                 {
                     string[] lineTemp = line.Split(',');
                     if (wrongLines[i].newLinha.ToUpper() == lineTemp.First().ToUpper())
@@ -65,7 +68,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
 
             int rowIndex = rows.IndexOf(selectedRow);
-            LayerLineTypeDialog dialog = new LayerLineTypeDialog(selectedRow.LinhaLayer, arranjos)
+            LayerLineTypeDialog dialog = new LayerLineTypeDialog(selectedRow.LinhaLayer, catalogs)
             {
                 Owner = this
             };
@@ -90,7 +93,10 @@ namespace ConversorDrawind.UI.Wpf.Layers
         {
             foreach (CorrecaoLinhas item in wrongLines)
             {
-                arranjos.allNewLayerComposition[item.posLinha] = item.GetNewLinha();
+                if (item.posLinha >= 0 && item.posLinha < configuration.Layers.NewLayers.Count)
+                {
+                    configuration.Layers.NewLayers[item.posLinha] = LegacyConfigurationParsers.ParseLayerDefinition(item.GetNewLinha());
+                }
             }
 
             DialogResult = true;

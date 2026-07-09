@@ -6,12 +6,15 @@ namespace ConversorDrawind.UI.Wpf.Blocks
 {
     public partial class BlockFilterDialog : Window
     {
-        private readonly Arranjos arranjos;
+        private readonly global::ConversorDrawind.Configuration configuration;
+        private readonly CatalogConfiguration catalogs;
 
-        public BlockFilterDialog(Arranjos arranjos, Filter filter)
+        public BlockFilterDialog(global::ConversorDrawind.Configuration configuration, Filter filter)
         {
             InitializeComponent();
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new global::ConversorDrawind.Configuration();
+            this.configuration.EnsureDefaults();
+            catalogs = this.configuration.Catalogs;
             Filter = new Filter(filter);
             LoadControls();
             LoadConfiguration();
@@ -24,13 +27,13 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         {
             LayerComboBox.Items.Clear();
             LayerComboBox.Items.Add("ALL");
-            foreach (string layer in arranjos.allNewLayer.Concat(arranjos.allBaseLayer))
+            foreach (string layer in configuration.Layers.NewLayers.Select(layer => layer.Name).Concat(configuration.Layers.BaseLayers))
             {
                 LayerComboBox.Items.Add(layer);
             }
 
             ColorComboBox.Items.Clear();
-            foreach (string color in arranjos.allcolor)
+            foreach (string color in catalogs.Colors)
             {
                 ColorComboBox.Items.Add(color);
             }
@@ -48,9 +51,9 @@ namespace ConversorDrawind.UI.Wpf.Blocks
         {
             GenericNewColor newColor = new GenericNewColor(ColorComboBox.Text);
             newColor.ShowDialog();
-            if (!arranjos.allcolor.Contains(newColor.colorClass))
+            if (!catalogs.Colors.Contains(newColor.colorClass))
             {
-                arranjos.allcolor.Add(newColor.colorClass);
+                catalogs.Colors.Add(newColor.colorClass);
                 ColorComboBox.Items.Add(newColor.colorClass);
             }
 

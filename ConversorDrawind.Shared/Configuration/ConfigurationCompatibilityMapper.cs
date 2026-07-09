@@ -82,7 +82,12 @@ namespace ConversorDrawind
             result.Layers.ExplodeLayers = arranjos.allExplodeLayers.Where(item => !string.IsNullOrEmpty(item)).ToList();
 
             result.Lines.LineTypeScale = configuration.EXTLINELtscale;
-            result.Lines.BaseLineTypes = arranjos.allLineType1.ToList();
+            result.Lines.BaseLineTypes = configuration.Lines.BaseLineTypes.ToList();
+            result.Catalogs.Colors = configuration.Catalogs.Colors.ToList();
+            result.Catalogs.ObjectTypes = configuration.Catalogs.ObjectTypes.ToList();
+            result.Catalogs.FilterLineTypes = configuration.Catalogs.FilterLineTypes.ToList();
+            result.Catalogs.LayerLineTypes = configuration.Catalogs.LayerLineTypes.ToList();
+            result.Catalogs.RemovedLineTypes = configuration.Catalogs.RemovedLineTypes.ToList();
 
             result.Commands.LispCommands = arranjos.listLISPCommand.ToList();
             result.Commands.DllCommands = arranjos.listDLLCommand.ToList();
@@ -96,6 +101,7 @@ namespace ConversorDrawind
 
             result.Runtime.DbLineTypePath = configuration.PROGRAMDbLin;
             result.Runtime.TempDirectory = configuration.GetPROGRAMDirectoryTemp();
+            result.EnsureDefaults();
 
             return result;
         }
@@ -109,9 +115,9 @@ namespace ConversorDrawind
             List<Block> originalBlocks)
         {
             source = source ?? new ConverterConfiguration();
+            source.EnsureDefaults();
 
             arranjos.allBaseLayer.Clear();
-            arranjos.allLineType1.Clear();
             arranjos.allNewLayerComposition.Clear();
             arranjos.allNewLayer.Clear();
             arranjos.conversor.Clear();
@@ -186,10 +192,9 @@ namespace ConversorDrawind
             configuration.LayerTeklaString = source.Layers.TeklaDrawingSheetLayer;
             configuration.LayerBlockAttribute = source.Layers.BlockAttributeLayer;
             arranjos.allBaseLayer.AddRange(source.Layers.BaseLayers);
-            arranjos.allLineType1.AddRange(source.Lines.BaseLineTypes);
             arranjos.allNewLayerComposition.AddRange(source.Layers.NewLayers.Select(LegacyConfigurationParsers.FormatLayerDefinition));
             arranjos.allNewLayer.AddRange(source.Layers.NewLayers.Select(layer => layer.Name));
-            arranjos.layerRemove.AddRange(source.Layers.RemoveRules.Select(rule => ToFilter(rule.Filter, arranjos)));
+            arranjos.layerRemove.AddRange(source.Layers.RemoveRules.Select(rule => ToFilter(rule.Filter)));
             arranjos.conversor.AddRange(source.Layers.ConversionRules.Select(LegacyConfigurationParsers.FormatLayerConversionRule));
             arranjos.allExplodeLayers.AddRange(source.Layers.ExplodeLayers);
 
@@ -203,6 +208,36 @@ namespace ConversorDrawind
             teklaBlocks.AddRange(source.Blocks.TeklaBlocks.Select(ToBlock));
             cadBlocks.AddRange(source.Blocks.CadBlocks.Select(ToBlock));
             originalBlocks.AddRange(source.Blocks.OriginalBlocks.Select(ToBlock));
+        }
+
+        public static void ApplyBlocksToLegacyLists(
+            Configuration source,
+            List<Block> teklaBlocks,
+            List<Block> cadBlocks,
+            List<Block> originalBlocks)
+        {
+            source = source ?? new Configuration();
+            source.EnsureDefaults();
+
+            teklaBlocks.Clear();
+            cadBlocks.Clear();
+            originalBlocks.Clear();
+
+            teklaBlocks.AddRange(source.Blocks.TeklaBlocks.Select(ToBlock));
+            cadBlocks.AddRange(source.Blocks.CadBlocks.Select(ToBlock));
+            originalBlocks.AddRange(source.Blocks.OriginalBlocks.Select(ToBlock));
+        }
+
+        public static void ApplyBlocksFromLegacyLists(
+            Configuration target,
+            List<Block> teklaBlocks,
+            List<Block> cadBlocks,
+            List<Block> originalBlocks)
+        {
+            target = target ?? new Configuration();
+            target.Blocks.TeklaBlocks = (teklaBlocks ?? new List<Block>()).Select(ToBlockDefinition).ToList();
+            target.Blocks.CadBlocks = (cadBlocks ?? new List<Block>()).Select(ToBlockDefinition).ToList();
+            target.Blocks.OriginalBlocks = (originalBlocks ?? new List<Block>()).Select(ToBlockDefinition).ToList();
         }
 
         private static LayerRemoveRule ToRemoveRule(Filter filter)
@@ -224,9 +259,9 @@ namespace ConversorDrawind
             };
         }
 
-        private static Filter ToFilter(EntityFilter source, Arranjos arranjos)
+        private static Filter ToFilter(EntityFilter source)
         {
-            Filter result = new Filter(arranjos);
+            Filter result = new Filter(new Configuration().Catalogs);
             result.layerBase = source.BaseLayer;
             result.tipoObjeto = source.ObjectType;
             result.cor = source.Color;
@@ -282,7 +317,7 @@ namespace ConversorDrawind
             result.modify = source.Modify;
             result.p1 = ToPointEspecial(source.Point1);
             result.p2 = ToPointEspecial(source.Point2);
-            result.filtro = ToFilter(source.Filter, new Arranjos());
+            result.filtro = ToFilter(source.Filter);
             result.widthfactor = LegacyConfigurationParsers.FormatDouble(source.WidthFactor);
             result.indiceRelacao = source.RelatedIndex;
             result.isSociate = source.IsAssociated;

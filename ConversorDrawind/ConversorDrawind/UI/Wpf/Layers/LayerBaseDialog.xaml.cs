@@ -13,14 +13,15 @@ namespace ConversorDrawind.UI.Wpf.Layers
 {
     public partial class LayerBaseDialog : Window
     {
-        private readonly Arranjos arranjos;
+        private readonly global::ConversorDrawind.Configuration configuration;
         private readonly List<string> layers;
 
-        public LayerBaseDialog(string currentLayer, Arranjos arranjos)
+        public LayerBaseDialog(string currentLayer, global::ConversorDrawind.Configuration configuration)
         {
             InitializeComponent();
-            this.arranjos = arranjos;
-            layers = new List<string>(arranjos.allNewLayer);
+            this.configuration = configuration ?? new global::ConversorDrawind.Configuration();
+            this.configuration.EnsureDefaults();
+            layers = this.configuration.Layers.NewLayers.Select(layer => layer.Name).ToList();
             BaseLayerComboBox.ItemsSource = layers;
             BaseLayerComboBox.Text = currentLayer;
         }
@@ -44,7 +45,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
             loadThread.Join();
 
             layers.Clear();
-            layers.AddRange(arranjos.allNewLayer);
+            layers.AddRange(configuration.Layers.NewLayers.Select(layer => layer.Name));
             BaseLayerComboBox.ItemsSource = null;
             BaseLayerComboBox.ItemsSource = layers;
         }

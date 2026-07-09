@@ -4,18 +4,18 @@ namespace ConversorDrawind
 {
     public sealed class ConfigurarLayersCor : IDisposable
     {
-        private readonly Arranjos arranjos;
+        private readonly CatalogConfiguration catalogs;
         public string cor;
 
-        public ConfigurarLayersCor(string valor, Arranjos arranjos)
+        public ConfigurarLayersCor(string valor, Configuration configuration)
         {
             cor = valor;
-            this.arranjos = arranjos;
+            catalogs = (configuration ?? new Configuration()).Catalogs;
         }
 
         public UiDialogResult ShowDialog()
         {
-            LayerColorDialog dialog = new LayerColorDialog(cor, arranjos);
+            LayerColorDialog dialog = new LayerColorDialog(cor, catalogs);
             bool? result = dialog.ShowDialog();
 
             if (result == true)

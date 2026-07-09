@@ -6,22 +6,22 @@ namespace ConversorDrawind
     public sealed class LinhasErradas : IDisposable
     {
         private readonly List<CorrecaoLinhas> linhasErradas;
-        private readonly Arranjos arranjos;
+        private readonly Configuration configuration;
 
-        public LinhasErradas(List<CorrecaoLinhas> linhasErradas, Arranjos arranjos)
+        public LinhasErradas(List<CorrecaoLinhas> linhasErradas, Configuration configuration)
         {
             this.linhasErradas = linhasErradas;
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new Configuration();
         }
 
         public bool CheckLines()
         {
-            return new WrongLineTypesDialog(linhasErradas, arranjos).CheckLines();
+            return new WrongLineTypesDialog(linhasErradas, configuration).CheckLines();
         }
 
         public UiDialogResult ShowDialog()
         {
-            WrongLineTypesDialog dialog = new WrongLineTypesDialog(linhasErradas, arranjos);
+            WrongLineTypesDialog dialog = new WrongLineTypesDialog(linhasErradas, configuration);
             bool? result = dialog.ShowDialog();
             return result == true ? UiDialogResult.OK : UiDialogResult.Cancel;
         }

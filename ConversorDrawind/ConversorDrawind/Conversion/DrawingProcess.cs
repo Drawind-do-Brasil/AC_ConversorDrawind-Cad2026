@@ -471,7 +471,7 @@ namespace ConversorDrawind
                         ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
                         try
                         {
-                            foreach (string item in parametros.arranjos.listLISPCommand)
+                            foreach (string item in parametros.configuration.Commands.LispCommands)
                             {
                                 string[] value = item.Split('@');
                                 if (value.Count() != 3)
@@ -481,7 +481,7 @@ namespace ConversorDrawind
                                 }
                             }
                             if (last)
-                                foreach (string item in parametros.arranjos.listLISPCommand)
+                                foreach (string item in parametros.configuration.Commands.LispCommands)
                                 {
 
                                     string[] value = item.Split('@');

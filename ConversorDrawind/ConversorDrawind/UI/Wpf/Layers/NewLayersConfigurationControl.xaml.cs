@@ -17,7 +17,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 {
     public partial class NewLayersConfigurationControl : UserControl
     {
-        private Arranjos arranjos;
+        private global::ConversorDrawind.Configuration configuration = new global::ConversorDrawind.Configuration();
 
         public NewLayersConfigurationControl()
         {
@@ -26,42 +26,32 @@ namespace ConversorDrawind.UI.Wpf.Layers
             DataContext = this;
         }
 
-        public NewLayersConfigurationControl(Arranjos arranjos)
-            : this()
-        {
-            LoadArranjos(arranjos);
-        }
-
         public event EventHandler ConfigurationChanged;
 
         public ObservableCollection<LayerRow> Rows { get; }
 
-        public void LoadArranjos(Arranjos arranjos)
+        public void LoadConfiguration(global::ConversorDrawind.Configuration configuration)
         {
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new global::ConversorDrawind.Configuration();
+            this.configuration.EnsureDefaults();
             LoadRows();
         }
 
         private void LoadRows()
         {
             Rows.Clear();
-            if (arranjos == null)
+            for (int i = 0; i < configuration.Layers.NewLayers.Count; i++)
             {
-                return;
-            }
-
-            for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
-            {
-                string[] listTemp = arranjos.allNewLayerComposition[i].Split(':');
-                if (listTemp.Length >= 3)
+                LayerDefinition layer = configuration.Layers.NewLayers[i];
+                if (!string.IsNullOrWhiteSpace(layer.Name))
                 {
-                    Rows.Add(new LayerRow(listTemp[0], listTemp[1], listTemp[2]));
+                    Rows.Add(new LayerRow(layer.Name, layer.Color, layer.LineType));
                 }
             }
 
             if (Rows.Count == 0)
             {
-                NewLayer novoLayer = new NewLayer(arranjos);
+                NewLayer novoLayer = new NewLayer(configuration);
                 novoLayer.SetConjuntoEspecial();
                 Rows.Add(new LayerRow(novoLayer.layer, novoLayer.cor, novoLayer.tipoLinha.Split(',').First().ToUpper()));
             }
@@ -97,17 +87,18 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
         }
 
-        public static void CheckLines(Arranjos arranjos)
+        public void CheckLines()
         {
             var linhasErradas = new System.Collections.Generic.List<CorrecaoLinhas>();
-            for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
+            ApplyRowsToConfiguration(false);
+            for (int i = 0; i < configuration.Layers.NewLayers.Count; i++)
             {
-                string[] listTemp = arranjos.allNewLayerComposition[i].Split(':');
+                LayerDefinition layer = configuration.Layers.NewLayers[i];
                 bool lineOK = false;
-                foreach (string line in arranjos.allLineType2)
+                foreach (string line in configuration.Catalogs.LayerLineTypes)
                 {
                     string[] lineTemp = line.Split(',');
-                    if (listTemp.Last().ToUpper() == lineTemp.First().ToUpper())
+                    if ((layer.LineType ?? string.Empty).ToUpper() == lineTemp.First().ToUpper())
                     {
                         lineOK = true;
                     }
@@ -116,9 +107,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 if (!lineOK)
                 {
                     CorrecaoLinhas linhaerrada = new CorrecaoLinhas();
-                    linhaerrada.linha = arranjos.allNewLayerComposition[i];
-                    linhaerrada.nomeLayer = listTemp[0];
-                    linhaerrada.oldLinha = listTemp[2];
+                    linhaerrada.linha = LegacyConfigurationParsers.FormatLayerDefinition(layer);
+                    linhaerrada.nomeLayer = layer.Name;
+                    linhaerrada.oldLinha = layer.LineType;
                     linhaerrada.posLinha = i;
                     linhasErradas.Add(linhaerrada);
                 }
@@ -126,49 +117,33 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
             if (linhasErradas.Count > 0)
             {
-                LinhasErradas formLinhasErradas = new LinhasErradas(linhasErradas, arranjos);
+                LinhasErradas formLinhasErradas = new LinhasErradas(linhasErradas, configuration);
                 formLinhasErradas.ShowDialog();
+                LoadRows();
             }
         }
 
         public void OpenAcadLoadLayer()
         {
-            if (arranjos == null)
-            {
-                return;
-            }
-
-            UpdateAllNewLayerComposition();
-            UpdateAllNewLayer();
+            ApplyRowsToConfiguration(false);
             ImportLayersFromAcad(false);
         }
 
         public void OpenAcadLoadLayerExterno()
         {
-            if (arranjos == null)
-            {
-                return;
-            }
-
             ImportLayersFromAcad(true);
         }
 
-        public bool ApplyRowsToArranjos(bool showWarnings = true)
+        public bool ApplyRowsToConfiguration(bool showWarnings = true)
         {
-            if (arranjos == null)
-            {
-                return false;
-            }
-
             bool isRemove = false;
-            arranjos.allNewLayerComposition.Clear();
-            arranjos.allNewLayer.Clear();
+            configuration.Layers.NewLayers.Clear();
+            var names = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (LayerRow row in Rows)
             {
-                if (!arranjos.allNewLayer.Contains(row.Layer) || row.Layer == "")
+                if (names.Add(row.Layer) || row.Layer == "")
                 {
-                    arranjos.allNewLayerComposition.Add(row.Layer + ":" + row.Color + ":" + row.Line);
-                    arranjos.allNewLayer.Add(row.Layer);
+                    configuration.Layers.NewLayers.Add(new LayerDefinition { Name = row.Layer, Color = row.Color, LineType = row.Line });
                 }
                 else
                 {
@@ -176,12 +151,16 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 }
             }
 
-            if (!arranjos.allNewLayer.Contains("0"))
+            if (!configuration.Layers.NewLayers.Any(layer => string.Equals(layer.Name, "0", StringComparison.OrdinalIgnoreCase)))
             {
-                NewLayer novoLayer = new NewLayer(arranjos);
+                NewLayer novoLayer = new NewLayer(configuration);
                 novoLayer.SetConjuntoEspecial();
-                arranjos.allNewLayerComposition.Add(novoLayer.layer + ":" + novoLayer.cor + ":" + novoLayer.tipoLinha.Split(',').First().ToUpper());
-                arranjos.allNewLayer.Add(novoLayer.layer);
+                configuration.Layers.NewLayers.Add(new LayerDefinition
+                {
+                    Name = novoLayer.layer,
+                    Color = novoLayer.cor,
+                    LineType = novoLayer.tipoLinha.Split(',').First().ToUpper()
+                });
                 if (showWarnings)
                 {
                     MessageBox.Show(
@@ -201,8 +180,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     MessageBoxImage.Warning);
             }
 
-            arranjos.allNewLayer.Sort();
-            arranjos.allNewLayerComposition.Sort();
+            configuration.Layers.NewLayers = configuration.Layers.NewLayers
+                .OrderBy(layer => layer.Name, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(layer => layer.Color, StringComparer.OrdinalIgnoreCase)
+                .ThenBy(layer => layer.LineType, StringComparer.OrdinalIgnoreCase)
+                .ToList();
             LoadRows();
             NotifyConfigurationChanged();
             return true;
@@ -229,7 +211,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     loadThread.Join();
                     ApplicationRuntime.StopStatusThread(statusThread);
 
-                    string filetxt = new global::ConversorDrawind.Configuration().GetTempDirectory() + "TempImporNewLayer.Temp";
+                    string filetxt = configuration.GetTempDirectory() + "TempImporNewLayer.Temp";
                     if (File.Exists(filetxt))
                     {
                         using (StreamReader streamReader = new StreamReader(filetxt, Encoding.UTF8, true))
@@ -238,32 +220,14 @@ namespace ConversorDrawind.UI.Wpf.Layers
                             {
                                 string lineLayer = streamReader.ReadLine().ToUpper();
                                 string[] lineLayerArray = lineLayer.Split(':');
-                                if (!arranjos.allNewLayer.Contains(lineLayerArray.First()))
+                                LayerDefinition existing = FindLayer(lineLayerArray.First());
+                                if (existing == null)
                                 {
-                                    arranjos.allNewLayer.Add(lineLayerArray.First());
-                                    arranjos.allNewLayerComposition.Remove(lineLayer);
-                                    arranjos.allNewLayerComposition.Add(lineLayer);
+                                    configuration.Layers.NewLayers.Add(LegacyConfigurationParsers.ParseLayerDefinition(lineLayer));
                                 }
                                 else if (lineLayerArray.First() == "0")
                                 {
-                                    arranjos.allNewLayer.Remove(lineLayerArray.First());
-                                    arranjos.allNewLayer.Add(lineLayerArray.First());
-                                    bool exists = false;
-                                    for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
-                                    {
-                                        string[] lineLayerArray2 = arranjos.allNewLayerComposition[i].Split(':');
-                                        if (lineLayerArray2.First() == "0")
-                                        {
-                                            arranjos.allNewLayerComposition[i] = lineLayer;
-                                            exists = true;
-                                            break;
-                                        }
-                                    }
-
-                                    if (externalMode && !exists)
-                                    {
-                                        arranjos.allNewLayerComposition.Add(lineLayer);
-                                    }
+                                    UpdateLayer(existing, lineLayer);
                                 }
                                 else
                                 {
@@ -283,15 +247,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
                                     if (isUpdate)
                                     {
-                                        for (int i = 0; i < arranjos.allNewLayerComposition.Count; i++)
-                                        {
-                                            string[] lineLayerArray2 = arranjos.allNewLayerComposition[i].Split(':');
-                                            if (lineLayerArray2.First() == lineLayerArray.First())
-                                            {
-                                                arranjos.allNewLayerComposition[i] = lineLayer;
-                                                break;
-                                            }
-                                        }
+                                        UpdateLayer(existing, lineLayer);
                                     }
                                     else
                                     {
@@ -302,7 +258,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
                         }
 
                         File.Delete(filetxt);
-                        CheckLines(arranjos);
+                        CheckLines();
                     }
                 }
             }
@@ -322,22 +278,18 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
         }
 
-        private void UpdateAllNewLayerComposition()
+        private LayerDefinition FindLayer(string name)
         {
-            arranjos.allNewLayerComposition.Clear();
-            foreach (LayerRow row in Rows)
-            {
-                arranjos.allNewLayerComposition.Add(row.Layer + ":" + row.Color + ":" + row.Line);
-            }
+            return configuration.Layers.NewLayers
+                .FirstOrDefault(layer => string.Equals(layer.Name, name, StringComparison.OrdinalIgnoreCase));
         }
 
-        private void UpdateAllNewLayer()
+        private static void UpdateLayer(LayerDefinition target, string rawLayer)
         {
-            arranjos.allNewLayer.Clear();
-            foreach (LayerRow row in Rows)
-            {
-                arranjos.allNewLayer.Add(row.Layer);
-            }
+            LayerDefinition imported = LegacyConfigurationParsers.ParseLayerDefinition(rawLayer);
+            target.Name = imported.Name;
+            target.Color = imported.Color;
+            target.LineType = imported.LineType;
         }
 
         private void LoadClick(object sender, RoutedEventArgs e)
@@ -347,7 +299,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         private void ClearAllClick(object sender, RoutedEventArgs e)
         {
-            if (arranjos == null || Rows.Count == 0 || LayersGrid.SelectedIndex == -1)
+            if (Rows.Count == 0 || LayersGrid.SelectedIndex == -1)
             {
                 return;
             }
@@ -358,9 +310,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
             {
-                arranjos.allNewLayerComposition.Clear();
-                arranjos.allNewLayer.Clear();
-                arranjos.allNewLayer.Add("0");
+                configuration.Layers.NewLayers.Clear();
                 Rows.Clear();
                 NotifyConfigurationChanged();
             }
@@ -377,31 +327,26 @@ namespace ConversorDrawind.UI.Wpf.Layers
                         MessageBoxImage.Exclamation) == MessageBoxResult.Yes)
                 {
                     Rows.Remove(row);
-                    ApplyRowsToArranjos(false);
+                    ApplyRowsToConfiguration(false);
                 }
             }
         }
 
         private void AddRowClick(object sender, RoutedEventArgs e)
         {
-            if (arranjos == null)
-            {
-                return;
-            }
-
             int novosNomes = 0;
             bool isOK = false;
             string name = "";
             while (!isOK)
             {
                 ++novosNomes;
-                UpdateAllNewLayer();
-                if (!arranjos.allNewLayer.Contains("0"))
+                var layerNames = Rows.Select(row => row.Layer).ToList();
+                if (!layerNames.Contains("0"))
                 {
                     isOK = true;
                     name = "0";
                 }
-                else if (!arranjos.allNewLayer.Contains("NovoLayer_" + novosNomes))
+                else if (!layerNames.Contains("NovoLayer_" + novosNomes))
                 {
                     isOK = true;
                     name = "NovoLayer_" + novosNomes;
@@ -410,7 +355,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
             if (Rows.Count == 0)
             {
-                NewLayer novoLayer = new NewLayer(arranjos);
+                NewLayer novoLayer = new NewLayer(configuration);
                 novoLayer.SetConjuntoEspecial();
                 Rows.Add(new LayerRow(name, novoLayer.cor, novoLayer.tipoLinha.Split(',').First().ToUpper()));
             }
@@ -420,12 +365,12 @@ namespace ConversorDrawind.UI.Wpf.Layers
             }
 
             LayersGrid.SelectedIndex = Rows.Count - 1;
-            ApplyRowsToArranjos(false);
+            ApplyRowsToConfiguration(false);
         }
 
         private void LayersGridMouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (arranjos == null || LayersGrid.CurrentItem is not LayerRow row || LayersGrid.CurrentColumn == null)
+            if (LayersGrid.CurrentItem is not LayerRow row || LayersGrid.CurrentColumn == null)
             {
                 return;
             }
@@ -433,27 +378,27 @@ namespace ConversorDrawind.UI.Wpf.Layers
             int columnIndex = LayersGrid.Columns.IndexOf(LayersGrid.CurrentColumn);
             if (columnIndex == 0)
             {
-                ConfigurarLayersNome dialog = new ConfigurarLayersNome(row.Layer, arranjos);
+                ConfigurarLayersNome dialog = new ConfigurarLayersNome(row.Layer, configuration);
                 dialog.ShowDialog();
                 row.Layer = dialog.nome;
                 dialog.Dispose();
             }
             else if (columnIndex == 1)
             {
-                ConfigurarLayersCor dialog = new ConfigurarLayersCor(row.Color, arranjos);
+                ConfigurarLayersCor dialog = new ConfigurarLayersCor(row.Color, configuration);
                 dialog.ShowDialog();
                 row.Color = dialog.cor;
                 dialog.Dispose();
             }
             else if (columnIndex == 2)
             {
-                ConfigurarLayersLinha dialog = new ConfigurarLayersLinha(row.Line, arranjos);
+                ConfigurarLayersLinha dialog = new ConfigurarLayersLinha(row.Line, configuration);
                 dialog.ShowDialog();
                 row.Line = dialog.linha.Split(',').First().ToUpper();
                 dialog.Dispose();
             }
 
-            ApplyRowsToArranjos(false);
+            ApplyRowsToConfiguration(false);
         }
 
         private void NotifyConfigurationChanged()

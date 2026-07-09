@@ -30,7 +30,6 @@ namespace ConversorDrawind.UI.Wpf.Main
         private readonly ObservableCollection<string> allExplodeLayerNames = new ObservableCollection<string>();
         private readonly ObservableCollection<string> selectedExplodeLayerNames = new ObservableCollection<string>();
         private global::ConversorDrawind.Configuration configuration = new global::ConversorDrawind.Configuration();
-        private Arranjos arranjos = new Arranjos();
         private List<Block> listBlocks = new List<Block>();
         private List<Block> listBlocksInv = new List<Block>();
         private List<Block> listBlocksOrig = new List<Block>();
@@ -64,8 +63,8 @@ namespace ConversorDrawind.UI.Wpf.Main
                 case "SaveConverterClick": SaveConverter(); break;
                 case "ImportConverterClick": ImportConverter(); break;
                 case "LoadClientLayersClick": LoadClientLayers(); break;
-                case "ConfigureClientLayersClick": using (ConfigurarLayers f = new ConfigurarLayers(arranjos)) f.ShowDialog(); break;
-                case "ConfigureTextStylesClick": using (ConfigurarTextStyle f = new ConfigurarTextStyle(arranjos)) f.ShowDialog(); break;
+                case "ConfigureClientLayersClick": using (ConfigurarLayers f = new ConfigurarLayers(configuration)) f.ShowDialog(); RefreshLayerDependentViews(); break;
+                case "ConfigureTextStylesClick": using (ConfigurarTextStyle f = new ConfigurarTextStyle(configuration)) f.ShowDialog(); PopulateDimensionComboBoxes(); break;
                 case "DimensionArrowAdvancedClick": ConfigureAdvancedDimensionArrow(); break;
                 case "OtherLineColorClick": AddOtherDimensionColor(EditorView.DimensionLineColorComboBox); break;
                 case "OtherTextColorClick": AddOtherDimensionColor(EditorView.DimensionTextColorComboBox); break;
@@ -201,8 +200,11 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void LoadConverter(string converterName)
         {
-            configuration = new global::ConversorDrawind.Configuration(); arranjos = new Arranjos(); listBlocks = new List<Block>(); listBlocksInv = new List<Block>(); listBlocksOrig = new List<Block>();
-            ConverterFileService.LoadConverter(configuration, converterName, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
+            configuration = ConverterFileService.LoadConverter(converterName, CurrentStatus);
+            listBlocks = new List<Block>();
+            listBlocksInv = new List<Block>();
+            listBlocksOrig = new List<Block>();
+            ConfigurationCompatibilityMapper.ApplyBlocksToLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, converterName);
         }
@@ -224,7 +226,12 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void NewConverter()
         {
-            configuration = new global::ConversorDrawind.Configuration(); arranjos = new Arranjos(); listBlocks.Clear(); listBlocksInv.Clear(); listBlocksOrig.Clear(); EditorView.ConverterNameTextBox.Text = string.Empty; LoadConfigurationToControls();
+            configuration = new global::ConversorDrawind.Configuration();
+            listBlocks.Clear();
+            listBlocksInv.Clear();
+            listBlocksOrig.Clear();
+            EditorView.ConverterNameTextBox.Text = string.Empty;
+            LoadConfigurationToControls();
         }
 
         private void SaveConverter()
@@ -232,7 +239,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             string name = EditorView.ConverterNameTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(name)) { WpfMessageBox.Show(Localization.MessageEnterConverterNameBeforeSave, Localization.AppTitle); return; }
             ReadConfigurationFromControls();
-            ConverterFileService.SaveConverter(configuration, name, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
+            ConfigurationCompatibilityMapper.ApplyBlocksFromLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
+            ConverterFileService.SaveConverter(name, CurrentStatus, configuration);
             LoadConverterLists();
             SelectLoadedConverter(name);
             UserSettingsService.SaveLastConverter(CurrentStatus, name);
@@ -242,7 +250,8 @@ namespace ConversorDrawind.UI.Wpf.Main
         {
             OpenFileDialog dialog = new OpenFileDialog { Filter = Localization.FilterTemplateXml };
             if (dialog.ShowDialog(this) != true) return;
-            ConverterFileService.LoadConverter(configuration, dialog.FileName, arranjos, listBlocks, listBlocksInv, listBlocksOrig, CurrentStatus);
+            configuration = ConverterFileService.LoadConverter(dialog.FileName, CurrentStatus);
+            ConfigurationCompatibilityMapper.ApplyBlocksToLegacyLists(configuration, listBlocks, listBlocksInv, listBlocksOrig);
             EditorView.ConverterNameTextBox.Text = Path.GetFileNameWithoutExtension(dialog.FileName);
             LoadConfigurationToControls();
             UserSettingsService.SaveLastConverter(CurrentStatus, EditorView.ConverterNameTextBox.Text);
@@ -256,7 +265,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             ConversionPreflightResult preflight = ConversionPreflightValidator.ValidateFormatPath(configuration);
             if (!preflight.CanConvert) { WpfMessageBox.Show(Localization.FormatNotFoundMessage(preflight.MissingFormatPath), Localization.AppTitle); return; }
             ApplicationRuntime.ExtensaoGeral = Convert.ToString(ConverterView.ExtensionComboBox.Text);
-            Param1 param = new Param1 { conversorName = selectedConverter, desenhosName = drawings.ToArray(), closedesenhos = ConverterView.KeepFilesOpenCheckBox.IsChecked != true, configuration = configuration, arranjos = arranjos, StatusConversorItem = CurrentStatus };
+            Param1 param = new Param1 { conversorName = selectedConverter, desenhosName = drawings.ToArray(), closedesenhos = ConverterView.KeepFilesOpenCheckBox.IsChecked != true, configuration = configuration, StatusConversorItem = CurrentStatus };
             using (Processo processo = new Processo(param)) processo.ShowDialog();
             if (!Processo.IsCanceled) using (ProcessoEnd processoEnd = new ProcessoEnd()) processoEnd.ShowDialog();
         }
@@ -275,9 +284,9 @@ namespace ConversorDrawind.UI.Wpf.Main
                     return;
                 }
 
-                if (!arranjos.allcolor.Contains(colorDialog.colorClass))
+                if (!configuration.Catalogs.Colors.Contains(colorDialog.colorClass))
                 {
-                    arranjos.allcolor.Add(colorDialog.colorClass);
+                    configuration.Catalogs.Colors.Add(colorDialog.colorClass);
                 }
 
                 PopulateDimensionComboBoxes();
@@ -287,9 +296,9 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void PopulateDimensionComboBoxes()
         {
-            SetComboItems(EditorView.DimensionLayerComboBox, arranjos.allNewLayer, configuration.Dimensions.Layer);
-            SetComboItems(EditorView.DimensionLineColorComboBox, arranjos.allcolor.Skip(1), configuration.Dimensions.LineColor);
-            SetComboItems(EditorView.DimensionTextColorComboBox, arranjos.allcolor.Skip(1), configuration.Dimensions.TextColor);
+            SetComboItems(EditorView.DimensionLayerComboBox, NewLayerNames(), configuration.Dimensions.Layer);
+            SetComboItems(EditorView.DimensionLineColorComboBox, configuration.Catalogs.Colors.Skip(1), configuration.Dimensions.LineColor);
+            SetComboItems(EditorView.DimensionTextColorComboBox, configuration.Catalogs.Colors.Skip(1), configuration.Dimensions.TextColor);
             SetComboItems(EditorView.DimensionArrowTypeComboBox, DimensionArrowTypes(), configuration.Dimensions.ArrowType);
             SetComboItems(EditorView.DimensionTextStyleComboBox, TextStyleNames(), configuration.Text.DefaultStyleName);
             SetComboItems(EditorView.DimensionLinearPrecisionComboBox, Enumerable.Range(0, 9).Select(i => Convert.ToString(i)), Convert.ToString(configuration.Dimensions.Precision));
@@ -322,21 +331,27 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private IEnumerable<string> TextStyleNames()
         {
-            if (arranjos.allTextSyles.Count == 0)
-            {
-                arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
-            }
-
-            return arranjos.allTextSyles.Select(style => style.Split(':').First());
+            configuration.EnsureDefaults();
+            return configuration.Text.Styles.Select(style => style.Name);
         }
 
         private IEnumerable<string> DimensionBaseLayers()
         {
             yield return "DIMENSION";
-            foreach (string layer in arranjos.allBaseLayer.Where(layer => !string.Equals(layer, "DIMENSION", StringComparison.OrdinalIgnoreCase)))
+            foreach (string layer in configuration.Layers.BaseLayers.Where(layer => !string.Equals(layer, "DIMENSION", StringComparison.OrdinalIgnoreCase)))
             {
                 yield return layer;
             }
+        }
+
+        private IEnumerable<string> NewLayerNames()
+        {
+            return configuration.Layers.NewLayers.Select(layer => layer.Name);
+        }
+
+        private IEnumerable<string> AllConfiguredLayerNames()
+        {
+            return NewLayerNames().Concat(configuration.Layers.BaseLayers);
         }
 
         private IEnumerable<string> BooleanOptions()
@@ -402,7 +417,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         {
             SetComboItems(EditorView.TeklaTextLayerComboBox, PreferredLayerFirst("DRAWING SHEET"), configuration.Layers.TeklaDrawingSheetLayer);
             SetComboItems(EditorView.FormatBlockLayerComboBox, PreferredLayerFirst("OTHER OBJECT TYPE"), configuration.Layers.BlockAttributeLayer);
-            SetComboItems(EditorView.ScaleLayerComboBox, arranjos.allNewLayer.Concat(arranjos.allBaseLayer), configuration.Scale.Layer);
+            SetComboItems(EditorView.ScaleLayerComboBox, AllConfiguredLayerNames(), configuration.Scale.Layer);
         }
 
         private void ClientLayersConfigurationChanged(object sender, EventArgs e)
@@ -425,7 +440,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         private IEnumerable<string> PreferredLayerFirst(string preferredLayer)
         {
             yield return preferredLayer;
-            foreach (string layer in arranjos.allBaseLayer.Where(layer => !string.Equals(layer, preferredLayer, StringComparison.OrdinalIgnoreCase)))
+            foreach (string layer in configuration.Layers.BaseLayers.Where(layer => !string.Equals(layer, preferredLayer, StringComparison.OrdinalIgnoreCase)))
             {
                 yield return layer;
             }
@@ -433,7 +448,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void LoadClientLayers()
         {
-            using (ConfigurarLayers dialog = new ConfigurarLayers(arranjos))
+            using (ConfigurarLayers dialog = new ConfigurarLayers(configuration))
             {
                 dialog.OpenAcadLoadLayerExterno();
             }
@@ -444,8 +459,9 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void RefreshLayerRuleRows()
         {
             layerRuleRows.Clear();
-            foreach (string item in arranjos.conversor)
+            foreach (LayerConversionRule rule in configuration.Layers.ConversionRules)
             {
+                string item = LegacyConfigurationParsers.FormatLayerConversionRule(rule);
                 string[] parts = item.Split(new[] { ';' }, 3);
                 if (parts.Length == 3)
                 {
@@ -454,70 +470,74 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
         }
 
-        private void SaveLayerRuleRowsToArranjos()
+        private void SaveLayerRuleRowsToConfiguration()
         {
-            arranjos.conversor.Clear();
+            configuration.Layers.ConversionRules.Clear();
             foreach (LayerRuleRow row in layerRuleRows)
             {
-                arranjos.conversor.Add((row.BaseLayer ?? string.Empty) + ";" + (row.Filter ?? string.Empty) + ";" + (row.NewLayer ?? string.Empty));
+                configuration.Layers.ConversionRules.Add(
+                    LegacyConfigurationParsers.ParseLayerConversionRule((row.BaseLayer ?? string.Empty) + ";" + (row.Filter ?? string.Empty) + ";" + (row.NewLayer ?? string.Empty)));
             }
         }
 
         private void RefreshRemoveLayerViews()
         {
             removeLayerBaseNames.Clear();
-            foreach (string layer in arranjos.allNewLayer.Concat(arranjos.allBaseLayer).Distinct(StringComparer.OrdinalIgnoreCase))
+            foreach (string layer in AllConfiguredLayerNames().Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 removeLayerBaseNames.Add(layer);
             }
 
             removeLayerRows.Clear();
-            foreach (Filter filter in arranjos.layerRemove)
+            foreach (LayerRemoveRule rule in configuration.Layers.RemoveRules)
             {
-                removeLayerRows.Add(new RemoveLayerRow(filter.layerBase, filter.GetConjunto()));
+                string formatted = LegacyConfigurationParsers.FormatLayerRemoveRule(rule);
+                string[] parts = formatted.Split(new[] { ';' }, 2);
+                if (parts.Length == 2)
+                {
+                    removeLayerRows.Add(new RemoveLayerRow(parts[0], parts[1]));
+                }
             }
         }
 
-        private void SaveRemoveLayerRowsToArranjos()
+        private void SaveRemoveLayerRowsToConfiguration()
         {
-            arranjos.layerRemove.Clear();
+            configuration.Layers.RemoveRules.Clear();
             foreach (RemoveLayerRow row in removeLayerRows)
             {
-                Filter filter = new Filter(arranjos)
-                {
-                    layerBase = row.Layer ?? string.Empty
-                };
-                filter.SetConjunto(row.Filter ?? string.Empty);
-                arranjos.layerRemove.Add(filter);
+                configuration.Layers.RemoveRules.Add(
+                    LegacyConfigurationParsers.ParseLayerRemoveRule((row.Layer ?? string.Empty) + ";" + (row.Filter ?? string.Empty)));
             }
         }
 
         private void RefreshExplodeLayerViews()
         {
             allExplodeLayerNames.Clear();
-            foreach (string layer in arranjos.allBaseLayer.Distinct(StringComparer.OrdinalIgnoreCase))
+            foreach (string layer in configuration.Layers.BaseLayers.Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 allExplodeLayerNames.Add(layer);
             }
 
             selectedExplodeLayerNames.Clear();
-            foreach (string layer in arranjos.allExplodeLayers.Where(layer => !string.IsNullOrWhiteSpace(layer)).Distinct(StringComparer.OrdinalIgnoreCase))
+            foreach (string layer in configuration.Layers.ExplodeLayers.Where(layer => !string.IsNullOrWhiteSpace(layer)).Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 selectedExplodeLayerNames.Add(layer);
             }
         }
 
-        private void SaveExplodeLayerRowsToArranjos()
+        private void SaveExplodeLayerRowsToConfiguration()
         {
-            arranjos.allExplodeLayers.Clear();
-            arranjos.allExplodeLayers.AddRange(selectedExplodeLayerNames.Where(layer => !string.IsNullOrWhiteSpace(layer)));
+            configuration.Layers.ExplodeLayers = selectedExplodeLayerNames
+                .Where(layer => !string.IsNullOrWhiteSpace(layer))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
         }
 
         private void AddLayerRule()
         {
-            Filter filter = new Filter(arranjos);
+            Filter filter = new Filter(configuration.Catalogs);
             filter.SetConjunto();
-            NewLayer newLayer = new NewLayer(arranjos);
+            NewLayer newLayer = new NewLayer(configuration);
             newLayer.SetConjunto();
 
             int insertIndex = EditorView.LayerRulesGrid.SelectedIndex >= 0 ? EditorView.LayerRulesGrid.SelectedIndex : layerRuleRows.Count;
@@ -562,7 +582,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             int columnIndex = EditorView.LayerRulesGrid.Columns.IndexOf(EditorView.LayerRulesGrid.CurrentColumn);
             if (columnIndex == 0)
             {
-                using (LayersLayerBase dialog = new LayersLayerBase(row.BaseLayer, arranjos))
+                using (LayersLayerBase dialog = new LayersLayerBase(row.BaseLayer, configuration))
                 {
                     if (dialog.ShowDialog() == UiDialogResult.OK)
                     {
@@ -573,7 +593,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
             else if (columnIndex == 1)
             {
-                using (LayersFilter dialog = new LayersFilter(row.Filter, arranjos))
+                using (LayersFilter dialog = new LayersFilter(row.Filter, configuration))
                 {
                     if (dialog.ShowDialog() == UiDialogResult.OK)
                     {
@@ -584,7 +604,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             }
             else if (columnIndex == 2)
             {
-                using (LayersNewLayer dialog = new LayersNewLayer(row.NewLayer, arranjos))
+                using (LayersNewLayer dialog = new LayersNewLayer(row.NewLayer, configuration))
                 {
                     if (dialog.ShowDialog() == UiDialogResult.OK)
                     {
@@ -597,7 +617,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void AddRemoveLayerRule()
         {
-            Filter filter = new Filter(arranjos);
+            Filter filter = new Filter(configuration.Catalogs);
             filter.SetConjunto2();
             foreach (string layer in EditorView.RemoveLayerBaseListBox.SelectedItems.OfType<string>())
             {
@@ -630,7 +650,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            using (LayersFilter dialog = new LayersFilter(row.Filter, arranjos))
+            using (LayersFilter dialog = new LayersFilter(row.Filter, configuration))
             {
                 dialog.DisableOrientacao();
                 if (dialog.ShowDialog() == UiDialogResult.OK)
@@ -720,8 +740,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.AttributedFormatPathTextBox.Text = configuration.Blocks.TeklaBlockPath;
             EditorView.CadBlocksPathTextBox.Text = configuration.Blocks.CadBlockPath;
             EditorView.OriginalBlocksPathTextBox.Text = configuration.Blocks.CadBlockPath;
-            EditorView.ClientLayersControl.LoadArranjos(arranjos);
-            EditorView.ClientTextStylesControl.LoadArranjos(arranjos);
+            EditorView.ClientLayersControl.LoadConfiguration(configuration);
+            EditorView.ClientTextStylesControl.LoadConfiguration(configuration);
             PopulateEditorComboBoxes();
             RefreshLayerRuleRows();
             RefreshRemoveLayerViews();
@@ -761,7 +781,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             EditorView.ScaleLayerComboBox.Text = configuration.Scale.Layer;
             EditorView.ScaleTextSizeTextBox.Text = Convert.ToString(configuration.Scale.TextSize);
             lispCommands.Clear();
-            foreach (string command in arranjos.listLISPCommand)
+            foreach (string command in configuration.Commands.LispCommands)
             {
                 lispCommands.Add(LispCommandRow.FromCommandEntry(command));
             }
@@ -820,13 +840,12 @@ namespace ConversorDrawind.UI.Wpf.Main
             configuration.Scale.Point2.Z = ReadDouble(EditorView.ScaleP2ZTextBox.Text, configuration.Scale.Point2.Z);
             configuration.Scale.Layer = EditorView.ScaleLayerComboBox.Text;
             configuration.Scale.TextSize = ReadDouble(EditorView.ScaleTextSizeTextBox.Text, configuration.Scale.TextSize);
-            EditorView.ClientLayersControl.ApplyRowsToArranjos(false);
-            EditorView.ClientTextStylesControl.ApplyRowsToArranjos();
-            SaveLayerRuleRowsToArranjos();
-            SaveRemoveLayerRowsToArranjos();
-            SaveExplodeLayerRowsToArranjos();
-            arranjos.listLISPCommand.Clear();
-            arranjos.listLISPCommand.AddRange(lispCommands.Select(command => command.ToCommandEntry()));
+            EditorView.ClientLayersControl.ApplyRowsToConfiguration(false);
+            EditorView.ClientTextStylesControl.ApplyRowsToConfiguration();
+            SaveLayerRuleRowsToConfiguration();
+            SaveRemoveLayerRowsToConfiguration();
+            SaveExplodeLayerRowsToConfiguration();
+            configuration.Commands.LispCommands = lispCommands.Select(command => command.ToCommandEntry()).ToList();
         }
 
         private void RefreshBlockViews()
@@ -1124,7 +1143,7 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
-            using (AttFormat dialog = new AttFormat(listBlocks[index], arranjos, teklaDrawingBlock))
+            using (AttFormat dialog = new AttFormat(listBlocks[index], configuration, teklaDrawingBlock))
             {
                 if (dialog.ShowDialog() != UiDialogResult.OK)
                 {

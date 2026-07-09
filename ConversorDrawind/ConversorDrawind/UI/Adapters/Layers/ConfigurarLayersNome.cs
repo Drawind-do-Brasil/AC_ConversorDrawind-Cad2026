@@ -1,21 +1,24 @@
-﻿using ConversorDrawind.UI.Wpf.Layers;
+using ConversorDrawind.UI.Wpf.Layers;
 using System;
+using System.Linq;
+
 namespace ConversorDrawind
 {
     public sealed class ConfigurarLayersNome : IDisposable
     {
-        public string nome;
-        private readonly Arranjos arranjos;
+        private readonly Configuration configuration;
 
-        public ConfigurarLayersNome(string nome, Arranjos arranjos)
+        public ConfigurarLayersNome(string nome, Configuration configuration)
         {
             this.nome = nome;
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new Configuration();
         }
+
+        public string nome;
 
         public UiDialogResult ShowDialog()
         {
-            LayerNameDialog dialog = new LayerNameDialog(nome, arranjos.allNewLayer);
+            LayerNameDialog dialog = new LayerNameDialog(nome, configuration.Layers.NewLayers.Select(layer => layer.Name));
             bool? result = dialog.ShowDialog();
 
             if (result == true)
@@ -32,6 +35,3 @@ namespace ConversorDrawind
         }
     }
 }
-
-
-

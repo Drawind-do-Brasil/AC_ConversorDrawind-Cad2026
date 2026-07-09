@@ -18,15 +18,15 @@ namespace ConversorDrawind.UI.Wpf.Blocks
     public partial class BlockAttributeFormatWindow : Window
     {
         private readonly Block block;
-        private readonly Arranjos arranjos;
+        private readonly global::ConversorDrawind.Configuration configuration;
         private GetInfo drawingBlock;
         private bool isContinueOp1 = true;
 
-        public BlockAttributeFormatWindow(Block block, Arranjos arranjos, GetInfo drawingBlock)
+        public BlockAttributeFormatWindow(Block block, global::ConversorDrawind.Configuration configuration, GetInfo drawingBlock)
         {
             InitializeComponent();
             this.block = block;
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new global::ConversorDrawind.Configuration();
             this.drawingBlock = drawingBlock;
             Rows = new ObservableCollection<BlockAttributeRow>();
             LoadRows();
@@ -163,7 +163,7 @@ namespace ConversorDrawind.UI.Wpf.Blocks
             else if (columnIndex == 3)
             {
                 string[] layer = row.Filter.Split(';');
-                AttFormatFilter filterDialog = new AttFormatFilter(layer[1], arranjos, layer[0]);
+                AttFormatFilter filterDialog = new AttFormatFilter(layer[1], configuration, layer[0]);
                 filterDialog.ShowDialog();
                 string filter = filterDialog.filtro.layerBase + ";" + filterDialog.filtro.GetConjunto();
                 foreach (BlockAttributeRow selectedRow in SelectedRows())

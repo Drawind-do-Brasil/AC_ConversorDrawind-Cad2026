@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using System.Xml.Serialization;
 
 namespace ConversorDrawind
@@ -9,10 +9,7 @@ namespace ConversorDrawind
     {
         private static string[] colors = new string[] { "ALL", "BYLAYER", "BYBLOCK", "BLUE", "CYAN", "GREEN", "MAGENTA", "RED", "WHITE", "YELLOW" };
         private static string[] objects = new string[] { "ALL", "TEXT", "LINE", "ARC", "CIRCLE", "HATCH", "DIMENSION", "MTEXT", "LWPOLYLINE", "SPLINE", "ATTDEF" , "SOLID", "POINT"};
-        public string[] lineType1 = new string[] { "ALL", "BYLAYER", "BYBLOCK", "BORDER", "CENTER", "CONTINUOUS", "DASHDOT", "DIVIDE", "DOT", "HIDDEN", "PHANTOM",  "XKITLINE00", "XKITLINE01", "XKITLINE02", "XKITLINE03", "XKITLINE04", "XKITLINE05", "XKITLINE06", "DXK_LINE_DOT1", "DXK_LINE_DOT2", "DXK_LINE_DOT3", "DXK_LINE_DOT4", "DXK_LINE_DOT5" };
-        public string[] lineType2 = new string[] { "BYLAYER", "BYBLOCK", "CONTINUOUS,Continuous ________________________________" };
-        public string[] lineTypeRemove = new string[] { "BYLAYER", "BYBLOCK" };
-        public string[] linesTekla = new string[] { "0", 
+        private static string[] linesTekla = new string[] { "0", 
             "BOLT", 
             "BOLT MARK",
             "BOLT_MARK",
@@ -54,6 +51,42 @@ namespace ConversorDrawind
 };
         public static string defaultTextStyle = "TEXTO:RomanS:false:false:2.5:1:0";
 
+        public static List<string> DefaultColors()
+        {
+            List<string> result = colors.ToList();
+            for (int i = 8; i < 256; i++)
+            {
+                result.Add(Convert.ToString(i));
+            }
+
+            return result;
+        }
+
+        public static List<string> DefaultObjectTypes()
+        {
+            return objects.ToList();
+        }
+
+        public static List<string> DefaultFilterLineTypes()
+        {
+            return new ArranjosDefaultValues().LineType1.ToList();
+        }
+
+        public static List<string> DefaultLayerLineTypes()
+        {
+            return new ArranjosDefaultValues().LineType2.ToList();
+        }
+
+        public static List<string> DefaultRemovedLineTypes()
+        {
+            return new ArranjosDefaultValues().LineTypeRemove.ToList();
+        }
+
+        public static List<string> DefaultBaseLayers()
+        {
+            return new ArranjosDefaultValues().LinesTekla.ToList();
+        }
+
         [XmlIgnore]
         public static Arranjos Arrj = new Arranjos();
 
@@ -66,10 +99,6 @@ namespace ConversorDrawind
         [XmlIgnore]
         public static List<Block> ListBlocksOrig = new List<Block>();
 
-        public List<string> allcolor = new List<string>();
-        public List<string> allobjects = new List<string>();
-        public List<string> allLineType1 = new List<string>();
-        public List<string> allLineType2 = new List<string>();
         public List<string> allBaseLayer = new List<string>();
         public List<string> allNewLayer = new List<string>();
         public List<string> allNewLayerComposition = new List<string>();
@@ -101,54 +130,59 @@ namespace ConversorDrawind
         public Arranjos()
         {
             Load();
-            LoadDbLineTypePath();
-        }
-
-        private void LoadDbLineTypePath()
-        {
-            Configuration configuration = new Configuration();
-
-            string directory = AppDomain.CurrentDomain.BaseDirectory + "LinPack.nfj";
-
-            if (!File.Exists(directory))
-            {
-                StreamWriter sw = new StreamWriter(directory);
-                sw.WriteLine(configuration.Runtime.DbLineTypePath);
-                sw.Close();
-            }
-
-            StreamReader sr = new StreamReader(directory);
-            string DbLineTypePath = sr.ReadLine();
-            sr.Close();
-
-            if (File.Exists(DbLineTypePath))
-            {
-                StreamReader wr = new StreamReader(DbLineTypePath);
-                string line = "";
-                while (!wr.EndOfStream)
-                {
-                    line = wr.ReadLine();
-                    if (line.Length > 0 && line.Substring(0, 1) == "*")
-                    {
-                        allLineType2.Add(line.Remove(0, 1));
-                    }
-                }
-            }
         }
 
         private void Load()
         {
             allTextSyles.Add(defaultTextStyle);
-            allcolor.AddRange(colors);
-            for (int i = 8; i < 256; i++)
-            {
-                allcolor.Add(Convert.ToString(i));
-            }
-            allobjects.AddRange(objects);
-            allLineType1.AddRange(lineType1);
             allNewLayer.Add("0");
-            allBaseLayer.AddRange(linesTekla);
-            allLineType2.AddRange(lineType2);
+            allBaseLayer.AddRange(DefaultBaseLayers());
+        }
+
+        private sealed class ArranjosDefaultValues
+        {
+            public string[] LineType1 = new string[] { "ALL", "BYLAYER", "BYBLOCK", "BORDER", "CENTER", "CONTINUOUS", "DASHDOT", "DIVIDE", "DOT", "HIDDEN", "PHANTOM", "XKITLINE00", "XKITLINE01", "XKITLINE02", "XKITLINE03", "XKITLINE04", "XKITLINE05", "XKITLINE06", "DXK_LINE_DOT1", "DXK_LINE_DOT2", "DXK_LINE_DOT3", "DXK_LINE_DOT4", "DXK_LINE_DOT5" };
+            public string[] LineType2 = new string[] { "BYLAYER", "BYBLOCK", "CONTINUOUS,Continuous ________________________________" };
+            public string[] LineTypeRemove = new string[] { "BYLAYER", "BYBLOCK" };
+            public string[] LinesTekla = new string[] { "0",
+                "BOLT",
+                "BOLT MARK",
+                "BOLT_MARK",
+                "BOLTS",
+                "COMPONENT",
+                "COMPONENT MARK",
+                "CONNECTION MARK",
+                "DETAIL_MARKS",
+                "DIMENSION",
+                "DRAWING SHEET",
+                "DRAWING_TABLE",
+                "GRAPHIC OBJECT",
+                "GRAPHICAL_OBJECT",
+                "GRID",
+                "GRIDS",
+                "LEVEL TEXT",
+                "LINKED OBJECT",
+                "MARK",
+                "MARKS",
+                "MODEL OBJECT",
+                "NEIGHBOUR PART MARK",
+                "OTHER OBJECT TYPE",
+                "PART",
+                "PART MARK",
+                "REINFORCEMENT MARK",
+                "REINFORCING BAR",
+                "REVISION TEXT",
+                "SECTION",
+                "SECTION_MARKS",
+                "SYMBOL TEXT",
+                "TEXT",
+                "VIEW_LABEL",
+                "VIEWPORT LAYER",
+                "WELD",
+                "WELD_MARKS",
+                "LINKED OBJECT",
+                "NEIGHBOUR PART MARK"
+            };
         }
     }
 }

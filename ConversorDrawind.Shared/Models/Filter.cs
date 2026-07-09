@@ -6,7 +6,7 @@ namespace ConversorDrawind
 {
     public class Filter
     {
-        private Arranjos arranjos = new Arranjos();
+        private CatalogConfiguration catalogs = new Configuration().Catalogs;
         public string layerBase;
         public string tipoObjeto;
         public string cor;
@@ -22,14 +22,14 @@ namespace ConversorDrawind
         {
         }
 
-        public Filter(Arranjos arranjos)
+        public Filter(CatalogConfiguration catalogs)
         {
-            this.arranjos = arranjos ?? new Arranjos();
+            this.catalogs = catalogs ?? new Configuration().Catalogs;
         }
 
         public Filter(Filter filter)
         {
-            this.arranjos = filter.arranjos;
+            this.catalogs = filter.catalogs;
             this.layerBase = filter.layerBase;
             this.tipoObjeto = filter.tipoObjeto;
             this.cor = filter.cor;
@@ -52,9 +52,9 @@ namespace ConversorDrawind
 
         public void SetConjunto()
         {
-            tipoObjeto = arranjos.allobjects.First();
-            cor = arranjos.allcolor.First();
-            tipoLinha = arranjos.allLineType1.First();
+            tipoObjeto = catalogs.ObjectTypes.FirstOrDefault() ?? "ALL";
+            cor = catalogs.Colors.FirstOrDefault() ?? "ALL";
+            tipoLinha = catalogs.FilterLineTypes.FirstOrDefault() ?? "ALL";
             conteudoTexto = string.Empty;
             alturaTexto = string.Empty;
             orientacao = "ALL";
@@ -99,9 +99,9 @@ namespace ConversorDrawind
             }
             catch (Exception)
             {
-                tipoObjeto = arranjos.allobjects.First();
-                cor = arranjos.allcolor.First();
-                tipoLinha = arranjos.allLineType1.First();
+                tipoObjeto = catalogs.ObjectTypes.FirstOrDefault() ?? "ALL";
+                cor = catalogs.Colors.FirstOrDefault() ?? "ALL";
+                tipoLinha = catalogs.FilterLineTypes.FirstOrDefault() ?? "ALL";
                 conteudoTexto = string.Empty;
                 alturaTexto = string.Empty;
                 orientacao = "ALL";

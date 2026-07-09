@@ -7,16 +7,17 @@ namespace ConversorDrawind
 {
     public class ConfigurarLayers : IDisposable
     {
-        public Arranjos arranjos = new Arranjos();
+        private readonly Configuration configuration;
 
-        public ConfigurarLayers(Arranjos arranjos)
+        public ConfigurarLayers(Configuration configuration)
         {
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new Configuration();
         }
 
         public UiDialogResult ShowDialog()
         {
-            NewLayersConfigurationControl control = new NewLayersConfigurationControl(arranjos);
+            NewLayersConfigurationControl control = new NewLayersConfigurationControl();
+            control.LoadConfiguration(configuration);
             Window window = CreateWindow(control);
             bool? result = window.ShowDialog();
             return result == true ? UiDialogResult.OK : UiDialogResult.Cancel;
@@ -24,12 +25,15 @@ namespace ConversorDrawind
 
         public void CheckLines()
         {
-            NewLayersConfigurationControl.CheckLines(arranjos);
+            NewLayersConfigurationControl control = new NewLayersConfigurationControl();
+            control.LoadConfiguration(configuration);
+            control.CheckLines();
         }
 
         public void OpenAcadLoadLayerExterno()
         {
-            NewLayersConfigurationControl control = new NewLayersConfigurationControl(arranjos);
+            NewLayersConfigurationControl control = new NewLayersConfigurationControl();
+            control.LoadConfiguration(configuration);
             control.OpenAcadLoadLayerExterno();
         }
 
@@ -71,7 +75,7 @@ namespace ConversorDrawind
 
             continueButton.Click += delegate
             {
-                if (control.ApplyRowsToArranjos())
+                if (control.ApplyRowsToConfiguration())
                 {
                     window.DialogResult = true;
                 }

@@ -7,16 +7,16 @@ namespace ConversorDrawind.UI.Wpf.Layers
 {
     public partial class LayerColorDialog : Window
     {
-        private readonly Arranjos arranjos;
+        private readonly CatalogConfiguration catalogs;
         private readonly List<string> colors;
 
-        public LayerColorDialog(string currentColor, Arranjos arranjos)
+        public LayerColorDialog(string currentColor, CatalogConfiguration catalogs)
         {
             InitializeComponent();
 
-            this.arranjos = arranjos;
+            this.catalogs = catalogs ?? new global::ConversorDrawind.Configuration().Catalogs;
             Color = currentColor;
-            colors = BuildColorList(arranjos);
+            colors = BuildColorList(this.catalogs);
 
             ColorComboBox.ItemsSource = colors;
             ColorComboBox.Text = currentColor;
@@ -51,9 +51,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 return;
             }
 
-            if (!arranjos.allcolor.Contains(dialog.ColorValue))
+            if (!catalogs.Colors.Contains(dialog.ColorValue))
             {
-                arranjos.allcolor.Add(dialog.ColorValue);
+                catalogs.Colors.Add(dialog.ColorValue);
                 colors.Add(dialog.ColorValue);
                 ColorComboBox.Items.Refresh();
             }
@@ -61,17 +61,19 @@ namespace ConversorDrawind.UI.Wpf.Layers
             ColorComboBox.Text = dialog.ColorValue;
         }
 
-        private static List<string> BuildColorList(Arranjos arranjos)
+        private static List<string> BuildColorList(CatalogConfiguration catalogs)
         {
-            List<string> availableColors = arranjos.allcolor.ToList();
+            List<string> availableColors = catalogs.Colors.ToList();
 
-            if (arranjos.allcolor.Count > 0)
+            if (catalogs.Colors.Count > 0)
             {
-                availableColors.Remove(arranjos.allcolor.First());
+                availableColors.Remove(catalogs.Colors.First());
             }
 
-            availableColors.Remove(arranjos.lineTypeRemove.First());
-            availableColors.Remove(arranjos.lineTypeRemove.Last());
+            foreach (string removedLineType in catalogs.RemovedLineTypes)
+            {
+                availableColors.Remove(removedLineType);
+            }
 
             return availableColors;
         }

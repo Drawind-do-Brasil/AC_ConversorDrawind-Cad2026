@@ -202,7 +202,7 @@ namespace ConversorDrawind
                     LtScale = configuration.Lines.LineTypeScale,
                     BaseLayers = arranjos.allBaseLayer.ToList()
                 },
-                BasicLines = new BasicLinesXml { BaseLines = arranjos.allLineType1.ToList() },
+                BasicLines = new BasicLinesXml { BaseLines = configuration.Lines.BaseLineTypes.ToList() },
                 NewTextStyles = new TextStylesXml { TextStyles = arranjos.allTextSyles.ToList() },
                 NewLayers = new NewLayersXml
                 {
@@ -231,7 +231,6 @@ namespace ConversorDrawind
         public void ApplyTo(Configuration configuration, Arranjos arranjos, List<Block> blocks, List<Block> blocosi, List<Block> blocoso)
         {
             arranjos.allBaseLayer.Clear();
-            arranjos.allLineType1.Clear();
             arranjos.allNewLayerComposition.Clear();
             arranjos.allNewLayer.Clear();
             arranjos.conversor.Clear();
@@ -303,7 +302,8 @@ namespace ConversorDrawind
 
             configuration.Lines.LineTypeScale = BasicLayers?.LtScale ?? configuration.Lines.LineTypeScale;
             arranjos.allBaseLayer.AddRange(BasicLayers?.BaseLayers ?? new List<string>());
-            arranjos.allLineType1.AddRange(BasicLines?.BaseLines ?? new List<string>());
+            configuration.Lines.BaseLineTypes = (BasicLines?.BaseLines ?? new List<string>()).ToList();
+            configuration.Catalogs.FilterLineTypes = configuration.Lines.BaseLineTypes.ToList();
             arranjos.allNewLayerComposition.AddRange(NewLayers?.Layers ?? new List<string>());
 
             ApplyTextStyles(arranjos, textConfig);
@@ -314,7 +314,7 @@ namespace ConversorDrawind
             foreach (string line in RemoveLayers?.Layers ?? new List<string>())
             {
                 string[] st = line.Split('$').Last().Split(';');
-                Filter filter = new Filter(arranjos);
+                Filter filter = new Filter(configuration.Catalogs);
                 filter.layerBase = st[0];
                 filter.SetConjunto(st[1]);
                 arranjos.layerRemove.Add(filter);

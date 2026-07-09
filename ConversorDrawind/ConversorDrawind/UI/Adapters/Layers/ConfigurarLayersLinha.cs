@@ -5,14 +5,14 @@ namespace ConversorDrawind
     public sealed class ConfigurarLayersLinha : IDisposable
     {
         public string linha;
-        private readonly Arranjos arranjos;
+        private readonly CatalogConfiguration catalogs;
 
-        public ConfigurarLayersLinha(string valor, Arranjos arranjos)
+        public ConfigurarLayersLinha(string valor, Configuration configuration)
         {
-            this.arranjos = arranjos;
+            catalogs = (configuration ?? new Configuration()).Catalogs;
             linha = string.Empty;
 
-            foreach (string lineType in arranjos.allLineType2)
+            foreach (string lineType in catalogs.LayerLineTypes)
             {
                 if (lineType.Split(',')[0].ToUpper() == valor)
                 {
@@ -24,7 +24,7 @@ namespace ConversorDrawind
 
         public UiDialogResult ShowDialog()
         {
-            LayerLineTypeDialog dialog = new LayerLineTypeDialog(linha.Split(',')[0].ToUpper(), arranjos);
+            LayerLineTypeDialog dialog = new LayerLineTypeDialog(linha.Split(',')[0].ToUpper(), catalogs);
             bool? result = dialog.ShowDialog();
 
             if (result == true)

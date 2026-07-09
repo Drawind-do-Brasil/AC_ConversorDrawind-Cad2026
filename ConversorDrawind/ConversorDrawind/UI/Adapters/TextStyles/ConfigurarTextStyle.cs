@@ -7,16 +7,17 @@ namespace ConversorDrawind
 {
     public sealed class ConfigurarTextStyle : IDisposable
     {
-        public Arranjos arranjos = new Arranjos();
+        private readonly Configuration configuration;
 
-        public ConfigurarTextStyle(Arranjos arranjos)
+        public ConfigurarTextStyle(Configuration configuration)
         {
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new Configuration();
         }
 
         public UiDialogResult ShowDialog()
         {
-            TextStyleConfigurationControl control = new TextStyleConfigurationControl(arranjos);
+            TextStyleConfigurationControl control = new TextStyleConfigurationControl();
+            control.LoadConfiguration(configuration);
             Window window = CreateWindow(control);
             bool? result = window.ShowDialog();
             return result == true ? UiDialogResult.OK : UiDialogResult.Cancel;
@@ -59,7 +60,7 @@ namespace ConversorDrawind
 
             saveButton.Click += delegate
             {
-                if (control.ApplyRowsToArranjos())
+                if (control.ApplyRowsToConfiguration())
                 {
                     window.DialogResult = true;
                 }

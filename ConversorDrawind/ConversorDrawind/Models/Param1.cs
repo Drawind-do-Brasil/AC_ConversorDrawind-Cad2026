@@ -6,7 +6,6 @@
         public string[] desenhosName;
         public bool closedesenhos;
         public Configuration configuration;
-        public Arranjos arranjos;
         public StatusConversorItem StatusConversorItem;
     }
 }

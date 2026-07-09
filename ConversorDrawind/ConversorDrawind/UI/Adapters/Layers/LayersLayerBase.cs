@@ -1,21 +1,23 @@
-﻿using ConversorDrawind.UI.Wpf.Layers;
+using ConversorDrawind.UI.Wpf.Layers;
 using System;
+
 namespace ConversorDrawind
 {
     public sealed class LayersLayerBase : IDisposable
     {
-        private readonly Arranjos arranjos;
-        public string layerBase;
+        private readonly Configuration configuration;
 
-        public LayersLayerBase(string valor, Arranjos arranjos)
+        public LayersLayerBase(string valor, Configuration configuration)
         {
-            this.arranjos = arranjos;
+            this.configuration = configuration ?? new Configuration();
             layerBase = valor;
         }
 
+        public string layerBase;
+
         public UiDialogResult ShowDialog()
         {
-            LayerBaseDialog dialog = new LayerBaseDialog(layerBase, arranjos);
+            LayerBaseDialog dialog = new LayerBaseDialog(layerBase, configuration);
             bool? result = dialog.ShowDialog();
 
             if (result == true)
@@ -32,6 +34,3 @@ namespace ConversorDrawind
         }
     }
 }
-
-
-

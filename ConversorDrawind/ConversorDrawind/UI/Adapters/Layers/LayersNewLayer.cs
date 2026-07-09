@@ -4,19 +4,19 @@ namespace ConversorDrawind
 {
     public sealed class LayersNewLayer : IDisposable
     {
-        private readonly Arranjos arranjos;
+        private readonly Configuration configuration;
         public NewLayer novoLayer;
 
-        public LayersNewLayer(string line, Arranjos arranjos)
+        public LayersNewLayer(string line, Configuration configuration)
         {
-            this.arranjos = arranjos;
-            novoLayer = new NewLayer(this.arranjos);
+            this.configuration = configuration ?? new Configuration();
+            novoLayer = new NewLayer(this.configuration);
             novoLayer.SetConjunto(line);
         }
 
         public UiDialogResult ShowDialog()
         {
-            NewLayerDialog dialog = new NewLayerDialog(novoLayer, arranjos);
+            NewLayerDialog dialog = new NewLayerDialog(novoLayer, configuration);
             bool? result = dialog.ShowDialog();
 
             if (result == true)

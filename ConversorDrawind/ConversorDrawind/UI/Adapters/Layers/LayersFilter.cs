@@ -4,17 +4,17 @@ namespace ConversorDrawind
 {
     public sealed class LayersFilter : IDisposable
     {
-        private readonly Arranjos arranjos;
+        private readonly Configuration configuration;
         private bool disableOrientation;
         private bool disableText;
         private string lineType2Source;
 
         public Filter filtro;
 
-        public LayersFilter(string valor, Arranjos arranjos)
+        public LayersFilter(string valor, Configuration configuration)
         {
-            this.arranjos = arranjos;
-            filtro = new Filter(arranjos);
+            this.configuration = configuration ?? new Configuration();
+            filtro = new Filter(this.configuration.Catalogs);
             filtro.SetConjunto(valor);
         }
 
@@ -35,7 +35,7 @@ namespace ConversorDrawind
 
         public UiDialogResult ShowDialog()
         {
-            LayerFilterDialog dialog = new LayerFilterDialog(filtro, arranjos);
+            LayerFilterDialog dialog = new LayerFilterDialog(filtro, configuration.Catalogs);
             if (lineType2Source != null)
             {
                 dialog.LoadLineTypes2(lineType2Source);

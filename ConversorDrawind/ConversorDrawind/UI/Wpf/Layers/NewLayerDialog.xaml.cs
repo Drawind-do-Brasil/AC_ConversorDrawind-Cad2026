@@ -9,23 +9,26 @@ namespace ConversorDrawind.UI.Wpf.Layers
 {
     public partial class NewLayerDialog : Window
     {
-        private readonly Arranjos arranjos;
+        private readonly global::ConversorDrawind.Configuration configuration;
         private readonly NewLayer newLayer;
+        private readonly List<string> layers;
         private readonly List<string> colors;
         private readonly List<string> lineTypes;
         private readonly List<string> textStyles;
 
-        public NewLayerDialog(NewLayer newLayer, Arranjos arranjos)
+        public NewLayerDialog(NewLayer newLayer, global::ConversorDrawind.Configuration configuration)
         {
             InitializeComponent();
 
             this.newLayer = newLayer;
-            this.arranjos = arranjos;
-            colors = BuildColorList(arranjos);
-            lineTypes = arranjos.allLineType2.ToList();
-            textStyles = arranjos.allTextSyles.Select(textStyle => textStyle.Split(':').First()).ToList();
+            this.configuration = configuration ?? new global::ConversorDrawind.Configuration();
+            this.configuration.EnsureDefaults();
+            layers = this.configuration.Layers.NewLayers.Select(layer => layer.Name).ToList();
+            colors = BuildColorList(this.configuration.Catalogs);
+            lineTypes = this.configuration.Catalogs.LayerLineTypes.ToList();
+            textStyles = this.configuration.Text.Styles.Select(textStyle => textStyle.Name).ToList();
 
-            LayerComboBox.ItemsSource = arranjos.allNewLayer;
+            LayerComboBox.ItemsSource = layers;
             ColorComboBox.ItemsSource = colors;
             LineTypeComboBox.ItemsSource = lineTypes;
             TextStyleComboBox.ItemsSource = textStyles;
@@ -55,7 +58,7 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         private void ContinueButtonClick(object sender, RoutedEventArgs e)
         {
-            if (arranjos.allNewLayer.Contains(LayerComboBox.Text))
+            if (layers.Contains(LayerComboBox.Text))
             {
                 newLayer.layer = LayerComboBox.Text;
             }
@@ -97,9 +100,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 return;
             }
 
-            if (!arranjos.allcolor.Contains(dialog.ColorValue))
+            if (!configuration.Catalogs.Colors.Contains(dialog.ColorValue))
             {
-                arranjos.allcolor.Add(dialog.ColorValue);
+                configuration.Catalogs.Colors.Add(dialog.ColorValue);
                 colors.Add(dialog.ColorValue);
                 ColorComboBox.Items.Refresh();
             }
@@ -122,13 +125,13 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 && text.Count(character => character == ',') <= 1;
         }
 
-        private static List<string> BuildColorList(Arranjos arranjos)
+        private static List<string> BuildColorList(CatalogConfiguration catalogs)
         {
-            List<string> availableColors = arranjos.allcolor.ToList();
+            List<string> availableColors = catalogs.Colors.ToList();
 
-            if (arranjos.allcolor.Count > 0)
+            if (catalogs.Colors.Count > 0)
             {
-                availableColors.Remove(arranjos.allcolor.First());
+                availableColors.Remove(catalogs.Colors.First());
             }
 
             return availableColors;

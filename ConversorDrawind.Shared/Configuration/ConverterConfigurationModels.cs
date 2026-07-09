@@ -101,6 +101,15 @@ namespace ConversorDrawind
         public List<string> BaseLineTypes { get; set; } = new List<string>();
     }
 
+    public sealed class CatalogConfiguration
+    {
+        public List<string> Colors { get; set; } = new List<string>();
+        public List<string> ObjectTypes { get; set; } = new List<string>();
+        public List<string> FilterLineTypes { get; set; } = new List<string>();
+        public List<string> LayerLineTypes { get; set; } = new List<string>();
+        public List<string> RemovedLineTypes { get; set; } = new List<string>();
+    }
+
     public sealed class CommandConfiguration
     {
         public List<string> LispCommands { get; set; } = new List<string>();

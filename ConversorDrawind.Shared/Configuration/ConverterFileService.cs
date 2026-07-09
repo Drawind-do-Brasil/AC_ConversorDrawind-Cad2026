@@ -29,33 +29,6 @@ namespace ConversorDrawind
             return ConfigurationPaths.TxmlPath(converterName, statusConversorItem);
         }
 
-        public static void LoadConverter(
-            Configuration configuration,
-            string converterName,
-            Arranjos arranjos,
-            List<Block> blocks,
-            List<Block> blocksInv,
-            List<Block> blocksOrig,
-            StatusConversorItem statusConversorItem)
-        {
-            Configuration loadedConfiguration = LoadConverter(converterName, statusConversorItem);
-            configuration.Apply(loadedConfiguration);
-            ConfigurationCompatibilityMapper.ApplyToLegacyState(loadedConfiguration.ToConverterConfiguration(), configuration, arranjos, blocks, blocksInv, blocksOrig);
-        }
-
-        public static void SaveConverter(
-            Configuration configuration,
-            string converterName,
-            Arranjos arranjos,
-            List<Block> blocks,
-            List<Block> blocksInv,
-            List<Block> blocksOrig,
-            StatusConversorItem statusConversorItem)
-        {
-            Configuration structuredConfiguration = ConfigurationCompatibilityMapper.FromLegacyState(configuration, arranjos, blocks, blocksInv, blocksOrig);
-            SaveConverter(converterName, statusConversorItem, new Configuration(structuredConfiguration));
-        }
-
         public static Configuration LoadConverter(string converterName, StatusConversorItem statusConversorItem)
         {
             return Repository.Load(converterName, statusConversorItem);

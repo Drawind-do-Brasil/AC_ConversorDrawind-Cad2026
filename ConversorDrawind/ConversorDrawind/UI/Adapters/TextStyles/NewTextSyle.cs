@@ -8,7 +8,7 @@ namespace ConversorDrawind
         public string[] valores = new string[7];
         public bool createNew = false;
 
-        public NewTextSyle(string line, Arranjos arranjos)
+        public NewTextSyle(string line)
         {
             if (string.IsNullOrEmpty(line))
             {

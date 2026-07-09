@@ -119,6 +119,7 @@ namespace ConversorDrawind
                     Scale(configuration.Scale),
                     Layers(configuration.Layers),
                     Lines(configuration.Lines),
+                    Catalogs(configuration.Catalogs),
                     Commands(configuration.Commands),
                     Blocks(configuration.Blocks)));
         }
@@ -243,6 +244,24 @@ namespace ConversorDrawind
                 (value.BaseLineTypes ?? new List<string>()).Select(item => new XElement("BASE_LINE_TYPE", Attr("NAME", item))));
         }
 
+        private static XElement Catalogs(CatalogConfiguration value)
+        {
+            value = value ?? new CatalogConfiguration();
+            return new XElement("CATALOGS",
+                StringList("COLOR", value.Colors),
+                StringList("OBJECT_TYPE", value.ObjectTypes),
+                StringList("FILTER_LINE_TYPE", value.FilterLineTypes),
+                StringList("LAYER_LINE_TYPE", value.LayerLineTypes),
+                StringList("REMOVED_LINE_TYPE", value.RemovedLineTypes));
+        }
+
+        private static IEnumerable<XElement> StringList(string elementName, IEnumerable<string> values)
+        {
+            return (values ?? new List<string>())
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(value => new XElement(elementName, Attr("NAME", value)));
+        }
+
         private static XElement Commands(CommandConfiguration value)
         {
             value = value ?? new CommandConfiguration();
@@ -339,8 +358,10 @@ namespace ConversorDrawind
             ReadScale(root.Element("SCALE"), result.Scale);
             ReadLayers(root.Element("LAYERS"), result.Layers);
             ReadLines(root.Element("LINES"), result.Lines);
+            ReadCatalogs(root.Element("CATALOGS"), result.Catalogs);
             ReadCommands(root.Element("COMMANDS"), result.Commands);
             ReadBlocks(root.Element("BLOCKS"), result.Blocks);
+            result.EnsureDefaults();
 
             return result;
         }
@@ -466,6 +487,18 @@ namespace ConversorDrawind
 
             value.LineTypeScale = D(element, "LINE_TYPE_SCALE", value.LineTypeScale);
             value.BaseLineTypes = element.Elements("BASE_LINE_TYPE").Select(item => S(item, "NAME")).ToList();
+        }
+
+        private static void ReadCatalogs(XElement element, CatalogConfiguration value)
+        {
+            if (element == null)
+                return;
+
+            value.Colors = element.Elements("COLOR").Select(item => S(item, "NAME")).ToList();
+            value.ObjectTypes = element.Elements("OBJECT_TYPE").Select(item => S(item, "NAME")).ToList();
+            value.FilterLineTypes = element.Elements("FILTER_LINE_TYPE").Select(item => S(item, "NAME")).ToList();
+            value.LayerLineTypes = element.Elements("LAYER_LINE_TYPE").Select(item => S(item, "NAME")).ToList();
+            value.RemovedLineTypes = element.Elements("REMOVED_LINE_TYPE").Select(item => S(item, "NAME")).ToList();
         }
 
         private static void ReadCommands(XElement element, CommandConfiguration value)

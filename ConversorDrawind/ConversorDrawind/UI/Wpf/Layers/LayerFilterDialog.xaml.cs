@@ -16,15 +16,15 @@ namespace ConversorDrawind.UI.Wpf.Layers
 {
     public partial class LayerFilterDialog : Window
     {
-        private readonly Arranjos arranjos;
+        private readonly CatalogConfiguration catalogs;
         private readonly Filter filter;
         private List<string> lineTypes = new List<string>();
 
-        public LayerFilterDialog(Filter filter, Arranjos arranjos)
+        public LayerFilterDialog(Filter filter, CatalogConfiguration catalogs)
         {
             InitializeComponent();
             this.filter = filter;
-            this.arranjos = arranjos;
+            this.catalogs = catalogs ?? new global::ConversorDrawind.Configuration().Catalogs;
             LoadValues();
         }
 
@@ -32,6 +32,12 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         private void LoadValues()
         {
+            ObjectTypeComboBox.ItemsSource = catalogs.ObjectTypes;
+            ColorComboBox.ItemsSource = catalogs.Colors;
+            lineTypes = catalogs.FilterLineTypes.ToList();
+            LineTypeComboBox.ItemsSource = lineTypes;
+            OrientationComboBox.ItemsSource = new[] { "ALL", "HORIZONTAL", "VERTICAL" };
+
             ObjectTypeComboBox.Text = filter.tipoObjeto;
             ColorComboBox.Text = filter.cor;
             LineTypeComboBox.Text = filter.tipoLinha;
@@ -42,13 +48,13 @@ namespace ConversorDrawind.UI.Wpf.Layers
 
         public void LoadLineTypes2(string line)
         {
-            arranjos.allLineType2.Clear();
+            catalogs.LayerLineTypes.Clear();
             foreach (string item in line.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries))
             {
-                arranjos.allLineType2.Add(item);
+                catalogs.LayerLineTypes.Add(item);
             }
 
-            lineTypes = arranjos.allLineType2.ToList();
+            lineTypes = catalogs.LayerLineTypes.ToList();
             LineTypeComboBox.ItemsSource = lineTypes;
             if (lineTypes.Count > 0 && string.IsNullOrWhiteSpace(LineTypeComboBox.Text))
             {
@@ -77,9 +83,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 return;
             }
 
-            if (!arranjos.allcolor.Contains(dialog.ColorValue))
+            if (!catalogs.Colors.Contains(dialog.ColorValue))
             {
-                arranjos.allcolor.Add(dialog.ColorValue);
+                catalogs.Colors.Add(dialog.ColorValue);
                 ColorComboBox.Items.Refresh();
             }
 
@@ -94,8 +100,8 @@ namespace ConversorDrawind.UI.Wpf.Layers
             };
 
             dialog.ShowDialog();
-            arranjos.allobjects.Remove(dialog.Entity);
-            arranjos.allobjects.Add(dialog.Entity);
+            catalogs.ObjectTypes.Remove(dialog.Entity);
+            catalogs.ObjectTypes.Add(dialog.Entity);
             ObjectTypeComboBox.Items.Refresh();
             ObjectTypeComboBox.Text = dialog.Entity;
         }
@@ -126,9 +132,9 @@ namespace ConversorDrawind.UI.Wpf.Layers
                 ApplicationRuntime.StopStatusThread(statusThread);
 
                 ImportTempLineTypes();
-                lineTypes = arranjos.allLineType1.ToList();
+                lineTypes = catalogs.FilterLineTypes.ToList();
                 LineTypeComboBox.ItemsSource = lineTypes;
-                LineTypeComboBox.Text = arranjos.allLineType1.FirstOrDefault();
+                LineTypeComboBox.Text = catalogs.FilterLineTypes.FirstOrDefault();
             }
             catch (Exception)
             {
@@ -176,11 +182,11 @@ namespace ConversorDrawind.UI.Wpf.Layers
             foreach (string line in File.ReadLines(filetxt, Encoding.UTF8))
             {
                 string lineType = line.ToUpper();
-                arranjos.allLineType1.Remove(lineType);
-                arranjos.allLineType1.Add(lineType);
+                catalogs.FilterLineTypes.Remove(lineType);
+                catalogs.FilterLineTypes.Add(lineType);
             }
 
-            arranjos.allLineType1.Sort();
+            catalogs.FilterLineTypes.Sort();
             File.Delete(filetxt);
         }
 

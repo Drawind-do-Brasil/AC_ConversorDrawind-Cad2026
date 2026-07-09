@@ -32,7 +32,7 @@ namespace ConversorDrawind
 
         public TagBlock()
         {
-            filtro = new Filter(new Arranjos());
+            filtro = new Filter(new Configuration().Catalogs);
             filtro.SetConjunto3();
         }
 
