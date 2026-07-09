@@ -1,5 +1,6 @@
 using ConversorDrawind.UI.Wpf.Layers;
 using ConversorDrawind.UI.Wpf.TextStyles;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -82,6 +83,36 @@ namespace ConversorDrawind.UI.Wpf.Main
         public ListBox AllExplodeLayersListBox => ExplosionTab.AllLayersListBox;
         public ListBox SelectedExplodeLayersListBox => ExplosionTab.SelectedLayersListBox;
         public DataGrid LispCommandsListBox => LispDllTab.CommandsListBox;
+
+        public void ShowLayerRules(IEnumerable<LayerConversionRule> rules) => ConvertersTab.ShowLayerRules(rules);
+        public void ShowRemoveLayers(IEnumerable<string> layerNames, IEnumerable<LayerRemoveRule> rules) => RemoveLayersTab.ShowRemoveLayers(layerNames, rules);
+        public void ShowExplodeLayers(IEnumerable<string> baseLayers, IEnumerable<string> explodeLayers) => ExplosionTab.ShowExplodeLayers(baseLayers, explodeLayers);
+        public void ShowTeklaBlocks(IEnumerable<BlockDefinition> blocks) => BlocksAndAttributesTab.ShowTeklaBlocks(blocks);
+        public void ShowCadBlocks(IEnumerable<BlockDefinition> blocks) => BlocksAndAttributesTab.ShowCadBlocks(blocks);
+        public void ShowOriginalBlocks(IEnumerable<BlockDefinition> blocks) => BlocksAndAttributesTab.ShowOriginalBlocks(blocks);
+        public void ShowBlockRelations(IEnumerable<BlockDefinition> cadBlocks, IEnumerable<BlockDefinition> originalBlocks) => BlocksAndAttributesTab.ShowBlockRelations(cadBlocks, originalBlocks);
+        public void RefreshBlockViews(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.RefreshBlockViews(configuration);
+        public void ResetBlockRelationsState(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.ResetBlockRelationsState(configuration);
+        public void UpdateRelationControls(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.UpdateRelationControls(configuration);
+        public void RelateSelectedBlocks(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.RelateSelectedBlocks(configuration);
+        public void EditBlockRelationParameters(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.EditBlockRelationParameters(configuration);
+        public void RemoveSelectedRelation(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.RemoveSelectedRelation(configuration);
+        public int GetSelectedTeklaBlockIndex(global::ConversorDrawind.Configuration configuration) => BlocksAndAttributesTab.GetSelectedTeklaBlockIndex(configuration);
+        public void ShowLispCommands(IEnumerable<string> commands) => LispDllTab.ShowCommands(commands);
+        public void AddLayerRule(global::ConversorDrawind.Configuration configuration) => ConvertersTab.AddLayerRule(configuration);
+        public void DeleteSelectedLayerRules(global::ConversorDrawind.Configuration configuration) => ConvertersTab.DeleteSelectedLayerRules(configuration);
+        public void MoveLayerRule(global::ConversorDrawind.Configuration configuration, int direction) => ConvertersTab.MoveLayerRule(configuration, direction);
+        public void EditLayerRule(global::ConversorDrawind.Configuration configuration) => ConvertersTab.EditLayerRule(configuration);
+        public void AddRemoveLayerRules(global::ConversorDrawind.Configuration configuration) => RemoveLayersTab.AddRemoveLayerRules(configuration);
+        public void DeleteSelectedRemoveLayers(global::ConversorDrawind.Configuration configuration) => RemoveLayersTab.DeleteSelectedRemoveLayers(configuration);
+        public void EditRemoveLayer(global::ConversorDrawind.Configuration configuration) => RemoveLayersTab.EditRemoveLayer(configuration);
+        public void AddExplodeLayers(global::ConversorDrawind.Configuration configuration) => ExplosionTab.AddExplodeLayers(configuration);
+        public void RemoveSelectedExplodeLayers(global::ConversorDrawind.Configuration configuration) => ExplosionTab.RemoveSelectedExplodeLayers(configuration);
+        public void MoveExplodeLayers(global::ConversorDrawind.Configuration configuration, object sender, DragEventArgs e) => ExplosionTab.MoveExplodeLayers(configuration, sender, e);
+        public void AddLispCommand(global::ConversorDrawind.Configuration configuration, Window owner) => LispDllTab.AddLispCommand(configuration, owner);
+        public void ModifyLispCommand(global::ConversorDrawind.Configuration configuration, Window owner) => LispDllTab.ModifyLispCommand(configuration, owner);
+        public void DeleteLispCommand(global::ConversorDrawind.Configuration configuration) => LispDllTab.DeleteLispCommand(configuration);
+        public void MoveLispCommand(global::ConversorDrawind.Configuration configuration, int direction) => LispDllTab.MoveLispCommand(configuration, direction);
 
         private void NewConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(NewConverterClick), sender, e);
         private void SaveConverterClick(object sender, RoutedEventArgs e) => Forward(nameof(SaveConverterClick), sender, e);

@@ -11,9 +11,13 @@
             <Button Content="{x:Static local:Localization.ButtonSave}" Width="90" Margin="6,0,0,0" Click="SaveConverterClick" />
             <Button Content="{x:Static local:Localization.ButtonImport}" Width="90" Margin="6,0,0,0" Click="ImportConverterClick" />
             <TextBlock Text="{x:Static local:Localization.LabelTemplate}" Margin="18,4,4,0" />
-            <ComboBox x:Name="ConverterComboBox" Width="220" SelectionChanged="ConverterComboBoxSelectionChanged" />
+            <ComboBox x:Name="ConverterComboBox"
+                      Width="220"
+                      ItemsSource="{Binding ConverterNames}"
+                      SelectedItem="{Binding SelectedConverterName, Mode=TwoWay}"
+                      SelectionChanged="ConverterComboBoxSelectionChanged" />
             <TextBlock Text="{x:Static local:Localization.LabelName}" Margin="18,4,4,0" />
-            <TextBox x:Name="ConverterNameTextBox" Width="260" />
+            <TextBox x:Name="ConverterNameTextBox" Width="260" Text="{Binding TemplateName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
        
         </StackPanel>
         <TabControl x:Name="ConfigurationTabs" SelectionChanged="ConfigurationTabsSelectionChanged">

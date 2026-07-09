@@ -11,14 +11,14 @@ namespace ConversorDrawindDLL
     class ConvertBlocks
     {
         private static double EscalaAtual = 1;
-        private static double RefTamFormato = Configuration.INTREFTamFormato;
+        private static double RefTamFormato = Configuration.ReferenceFormatSize;
         private static bool HasStartPointOverride = false;
         private static Point3d StartPointOverride = Point3d.Origin;
 
         internal static void ResetForTests()
         {
             EscalaAtual = 1;
-            RefTamFormato = Configuration.INTREFTamFormato;
+            RefTamFormato = Configuration.ReferenceFormatSize;
             HasStartPointOverride = false;
             StartPointOverride = Point3d.Origin;
         }
@@ -102,7 +102,7 @@ namespace ConversorDrawindDLL
             Editor editor = documentContext.Editor;
             IEntitySelector entitySelector = new AcadEntitySelector(editor);
 
-            RefTamFormato = Configuration.INTREFTamFormato;
+            RefTamFormato = Configuration.ReferenceFormatSize;
             ConvertLayer.Zoom();
 
             Application.UpdateScreen();

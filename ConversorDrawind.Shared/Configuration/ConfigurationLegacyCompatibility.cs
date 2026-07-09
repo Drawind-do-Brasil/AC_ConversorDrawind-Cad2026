@@ -14,7 +14,7 @@ namespace ConversorDrawind
         private Point automaticScalePoint1 = new Point(0, 0, 0);
         private Point automaticScalePoint2 = new Point(0, 0, 0);
 
-        public static double INTREFTamFormato
+        public static double ReferenceFormatSize
         {
             get { return referenceFormatSize; }
             set

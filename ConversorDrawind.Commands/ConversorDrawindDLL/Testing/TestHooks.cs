@@ -4,7 +4,7 @@ namespace ConversorDrawindDLL
     {
         internal static void ResetGlobalState()
         {
-            Configuration.INTREFTamFormato = 841;
+            Configuration.ReferenceFormatSize = 841;
             Configuration.Config = new Configuration();
 
             RuntimeConfigurationState.ResetWorkingStateFromConfiguration();

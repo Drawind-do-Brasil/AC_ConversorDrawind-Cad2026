@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -17,6 +18,84 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         public ListBox AllLayersListBox => AllExplodeLayersListBox;
         public ListBox SelectedLayersListBox => SelectedExplodeLayersListBox;
+
+        public void ShowExplodeLayers(IEnumerable<string> baseLayers, IEnumerable<string> explodeLayers)
+        {
+            AllExplodeLayersListBox.ItemsSource = (baseLayers ?? Enumerable.Empty<string>())
+                .Distinct(System.StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            SelectedExplodeLayersListBox.ItemsSource = (explodeLayers ?? Enumerable.Empty<string>()).ToList();
+        }
+
+        public void AddExplodeLayers(global::ConversorDrawind.Configuration configuration)
+        {
+            foreach (string layer in AllExplodeLayersListBox.SelectedItems.OfType<string>())
+            {
+                if (!configuration.Layers.ExplodeLayers.Contains(layer))
+                {
+                    configuration.Layers.ExplodeLayers.Add(layer);
+                }
+            }
+
+            Refresh(configuration);
+        }
+
+        public void RemoveSelectedExplodeLayers(global::ConversorDrawind.Configuration configuration)
+        {
+            foreach (string layer in SelectedExplodeLayersListBox.SelectedItems.OfType<string>().ToList())
+            {
+                configuration.Layers.ExplodeLayers.Remove(layer);
+            }
+
+            Refresh(configuration);
+        }
+
+        public void MoveExplodeLayers(global::ConversorDrawind.Configuration configuration, object sender, DragEventArgs e)
+        {
+            if (!(sender is ListBox targetListBox) || !e.Data.GetDataPresent(ExplodeLayerDragFormat))
+            {
+                return;
+            }
+
+            string sourceName = e.Data.GetDataPresent(ExplodeLayerDragSourceFormat)
+                ? e.Data.GetData(ExplodeLayerDragSourceFormat) as string
+                : string.Empty;
+            if (sourceName == targetListBox.Name)
+            {
+                return;
+            }
+
+            List<string> layers = ((string[])e.Data.GetData(ExplodeLayerDragFormat)).ToList();
+            if (targetListBox == SelectedExplodeLayersListBox)
+            {
+                foreach (string layer in layers)
+                {
+                    if (!configuration.Layers.ExplodeLayers.Contains(layer))
+                    {
+                        configuration.Layers.ExplodeLayers.Add(layer);
+                    }
+                }
+            }
+            else if (targetListBox == AllExplodeLayersListBox)
+            {
+                foreach (string layer in layers)
+                {
+                    configuration.Layers.ExplodeLayers.Remove(layer);
+                }
+            }
+
+            Refresh(configuration);
+            e.Handled = true;
+        }
+
+        private void Refresh(global::ConversorDrawind.Configuration configuration)
+        {
+            configuration.Layers.ExplodeLayers = configuration.Layers.ExplodeLayers
+                .Where(layer => !string.IsNullOrWhiteSpace(layer))
+                .Distinct(System.StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            ShowExplodeLayers(configuration.Layers.BaseLayers, configuration.Layers.ExplodeLayers);
+        }
 
         private MainWindow OwnerWindow => Window.GetWindow(this) as MainWindow;
 

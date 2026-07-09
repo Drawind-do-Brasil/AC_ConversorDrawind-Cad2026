@@ -3,12 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ConversorDrawind"
         xmlns:main="clr-namespace:ConversorDrawind.UI.Wpf.Main"
+        xmlns:viewModels="clr-namespace:ConversorDrawind.UI.Wpf.Main.ViewModels"
         Title="{x:Static local:Localization.AppMainWindowTitle}"
         Width="1050"
         Height="760"
         MinWidth="980"
         MinHeight="680"
         WindowStartupLocation="CenterScreen">
+    <Window.Resources>
+        <viewModels:SourceModeToBooleanConverter x:Key="SourceModeToBooleanConverter" />
+        <viewModels:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </Window.Resources>
     <DockPanel Margin="10">
         <Grid DockPanel.Dock="Bottom" Margin="0,8,0,0">
             <Grid.ColumnDefinitions>

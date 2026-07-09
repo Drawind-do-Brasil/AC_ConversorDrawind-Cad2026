@@ -30,7 +30,7 @@ namespace ConversorDrawind
             result.General.ExplodeBlocks = configuration.ExplodeBlocks;
             result.General.InventorExplode = configuration.EXTCONFInventorExplode;
 
-            result.Dimensions.ReferenceFormatSize = Configuration.INTREFTamFormato;
+            result.Dimensions.ReferenceFormatSize = Configuration.ReferenceFormatSize;
             result.Dimensions.InternalLengthCharFactor = configuration.INTFactorLengthChar;
             result.Dimensions.InternalTextOffset = configuration.INTDIMTextOffset;
             result.Dimensions.Enabled = configuration.EXTDIMGERALHabilit;

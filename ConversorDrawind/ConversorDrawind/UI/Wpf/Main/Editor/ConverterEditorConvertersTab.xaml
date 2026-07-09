@@ -49,11 +49,11 @@
 
         <StackPanel Grid.Row="2" Orientation="Horizontal" Margin="0,8,0,0">
             <TextBlock Text="{x:Static local:Localization.LabelLtScale}" Margin="0,4,4,0" />
-            <TextBox x:Name="LtScaleTextBox" Width="70" />
+            <TextBox x:Name="LtScaleTextBox" Width="70" Text="{Binding Configuration.Lines.LineTypeScale, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
             <TextBlock Text="{x:Static local:Localization.LabelTeklaTextLayer}" Margin="18,4,4,0" />
-            <ComboBox x:Name="TeklaTextLayerComboBox" Width="150" />
+            <ComboBox x:Name="TeklaTextLayerComboBox" Width="150" ItemsSource="{Binding TeklaTextLayerOptions}" Text="{Binding Configuration.Layers.TeklaDrawingSheetLayer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" />
             <TextBlock Text="{x:Static local:Localization.LabelFormatLayer}" Margin="18,4,4,0" />
-            <ComboBox x:Name="FormatBlockLayerComboBox" Width="150" />
+            <ComboBox x:Name="FormatBlockLayerComboBox" Width="150" ItemsSource="{Binding FormatBlockLayerOptions}" Text="{Binding Configuration.Layers.BlockAttributeLayer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEditable="True" />
         </StackPanel>
     </Grid>
 </UserControl>

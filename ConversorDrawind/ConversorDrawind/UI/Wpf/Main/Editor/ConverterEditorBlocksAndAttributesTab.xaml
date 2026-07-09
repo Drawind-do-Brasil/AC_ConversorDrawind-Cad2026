@@ -18,7 +18,8 @@
                             Click="BrowseAttributedFormatClick" />
                     <TextBox x:Name="AttributedFormatPathTextBox"
                              Height="23"
-                             Margin="6,0,0,0" />
+                             Margin="6,0,0,0"
+                             Text="{Binding Configuration.Blocks.TeklaBlockPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
 
                 <GroupBox Grid.Row="1"
@@ -67,7 +68,8 @@
                     <TextBox x:Name="CadBlocksPathTextBox"
                              Width="700"
                              Height="23"
-                             Margin="8,0,0,0" />
+                             Margin="8,0,0,0"
+                             Text="{Binding Configuration.Blocks.CadBlockPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
                 <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0">
@@ -78,7 +80,8 @@
                     <TextBox x:Name="OriginalBlocksPathTextBox"
                              Width="700"
                              Height="23"
-                             Margin="8,0,0,0" />
+                             Margin="8,0,0,0"
+                             Text="{Binding Configuration.Blocks.CadBlockPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </StackPanel>
 
                 <Grid Grid.Row="2" Margin="0,6,0,0">

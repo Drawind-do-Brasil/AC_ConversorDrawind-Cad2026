@@ -1,28 +1,36 @@
 <UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorMainTab"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ConversorDrawind">
+             xmlns:local="clr-namespace:ConversorDrawind"
+             xmlns:viewModels="clr-namespace:ConversorDrawind.UI.Wpf.Main.ViewModels">
+    <UserControl.Resources>
+        <viewModels:SourceModeToBooleanConverter x:Key="SourceModeToBooleanConverter" />
+    </UserControl.Resources>
     <ScrollViewer VerticalScrollBarVisibility="Auto">
         <StackPanel Margin="10">
-            <CheckBox x:Name="ConvertDimensionsCheckBox" Content="{x:Static local:Localization.LabelConvertDimensions}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
-            <CheckBox x:Name="ConvertLayersCheckBox" Content="{x:Static local:Localization.LabelConvertLayers}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
-            <CheckBox x:Name="ScaleDrawingCheckBox" Content="{x:Static local:Localization.LabelScaleDrawing}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
-            <CheckBox x:Name="AttributeFormatCheckBox" Content="{x:Static local:Localization.LabelAttributeDrawingFormat}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
-            <CheckBox x:Name="RunCommandsCheckBox" Content="{x:Static local:Localization.LabelRunCommandsAtEnd}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
-            <CheckBox x:Name="ShowErrorMessagesCheckBox" Content="{x:Static local:Localization.LabelEnableErrorMessages}" />
-            <CheckBox x:Name="DeleteTeklaCheckBox" Content="{x:Static local:Localization.LabelDeleteTeklaWord}" />
-            <CheckBox x:Name="PurgeCheckBox" Content="{x:Static local:Localization.LabelPurgeDrawing}" />
-            <CheckBox x:Name="ExplodeCheckBox" Content="{x:Static local:Localization.LabelExplode}" />
-            <CheckBox x:Name="ExplodeBlocksCheckBox" Content="{x:Static local:Localization.LabelExplodeBlocks}" />
-            <CheckBox x:Name="DmBlockCheckBox" Content="{x:Static local:Localization.LabelAddDmBlock}" />
+            <CheckBox x:Name="ConvertDimensionsCheckBox" Content="{x:Static local:Localization.LabelConvertDimensions}" IsChecked="{Binding Configuration.General.ConvertDimensions, Mode=TwoWay}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="ConvertLayersCheckBox" Content="{x:Static local:Localization.LabelConvertLayers}" IsChecked="{Binding Configuration.General.ConvertLayers, Mode=TwoWay}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="ScaleDrawingCheckBox" Content="{x:Static local:Localization.LabelScaleDrawing}" IsChecked="{Binding Configuration.General.ApplyDrawingScale, Mode=TwoWay}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="AttributeFormatCheckBox" Content="{x:Static local:Localization.LabelAttributeDrawingFormat}" IsChecked="{Binding Configuration.General.ExchangeFormat, Mode=TwoWay}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="RunCommandsCheckBox" Content="{x:Static local:Localization.LabelRunCommandsAtEnd}" IsChecked="{Binding Configuration.General.ExecuteLisp, Mode=TwoWay}" Checked="FeatureCheckChanged" Unchecked="FeatureCheckChanged" />
+            <CheckBox x:Name="ShowErrorMessagesCheckBox" Content="{x:Static local:Localization.LabelEnableErrorMessages}" IsChecked="{Binding Configuration.General.ShowMessages, Mode=TwoWay}" />
+            <CheckBox x:Name="DeleteTeklaCheckBox" Content="{x:Static local:Localization.LabelDeleteTeklaWord}" IsChecked="{Binding Configuration.General.DeleteTeklaStructures, Mode=TwoWay}" />
+            <CheckBox x:Name="PurgeCheckBox" Content="{x:Static local:Localization.LabelPurgeDrawing}" IsChecked="{Binding Configuration.General.Purge, Mode=TwoWay}" />
+            <CheckBox x:Name="ExplodeCheckBox" Content="{x:Static local:Localization.LabelExplode}" IsChecked="{Binding Configuration.General.InventorExplode, Mode=TwoWay}" />
+            <CheckBox x:Name="ExplodeBlocksCheckBox" Content="{x:Static local:Localization.LabelExplodeBlocks}" IsChecked="{Binding Configuration.General.ExplodeBlocks, Mode=TwoWay}" />
+            <CheckBox x:Name="DmBlockCheckBox" Content="{x:Static local:Localization.LabelAddDmBlock}" IsChecked="{Binding Configuration.Blocks.DimensionBlockEnabled, Mode=TwoWay}" />
             <GroupBox Header="{x:Static local:Localization.LabelOriginOfDrawings}" Margin="0,12,0,0">
                 <StackPanel>
-                    <RadioButton x:Name="TeklaOriginRadio" Content="{x:Static local:Localization.LabelTeklaStructures}" Checked="OriginChanged" />
-                    <RadioButton x:Name="CadOriginRadio" Content="{x:Static local:Localization.LabelCad}" Checked="OriginChanged" />
+                    <RadioButton x:Name="TeklaOriginRadio" Content="{x:Static local:Localization.LabelTeklaStructures}" IsChecked="{Binding Configuration.General.SourceMode, Mode=TwoWay, Converter={StaticResource SourceModeToBooleanConverter}, ConverterParameter=0}" Checked="OriginChanged" />
+                    <RadioButton x:Name="CadOriginRadio" Content="{x:Static local:Localization.LabelCad}" IsChecked="{Binding Configuration.General.SourceMode, Mode=TwoWay, Converter={StaticResource SourceModeToBooleanConverter}, ConverterParameter=1}" Checked="OriginChanged" />
                 </StackPanel>
             </GroupBox>
             <TextBlock Text="{x:Static local:Localization.LabelComments}" Margin="0,12,0,2" />
-            <TextBox x:Name="AddCommentsTextBox" Height="70" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox x:Name="AddCommentsTextBox"
+                     Height="70"
+                     AcceptsReturn="True"
+                     TextWrapping="Wrap"
+                     Text="{Binding Comments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </ScrollViewer>
 </UserControl>

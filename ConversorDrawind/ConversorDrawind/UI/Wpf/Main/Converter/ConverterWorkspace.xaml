@@ -23,10 +23,18 @@
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
                 <TextBlock Text="{x:Static local:Localization.LabelStatus}" />
-                <ComboBox x:Name="StatusComboBox" Width="150" DisplayMemberPath="Nome" SelectionChanged="StatusComboBoxSelectionChanged" />
+                <ComboBox x:Name="StatusComboBox"
+                          Width="150"
+                          DisplayMemberPath="Nome"
+                          ItemsSource="{Binding StatusItems}"
+                          SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                          SelectionChanged="StatusComboBoxSelectionChanged" />
             </Grid>
             <GroupBox Grid.Row="1" Header="{x:Static local:Localization.LabelConverters}" >
-                <ListBox x:Name="ConvertersListBox" SelectionChanged="ConvertersSelectionChanged" />
+                <ListBox x:Name="ConvertersListBox"
+                         ItemsSource="{Binding ConverterNames}"
+                         SelectedItem="{Binding SelectedConverterName, Mode=TwoWay}"
+                         SelectionChanged="ConvertersSelectionChanged" />
             </GroupBox>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="2">
@@ -49,7 +57,11 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{x:Static local:Localization.LabelExtension}"  />
                 <Separator Visibility="Hidden" Margin="5"/>
-                <ComboBox x:Name="ExtensionComboBox" Width="78" IsEditable="True" />
+                <ComboBox x:Name="ExtensionComboBox"
+                          Width="78"
+                          IsEditable="True"
+                          ItemsSource="{Binding ExtensionOptions}"
+                          Text="{Binding Extension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
             </StackPanel>
             <Separator Visibility="Hidden" Margin="2.5"/>
             <CheckBox x:Name="KeepFilesOpenCheckBox" Content="{x:Static local:Localization.LabelKeepFilesOpen}" />
@@ -58,7 +70,11 @@
         </StackPanel>
         <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
             <TextBlock  Text="{x:Static local:Localization.LabelComments}"  />
-            <TextBox  x:Name="TemplateCommentsTextBox" Height="62" AcceptsReturn="True" TextWrapping="Wrap" />
+            <TextBox  x:Name="TemplateCommentsTextBox"
+                      Height="62"
+                      AcceptsReturn="True"
+                      TextWrapping="Wrap"
+                      Text="{Binding Comments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
         </StackPanel>
     </Grid>
 </UserControl>
