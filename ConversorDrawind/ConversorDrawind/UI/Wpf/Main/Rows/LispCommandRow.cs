@@ -1,6 +1,6 @@
 using ConversorDrawind.UI.Wpf.LispDll;
 
-namespace ConversorDrawind.UI.Wpf.Main
+namespace ConversorDrawind.UI.Wpf.Main.Rows
 {
     public sealed class LispCommandRow
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Linq;
 
-namespace ConversorDrawind.UI.Wpf.Main
+namespace ConversorDrawind.UI.Wpf.Main.Rows
 {
     public sealed class LayerRuleRow
     {
