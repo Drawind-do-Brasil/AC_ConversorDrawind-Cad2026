@@ -100,12 +100,14 @@ namespace ConversorDrawind
 
         public Arranjos()
         {
-            Carregar();
-            allBaseLayer.AddRange(linesTekla);
-            allLineType2.AddRange(lineType2);
+            Load();
+            LoadDbLineTypePath();
+        }
 
+        private void LoadDbLineTypePath()
+        {
             Configuration configuration = new Configuration();
-        
+
             string directory = AppDomain.CurrentDomain.BaseDirectory + "LinPack.nfj";
 
             if (!File.Exists(directory))
@@ -116,25 +118,25 @@ namespace ConversorDrawind
             }
 
             StreamReader sr = new StreamReader(directory);
-            string PROGRAMDbLin = sr.ReadLine();
+            string DbLineTypePath = sr.ReadLine();
             sr.Close();
 
-            if (File.Exists(PROGRAMDbLin))
+            if (File.Exists(DbLineTypePath))
             {
-                StreamReader wr = new StreamReader(PROGRAMDbLin);
+                StreamReader wr = new StreamReader(DbLineTypePath);
                 string line = "";
                 while (!wr.EndOfStream)
                 {
                     line = wr.ReadLine();
-                    if (line.Length > 0 && line.Substring(0,1) == "*")
+                    if (line.Length > 0 && line.Substring(0, 1) == "*")
                     {
-                        allLineType2.Add(line.Remove(0,1));
+                        allLineType2.Add(line.Remove(0, 1));
                     }
                 }
             }
         }
 
-        private void Carregar()
+        private void Load()
         {
             allTextSyles.Add(defaultTextStyle);
             allcolor.AddRange(colors);
@@ -145,6 +147,8 @@ namespace ConversorDrawind
             allobjects.AddRange(objects);
             allLineType1.AddRange(lineType1);
             allNewLayer.Add("0");
+            allBaseLayer.AddRange(linesTekla);
+            allLineType2.AddRange(lineType2);
         }
     }
 }

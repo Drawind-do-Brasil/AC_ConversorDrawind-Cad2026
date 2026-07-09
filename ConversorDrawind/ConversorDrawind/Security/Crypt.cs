@@ -31,7 +31,7 @@ namespace ConversorDrawind
     /// <summary>
     /// Classe auxiliar com métodos para criptografia de dados.
     /// </summary>
-    public class Class_Crypt
+    public class Crypt
     {
         #region Private members
         private string _key = string.Empty;
@@ -66,7 +66,7 @@ namespace ConversorDrawind
         /// <summary>
         /// Contrutor padrão da classe, é setado um tipo de criptografia padrão.
         /// </summary>
-        public Class_Crypt()
+        public Crypt()
         {
             _algorithm = new RijndaelManaged();
             _algorithm.Mode = CipherMode.CBC;
@@ -76,7 +76,7 @@ namespace ConversorDrawind
         /// Construtor com o tipo de criptografia a ser usada.
         /// </summary>
         /// <param name="cryptProvider">Tipo de criptografia.</param>
-        public Class_Crypt(CryptProvider cryptProvider)
+        public Crypt(CryptProvider cryptProvider)
         {
             // Seleciona algoritmo simétrico
             switch (cryptProvider)
