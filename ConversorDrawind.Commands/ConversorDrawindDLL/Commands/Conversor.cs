@@ -805,14 +805,7 @@ namespace ConversorDrawindDLL
             bref.Layer = obj.Layer;
     
         }
-             [CommandMethod("tteste")]
-        public static void FindTextsInBlock()
-        {
-            GETREALMAXMIN();
-            GETSCALE();
-        }
-
-        private static bool ChecarEscala(DBText text, Point3d positionInSpace)
+private static bool ChecarEscala(DBText text, Point3d positionInSpace)
         {
             if (!string.Equals(text.Layer, Configuration.Config.EXTSCALELayer, StringComparison.OrdinalIgnoreCase))
                 return false;

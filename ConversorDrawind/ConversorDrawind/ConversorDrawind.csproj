@@ -64,14 +64,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Configuration\Configuration.cs" />
-    <Compile Remove="Configuration\ConfigurationPaths.cs" />
-    <Compile Remove="Configuration\ConfigurationXmlContract.cs" />
-    <Compile Remove="Configuration\ConfigurationXmlDocument.cs" />
-    <Compile Remove="Configuration\ConverterFileService.cs" />
-    <Compile Remove="Configuration\DllConfigFile.cs" />
-    <Compile Remove="Configuration\UserSettingsService.cs" />
-    <Compile Remove="Utilities\NumericTextParser.cs" />
     <None Update="app.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
