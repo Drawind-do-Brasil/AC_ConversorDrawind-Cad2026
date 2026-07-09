@@ -3,10 +3,10 @@ namespace ConversorDrawind
     public static class Localization
     {
         public static string AppTitle => "Conversor Drawind";
-        public static string AppMainWindowTitle => "Conversor Drawind - AutoCAD 2026";
-        public static string AppCompatibilityText => "Compatível com AutoCAD 2026";
+        public static string AppMainWindowTitle => $"Conversor Drawind - {ApplicationInfo.AutoCadDisplayName}";
+        public static string AppCompatibilityText => $"Compatível com {ApplicationInfo.AutoCadDisplayName}";
         public static string AppDevelopedByText => "Desenvolvido por Nayara Ferreira de Jesus.";
-        public static string AppCopyrightText => "Copyright © Drawind do Brasil 2026";
+        public static string AppCopyrightText => "Copyright © 2026 Drawind do Brasil";
 
         public static string ButtonOk => "OK";
         public static string ButtonSave => "Salvar";
@@ -25,7 +25,7 @@ namespace ConversorDrawind
         public static string ButtonConfigure => "Configurar";
         public static string ButtonRelate => "Relacionar";
         public static string ButtonUpdate => "Atualizar";
-        public static string ButtonRestoreLastConverted => "Restaurar últimos arquivos convertidos";
+        public static string ButtonRestoreLastConverted => "Restaurar os últimos arquivos convertidos";
         public static string ButtonMoveUp => "Mover para cima";
         public static string ButtonMoveDown => "Mover para baixo";
         public static string ButtonAddLine => "Incluir linha";
@@ -34,7 +34,7 @@ namespace ConversorDrawind
         public static string ButtonActivate => "Ativar";
         public static string ButtonChangePathOnly => "Alterar apenas o caminho do arquivo";
         public static string ButtonAttributedFormat => "Formato atribuído";
-        public static string ButtonUpdateBlocks => "Atualizar os blocos";
+        public static string ButtonUpdateBlocks => "Atualizar blocos";
         public static string ButtonAssociateByTags => "Associar por tags";
         public static string ButtonAssociateByOrder => "Associar por ordem";
         public static string ButtonMoveTagsDown => "Mover tags para baixo";
@@ -65,14 +65,14 @@ namespace ConversorDrawind
         public static string LabelColor => "Cor:";
         public static string LabelCommandName => "Nome do comando:";
         public static string LabelAttributeName => "Nome do atributo";
-        public static string LabelCommandPath => "Local do Lisp ou DLL:";
-        public static string LabelLispLocation => "Local do Lisp";
+        public static string LabelCommandPath => "Local do LISP ou DLL:";
+        public static string LabelLispLocation => "Local do LISP";
         public static string LabelLineType => "Tipo de linha:";
         public static string LabelHeight => "Altura:";
         public static string LabelWidth => "Largura:";
         public static string LabelTextStyle => "Estilo de texto:";
         public static string LabelContent => "Conteúdo:";
-        public static string LabelOrientation => "Orientação (linha)";
+        public static string LabelOrientation => "Orientação da linha";
         public static string LabelObjectType => "Tipo de objeto";
         public static string LabelText => "Texto";
         public static string LabelLayerBase => "Layer base";
@@ -80,16 +80,16 @@ namespace ConversorDrawind
         public static string LabelLineColor => "Cor da linha";
         public static string LabelTextColor => "Cor do texto";
         public static string LabelArrowType => "Tipo de seta";
-        public static string LabelDimStyle => "DimStyle";
+        public static string LabelDimStyle => "Estilo de cota";
         public static string LabelScale => "Escala";
-        public static string LabelLtScale => "Ltscale:";
+        public static string LabelLtScale => "Escala do tipo de linha:";
         public static string LabelManualScale => "Escala manual";
         public static string LabelAutomaticScale => "Escala automática";
         public static string LabelManual => "Manual";
         public static string LabelAutomatic => "Automática";
         public static string LabelLayersAfterConversion => "Layers após a conversão";
         public static string LabelAllLayers => "Todos os layers";
-        public static string LabelExplodeOnlyLayers => "Explodir somente blocos nos layers";
+        public static string LabelExplodeOnlyLayers => "Explodir blocos somente nos layers";
         public static string LabelOriginOfDrawings => "Origem dos desenhos";
         public static string LabelTeklaStructures => "Tekla Structures";
         public static string LabelCad => "CAD";
@@ -104,7 +104,7 @@ namespace ConversorDrawind
         public static string LabelXyz => "XYZ";
         public static string LabelFixDimensionArrows => "Alterar setas de cotas que colidirem.";
         public static string LabelArrowCollisionTarget => "Alterar setas que colidirem para:";
-        public static string LabelArrowTransitionDistance => "Distância exata de transição da seta: (onde a seta passa a ser para fora)";
+        public static string LabelArrowTransitionDistance => "Distância exata de transição da seta (quando a seta passa para fora):";
         public static string LabelSerialNumber => "Número de série:";
         public static string LabelRed => "Vermelho:";
         public static string LabelGreen => "Verde:";
@@ -129,10 +129,10 @@ namespace ConversorDrawind
         public static string LabelP2X => "P2 X";
         public static string LabelP2Y => "P2 Y";
         public static string LabelP2Z => "P2 Z";
-        public static string LabelDimensionScale => "Escala da dimensão";
-        public static string LabelDimensionArrowSize => "Tamanho da seta da dimensão";
-        public static string LabelDimensionOffset => "Deslocamento da dimensão";
-        public static string LabelDimensionLineExtend => "Extensão da linha";
+        public static string LabelDimensionScale => "Escala da cota";
+        public static string LabelDimensionArrowSize => "Tamanho da seta da cota";
+        public static string LabelDimensionOffset => "Deslocamento da cota";
+        public static string LabelDimensionLineExtend => "Extensão da linha de cota";
         public static string LabelDimensionLinearPrecision => "Precisão linear";
         public static string LabelDimensionAngularPrecision => "Precisão angular";
         public static string LabelDimensionLinearUnit => "Unidade linear";
@@ -154,14 +154,14 @@ namespace ConversorDrawind
         public static string LabelConverterTemplate => "Template:";
         public static string LabelLoad => "Carregar";
         public static string LabelClearList => "Limpar lista";
-        public static string LabelRestoreLastConverted => "Restaurar últimos arquivos convertidos";
+        public static string LabelRestoreLastConverted => "Restaurar os últimos arquivos convertidos";
         public static string LabelConvertDimensions => "Converter cotas";
-        public static string LabelConvertLayers => "Converter e ou remover layers";
+        public static string LabelConvertLayers => "Converter e/ou remover layers";
         public static string LabelScaleDrawing => "Colocar o desenho na escala real";
         public static string LabelAttributeDrawingFormat => "Atribuir o formato do desenho";
         public static string LabelRunCommandsAtEnd => "Executar comandos no final";
         public static string LabelEnableErrorMessages => "Habilitar mensagens de erro caso ocorram";
-        public static string LabelDeleteTeklaWord => "Deletar a palavra Tekla Structures do desenho";
+        public static string LabelDeleteTeklaWord => "Excluir a palavra Tekla Structures do desenho";
         public static string LabelPurgeDrawing => "Purgar o desenho";
         public static string LabelExplode => "Explodir";
         public static string LabelExplodeBlocks => "Explodir blocos";
@@ -170,7 +170,7 @@ namespace ConversorDrawind
         public static string LabelFinished => "Finalizado!";
         public static string LabelConverting => "Convertendo";
         public static string LabelWaitForProcess => "Aguarde até que o processo termine.";
-        public static string LabelStartedAutoCad2026 => "Iniciando o AutoCAD 2026...";
+        public static string LabelStartedAutoCad2026 => $"Iniciando o {ApplicationInfo.AutoCadDisplayName}...";
         public static string LabelDrawind => "DRAWIND";
         public static string LabelLoadingDots => "...";
         public static string LabelLayerFilter => "Filtro";
@@ -184,7 +184,7 @@ namespace ConversorDrawind
         public static string TabCreateConverter => "Criar conversor";
         public static string TabMain => "Principal";
         public static string TabLayersAndStyles => "Layers e estilos";
-        public static string TabClientLayers => "Layers do Cliente";
+        public static string TabClientLayers => "Layers do cliente";
         public static string TabClientTextStyles => "Estilos de texto do cliente";
         public static string TabConverters => "Conversores";
         public static string TabDimensions => "Dimensões";
@@ -231,7 +231,7 @@ namespace ConversorDrawind
         public static string FilterCadDrawings => "Desenhos CAD (*.dwg;*.dxf)|*.dwg;*.dxf|Todos os arquivos (*.*)|*.*";
         public static string FilterCadDrawingsOnly => "Desenhos CAD (*.dwg;*.dxf)|*.dwg;*.dxf";
         public static string FilterTemplateXml => "Template XML (*.txml)|*.txml|XML (*.xml)|*.xml|Todos os arquivos (*.*)|*.*";
-        public static string FilterDrawing => "Drawing (*.dwg)|*.dwg";
+        public static string FilterDrawing => "Desenho (*.dwg)|*.dwg";
         public static string FilterLin => "Arquivo LIN (*.lin)|*.lin";
         public static string FilterTextFiles => "Texto (*.txt)|*.txt";
 
@@ -240,12 +240,12 @@ namespace ConversorDrawind
         public static string MessageSelectConverterBeforeConvert => "Selecione um conversor antes de converter.";
         public static string MessageAddAtLeastOneDrawingBeforeConvert => "Adicione pelo menos um desenho antes de converter.";
         public static string MessageConfiguredFormatNotFound => "O formato configurado não foi encontrado:\n";
-        public static string MessageCouldNotSaveFile => "Não foi possível salvar o arquivo, ele pode estar sendo usado por outro programa.";
+        public static string MessageCouldNotSaveFile => "Não foi possível salvar o arquivo. Ele pode estar sendo usado por outro programa.";
         public static string MessageCouldNotOpenSelectedDrawing => "Não foi possível abrir o desenho selecionado!";
         public static string MessageActivationSuccess => "Ativação realizada com sucesso!";
         public static string MessageInvalidPassword => "Senha inválida!";
-        public static string MessageCannotAddStyle => "Não é possível adicionar este estilo, esse nome já existe!";
-        public static string MessageCannotRemoveStyle => "Não é possível remover este estilo, é necessário pelo menos um estilo!";
+        public static string MessageCannotAddStyle => "Não é possível adicionar este estilo, pois esse nome já existe!";
+        public static string MessageCannotRemoveStyle => "Não é possível remover este estilo, pois é necessário manter pelo menos um estilo!";
         public static string MessageDeleteSelectedRow => "Deseja realmente excluir a linha selecionada?";
         public static string MessageLayerAlreadyExists => "O layer já existe!";
         public static string MessageUpdateExistingLayers => "Deseja atualizar os layers que já existem?\nObservação: o layer '0' sempre é atualizado.";
@@ -256,8 +256,8 @@ namespace ConversorDrawind
         public static string MessageCouldNotOpenDrawingFile => "Não foi possível abrir o desenho selecionado!";
         public static string MessageDrawingDoesNotExistPrefix => "O desenho ";
         public static string MessageDrawingDoesNotExistSuffix => " não existe!";
-        public static string MessageLineTypesNeedCorrection => "Os tipos de linhas dos layers a seguir não correspondem a um tipo de linha presente no arquivo \"acadiso.lin\". Corrija os erros para continuar.";
-        public static string MessageSpecifyCorrectLinFile => "Por favor, especifique o arquivo correto.";
+        public static string MessageLineTypesNeedCorrection => "Os tipos de linha dos layers a seguir não correspondem a nenhum tipo de linha presente no arquivo \"acadiso.lin\". Corrija os erros para continuar.";
+        public static string MessageSpecifyCorrectLinFile => "Especifique o arquivo correto.";
         public static string MessageLoadWarning => "Alguns layers não foram adicionados porque existem layers com o mesmo nome na lista.";
 
         public static string FormatDrawingDoesNotExist(string file) => $"O desenho {file} não existe!";

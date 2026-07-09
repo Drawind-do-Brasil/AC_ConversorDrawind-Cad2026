@@ -9,7 +9,7 @@ namespace ConversorDrawindDLL
         private readonly Func<Point3d> getMinPoint;
         private readonly Func<Point3d> getMaxPoint;
         private readonly Action moveToOrigin;
-        private readonly Action<myPoint> setMinPoint;
+        private readonly Action<ConversorDrawind.Point> setMinPoint;
         private readonly Action<double, double, double> setMaxPoint;
 
         internal ConversionExtentsWorkflow(
@@ -17,7 +17,7 @@ namespace ConversorDrawindDLL
             Func<Point3d> getMinPoint,
             Func<Point3d> getMaxPoint,
             Action moveToOrigin,
-            Action<myPoint> setMinPoint,
+            Action<ConversorDrawind.Point> setMinPoint,
             Action<double, double, double> setMaxPoint)
         {
             this.refreshExtents = refreshExtents ?? throw new ArgumentNullException(nameof(refreshExtents));
@@ -45,7 +45,7 @@ namespace ConversorDrawindDLL
                 maxPoint.X - minPoint.X,
                 maxPoint.Y - minPoint.Y,
                 maxPoint.Z - minPoint.Z);
-            setMinPoint(new myPoint(0, 0, 0));
+            setMinPoint(new ConversorDrawind.Point(0, 0, 0));
 
             ZoomToCurrentExtents();
         }

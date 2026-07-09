@@ -1,22 +1,23 @@
 using System;
+using ConversorDrawind;
 
 namespace ConversorDrawindDLL
 {
     internal static class Localization
     {
-        internal static string AppCopyright => "Conversor Drawind 2011 @ 2016 - Versão 2016 - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.";
+        internal static string AppCopyright => "Conversor Drawind 2011 a 2016 - Versão 2016 - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.";
         internal static string AppDevelopedBy => "Desenvolvido por Nayara Ferreira de Jesus.";
-        internal static string AppCompatibilityAutoCad2023 => "Compatível com Autocad 2023.";
+        internal static string AppCompatibilityAutoCad => $"Compatível com {ApplicationInfo.AutoCadDisplayName}.";
         internal static string TitleError => "Erro";
         internal static string AlertErrorPrefix => "Erro:";
 
-        internal static string MessageCompleted => "... Completado.";
-        internal static string MessageCompletedLowercase => "... completado.";
-        internal static string MessageFailedPrefix => "... Erro.";
+        internal static string MessageCompleted => "... Concluído.";
+        internal static string MessageCompletedLowercase => "... concluído.";
+        internal static string MessageFailedPrefix => "... erro.";
         internal static string MessageNoLogContext => "Falha sem contexto informado";
         internal static string MessageNoLogDetails => "Sem detalhes";
         internal static string MessageInternalConversionLogHeader => "Log de erros internos da conversão";
-        internal static string MessageDrawingPrefix => "Drawing:";
+        internal static string MessageDrawingPrefix => "Desenho:";
         internal static string MessageAttributeListSizeMismatch => "A lista contém um número diferente de elementos.";
         internal static string MessageInvalidLinearDimensionEntity => "Não foi possível converter a cota linear: entidade inválida.";
         internal static string MessagePurgingDimensionStyles => "Purgando estilos de cota: ";
@@ -38,48 +39,48 @@ namespace ConversorDrawindDLL
         internal static string KeywordNo => "Não";
 
         internal static string StartExtractingBlocks => "Extraindo os blocos ";
-        internal static string StartMoveToOrigin => "Movendo para origem ";
-        internal static string StartEditingNewBlock => "Editando o novo bloco ... ";
+        internal static string StartMoveToOrigin => "Movendo para a origem ";
+        internal static string StartEditingNewBlock => "Editando o novo bloco... ";
         internal static string StartRemovingOldBlocks => "Removendo blocos antigos... ";
         internal static string StartRemovingUnusedLayers => "Removendo layers desnecessários... ";
-        internal static string StartFixingDimensionArrows => "Consertando setas das dimensões... ";
+        internal static string StartFixingDimensionArrows => "Corrigindo setas das cotas... ";
         internal static string StartPurgingDrawing => "Purgando desenho... ";
         internal static string StartCapturingFormatTexts => "Capturando textos do formato ";
         internal static string StartScalingDrawing => "Colocando o desenho na escala real... ";
         internal static string StartScalingFormat => "Colocando o formato na escala real... ";
         internal static string StartCreatingLayers => "Criando novos layers ";
-        internal static string StartCreatingTextStyles => "Criando novos estilos de textos ";
-        internal static string StartConvertingDimensions => "Convertendo as dimensões ";
+        internal static string StartCreatingTextStyles => "Criando novos estilos de texto ";
+        internal static string StartConvertingDimensions => "Convertendo as cotas ";
         internal static string StartExplodingBlocks => "Explodindo os blocos ";
         internal static string StartAddingDmBlock => "Adicionando bloco DM ";
-        internal static string StartDeletingTeklaStructuresWord => "Excluindo a palavra \"Tekla structures\" ";
+        internal static string StartDeletingTeklaStructuresWord => "Excluindo a palavra \"Tekla Structures\" ";
         internal static string StartConvertingLayers => "Convertendo os layers ";
 
-        internal static string ErrorEditingNewBlock => "Descrição: Erro ao editar o novo bloco...";
-        internal static string ErrorExtractingBlockLayers => "Descrição: Erro ao extrair os layers dos blocos...";
-        internal static string ErrorFixingDimensionArrows => "Descrição: Erro ao tentar consertar as setas das dimensões...";
-        internal static string ErrorPurgingDrawing => "Descrição: Erro ao tentar purgar o desenho...";
-        internal static string ErrorCapturingFormatTexts => "Descrição: Erro ao capturar os textos no formato...";
-        internal static string ErrorScalingDrawing => "Descrição: Erro ao tentar colocar o desenho na escala real...";
-        internal static string ErrorScalingFormat => "Descrição: Erro ao tentar colocar o formato na escala real...";
-        internal static string ErrorCreatingLayers => "Descrição: Erro ao criar os novos layers...";
-        internal static string ErrorCreatingTextStyles => "Descrição: Erro ao criar os novos estilos de textos...";
-        internal static string ErrorConvertingDimensions => "Descrição: Erro ao converter as dimensões...";
-        internal static string ErrorExplodingBlocks => "Descrição: Erro ao explodir os blocos...";
-        internal static string ErrorAddingDmBlock => "Descrição: Erro ao adicionar bloco DM...";
-        internal static string ErrorDeletingTeklaStructuresWord => "Descrição: Erro ao excluir a palavra \"Tekla structures\"...";
-        internal static string ErrorConvertingLayers => "Descrição: Erro ao converter os layers...";
+        internal static string ErrorEditingNewBlock => "Descrição: erro ao editar o novo bloco...";
+        internal static string ErrorExtractingBlockLayers => "Descrição: erro ao extrair os layers dos blocos...";
+        internal static string ErrorFixingDimensionArrows => "Descrição: erro ao tentar corrigir as setas das cotas...";
+        internal static string ErrorPurgingDrawing => "Descrição: erro ao tentar purgar o desenho...";
+        internal static string ErrorCapturingFormatTexts => "Descrição: erro ao capturar os textos no formato...";
+        internal static string ErrorScalingDrawing => "Descrição: erro ao tentar colocar o desenho na escala real...";
+        internal static string ErrorScalingFormat => "Descrição: erro ao tentar colocar o formato na escala real...";
+        internal static string ErrorCreatingLayers => "Descrição: erro ao criar os novos layers...";
+        internal static string ErrorCreatingTextStyles => "Descrição: erro ao criar os novos estilos de texto...";
+        internal static string ErrorConvertingDimensions => "Descrição: erro ao converter as cotas...";
+        internal static string ErrorExplodingBlocks => "Descrição: erro ao explodir os blocos...";
+        internal static string ErrorAddingDmBlock => "Descrição: erro ao adicionar o bloco DM...";
+        internal static string ErrorDeletingTeklaStructuresWord => "Descrição: erro ao excluir a palavra \"Tekla Structures\"...";
+        internal static string ErrorConvertingLayers => "Descrição: erro ao converter os layers...";
 
         internal static string WarningCouldNotAttributeFormat(string blockNames) =>
-            "Não foi possível atributar o formato. \nOs blocos ou atributos dentro dos blocos não correspondem ao especificado.\nNomes dos blocos especificados: " + blockNames + ".";
+            "Não foi possível atribuir o formato.\nOs blocos ou atributos dentro dos blocos não correspondem ao especificado.\nNomes dos blocos especificados: " + blockNames + ".";
 
         internal static string WarningCouldNotExtractBlockLayers => "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.";
         internal static string WarningCouldNotPurgeDrawing => "Não foi possível remover layers, blocos e tipos de linha desnecessários.\nVerifique se a conversão ocorreu normalmente.";
         internal static string WarningCouldNotScaleDrawing => "Não foi possível colocar o desenho na escala real!";
         internal static string WarningCouldNotScaleFormat => "Não foi possível colocar o formato na escala real!";
         internal static string WarningCouldNotCreateLayers => "Não foi possível criar os novos layers.\nVerifique se a conversão ocorreu normalmente.";
-        internal static string WarningCouldNotCreateTextStyles => "Não foi possível criar os novos estilos de textos.\nVerifique se a conversão ocorreu normalmente.";
-        internal static string WarningCouldNotConvertDimensions => "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.";
+        internal static string WarningCouldNotCreateTextStyles => "Não foi possível criar os novos estilos de texto.\nVerifique se a conversão ocorreu normalmente.";
+        internal static string WarningCouldNotConvertDimensions => "Não foi possível converter as cotas.\nVerifique se a conversão ocorreu normalmente.";
         internal static string WarningCouldNotExplodeBlocks => "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.";
         internal static string WarningCouldNotAddDmBlock => "Não foi possível adicionar o bloco DM.\nVerifique se a conversão ocorreu normalmente.";
         internal static string WarningCouldNotConvertLayers => "Não foi possível converter os layers.\nVerifique se a conversão ocorreu normalmente.";
@@ -91,7 +92,7 @@ namespace ConversorDrawindDLL
         internal static string LogAlterarAtributosDoBloco => "Alterar atributos do bloco";
         internal static string LogAlterarAtributosRelacionados => "Alterar atributos relacionados do bloco";
         internal static string LogAplicarEstiloDeCota => "Aplicar estilo de cota";
-        internal static string LogAtualizarConfiguracaoDaDimensao => "Atualizar configuração da dimensão";
+        internal static string LogAtualizarConfiguracaoDaDimensao => "Atualizar configuração da cota";
         internal static string LogAtualizarPrecisaoDaCota => "Atualizar precisão da cota";
         internal static string LogAtualizarTextoDeCota => "Atualizar texto da cota";
         internal static string LogCapturarAtributosDosBlocos => "Capturar atributos dos blocos";

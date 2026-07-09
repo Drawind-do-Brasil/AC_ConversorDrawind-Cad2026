@@ -33,8 +33,8 @@ namespace ConversorDrawindDLL
 
                     if (promptPointResult.Status.ToString() == "OK")
                     {
-                        Point3d myPoint = promptPointResult.Value;
-                        WriteTempFile("ConvertTo.PointInfo", myPoint.X + ";" + myPoint.Y + ";" + myPoint.Z);
+                        Point3d capturedPoint = promptPointResult.Value;
+                        WriteTempFile("ConvertTo.PointInfo", capturedPoint.X + ";" + capturedPoint.Y + ";" + capturedPoint.Z);
                     }
                 }
                 catch (Exception e)

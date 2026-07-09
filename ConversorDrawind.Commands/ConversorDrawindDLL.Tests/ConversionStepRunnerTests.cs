@@ -20,7 +20,7 @@ namespace ConversorDrawindDLL.Tests
                 "Aviso",
                 "Descrição de erro\n");
 
-            Assert.Equal(new[] { "Iniciando ", "action", "... completado.\n" }, messenger.Events);
+            Assert.Equal(new[] { "Iniciando ", "action", Localization.MessageCompletedLowercase + "\n" }, messenger.Events);
             Assert.Empty(logs);
             Assert.Empty(warnings);
         }
@@ -43,7 +43,7 @@ namespace ConversorDrawindDLL.Tests
                 "Aviso",
                 "Descrição de erro\n");
 
-            Assert.Equal(new[] { "Iniciando ", "... Erro. \nDescrição de erro\n" }, messenger.Events);
+            Assert.Equal(new[] { "Iniciando ", Localization.MessageFailedPrefix + " \nDescrição de erro\n" }, messenger.Events);
             Assert.Equal(new[] { "Contexto de teste:Falhou" }, logs);
             Assert.Equal(new[] { "Aviso" }, warnings);
         }

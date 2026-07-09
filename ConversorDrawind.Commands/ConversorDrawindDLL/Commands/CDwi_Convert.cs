@@ -16,8 +16,8 @@ namespace ConversorDrawindDLL
 [CommandMethod("CDwi_Convert")]
         public static void CDwi_ConvertToDimension()
         {
-            NewMin = new myPoint(double.MaxValue, double.MaxValue, double.MaxValue);
-            NewMax = new myPoint(double.MinValue, double.MinValue, double.MinValue);
+            NewMin = new ConversorDrawind.Point(double.MaxValue, double.MaxValue, double.MaxValue);
+            NewMax = new ConversorDrawind.Point(double.MinValue, double.MinValue, double.MinValue);
 
             timeini = DateTime.Now;
             //Main Instances

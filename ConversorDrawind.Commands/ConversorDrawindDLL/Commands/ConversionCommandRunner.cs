@@ -38,7 +38,7 @@ namespace ConversorDrawindDLL
         {
             messenger.WriteMessage("\n" + Localization.AppCopyright + "\n");
             messenger.WriteMessage(Localization.AppDevelopedBy + "\n");
-            messenger.WriteMessage(Localization.AppCompatibilityAutoCad2023 + "\n");
+            messenger.WriteMessage(Localization.AppCompatibilityAutoCad + "\n");
         }
 
         internal void InitializeLogger(Document document, ref string logDirectory, ref string logFileName)
