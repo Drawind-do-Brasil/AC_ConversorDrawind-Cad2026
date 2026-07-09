@@ -14,6 +14,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             RefreshEditorFromConfiguration();
             loadedConverterName = string.Empty;
             loadedConverterStatus = null;
+            loadedConfigurationSnapshot = string.Empty;
         }
 
         private void SaveConverter()
@@ -27,6 +28,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             UserSettingsService.SaveLastConverter(CurrentStatus, name);
             loadedConverterName = name;
             loadedConverterStatus = CurrentStatus;
+            loadedConfigurationSnapshot = CreateConfigurationSnapshot(configuration);
         }
 
         private void ImportConverter()
@@ -40,6 +42,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             UserSettingsService.SaveLastConverter(CurrentStatus, viewModel.TemplateName);
             loadedConverterName = string.Empty;
             loadedConverterStatus = null;
+            loadedConfigurationSnapshot = string.Empty;
         }
 
     }

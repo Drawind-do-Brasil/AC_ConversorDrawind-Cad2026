@@ -655,7 +655,6 @@ namespace ConversorDrawind
             if (deleteLogAfterClose)
                 TryDeleteFile(ApplicationRuntime.LOGarqConvertidos);
 
-            //File.Delete(arqtemp);
         }
 
         private static void TryDeleteFile(string path)

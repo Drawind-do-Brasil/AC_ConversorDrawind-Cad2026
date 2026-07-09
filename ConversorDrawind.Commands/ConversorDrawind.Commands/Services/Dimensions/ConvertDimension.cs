@@ -154,7 +154,6 @@ namespace ConversorDrawind.Commands
                 {
                     lineListParallel.Add(objectsInBlock.lineList[j]);
                 }
-                /**/
                 else if (DimensionGeometry.CheckPerpendicularLines(DimensionGeometry.RoundPoint(objectsInBlock.dBTextList.First().Position, DefaultPointPrecision),
                          DimensionGeometry.RoundPoint(DimensionGeometry.GetPointLine(objectsInBlock.dBTextList.First().Position,
                          objectsInBlock.dBTextList.First().Rotation), DefaultPointPrecision),
@@ -461,10 +460,6 @@ namespace ConversorDrawind.Commands
                         entityWriter.CreateLine(line2[j].StartPoint.TransformBy(objectsInBlock.matrix3d),
                                    line2[j].EndPoint.TransformBy(objectsInBlock.matrix3d));
                     }
-
-                    /* CreateAngularDimension(dimensionProperties,
-                                            objectsInBlock.dimStyle);
-                     */
                     double distX = 0;
                     for (int j = 0; j < objectsInBlock.arcList.Count; j++)
                     {

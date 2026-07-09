@@ -15,6 +15,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         private bool isSynchronizingConverterSelection;
         private string loadedConverterName = string.Empty;
         private StatusConversorItem loadedConverterStatus;
+        private string loadedConfigurationSnapshot = string.Empty;
 
         public MainWindow()
         {

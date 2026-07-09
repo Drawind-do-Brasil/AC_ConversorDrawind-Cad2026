@@ -9,8 +9,6 @@ namespace ConversorDrawind.Commands
         {
             InitializeComponent();
             scaleB.SelectAll();
-
-            //scaleB.Focus();
         }
 
         public double scale = 1;

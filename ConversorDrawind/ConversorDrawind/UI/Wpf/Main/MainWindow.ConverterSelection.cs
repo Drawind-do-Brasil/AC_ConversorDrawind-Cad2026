@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows;
+using System.Windows.Threading;
 using WpfMessageBox = System.Windows.MessageBox;
 
 namespace ConversorDrawind.UI.Wpf.Main
@@ -13,7 +14,15 @@ namespace ConversorDrawind.UI.Wpf.Main
         private void LoadConverterLists()
         {
             List<string> names = ConverterFileService.ListConverterNames(CurrentStatus);
-            viewModel.SetConverterNames(names);
+            isSynchronizingConverterSelection = true;
+            try
+            {
+                viewModel.SetConverterNames(names);
+            }
+            finally
+            {
+                isSynchronizingConverterSelection = false;
+            }
         }
 
         private List<string> CurrentConverterNames()
@@ -79,6 +88,11 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return;
             }
 
+            if (IsLoadedConverterSelection(selected))
+            {
+                return;
+            }
+
             if (!ConfirmDiscardTemplateChanges())
             {
                 RestoreLoadedConverterSelection();
@@ -93,6 +107,11 @@ namespace ConversorDrawind.UI.Wpf.Main
         {
             string selected = viewModel.SelectedConverterName;
             if (isInitializing || isSynchronizingConverterSelection || string.IsNullOrWhiteSpace(selected))
+            {
+                return;
+            }
+
+            if (IsLoadedConverterSelection(selected))
             {
                 return;
             }
@@ -115,6 +134,7 @@ namespace ConversorDrawind.UI.Wpf.Main
             UserSettingsService.SaveLastConverter(CurrentStatus, converterName);
             loadedConverterName = converterName;
             loadedConverterStatus = CurrentStatus;
+            loadedConfigurationSnapshot = CreateConfigurationSnapshot(configuration);
         }
 
         private void SelectLoadedConverter(string converterName)
@@ -152,28 +172,32 @@ namespace ConversorDrawind.UI.Wpf.Main
                 return false;
             }
 
-            string savedPath = ConverterFileService.GetTxmlPath(loadedConverterName, loadedConverterStatus);
-            if (!File.Exists(savedPath))
+            if (string.IsNullOrEmpty(loadedConfigurationSnapshot))
             {
                 return false;
             }
 
             ApplyEditorPendingChanges();
 
-            global::ConversorDrawind.Configuration savedConfiguration = ConverterFileService.LoadConverter(loadedConverterName, loadedConverterStatus);
-            string currentXml = StructuredConfigurationXmlWriter.CreateDocument(configuration.ToConverterConfiguration()).ToString();
-            string savedXml = StructuredConfigurationXmlWriter.CreateDocument(savedConfiguration.ToConverterConfiguration()).ToString();
-
-            return !string.Equals(currentXml, savedXml, StringComparison.Ordinal);
+            return !string.Equals(CreateConfigurationSnapshot(configuration), loadedConfigurationSnapshot, StringComparison.Ordinal);
         }
 
         private void RestoreLoadedConverterSelection()
         {
+            ApplyLoadedConverterSelection();
+            Dispatcher.BeginInvoke(new Action(ApplyLoadedConverterSelection), DispatcherPriority.ContextIdle);
+        }
+
+        private void ApplyLoadedConverterSelection()
+        {
             isSynchronizingConverterSelection = true;
             try
             {
-                viewModel.SelectedConverterName = string.IsNullOrWhiteSpace(loadedConverterName) ? string.Empty : loadedConverterName;
+                string converterName = string.IsNullOrWhiteSpace(loadedConverterName) ? string.Empty : loadedConverterName;
+                viewModel.SelectedConverterName = converterName;
                 viewModel.TemplateName = loadedConverterName ?? string.Empty;
+                ConverterView.ConvertersListBox.SelectedItem = string.IsNullOrWhiteSpace(converterName) ? null : converterName;
+                EditorView.ConverterComboBoxControl.SelectedItem = string.IsNullOrWhiteSpace(converterName) ? null : converterName;
             }
             finally
             {
@@ -194,6 +218,19 @@ namespace ConversorDrawind.UI.Wpf.Main
             Param1 param = new Param1 { conversorName = selectedConverter, desenhosName = drawingFiles, closedesenhos = ConverterView.KeepFilesOpenCheckBox.IsChecked != true, configuration = configuration, StatusConversorItem = CurrentStatus };
             using (Processo processo = new Processo(param)) processo.ShowDialog();
             if (!Processo.IsCanceled) using (ProcessoEnd processoEnd = new ProcessoEnd()) processoEnd.ShowDialog();
+        }
+
+        private bool IsLoadedConverterSelection(string converterName)
+        {
+            return loadedConverterStatus == CurrentStatus &&
+                string.Equals(converterName, loadedConverterName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string CreateConfigurationSnapshot(global::ConversorDrawind.Configuration source)
+        {
+            return StructuredConfigurationXmlWriter
+                .CreateDocument((source ?? new global::ConversorDrawind.Configuration()).ToConverterConfiguration())
+                .ToString();
         }
 
     }

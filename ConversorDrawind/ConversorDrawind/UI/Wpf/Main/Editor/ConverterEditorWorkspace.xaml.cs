@@ -83,6 +83,7 @@ namespace ConversorDrawind.UI.Wpf.Main
         public ListBox AllExplodeLayersListBox => ExplosionTab.AllLayersListBox;
         public ListBox SelectedExplodeLayersListBox => ExplosionTab.SelectedLayersListBox;
         public DataGrid LispCommandsListBox => LispDllTab.CommandsListBox;
+        public ComboBox ConverterComboBoxControl => ConverterComboBox;
 
         public void ShowLayerRules(IEnumerable<LayerConversionRule> rules) => ConvertersTab.ShowLayerRules(rules);
         public void ShowRemoveLayers(IEnumerable<string> layerNames, IEnumerable<LayerRemoveRule> rules) => RemoveLayersTab.ShowRemoveLayers(layerNames, rules);
