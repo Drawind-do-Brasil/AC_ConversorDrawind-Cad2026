@@ -8,8 +8,8 @@ namespace ConversorDrawind
         public string widthfactor = "1";
         public string tag;
         public bool modify = false;
-        public Point p1 = new Point();
-        public Point p2 = new Point();
+        public PointEspecial p1 = new PointEspecial();
+        public PointEspecial p2 = new PointEspecial();
         public Filter filtro;
         public int indiceRelacao = -1;
         public bool isSociate = false;
@@ -36,8 +36,8 @@ namespace ConversorDrawind
         public TagBlock DeepCopy()
         {
             TagBlock other = (TagBlock)this.MemberwiseClone();
-            other.p1 = new Point(this.p1);
-            other.p2 = new Point(this.p2);
+            other.p1 = new PointEspecial(this.p1);
+            other.p2 = new PointEspecial(this.p2);
             other.filtro = new Filter(this.filtro);
             other.verifiqued = this.verifiqued;
             other.text = this.text;
@@ -52,8 +52,8 @@ namespace ConversorDrawind
             string[] pts = conj[2].Split(';');
             string[] pts1 = pts[0].Split(',');
             string[] pts2 = pts[1].Split(',');
-            p1 = new Point(NumericTextParser.ToDouble(pts1[0]), NumericTextParser.ToDouble(pts1[1]), NumericTextParser.ToDouble(pts1[2]));
-            p2 = new Point(NumericTextParser.ToDouble(pts2[0]), NumericTextParser.ToDouble(pts2[1]), NumericTextParser.ToDouble(pts2[2]));
+            p1 = new PointEspecial(NumericTextParser.ToDouble(pts1[0]), NumericTextParser.ToDouble(pts1[1]), NumericTextParser.ToDouble(pts1[2]));
+            p2 = new PointEspecial(NumericTextParser.ToDouble(pts2[0]), NumericTextParser.ToDouble(pts2[1]), NumericTextParser.ToDouble(pts2[2]));
             string[] subconj = conj[3].Split(';');
             filtro.layerBase = subconj[0];
             filtro.SetConjunto(subconj[1]);

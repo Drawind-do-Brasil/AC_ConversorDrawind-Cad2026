@@ -105,7 +105,11 @@ namespace ConversorDrawindDLL
 
             stepRunner.Run(
                 Localization.StartAddingDmBlock,
-                DocumentManager.AddBlockDM,
+                () =>
+                {
+                    IAcadDocumentContext documentContext = new AcadDocumentContext();
+                    new DmBlockService(documentContext, new AcadEntitySelector(documentContext.Editor)).AddOrUpdate();
+                },
                 LogContext.PrepararConversao,
                 Localization.WarningCouldNotAddDmBlock,
                 Localization.ErrorAddingDmBlock + "\n");

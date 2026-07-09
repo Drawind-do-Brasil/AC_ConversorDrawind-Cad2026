@@ -25,6 +25,8 @@ namespace ConversorDrawindDLL
         internal static string MessagePurgingLineTypes => "Purgando tipos de linha: ";
         internal static string MessagePurgingLayers => "Purgando layers: ";
         internal static string MessagePurgingBlocks => "Purgando blocos: ";
+        internal static string MessageBlockNameRequired => "O nome do bloco deve ser informado.";
+        internal static string MessageSourceDrawingRequired => "O arquivo DWG de origem deve ser informado.";
 
         internal static string PromptType => "Tipo: ";
         internal static string PromptClose => "Fechar: ";

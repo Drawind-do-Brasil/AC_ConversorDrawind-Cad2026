@@ -57,14 +57,12 @@ namespace ConversorDrawindDLL
                                 {
                                     rotatedDimension.Dimsah = true;
                                     rotatedDimension.Dimblk2 = ConvertLayer.GetArrowObjectId(tipoSeta);
-                                    //rotatedDimension.Dimblk2s = ConvertLayer.GetArrowBlockNameString(tipoSeta);
                                 }
                                 if (AnalisePoint(rotatedDimension, point))
                                 {
                                     ObjectId ids = rotatedDimension.Dimblk2;
                                     rotatedDimension.Dimsah = true;
                                     rotatedDimension.Dimblk1 = ConvertLayer.GetArrowObjectId(tipoSeta);
-                                    //rotatedDimension.Dimblk1s = ConvertLayer.GetArrowBlockNameString(tipoSeta);
                                     rotatedDimension.Dimblk2 = ids;
 
                                 }
