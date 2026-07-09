@@ -181,7 +181,7 @@ namespace ConversorDrawind
             configuration.EXTTEXTSize = source.Text.DefaultSize;
             arranjos.allTextSyles.AddRange(source.Text.Styles.Select(LegacyConfigurationParsers.FormatTextStyleDefinition));
             if (arranjos.allTextSyles.Count == 0)
-                arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
+                arranjos.allTextSyles.Add(Defaults.LegacyTextStyle());
 
             configuration.EXTSCALEManual = source.Scale.Manual;
             configuration.EXTSCALEp1 = ToPointEspecial(source.Scale.Point1);

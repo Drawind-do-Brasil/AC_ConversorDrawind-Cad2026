@@ -68,7 +68,9 @@ namespace ConversorDrawind
         public static Configuration Load(string file)
         {
             Configuration configuration = new Configuration();
+#pragma warning disable CS0618
             Arranjos arranjos = new Arranjos();
+#pragma warning restore CS0618
             List<Block> teklaBlocks = new List<Block>();
             List<Block> cadBlocks = new List<Block>();
             List<Block> originalBlocks = new List<Block>();

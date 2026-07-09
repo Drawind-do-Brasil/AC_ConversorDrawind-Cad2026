@@ -131,26 +131,28 @@ namespace ConversorDrawind
             if (Layers.BaseLayers == null) Layers.BaseLayers = new List<string>();
             if (Lines.BaseLineTypes == null) Lines.BaseLineTypes = new List<string>();
 
-            FillIfEmpty(Catalogs.Colors, Arranjos.DefaultColors());
-            FillIfEmpty(Catalogs.ObjectTypes, Arranjos.DefaultObjectTypes());
-            FillIfEmpty(Catalogs.FilterLineTypes, Arranjos.DefaultFilterLineTypes());
+            FillIfEmpty(Catalogs.Colors, Defaults.DefaultColors());
+            FillIfEmpty(Catalogs.ObjectTypes, Defaults.DefaultObjectTypes());
+            FillIfEmpty(Catalogs.FilterLineTypes, Defaults.DefaultFilterLineTypes());
             FillIfEmpty(Catalogs.LayerLineTypes, BuildDefaultLayerLineTypes());
-            FillIfEmpty(Catalogs.RemovedLineTypes, Arranjos.DefaultRemovedLineTypes());
+            FillIfEmpty(Catalogs.RemovedLineTypes, Defaults.DefaultRemovedLineTypes());
 
             FillIfEmpty(Text.Styles, new List<TextStyleDefinition>
             {
-                LegacyConfigurationParsers.ParseTextStyleDefinition(Arranjos.defaultTextStyle)
+                Defaults.TextStyle()
             });
-            FillIfEmpty(Layers.BaseLayers, Arranjos.DefaultBaseLayers());
+            FillIfEmpty(Layers.BaseLayers, Defaults.DefaultBaseLayers());
             FillIfEmpty(Lines.BaseLineTypes, Catalogs.FilterLineTypes);
 
             if (Layers.NewLayers == null)
                 Layers.NewLayers = new List<LayerDefinition>();
+
+            FillIfEmpty(Layers.NewLayers, Defaults.DefaultNewLayers());
         }
 
         private List<string> BuildDefaultLayerLineTypes()
         {
-            List<string> result = Arranjos.DefaultLayerLineTypes();
+            List<string> result = Defaults.DefaultLayerLineTypes();
             foreach (string lineType in ReadLineTypeNames(GetLineTypeCatalogPath()))
             {
                 if (!result.Contains(lineType))
@@ -194,6 +196,14 @@ namespace ConversorDrawind
         }
 
         private static void FillIfEmpty(List<TextStyleDefinition> target, IEnumerable<TextStyleDefinition> values)
+        {
+            if (target == null || target.Count > 0)
+                return;
+
+            target.AddRange(values);
+        }
+
+        private static void FillIfEmpty(List<LayerDefinition> target, IEnumerable<LayerDefinition> values)
         {
             if (target == null || target.Count > 0)
                 return;

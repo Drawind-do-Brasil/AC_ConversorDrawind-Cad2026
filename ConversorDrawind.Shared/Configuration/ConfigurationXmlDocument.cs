@@ -10,6 +10,7 @@ using System.Xml.Serialization;
 
 namespace ConversorDrawind
 {
+#pragma warning disable CS0618
     [XmlRoot("CONVERSOR")]
     public sealed class ConfigurationXmlDocument
     {
@@ -355,7 +356,7 @@ namespace ConversorDrawind
                 return;
             }
 
-            arranjos.allTextSyles.Add(Arranjos.defaultTextStyle);
+            arranjos.allTextSyles.Add(Defaults.LegacyTextStyle());
         }
 
         private static BlockXml CreateTeklaBlock(Block block)
@@ -412,6 +413,7 @@ namespace ConversorDrawind
             return result;
         }
     }
+#pragma warning restore CS0618
 
     public sealed class CommentsXml
     {
