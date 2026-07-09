@@ -35,8 +35,8 @@ namespace ConversorDrawind.Commands
                 {
                     string newdate = editor.GetString(Localization.PromptBlockName).StringResult.Replace("*******", " ");
                     double scale = ConversionSession.AppliedScale = scaleWorkflow.ReadLineTypeScale();
-                    ConvertLayer.ScaleDrawingInv(scale, new List<Block>() { new Block(newdate) });
-                    ConvertLayer.Zoom(ConversionSession.MinPoint3d, ConversionSession.MaxPoint3d);
+                    DrawingTransformOperations.ScaleDrawingInv(scale, new List<Block>() { new Block(newdate) });
+                    DrawingTransformOperations.Zoom(ConversionSession.MinPoint3d, ConversionSession.MaxPoint3d);
                 },
                 LogContext.DefinirEscalaDoBloco,
                 Localization.WarningCouldNotScaleFormat,

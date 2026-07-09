@@ -27,8 +27,8 @@ namespace ConversorDrawind.Commands
  
         public void ConvertByInventor()
         {
-            ConvertLayer.CreateDimstyle2();
-            ObjectId[] ids = ConvertLayer.Filter("ALL", "DIMENSION", "ALL", "ALL");
+            DrawingStyleOperations.CreateDimstyle2();
+            ObjectId[] ids = LayerSelectionQueries.Filter("ALL", "DIMENSION", "ALL", "ALL");
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database acCurDb = documentContext.Database;
             using (Transaction acTrans = acCurDb.TransactionManager.MyStartTransaction())
@@ -67,7 +67,7 @@ namespace ConversorDrawind.Commands
             document = documentContext.Document;
             database = documentContext.Database;
             editor = documentContext.Editor;
-            ObjectId ds = ConvertLayer.CreateDimstyle();
+            ObjectId ds = DrawingStyleOperations.CreateDimstyle();
 
             using (transaction = database.TransactionManager.MyStartTransaction())
             {

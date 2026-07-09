@@ -22,7 +22,7 @@ namespace ConversorDrawind.Commands
                 {
                     if (Configuration.Config.General.ConverterType == 0 && Configuration.Config.Lines.LineTypeScale != 0)
                         scaleWorkflow.ApplyLineTypeScale(Configuration.Config.Lines.LineTypeScale);
-                    ConvertLayer.CreateAndAssignALayer();
+                    LayerSetupOperations.CreateAndAssignALayer();
                 },
                 LogContext.PrepararConversao,
                 Localization.WarningCouldNotCreateLayers,
@@ -38,7 +38,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartCreatingTextStyles,
-                ConvertLayer.CreateTextSyles,
+                DrawingStyleOperations.CreateTextSyles,
                 LogContext.PrepararConversao,
                 Localization.WarningCouldNotCreateTextStyles,
                 Localization.ErrorCreatingTextStyles + "\n");
@@ -68,7 +68,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartExplodingBlocks,
-                ConvertLayer.ExplodeObjectsInv,
+                EntityExplosionWorkflow.ExplodeObjectsInv,
                 LogContext.CarregarLayer,
                 Localization.WarningCouldNotExplodeBlocks,
                 Localization.ErrorExplodingBlocks + "\n");
@@ -92,7 +92,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartExplodingBlocks,
-                ConvertLayer.ExplodeObjects,
+                EntityExplosionWorkflow.ExplodeObjects,
                 LogContext.CriarBloco,
                 Localization.WarningCouldNotExplodeBlocks,
                 Localization.ErrorExplodingBlocks + "\n");
@@ -124,8 +124,8 @@ namespace ConversorDrawind.Commands
                 Localization.StartDeletingTeklaStructuresWord,
                 () =>
                 {
-                    ConvertLayer.DeletingTekla(Configuration.Config.Layers.TeklaDrawingSheetLayer);
-                    ConvertLayer.DeletingTekla();
+                    DrawingTransformOperations.DeletingTekla(Configuration.Config.Layers.TeklaDrawingSheetLayer);
+                    DrawingTransformOperations.DeletingTekla();
                 },
                 LogContext.FinalizarConversao,
                 string.Empty,
@@ -139,7 +139,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartConvertingLayers,
-                ConvertLayer.ConvertLayersNew,
+                EntityExplosionWorkflow.ConvertLayersNew,
                 LogContext.PublicarArquivo,
                 Localization.WarningCouldNotConvertLayers,
                 Localization.ErrorConvertingLayers + "\n");

@@ -53,7 +53,7 @@ namespace ConversorDrawind.Commands
                             List<Filter> filters =
                                  layers.Where(filter => string.Equals(filter.layerBase, entity.Layer, StringComparison.OrdinalIgnoreCase) &&
                                   (string.Equals(filter.tipoObjeto, "ALL", StringComparison.OrdinalIgnoreCase) || string.Equals(filter.tipoObjeto, entity.Id.ObjectClass.DxfName, StringComparison.OrdinalIgnoreCase)) &&
-                                  (string.Equals(filter.cor, "ALL", StringComparison.OrdinalIgnoreCase) || entity.Color.ColorNameForDisplay == ConvertLayer.GetColorForName(filter.cor).ColorNameForDisplay) &&
+                                           (string.Equals(filter.cor, "ALL", StringComparison.OrdinalIgnoreCase) || entity.Color.ColorNameForDisplay == LayerSetupOperations.GetColorForName(filter.cor).ColorNameForDisplay) &&
                                   (string.Equals(filter.tipoLinha, "ALL", StringComparison.OrdinalIgnoreCase) || string.Equals(filter.tipoLinha, entity.Linetype, StringComparison.OrdinalIgnoreCase)) &&
                                   (entity.GetType() != typeof(DBText) || (entity.GetType() == typeof(DBText) &&
                                                                          (string.IsNullOrEmpty(filter.conteudoTexto) || filter.conteudoTexto == ((DBText)entity).TextString) &&
@@ -86,7 +86,7 @@ namespace ConversorDrawind.Commands
                             foreach (ObjectId id in objectIds)
                             {
                                 Entity entity = id.GetObject(OpenMode.ForWrite) as Entity;
-                                if (string.Equals(filter.cor, "ALL", StringComparison.OrdinalIgnoreCase) || entity.Color.ColorNameForDisplay == ConvertLayer.GetColorForName(filter.cor).ColorNameForDisplay)
+                        if (string.Equals(filter.cor, "ALL", StringComparison.OrdinalIgnoreCase) || entity.Color.ColorNameForDisplay == LayerSetupOperations.GetColorForName(filter.cor).ColorNameForDisplay)
                                 {
                                     if (entity.GetType() != typeof(DBText) &&
                                         (!string.Equals(entity.Id.ObjectClass.DxfName, "INSERT", StringComparison.OrdinalIgnoreCase) ||

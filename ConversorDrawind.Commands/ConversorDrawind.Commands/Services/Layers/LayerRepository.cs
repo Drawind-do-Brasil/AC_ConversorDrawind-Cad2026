@@ -94,9 +94,9 @@ namespace ConversorDrawind.Commands
 
         private static void ApplyLayerDefinition(LayerTableRecord layerRecord, string[] layerDefinition)
         {
-            layerRecord.Color = ConvertLayer.GetColorForName(layerDefinition[1]);
+            layerRecord.Color = LayerSetupOperations.GetColorForName(layerDefinition[1]);
             layerRecord.Name = layerDefinition[0];
-            layerRecord.LinetypeObjectId = ConvertLayer.LoadLinetype(layerDefinition[2]);
+                layerRecord.LinetypeObjectId = LayerSetupOperations.LoadLinetype(layerDefinition[2]);
         }
     }
 }

@@ -33,7 +33,7 @@ namespace ConversorDrawind.Commands
                 p1,
                 p2,
                 Configuration.Config.Dimensions.Layer,
-                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
+                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor));
             Append(line);
         }
 
@@ -43,7 +43,7 @@ namespace ConversorDrawind.Commands
                 dimensionProperties,
                 dimStyle,
                 Configuration.Config.Dimensions.Layer,
-                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
+                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor));
             Append(rotatedDimension);
         }
 
@@ -53,7 +53,7 @@ namespace ConversorDrawind.Commands
                 dimensionProperties,
                 dimStyle,
                 Configuration.Config.Dimensions.Layer,
-                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor));
+                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor));
             Append(dimension);
         }
 
@@ -63,7 +63,7 @@ namespace ConversorDrawind.Commands
                 dimensionProperties,
                 dimStyle,
                 Configuration.Config.Dimensions.Layer,
-                ConvertLayer.GetColorForName(Configuration.Config.Dimensions.LineColor),
+                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor),
                 Configuration.Config.Dimensions.ArrowSize);
             Append(dimension);
         }

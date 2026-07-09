@@ -75,7 +75,7 @@ namespace ConversorDrawind.Commands
             copiedText.WidthFactor = sourceText.WidthFactor;
             copiedText.TextStyleId = textStyle;
             copiedText.Layer = Configuration.Config.Dimensions.Layer;
-            copiedText.Color = ConvertLayer.GetColorForName(Configuration.Config.Dimensions.TextColor);
+            copiedText.Color = LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.TextColor);
             copiedText.Position = sourceText.Position.TransformBy(transform);
 
             return copiedText;

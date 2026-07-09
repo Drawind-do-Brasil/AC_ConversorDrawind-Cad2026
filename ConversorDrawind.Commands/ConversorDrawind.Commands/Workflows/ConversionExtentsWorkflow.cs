@@ -52,7 +52,7 @@ namespace ConversorDrawind.Commands
 
         private void ZoomToCurrentExtents()
         {
-            ConvertLayer.Zoom(getMaxPoint(), getMinPoint());
+            DrawingTransformOperations.Zoom(getMaxPoint(), getMinPoint());
         }
     }
 }

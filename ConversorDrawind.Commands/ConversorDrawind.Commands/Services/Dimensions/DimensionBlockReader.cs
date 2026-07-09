@@ -8,7 +8,7 @@ namespace ConversorDrawind.Commands
         {
             ObjectsInBlock objectsInBlock = ReadEntities(blockTableRecord);
             objectsInBlock.matrix3d = blockReference.BlockTransform;
-            objectsInBlock.textStyle = ConvertLayer.GetTextSyleByName(Configuration.Config.Text.DefaultStyleName);
+            objectsInBlock.textStyle = DrawingStyleOperations.GetTextSyleByName(Configuration.Config.Text.DefaultStyleName);
             objectsInBlock.dimStyle = dimStyle;
             return objectsInBlock;
         }

@@ -32,11 +32,11 @@ namespace ConversorDrawind.Commands
                 Localization.StartScalingDrawing,
                 () =>
                 {
-                    ConversionSession.AppliedScale = ConvertLayer.GetScaleDrawing(ConversionSession.CapturedScale);
+                    ConversionSession.AppliedScale = DrawingTransformOperations.GetScaleDrawing(ConversionSession.CapturedScale);
 
-                    ConvertLayer.ScaleDrawing(ConversionSession.AppliedScale);
+                    DrawingTransformOperations.ScaleDrawing(ConversionSession.AppliedScale);
                     if (Configuration.Config.General.ConverterType == 1)
-                        new DimensionScaleService(ConvertLayer.Filter, documentContext, ConversionLog.Write)
+                        new DimensionScaleService(LayerSelectionQueries.Filter, documentContext, ConversionLog.Write)
                             .ApplyScale(ConversionSession.AppliedScale);
                     scaleWorkflow.ApplyDrawingScale(Configuration.Config.Lines.LineTypeScale, Configuration.Config.Dimensions.Scale, ConversionSession.AppliedScale);
                     Point3d ptMax = ConversionSession.MaxPoint3d;
@@ -74,7 +74,7 @@ namespace ConversorDrawind.Commands
                         }
                     }
 
-                    ConvertLayer.Zoom(ptMin, new Point3d(ptMax.X * ConversionSession.AppliedScale, ptMax.Y * ConversionSession.AppliedScale, ptMax.Z * ConversionSession.AppliedScale));
+                    DrawingTransformOperations.Zoom(ptMin, new Point3d(ptMax.X * ConversionSession.AppliedScale, ptMax.Y * ConversionSession.AppliedScale, ptMax.Z * ConversionSession.AppliedScale));
                 },
                 LogContext.CapturarEscalaDoDesenho,
                 Localization.WarningCouldNotScaleDrawing,

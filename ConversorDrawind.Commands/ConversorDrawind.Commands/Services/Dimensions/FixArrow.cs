@@ -56,13 +56,13 @@ namespace ConversorDrawind.Commands
                                 if (AnalisePoint(rotatedDimension, rotatedDimension.DimLinePoint))
                                 {
                                     rotatedDimension.Dimsah = true;
-                                    rotatedDimension.Dimblk2 = ConvertLayer.GetArrowObjectId(tipoSeta);
+                                rotatedDimension.Dimblk2 = DrawingStyleOperations.GetArrowObjectId(tipoSeta);
                                 }
                                 if (AnalisePoint(rotatedDimension, point))
                                 {
                                     ObjectId ids = rotatedDimension.Dimblk2;
                                     rotatedDimension.Dimsah = true;
-                                    rotatedDimension.Dimblk1 = ConvertLayer.GetArrowObjectId(tipoSeta);
+                                rotatedDimension.Dimblk1 = DrawingStyleOperations.GetArrowObjectId(tipoSeta);
                                     rotatedDimension.Dimblk2 = ids;
 
                                 }

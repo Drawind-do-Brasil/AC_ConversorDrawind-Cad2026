@@ -45,11 +45,11 @@ namespace ConversorDrawind.Commands
                     Localization.StartPurgingDrawing,
                     () =>
                     {
-                        ConvertLayer.PurgeUnreferencedBlocks();
-                        ConvertLayer.PurgeUnreferencedLineTypes();
-                        ConvertLayer.PurgeUnreferencedLayers();
-                        ConvertLayer.PurgeDimensionSyles();
-                        ConvertLayer.PurgeTextSyles();
+                        SymbolTableCleanup.PurgeUnreferencedBlocks();
+                        SymbolTableCleanup.PurgeUnreferencedLineTypes();
+                        SymbolTableCleanup.PurgeUnreferencedLayers();
+                        SymbolTableCleanup.PurgeDimensionSyles();
+                        SymbolTableCleanup.PurgeTextSyles();
                     },
                     LogContext.SalvarDesenho,
                     Localization.WarningCouldNotPurgeDrawing,

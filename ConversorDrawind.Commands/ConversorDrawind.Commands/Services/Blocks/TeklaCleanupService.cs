@@ -70,7 +70,7 @@ namespace ConversorDrawind.Commands
                 try
                 {
                     PromptSelectionResult promptSelectionResult = entitySelector.SelectAll(
-                        ConvertLayer.FilterText2("Drawing sheet", "ALL", "DrawingSheet", "Drawing_Sheet"));
+                    LayerSelectionQueries.FilterText2("Drawing sheet", "ALL", "DrawingSheet", "Drawing_Sheet"));
 
                     ObjectId[] objectIdList = null;
                     if (promptSelectionResult.Status.ToString() == "OK")

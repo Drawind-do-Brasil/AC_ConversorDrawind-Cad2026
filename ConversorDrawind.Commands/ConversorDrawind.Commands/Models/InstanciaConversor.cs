@@ -26,7 +26,7 @@ namespace ConversorDrawind.Commands
                                      (entity.GetType() != typeof(DBText) || (entity.GetType() == typeof(DBText) &&
                                                                              (String.IsNullOrEmpty(p.BaseConteudo) || p.BaseConteudo == ((DBText)entity).TextString) &&
                                                                              (p.BaseAlturaTexto == 0 || Math.Round(((DBText)entity).Height, p.BaseAlturaTextoArredondamento) == p.BaseAlturaTexto))) &&
-                                     (entity.GetType() != typeof(Line) || (entity.GetType() == typeof(Line) && (p.BaseOrientacaoLinha == "ALL" || ConvertLayer.WhatIsTheOrientation(((Line)entity).StartPoint, ((Line)entity).EndPoint, p.BaseOrientacaoLinha))))).FirstOrDefault();
+                                     (entity.GetType() != typeof(Line) || (entity.GetType() == typeof(Line) && (p.BaseOrientacaoLinha == "ALL" || DrawingTransformOperations.WhatIsTheOrientation(((Line)entity).StartPoint, ((Line)entity).EndPoint, p.BaseOrientacaoLinha))))).FirstOrDefault();
 
 
             if (conversor == null)
@@ -41,7 +41,7 @@ namespace ConversorDrawind.Commands
                 entity.UpgradeOpen();
                 entity.Layer = conversor.NewLayerName;
                 entity.Color = conversor.NewColor;
-                entity.LinetypeId = ConvertLayer.LoadLinetype(conversor.NewLineTypeString);
+                entity.LinetypeId = LayerSetupOperations.LoadLinetype(conversor.NewLineTypeString);
 
                 if (entity.GetType() == typeof(DBText))
                 {
@@ -50,7 +50,7 @@ namespace ConversorDrawind.Commands
                         text.Height = conversor.NewAltura;
                     if (conversor.NewLargura > 0)
                         text.WidthFactor = conversor.NewLargura;
-                    text.TextStyleId = ConvertLayer.GetTextSyleByName(conversor.TextSyle);
+                    text.TextStyleId = DrawingStyleOperations.GetTextSyleByName(conversor.TextSyle);
                     text.Oblique = GetObliqueByTextStyle(conversor.TextSyle);
                 }
                 entity.DowngradeOpen();
@@ -150,7 +150,7 @@ namespace ConversorDrawind.Commands
             string[] split3 = split1[2].Split(':');
             baseLayerName = split1[0].ToUpper();
             baseObjectType = split2[0].ToUpper();
-            baseColor = ConvertLayer.GetColorForName(split2[1]);
+            baseColor = LayerSetupOperations.GetColorForName(split2[1]);
             baseColorString = split2[1];
 
             baseLineTypeString = split2[2].ToUpper();
@@ -160,7 +160,7 @@ namespace ConversorDrawind.Commands
             baseAlturaTextoArredondamento = split2[4].ReplaceComma().Split(',').Last().Length;
             baseOrientacaoLinha = split2[5].ToUpper();
             newLayerName = split3[0];
-            newColor = ConvertLayer.GetColorForName(split3[1]);
+            newColor = LayerSetupOperations.GetColorForName(split3[1]);
             newLineTypeString = split3[2];
             newAltura = 0;
             double.TryParse(split3[3].ReplaceComma(), out newAltura);
