@@ -45,7 +45,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (Exception e)
                         {
-                            logError("Erro 59", e.Message);
+                            logError(LogContext.ExplodirEntidade, e.Message);
                         }
                     }
 
@@ -61,7 +61,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 60", e.Message);
+                    logError(LogContext.ExplodirBlocos, e.Message);
                 }
                 finally
                 {
@@ -80,8 +80,8 @@ namespace ConversorDrawindDLL
                           entity.GetType() == typeof(DiametricDimension) ||
                           entity.GetType() == typeof(RadialDimension) ||
                           entity.GetType() == typeof(RadialDimensionLarge),
-                "Erro 61",
-                "Erro 62");
+                LogContext.ExplodirEntidade,
+                LogContext.ExplodirBlocos);
         }
 
         internal void ExplodeImpDimensions(ObjectId[] objectIds)
@@ -89,15 +89,15 @@ namespace ConversorDrawindDLL
             ExplodeMatchingEntities(
                 objectIds,
                 entity => entity.GetType().ToString() == "Autodesk.AutoCAD.DatabaseServices.ImpDimension",
-                "Erro 85",
-                "Erro 86");
+                LogContext.ExplodirCotaRadialGrande,
+                LogContext.ExplodirCotaRadialGrande);
         }
 
         internal void ExplodeRadialDimensionLarge()
         {
             ExplodeBlockReferences(
                 blockReference => blockReference.GetType() == typeof(RadialDimensionLarge),
-                "Erro 58.2",
+                LogContext.ExplodirCotasImportadas,
                 OpenMode.ForRead);
         }
 
@@ -105,15 +105,15 @@ namespace ConversorDrawindDLL
         {
             ExplodeBlockReferences(
                 blockReference => true,
-                "Erro 58.1",
+                LogContext.ExplodirTiposConhecidos,
                 OpenMode.ForWrite);
         }
 
         private void ExplodeMatchingEntities(
             ObjectId[] objectIds,
             Func<Entity, bool> shouldExplode,
-            string itemErrorCode,
-            string transactionErrorCode)
+            string itemLogContext,
+            string transactionLogContext)
         {
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.MyStartTransaction())
@@ -135,7 +135,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (Exception e)
                         {
-                            logError(itemErrorCode, e.Message);
+                            logError(itemLogContext, e.Message);
                         }
                     }
 
@@ -143,7 +143,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError(transactionErrorCode, e.Message);
+                    logError(transactionLogContext, e.Message);
                 }
                 finally
                 {
@@ -167,7 +167,7 @@ namespace ConversorDrawindDLL
 
         private void ExplodeBlockReferences(
             Func<BlockReference, bool> shouldExplode,
-            string transactionErrorCode,
+            string transactionLogContext,
             OpenMode tableOpenMode)
         {
             Database database = documentContext.Database;
@@ -194,7 +194,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError(transactionErrorCode, e.Message);
+                    logError(transactionLogContext, e.Message);
                 }
                 finally
                 {

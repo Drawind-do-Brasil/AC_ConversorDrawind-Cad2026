@@ -41,7 +41,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 78", e.Message);
+                    logError(LogContext.ZoomNoDesenho, e.Message);
                 }
                 finally
                 {

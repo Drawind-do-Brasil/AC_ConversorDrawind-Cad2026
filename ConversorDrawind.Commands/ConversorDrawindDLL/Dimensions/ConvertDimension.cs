@@ -78,7 +78,7 @@ namespace ConversorDrawindDLL
                 catch (Exception e)
                 {
 
-                    Conversor.EscreverLog("Erro 41", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterCotas, e.Message);
                 }
                 finally
                 {
@@ -111,7 +111,7 @@ namespace ConversorDrawindDLL
                     }
                     catch (System.Exception e)
                     {
-                        Conversor.EscreverLog("Erro 42", e.Message);
+                        Conversor.EscreverLog(LogContext.ConverterCotaRadial, e.Message);
                     }
 
                     if (oID.Count > 0)
@@ -119,8 +119,8 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 43", e.Message);
-                    throw new System.InvalidOperationException("Erro - NFJ1");
+                    Conversor.EscreverLog(LogContext.ConverterCotaLinear, e.Message);
+                    throw new System.InvalidOperationException("Nao foi possivel converter a cota linear: entidade invalida.");
                 }
                 finally
                 {
@@ -309,7 +309,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 44", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterCotaAngular, e.Message);
                 }
             }
 
@@ -468,7 +468,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 45", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterCotaDiametro, e.Message);
                 }
 
                 return true;
@@ -567,7 +567,7 @@ namespace ConversorDrawindDLL
                     }
                     catch (System.Exception e)
                     {
-                        Conversor.EscreverLog("Erro 46", e.Message);
+                        Conversor.EscreverLog(LogContext.AtualizarTextoDeCota, e.Message);
                         dimensionProperties.XLine1End = line2.Last().EndPoint.TransformBy(objectsInBlock.matrix3d);
                     }
                     dimensionProperties.XLine2Start = line1.Last().StartPoint.TransformBy(objectsInBlock.matrix3d);
@@ -577,7 +577,7 @@ namespace ConversorDrawindDLL
                     }
                     catch (System.Exception e)
                     {
-                        Conversor.EscreverLog("Erro 47", e.Message);
+                        Conversor.EscreverLog(LogContext.ConverterCotaAlinhada, e.Message);
                         dimensionProperties.XLine2End = line1.Last().EndPoint.TransformBy(objectsInBlock.matrix3d);
                     }
                     dimensionProperties.Center = objectsInBlock.arcList.First().Center.TransformBy(objectsInBlock.matrix3d);
@@ -628,7 +628,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 48", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterCotas, e.Message);
                 }
             }
 
@@ -640,7 +640,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 49", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterCotas, e.Message);
                 }
             }
         }

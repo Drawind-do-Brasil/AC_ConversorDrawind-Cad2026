@@ -119,7 +119,7 @@ namespace ConversorDrawindDLL
 
             catch (Exception e)
             {
-                Conversor.EscreverLog("Erro 57", e.Message);
+                Conversor.EscreverLog(LogContext.ConverterEntidadePorLayer, e.Message);
             }
             finally
             {
@@ -181,13 +181,13 @@ namespace ConversorDrawindDLL
         private static void PurgeSymbolTableRecords(
             Func<Database, ObjectId> getTableId,
             string message,
-            string eraseErrorCode,
-            string purgeErrorCode)
+            string eraseLogContext,
+            string purgeLogContext)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             IEditorMessenger messenger = new AcadEditorMessenger(documentContext.Editor);
             new SymbolTablePurgeService(documentContext, messenger, Conversor.EscreverLog)
-                .PurgeSymbolTableRecords(getTableId, message, eraseErrorCode, purgeErrorCode);
+                .PurgeSymbolTableRecords(getTableId, message, eraseLogContext, purgeLogContext);
         }
 
         public static void PurgeDimensionSyles()
@@ -195,8 +195,8 @@ namespace ConversorDrawindDLL
             PurgeSymbolTableRecords(
                 database => database.DimStyleTableId,
                 "Purging Dimension Styles: ",
-                "Erro 66",
-                "Erro 67");
+                LogContext.RemoverReferenciasDeTabela,
+                LogContext.RemoverReferenciasDeTabela);
         }
 
         public static void PurgeTextSyles()
@@ -204,8 +204,8 @@ namespace ConversorDrawindDLL
             PurgeSymbolTableRecords(
                 database => database.TextStyleTableId,
                 "Purging Text Styles: ",
-                "Erro 66",
-                "Erro 67");
+                LogContext.RemoverReferenciasDeTabela,
+                LogContext.RemoverReferenciasDeTabela);
         }
 
         public static void PurgeUnreferencedLineTypes()
@@ -213,8 +213,8 @@ namespace ConversorDrawindDLL
             PurgeSymbolTableRecords(
                 database => database.LinetypeTableId,
                 "Purging Line Types: ",
-                "Erro 66",
-                "Erro 67");
+                LogContext.RemoverReferenciasDeTabela,
+                LogContext.RemoverReferenciasDeTabela);
         }
 
         public static void PurgeUnreferencedLayers()
@@ -222,8 +222,8 @@ namespace ConversorDrawindDLL
             PurgeSymbolTableRecords(
                 database => database.LayerTableId,
                 "Purging Layers: ",
-                "Erro 68",
-                "Erro 69");
+                LogContext.RemoverReferenciasDeTabela,
+                LogContext.RemoverReferenciasDeTabela);
         }
 
         public static void PurgeUnreferencedBlocks()
@@ -231,8 +231,8 @@ namespace ConversorDrawindDLL
             PurgeSymbolTableRecords(
                 database => database.BlockTableId,
                 "Purging Blocks: ",
-                "Erro 70",
-                "Erro 71");
+                LogContext.RemoverReferenciasDeTabela,
+                LogContext.RemoverReferenciasDeTabela);
         }
 
         public static Autodesk.AutoCAD.GraphicsInterface.FontDescriptor UpdateTextFont(string font, bool italic, bool negrito)
@@ -275,7 +275,7 @@ namespace ConversorDrawindDLL
                 documentContext,
                 systemVariables,
                 Conversor.EscreverLog,
-                "Erro 75");
+                LogContext.CriarEstilosDeTexto);
         }
 
         public static ObjectId GetArrowObjectId(string newArrName, string tipo)
@@ -288,7 +288,7 @@ namespace ConversorDrawindDLL
                 documentContext,
                 systemVariables,
                 Conversor.EscreverLog,
-                "Erro 76");
+                LogContext.CriarEstiloDeCota);
         }
 
         public static string GetArrowBlockName(string name)
@@ -416,7 +416,7 @@ namespace ConversorDrawindDLL
                      }
                      catch (System.Exception e)
                      {
-                         Conversor.EscreverLog("Erro 90", e.Message);
+                         Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
                      }
                      finally
                      {
@@ -487,7 +487,7 @@ namespace ConversorDrawindDLL
                             }
                             catch (System.Exception e)
                             {
-                                Conversor.EscreverLog("Erro 90", e.Message);
+                                Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
                             }
                             finally
                             {
@@ -552,7 +552,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (System.Exception e)
                         {
-                            Conversor.EscreverLog("Erro 81", e.Message);
+                            Conversor.EscreverLog(LogContext.MoverDesenhoParaOrigem, e.Message);
                         }
 
                         finally
@@ -625,7 +625,7 @@ namespace ConversorDrawindDLL
             }
             catch (System.Exception e)
             {
-                Conversor.EscreverLog("Erro 83", e.Message);
+                Conversor.EscreverLog(LogContext.ZoomNoDesenho, e.Message);
             }
 
             foreach (ObjectId item in myIDs)

@@ -39,7 +39,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 31", e.Message);
+                    logError(LogContext.CapturarInformacaoDoDesenho, e.Message);
                 }
                 finally
                 {
@@ -67,7 +67,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 32", e.Message);
+                    logError(LogContext.CapturarPonto, e.Message);
                 }
                 finally
                 {
@@ -97,7 +97,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 33", e.Message);
+                    logError(LogContext.CapturarPontos, e.Message);
                 }
                 finally
                 {
@@ -128,7 +128,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 34", e.Message);
+                    logError(LogContext.CapturarDistanciaVertical, e.Message);
                 }
                 finally
                 {
@@ -139,7 +139,7 @@ namespace ConversorDrawindDLL
 
         internal void CaptureHorizontalDistance()
         {
-            CaptureDistance("Erro 35", point => point.X);
+            CaptureDistance(LogContext.CapturarDistanciaHorizontal, point => point.X);
         }
 
         internal void CaptureVerticalDistance()
@@ -147,7 +147,7 @@ namespace ConversorDrawindDLL
             CaptureDistance(null, point => point.Y);
         }
 
-        private void CaptureDistance(string errorCode, Func<Point3d, double> coordinateSelector)
+        private void CaptureDistance(string logContext, Func<Point3d, double> coordinateSelector)
         {
             Database database = documentContext.Database;
             Editor editor = documentContext.Editor;
@@ -179,9 +179,9 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    if (errorCode != null)
+                    if (logContext != null)
                     {
-                        logError(errorCode, e.Message);
+                        logError(logContext, e.Message);
                     }
                 }
                 finally

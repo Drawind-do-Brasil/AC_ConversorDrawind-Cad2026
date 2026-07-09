@@ -75,7 +75,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 72", e.Message);
+                    logError(LogContext.CriarEstilosDeTexto, e.Message);
                 }
                 finally
                 {

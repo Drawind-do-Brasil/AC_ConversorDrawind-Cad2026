@@ -66,7 +66,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 88", e.Message);
+                    logError(LogContext.RemoverBlocos, e.Message);
                 }
             }
         }
@@ -116,13 +116,13 @@ namespace ConversorDrawindDLL
                     }
                     catch (Exception e)
                     {
-                        logError("Erro 6", e.Message);
+                        logError(LogContext.RemoverBloco, e.Message);
                     }
                 }
             }
             catch (Exception e)
             {
-                logError("Erro 7", e.Message);
+                logError(LogContext.RemoverBlocos, e.Message);
             }
         }
 
@@ -152,7 +152,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 8", e.Message);
+                    logError(LogContext.RemoverBloco, e.Message);
                 }
                 finally
                 {

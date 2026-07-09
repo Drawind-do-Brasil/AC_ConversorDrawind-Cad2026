@@ -137,7 +137,7 @@ namespace ConversorDrawind
         }
 
 
-        public void ApplyTo(Configuration configuration, LegacyConfigurationState state, List<Block> blocks, List<Block> blocosi, List<Block> blocoso)
+        public void ApplyTo(Configuration configuration, LegacyConfigurationState state)
         {
             state.BaseLayers.Clear();
             state.NewLayerDefinitions.Clear();
@@ -146,9 +146,9 @@ namespace ConversorDrawind
             state.RemoveRules.Clear();
             state.LispCommands.Clear();
             state.ExplodeLayers.Clear();
-            blocks.Clear();
-            blocosi.Clear();
-            blocoso.Clear();
+            configuration.Blocks.TeklaBlocks.Clear();
+            configuration.Blocks.CadBlocks.Clear();
+            configuration.Blocks.OriginalBlocks.Clear();
 
             configuration.Comments = Comments?.Text ?? string.Empty;
 
@@ -237,9 +237,9 @@ namespace ConversorDrawind
             configuration.Blocks.CadBlockPath = blockConfig.DirectoryCadConversion;
             state.ExplodeLayers.AddRange((blockConfig.LayerExplode ?? string.Empty).Split(';'));
 
-            blocks.AddRange((blockConfig.TeklaBlocks ?? new List<BlockXml>()).Select(CreateTeklaBlock));
-            blocosi.AddRange((blockConfig.CadBlocks ?? new List<BlockXml>()).Select(CreateRelatedBlock));
-            blocoso.AddRange((blockConfig.OrigBlocks ?? new List<BlockXml>()).Select(CreateRelatedBlock));
+            configuration.Blocks.TeklaBlocks.AddRange((blockConfig.TeklaBlocks ?? new List<BlockXml>()).Select(CreateTeklaBlockDefinition));
+            configuration.Blocks.CadBlocks.AddRange((blockConfig.CadBlocks ?? new List<BlockXml>()).Select(CreateRelatedBlockDefinition));
+            configuration.Blocks.OriginalBlocks.AddRange((blockConfig.OrigBlocks ?? new List<BlockXml>()).Select(CreateRelatedBlockDefinition));
         }
 
         private void ApplyTextStyles(LegacyConfigurationState state, TextConfigXml textConfig)
@@ -276,14 +276,14 @@ namespace ConversorDrawind
             };
         }
 
-        private static Block CreateTeklaBlock(BlockXml block)
+        private static BlockDefinition CreateTeklaBlockDefinition(BlockXml block)
         {
-            Block result = new Block { blockName = block.Nome };
+            BlockDefinition result = new BlockDefinition { Name = block.Nome };
             foreach (string tag in block.Tags ?? new List<string>())
             {
                 TagBlock tagBlock = new TagBlock();
                 tagBlock.SetConjunto(tag);
-                result.listTags.Add(tagBlock);
+                result.Tags.Add(ToTagDefinition(tagBlock));
             }
 
             return result;
@@ -298,14 +298,14 @@ namespace ConversorDrawind
             };
         }
 
-        private static Block CreateRelatedBlock(BlockXml block)
+        private static BlockDefinition CreateRelatedBlockDefinition(BlockXml block)
         {
             string[] linesplit = block.Nome.Split(';');
-            Block result = new Block
+            BlockDefinition result = new BlockDefinition
             {
-                blockName = linesplit[0],
-                blockNameRelacao = linesplit[1],
-                cor = Color.FromArgb(System.Convert.ToInt32(linesplit[2]))
+                Name = linesplit[0],
+                RelatedName = linesplit[1],
+                ColorArgb = System.Convert.ToInt32(linesplit[2])
             };
 
             foreach (string tag in block.Tags ?? new List<string>())
@@ -315,10 +315,45 @@ namespace ConversorDrawind
                 string[] linetemp = tag.Split('@');
                 tagBlock.indiceRelacao = System.Convert.ToInt32(linetemp[linetemp.Count() - 2]);
                 tagBlock.isSociate = System.Convert.ToBoolean(linetemp[linetemp.Count() - 1]);
-                result.listTags.Add(tagBlock);
+                result.Tags.Add(ToTagDefinition(tagBlock));
             }
 
             return result;
+        }
+
+        private static BlockTagDefinition ToTagDefinition(TagBlock tag)
+        {
+            return new BlockTagDefinition
+            {
+                Name = tag.tag,
+                Modify = tag.modify,
+                Point1 = ToPoint(tag.p1),
+                Point2 = ToPoint(tag.p2),
+                Filter = ToEntityFilter(tag.filtro),
+                WidthFactor = LegacyConfigurationParsers.ParseDouble(tag.widthfactor, 1),
+                RelatedIndex = tag.indiceRelacao,
+                IsAssociated = tag.isSociate
+            };
+        }
+
+        private static EntityFilter ToEntityFilter(Filter filter)
+        {
+            return new EntityFilter
+            {
+                BaseLayer = filter.layerBase,
+                ObjectType = filter.tipoObjeto,
+                Color = filter.cor,
+                LineType = filter.tipoLinha,
+                TextContent = filter.conteudoTexto,
+                TextHeight = filter.alturaTexto,
+                Orientation = filter.orientacao
+            };
+        }
+
+        private static Point3DConfiguration ToPoint(PointEspecial point)
+        {
+            point = point ?? new PointEspecial(0, 0, 0);
+            return new Point3DConfiguration { X = point.X, Y = point.Y, Z = point.Z };
         }
     }
 #pragma warning restore CS0618

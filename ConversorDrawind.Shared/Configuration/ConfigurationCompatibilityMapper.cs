@@ -9,10 +9,7 @@ namespace ConversorDrawind
     {
         public static ConverterConfiguration FromLegacyState(
             Configuration configuration,
-            LegacyConfigurationState state,
-            List<Block> teklaBlocks,
-            List<Block> cadBlocks,
-            List<Block> originalBlocks)
+            LegacyConfigurationState state)
         {
             ConverterConfiguration result = new ConverterConfiguration();
 
@@ -95,9 +92,9 @@ namespace ConversorDrawind
             result.Blocks.TeklaBlockPath = configuration.PROGRAMblockFormatoCaminho;
             result.Blocks.CadBlockPath = configuration.EXTCONFCaminhoBlocoInv;
             result.Blocks.DimensionBlockEnabled = configuration.DMBlock;
-            result.Blocks.TeklaBlocks = teklaBlocks.Select(ToBlockDefinition).ToList();
-            result.Blocks.CadBlocks = cadBlocks.Select(ToBlockDefinition).ToList();
-            result.Blocks.OriginalBlocks = originalBlocks.Select(ToBlockDefinition).ToList();
+            result.Blocks.TeklaBlocks = configuration.Blocks.TeklaBlocks.Select(CopyBlockDefinition).ToList();
+            result.Blocks.CadBlocks = configuration.Blocks.CadBlocks.Select(CopyBlockDefinition).ToList();
+            result.Blocks.OriginalBlocks = configuration.Blocks.OriginalBlocks.Select(CopyBlockDefinition).ToList();
 
             result.Runtime.DbLineTypePath = configuration.PROGRAMDbLin;
             result.Runtime.TempDirectory = configuration.GetPROGRAMDirectoryTemp();
@@ -177,6 +174,47 @@ namespace ConversorDrawind
                 RelatedName = block.blockNameRelacao,
                 ColorArgb = block.cor.ToArgb(),
                 Tags = block.listTags.Select(ToTagDefinition).ToList()
+            };
+        }
+
+        private static BlockDefinition CopyBlockDefinition(BlockDefinition source)
+        {
+            return new BlockDefinition
+            {
+                Name = source.Name,
+                RelatedName = source.RelatedName,
+                ColorArgb = source.ColorArgb,
+                Tags = source.Tags.Select(CopyTagDefinition).ToList()
+            };
+        }
+
+        private static BlockTagDefinition CopyTagDefinition(BlockTagDefinition source)
+        {
+            return new BlockTagDefinition
+            {
+                Name = source.Name,
+                Modify = source.Modify,
+                Point1 = CopyPoint(source.Point1),
+                Point2 = CopyPoint(source.Point2),
+                Filter = CopyFilter(source.Filter),
+                WidthFactor = source.WidthFactor,
+                RelatedIndex = source.RelatedIndex,
+                IsAssociated = source.IsAssociated
+            };
+        }
+
+        private static EntityFilter CopyFilter(EntityFilter source)
+        {
+            source = source ?? new EntityFilter();
+            return new EntityFilter
+            {
+                BaseLayer = source.BaseLayer,
+                ObjectType = source.ObjectType,
+                Color = source.Color,
+                LineType = source.LineType,
+                TextContent = source.TextContent,
+                TextHeight = source.TextHeight,
+                Orientation = source.Orientation
             };
         }
 

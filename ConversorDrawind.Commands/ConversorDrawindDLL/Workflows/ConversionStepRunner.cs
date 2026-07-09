@@ -21,7 +21,7 @@ namespace ConversorDrawindDLL
         internal void Run(
             string startMessage,
             Action action,
-            string errorCode,
+            string logContext,
             string warningMessage,
             string errorDescription,
             string completedMessage = "... completado.\n")
@@ -37,7 +37,7 @@ namespace ConversorDrawindDLL
             }
             catch (Exception e)
             {
-                logError(errorCode, e.Message);
+                logError(logContext, e.Message);
 
                 if (!string.IsNullOrEmpty(warningMessage))
                     showWarning(warningMessage);

@@ -37,7 +37,7 @@ namespace ConversorDrawindDLL
             }
             catch (Exception e)
             {
-                logError("Erro 51", e.Message);
+                logError(LogContext.SelecionarEntidadesPorLayer, e.Message);
                 return null;
             }
         }
@@ -60,7 +60,7 @@ namespace ConversorDrawindDLL
             }
             catch (Exception e)
             {
-                logError("Erro 52", e.Message);
+                logError(LogContext.SelecionarLayers, e.Message);
                 return null;
             }
         }

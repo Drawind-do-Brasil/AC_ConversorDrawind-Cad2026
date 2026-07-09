@@ -39,7 +39,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Autodesk.AutoCAD.Runtime.Exception ex)
                 {
-                    logError("Erro 79", ex.Message);
+                    logError(LogContext.DefinirEscalaDoBloco, ex.Message);
                     Application.ShowAlertDialog(ex.Message);
                 }
                 finally

@@ -11,7 +11,7 @@ using FORMS = System.Windows.Forms;
 
 namespace ConversorDrawindDLL
 {
-    public class Conversor
+    public partial class Conversor
     {
         private static myPoint NewMin = new myPoint(double.MaxValue, double.MaxValue, double.MaxValue);
         private static myPoint NewMax = new myPoint(double.MinValue, double.MinValue, double.MinValue);
@@ -30,11 +30,18 @@ namespace ConversorDrawindDLL
 
         }
 
-        public static void EscreverLog(string log, string erro)
+        public static void EscreverLog(string context, string detail)
         {
-            ConversionLogger.Write(LOG_Diretorio, LOG_FileName, log, erro);
+            ConversionLogger.Write(LOG_Diretorio, LOG_FileName, context, detail);
         }
-        public static void MoveElements(Point3d startPoint, Point3d endPoint)
+
+        public static void EscreverLog(string context, System.Exception exception)
+        {
+            if (exception == null)
+                throw new ArgumentNullException(nameof(exception));
+
+            EscreverLog(context, exception.Message);
+        }        public static void MoveElements(Point3d startPoint, Point3d endPoint)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             Database db = documentContext.Database;
@@ -117,100 +124,6 @@ namespace ConversorDrawindDLL
             // Atualizar a viewport para refletir as alterações
             ed.Regen();
         }
-
-
-        [CommandMethod("CDwi_Convert")]
-        public static void CDwi_ConvertToDimension()
-        {
-            NewMin = new myPoint(double.MaxValue, double.MaxValue, double.MaxValue);
-            NewMax = new myPoint(double.MinValue, double.MinValue, double.MinValue);
-
-            timeini = DateTime.Now;
-            //Main Instances
-            escalaCapiturada = -1;
-            escalaFinal = 1;
-
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            ConversionCommandRunner commandRunner = new ConversionCommandRunner(
-                documentContext,
-                Conversor.EscreverLog,
-                ConversionMessages.ShowWarningIfEnabled);
-            ConversionCommandContext commandContext = commandRunner.CreateContext();
-            Document document = commandContext.DocumentContext.Document;
-            ISystemVariableService systemVariables = commandContext.SystemVariables;
-            ScaleWorkflow scaleWorkflow = commandContext.ScaleWorkflow;
-            ConversionStepRunner stepRunner = commandContext.StepRunner;
-            ConversionWorkflow workflow = new ConversionWorkflow(stepRunner, scaleWorkflow);
-            ConversionExtentsWorkflow extentsWorkflow = new ConversionExtentsWorkflow(
-                GETREALMAXMIN,
-                GetNewMin,
-                GetNewMax,
-                MoveToOrigin,
-                point => NewMin = point,
-                (x, y, z) =>
-                {
-                    NewMax.X = x;
-                    NewMax.Y = y;
-                    NewMax.Z = z;
-                });
-            commandRunner.WriteStartupBanner(commandContext.Messenger);
-
-            stepRunner.Run(
-                "Extraindo os blocos ",
-                InitialConversionLayer,
-                "Erro 14",
-                "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao extrair os layers dos blocos...\n");
-
-            extentsWorkflow.RefreshAndZoom();
-
-
-            commandRunner.InitializeLogger(document, ref LOG_Diretorio, ref LOG_FileName);
-
-
-
-
-            commandRunner.LoadTempConfiguration(Configuration.Config, ref conversor);
-
-            GETSCALE();
-            //idLayer = ConvertLayer.CreateAndAssignALayer(Configuration.Config.Dimensions.Layer);
-
-
-
-
-
-
-            systemVariables.Set("DWGCHECK", 1);
-
-            workflow.CreateLayersIfEnabled();
-
-            workflow.CreateTextStylesIfNeeded();
-
-            stepRunner.Run(
-                "Movendo para origem ",
-                extentsWorkflow.MoveToOriginAndRefreshZoom,
-                "Erro 14",
-                "Não foi possível extrair os layers dos blocos.\nVerifique se a conversão ocorreu normalmente.",
-                "Descrição: Erro ao extrair os layers dos blocos...\n");
-
-
-            workflow.ConvertDimensionsIfEnabled();
-
-            workflow.RunTeklaInverseConversionIfNeeded();
-
-            workflow.ExplodeBlocksIfConfigured();
-
-            workflow.AddDmBlockIfEnabled();
-
-            workflow.DeleteTeklaStructuresIfEnabled();
-
-            workflow.ConvertLayersIfEnabled();
-
-
-
-        }
-
-
         public static void UPDATE_DIMENSTION(double dscale)
         {
 
@@ -237,7 +150,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (System.Exception e)
                         {
-                            Conversor.EscreverLog("Erro 21", e.Message);
+                            Conversor.EscreverLog(LogContext.AtualizarConfiguracaoDaDimensao, e.Message);
                         }
 
 
@@ -253,207 +166,7 @@ namespace ConversorDrawindDLL
                 }
             }
         }
-
-        [CommandMethod("CDwi_Save")]
-        public static void CDwi_Save()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Document document = documentContext.Document;
-            Editor editor = documentContext.Editor;
-            Database database = documentContext.Database;
-            {
-
-                PromptKeywordOptions pko = new PromptKeywordOptions("Tipo: ");
-                pko.AllowNone = true;
-                pko.Keywords.Add("DWG");
-                pko.Keywords.Add("DXF");
-                pko.Keywords.Default = "DWG";
-                PromptResult tipoOperacao = editor.GetKeywords(pko);
-                if (tipoOperacao.Status == PromptStatus.Cancel)
-                {
-                    return;
-                }
-                if (tipoOperacao.StringResult == "DWG")
-                    database.Save();
-                else
-                    SaveDXF();
-
-            }
-            {
-                PromptKeywordOptions pko = new PromptKeywordOptions("Fechar: ");
-                pko.AllowNone = true;
-                pko.Keywords.Add("Sim");
-                pko.Keywords.Add("Não");
-                pko.Keywords.Default = "Sim";
-                PromptResult tipoOperacao = editor.GetKeywords(pko);
-                if (tipoOperacao.Status == PromptStatus.Cancel)
-                {
-                    return;
-                }
-                if (tipoOperacao.StringResult == "Sim")
-                {
-                    document.CloseAndDiscard();
-                    document.Dispose();
-                }
-
-            }
-
-        }
-        [CommandMethod("CDwi_Scale")]
-        public static void CDwi_ConvertToScale()
-        {
-
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Document document = documentContext.Document;
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            ISystemVariableService systemVariables = new AcadSystemVariableService();
-            ScaleWorkflow scaleWorkflow = new ScaleWorkflow(systemVariables);
-            ConversionStepRunner stepRunner = new ConversionStepRunner(
-                new AcadEditorMessenger(editor),
-                Conversor.EscreverLog,
-                ConversionMessages.ShowWarningIfEnabled);
-
-            stepRunner.Run(
-                "Colocando o desenho na escala real... ",
-                () =>
-                {
-                    escalaFinal = ConvertLayer.GetScaleDrawing(escalaCapiturada);
-
-                    ConvertLayer.ScaleDrawing(escalaFinal);
-                    if (Configuration.Config.General.ConverterType == 1)
-                        UPDATE_DIMENSTION(escalaFinal);
-                    scaleWorkflow.ApplyDrawingScale(Configuration.Config.Lines.LineTypeScale, Configuration.Config.Dimensions.Scale, escalaFinal);
-                    Point3d ptMax = GetNewMax();
-                    Point3d ptMin = GetNewMin();
-                    database.Limmax = new Point2d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal);
-                    database.Limmin = new Point2d(ptMin.X, ptMin.Y);
-
-                    using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
-                    {
-                        try
-                        {
-                            ViewportTableRecord acVportTblRec = acTrans.GetObject(document.Editor.ActiveViewportId, OpenMode.ForWrite) as ViewportTableRecord;
-                            acVportTblRec.GridEnabled = true;
-                            acVportTblRec.GridIncrements = new Point2d(escalaFinal * 10, escalaFinal * 10);
-                            document.Editor.UpdateTiledViewportsFromDatabase();
-                            if (Configuration.Config.General.ConverterType == 0)
-                            {
-                                DimStyleTable dimStyleTable = (DimStyleTable)acTrans.GetObject(database.DimStyleTableId, OpenMode.ForRead);
-                                DimStyleTableRecord dimStyleTableRecord = null;
-                                if (dimStyleTable.Has(Configuration.Config.Dimensions.StyleName) == true)
-                                {
-                                    dimStyleTableRecord = acTrans.GetObject(dimStyleTable[Configuration.Config.Dimensions.StyleName],
-                                                          OpenMode.ForWrite) as DimStyleTableRecord;
-                                    dimStyleTableRecord.Dimscale = Configuration.Config.Dimensions.Scale * escalaFinal;
-                                }
-                            }
-                        }
-                        catch (System.Exception e)
-                        {
-                            Conversor.EscreverLog("Erro 22", e.Message);
-                        }
-                        finally
-                        {
-                            acTrans.MyCommit();
-                        }
-                    }
-
-                    ConvertLayer.Zoom(ptMin, new Point3d(ptMax.X * escalaFinal, ptMax.Y * escalaFinal, ptMax.Z * escalaFinal));
-                },
-                "Erro 23",
-                "Não foi possível colocar o desenho na escala real!",
-                "Descrição: Erro ao tentar colocar o desenho na escala real...\n",
-                "... Completado.\n");
-
-
-        }
-
-        [CommandMethod("CDwi_ScaleBlock")]
-        public static void CDwi_ConvertToScaleInv()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Document document = documentContext.Document;
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            ISystemVariableService systemVariables = new AcadSystemVariableService();
-            ScaleWorkflow scaleWorkflow = new ScaleWorkflow(systemVariables);
-            ConversionStepRunner stepRunner = new ConversionStepRunner(
-                new AcadEditorMessenger(editor),
-                Conversor.EscreverLog,
-                ConversionMessages.ShowWarningIfEnabled);
-
-
-
-            stepRunner.Run(
-                "Colocando o formato na escala real... ",
-                () =>
-                {
-                    string newdate = editor.GetString("Digite o nome do bloco: ").StringResult.Replace("*******", " ");
-                    double scale = escalaFinal = scaleWorkflow.ReadLineTypeScale();
-                    ConvertLayer.ScaleDrawingInv(scale, new List<Block>() { new Block(newdate) });
-                    object ptMax2 = GetNewMax();
-                    object ptMin2 = GetNewMin();
-                    ConvertLayer.Zoom((Point3d)ptMin2, (Point3d)ptMax2);
-                },
-                "Erro 24",
-                "Não foi possível colocar o formato na escala real!",
-                "Descrição: Erro ao tentar colocar o formato na escala real...\n",
-                "... Completado.\n");
-        }
-
-
-        [CommandMethod("CDwi_Finalize")]
-        public static void CDwi_Message()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Document document = documentContext.Document;
-            Editor editor = documentContext.Editor;
-            IEditorMessenger messenger = new AcadEditorMessenger(editor);
-            ConversionStepRunner stepRunner = new ConversionStepRunner(
-                messenger,
-                Conversor.EscreverLog,
-                ConversionMessages.ShowWarningIfEnabled);
-
-            if (Configuration.Config.Dimensions.FixArrow)
-            {
-                stepRunner.Run(
-                    "Consertando setas das dimensões... ",
-                    CDwi_ConsertarSetaSeta,
-                    "Erro 26",
-                    string.Empty,
-                    "Descrição: Erro ao tentar consertar as setas das dimensões...\n",
-                    "... Completado.\n");
-            }
-
-            if (Configuration.Config.General.Purge)
-            {
-                stepRunner.Run(
-                    "Purgando desenho... ",
-                    () =>
-                    {
-                        ConvertLayer.PurgeUnreferencedBlocks();
-                        ConvertLayer.PurgeUnreferencedLineTypes();
-                        ConvertLayer.PurgeUnreferencedLayers();
-                        ConvertLayer.PurgeDimensionSyles();
-                        ConvertLayer.PurgeTextSyles();
-                    },
-                    "Erro 28",
-                    "Não foi possível remover layers, blocos e tipo de linhas desnessessario .nVerifique se a conversão ocorreu normalmente.",
-                    "Descrição: Erro ao tentar purgar o desenho...\n",
-                    "... Completado.\n");
-            }
-
-            TimeSpan ts = DateTime.Now.Subtract(timeini);
-            editor.Regen();
-            messenger.WriteMessage("\nConversão: " + conversor + "\tUsuário: " + Environment.UserName + "\tTempo: " + ts.Hours + "h:" + ts.Minutes + "mm:" + ts.Seconds + "s:" + ts.Milliseconds + "ms\n");
-            messenger.WriteMessage("Conversor Drawind 2011 @ 2016 - Versão 2016 - Drawind do Brasil Corporação Limitada. Todos os direitos reservados.\n");
-            messenger.WriteMessage("Desenvolvido por Nayara Ferreira de Jesus.\n");
-            messenger.WriteMessage("Conversão finalizada.\n");
-        }
-
-
-        public static void GETREALMAXMIN()
+  public static void GETREALMAXMIN()
         {
             if (!GETREALMAXMINTEKLA())
                 GETREALMAXMINGENERAL();
@@ -771,7 +484,7 @@ namespace ConversorDrawindDLL
                     }
                     catch (System.Exception e)
                     {
-                        Conversor.EscreverLog("Erro 30", e.Message);
+                        Conversor.EscreverLog(LogContext.ConverterCamadasIniciais, e.Message);
                     }
                     finally
                     {
@@ -781,7 +494,6 @@ namespace ConversorDrawindDLL
             }
 
         }
-
 
 
         public static Point3d GetNewMin()
@@ -830,384 +542,6 @@ namespace ConversorDrawindDLL
             }
             return false;
         }
-
-        [CommandMethod("CDwi_GetPoint")]
-        public static void CDwi_GetPoint()
-        {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CapturePoint();
-        }
-
-        [CommandMethod("CDwi_Get2Point")]
-        public static void CDwi_Get2Point()
-        {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureTwoPoints();
-        }
-
-
-        [CommandMethod("CDwi_GetLayer")]
-        public static void CDwi_GetLayer()
-        {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureLayer();
-        }
-
-        [CommandMethod("CDwi_TextHeight")]
-        public static void CDwi_TextHeight()
-        {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureTextHeight();
-        }
-
-
-        [CommandMethod("CDwi_GetDistHorizontal")]
-        public static void CDwi_GetDistHorizontal()
-        {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureHorizontalDistance();
-        }
-
-        [CommandMethod("CDwi_GetDistVertical")]
-        public static void CDwi_GetDistVertical()
-        {
-            new DrawingInfoCommandService(new AcadDocumentContext(), Conversor.EscreverLog).CaptureVerticalDistance();
-        }
-        [CommandMethod("SaveDXF")]
-        public static void SaveDXF()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Document document = documentContext.Document;
-            Database database = documentContext.Database;
-            string path = Path.Combine(Path.GetDirectoryName(document.Name), Path.GetFileNameWithoutExtension(document.Name) + ".dxf");
-
-            int precision = 16;
-            // document.DowngradeDocOpen(false);
-            if (File.Exists(path))
-                File.Delete(path);
-            database.DxfOut(path, precision, DwgVersion.AC1021);
-
-            //database.SaveAs(path, DwgVersion.AC1009);
-
-        }
-        [CommandMethod("CDwi_GetAttributeText")]
-        public static void CDwi_GetAttributeText()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Document document = documentContext.Document;
-            Editor editor = documentContext.Editor;
-            IEditorMessenger messenger = new AcadEditorMessenger(editor);
-
-            //editor.WriteMessage("TESTE" + document.Name);
-            try
-            {
-                messenger.WriteMessage("Capturando textos do formato ");
-                if (Configuration.Config.General.ConverterType == 0)
-                {
-                    ConvertBlocks.SetStartPointOverride(ConvertBlocks.GetFormatStartPoint(Configuration.Config.Layers.BlockAttributeLayer));
-                    ConvertBlocks.GeTTextNew(Configuration.Config.Layers.BlockAttributeLayer);
-                    ConvertBlocks.GeTText();
-                }
-                else
-                    ConvertBlocks.GeTTextInv(RuntimeConfigurationState.InventorBlocks);
-                messenger.WriteMessage("... Completado.\n");
-            }
-            catch (System.Exception e)
-            {
-                Conversor.EscreverLog("Erro 36", e.Message);
-                messenger.WriteMessage("... Erro. \n" +
-                            "Descrição: Erro ao capturar os textos no formato...\n");
-            }
-            finally
-            {
-                ConvertBlocks.ClearStartPointOverride();
-            }
-
-        }
-
-        [CommandMethod("CDwi_DeleteLayers")]
-        public static void CDwi_DeleteLayers()
-        {
-            if (RuntimeConfigurationState.LayerRemove.Count > 0)
-            {
-                IAcadDocumentContext documentContext = new AcadDocumentContext();
-                Database database = documentContext.Database;
-                Editor editor = documentContext.Editor;
-                IEditorMessenger messenger = new AcadEditorMessenger(editor);
-                using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
-                {
-                    messenger.WriteMessage("Removendo layers desnecessários... ");
-                    try
-                    {
-                        ConvertBlocks.DeleteLayerNew(RuntimeConfigurationState.LayerRemove.ToList());
-                        ConvertBlocks.DeleteLayer(RuntimeConfigurationState.LayerRemove.ToList());
-                        messenger.WriteMessage("... Completado.\n");
-                    }
-                    catch (System.Exception e)
-                    {
-                        Conversor.EscreverLog("Erro 37", e.Message);
-                    }
-
-                    finally
-                    {
-                        acTrans.MyCommit();
-                    }
-                }
-            }
-        }
-
-        [CommandMethod("CDwi_DeleteBlocks")]
-        public static void CDwi_DeleteBlocks()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            IEditorMessenger messenger = new AcadEditorMessenger(editor);
-            using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
-            {
-                messenger.WriteMessage("Removendo blocos antigo.... ");
-                try
-                {
-                    ConvertBlocks.DeleteBlocks(RuntimeConfigurationState.OriginalBlocks);
-                    messenger.WriteMessage("... Completado.\n");
-                }
-                catch (System.Exception e)
-                {
-                    Conversor.EscreverLog("Erro 38", e.Message);
-                }
-                finally
-                {
-                    acTrans.MyCommit();
-                }
-            }
-        }
-
-        [CommandMethod("CDwi_AttributeBlock")]
-        public static void CDwi_AttributeBlock()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            IEditorMessenger messenger = new AcadEditorMessenger(editor);
-            using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
-            {
-                try
-                {
-                    if (Configuration.Config.General.ConverterType == 0)
-                        ConvertBlocks.SetText(RuntimeConfigurationState.TeklaBlocks);
-                    else
-                        ConvertBlocks.SetText2(RuntimeConfigurationState.InventorBlocks, RuntimeConfigurationState.OriginalBlocks);
-
-                    messenger.WriteMessage("Editando o novo bloco ... Completado.\n");
-                }
-                catch (System.Exception e)
-                {
-                    Conversor.EscreverLog("Erro 39", e.Message);
-                    messenger.WriteMessage("Editando o novo bloco ... Erro. \n" +
-                                    "Descrição: Erro ao editar o novo bloco...\n");
-                    if (Configuration.Config.General.ShowMessages)
-                    {
-                        string nomeBlocos = "";
-                        foreach (var item in RuntimeConfigurationState.TeklaBlocks)
-                        {
-                            nomeBlocos = nomeBlocos + item.blockName + ", ";
-                        }
-                        nomeBlocos = nomeBlocos.Trim();
-                        nomeBlocos = nomeBlocos.Trim(',');
-                        FORMS.MessageBox.Show(new FORMS.Form() { TopMost = true },
-                            "Não foi possível atributar o formato. \nOs blocos ou atributos dentro dos blocos não correspondem ao especificado.\nNomes dos blocos especificados: " + nomeBlocos + ".",
-                                             "Erro",
-                                             FORMS.MessageBoxButtons.OK,
-                                             FORMS.MessageBoxIcon.Warning,
-                                             FORMS.MessageBoxDefaultButton.Button1);
-                    }
-
-                }
-                finally
-                {
-                    acTrans.MyCommit();
-                }
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        [CommandMethod("CDwi_LoadLayer")]
-        public void CDwi_LoadLayer()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            using (Transaction transaction = database.TransactionManager.MyStartTransaction())
-            {
-                try
-                {
-                    string file = Path.GetTempPath() + "ConversorDrawindTemp\\";
-                    if (!Directory.Exists(file))
-                        Directory.CreateDirectory(file);
-                    file += "TempImporLayer.Temp";
-                    if (File.Exists(file))
-                        File.Delete(file);
-
-                    StreamWriter streamWriter = new StreamWriter(file, true);
-
-                    LayerTable layerTable = transaction.GetObject(database.LayerTableId, OpenMode.ForRead) as LayerTable;
-                    foreach (ObjectId item in layerTable)
-                    {
-                        streamWriter.WriteLine(((LayerTableRecord)transaction.GetObject(item, OpenMode.ForRead)).Name);
-                    }
-                    streamWriter.Close();
-                }
-                catch (System.Exception)
-                {
-
-                }
-                finally
-                {
-                    transaction.MyCommit();
-                }
-            }
-        }
-
-        [CommandMethod("CDwi_LoadLineType")]
-        public void CDwi_LoadLineType()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            using (Transaction transaction = database.TransactionManager.MyStartTransaction())
-            {
-                try
-                {
-                    string file = Path.GetTempPath() + "ConversorDrawindTemp\\";
-                    if (!Directory.Exists(file))
-                        Directory.CreateDirectory(file);
-                    file += "TempImporLineType.Temp";
-                    if (File.Exists(file))
-                        File.Delete(file);
-
-                    StreamWriter streamWriter = new StreamWriter(file, true);
-
-                    LinetypeTable linetypeTable = transaction.GetObject(database.LinetypeTableId, OpenMode.ForRead) as LinetypeTable;
-                    foreach (ObjectId item in linetypeTable)
-                    {
-                        streamWriter.WriteLine(((LinetypeTableRecord)transaction.GetObject(item, OpenMode.ForRead)).Name);
-                    }
-                    streamWriter.Close();
-                }
-                catch (System.Exception)
-                {
-
-                }
-                finally
-                {
-                    transaction.MyCommit();
-                }
-            }
-        }
-
-
-        [CommandMethod("CDwi_NewLayer")]
-        public void CDwi_NewLayer()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            using (Transaction transaction = database.TransactionManager.MyStartTransaction())
-            {
-                try
-                {
-                    string file = Path.GetTempPath() + "ConversorDrawindTemp\\";
-                    if (!Directory.Exists(file))
-                        Directory.CreateDirectory(file);
-                    file += "TempImporNewLayer.Temp";
-                    if (File.Exists(file))
-                        File.Delete(file);
-
-                    StreamWriter streamWriter = new StreamWriter(file, true);
-
-                    LayerTable layerTable = transaction.GetObject(database.LayerTableId, OpenMode.ForRead) as LayerTable;
-                    foreach (ObjectId item in layerTable)
-                    {
-                        LayerTableRecord ltr = (LayerTableRecord)transaction.GetObject(item, OpenMode.ForRead);
-                        LinetypeTableRecord linetypeTableRecord = transaction.GetObject(ltr.LinetypeObjectId, OpenMode.ForRead) as LinetypeTableRecord;
-
-                        string mynewlayer = ltr.Name + ":" +
-                                            ltr.Color + ":" +
-                                            linetypeTableRecord.Name;
-
-                        streamWriter.WriteLine(mynewlayer);
-                    }
-                    streamWriter.Close();
-                }
-                catch (System.Exception)
-                {
-
-                }
-                finally
-                {
-                    transaction.MyCommit();
-                }
-            }
-        }
-
-
-        [CommandMethod("CDwi_GetBlocks")]
-        public void CDwi_GetBlocks()
-        {
-            IAcadDocumentContext documentContext = new AcadDocumentContext();
-            Database database = documentContext.Database;
-            Editor editor = documentContext.Editor;
-            using (Transaction transaction = database.TransactionManager.MyStartTransaction())
-            {
-
-                try
-                {
-                    string file = Path.GetTempPath() + "ConversorDrawindTemp\\";
-
-                    file += "TempImporBlocks.Temp";
-                    if (File.Exists(file))
-                        File.Delete(file);
-
-                    StreamWriter streamWriter = new StreamWriter(file, true);
-
-                    try
-                    {
-                        ObjectId[] objectIdList = Filter1(editor);
-                        if (objectIdList != null)
-                        {
-                            foreach (ObjectId id1 in objectIdList)
-                            {
-                                BlockReference blockReference = (BlockReference)transaction.GetObject(id1, OpenMode.ForRead);
-                                streamWriter.WriteLine("***" + blockReference.Name);
-                                Entity Entity = null;
-                                foreach (ObjectId id2 in blockReference.AttributeCollection)
-                                {
-                                    Entity = transaction.GetObject(id2, OpenMode.ForRead) as Entity;
-                                    if (Entity.GetType() == typeof(AttributeReference))
-                                    {
-                                        AttributeReference attributeReference = Entity as AttributeReference;
-                                        streamWriter.WriteLine("---" + attributeReference.Tag + ";" + Convert.ToString(attributeReference.WidthFactor).ReplaceComma());
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    catch (System.Exception)
-                    {
-
-                    }
-
-                    streamWriter.Close();
-                }
-                catch (System.Exception)
-                {
-
-                }
-                finally
-                {
-                    transaction.MyCommit();
-                }
-            }
-        }
-
-
         private ObjectId[] Filter1(Editor editor)
         {
             try
@@ -1231,7 +565,7 @@ namespace ConversorDrawindDLL
 
             catch (System.Exception e)
             {
-                Conversor.EscreverLog("Erro 40", e.Message);
+                Conversor.EscreverLog(LogContext.FixarSetaDaCota, e.Message);
             }
         }
     }

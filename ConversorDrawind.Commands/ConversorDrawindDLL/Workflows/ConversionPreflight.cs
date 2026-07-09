@@ -30,7 +30,7 @@ namespace ConversorDrawindDLL
             }
             catch (System.Exception e)
             {
-                Conversor.EscreverLog("Erro 12", e.Message);
+                Conversor.EscreverLog(LogContext.CarregarConfiguracaoTemporaria, e.Message);
             }
         }
     }

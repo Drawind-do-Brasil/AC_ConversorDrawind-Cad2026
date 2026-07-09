@@ -54,7 +54,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (Exception e)
                         {
-                            logError("Erro 3", e.Message);
+                            logError(LogContext.CapturarAtributosDosBlocos, e.Message);
                         }
                     }
                 }

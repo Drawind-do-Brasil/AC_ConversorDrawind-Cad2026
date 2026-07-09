@@ -23,8 +23,8 @@ namespace ConversorDrawindDLL
         internal void PurgeSymbolTableRecords(
             Func<Database, ObjectId> getTableId,
             string message,
-            string eraseErrorCode,
-            string purgeErrorCode)
+            string eraseLogContext,
+            string purgeLogContext)
         {
             Database database = documentContext.Database;
 
@@ -51,7 +51,7 @@ namespace ConversorDrawindDLL
                         }
                         catch (Autodesk.AutoCAD.Runtime.Exception ex)
                         {
-                            logError(eraseErrorCode, ex.Message);
+                            logError(eraseLogContext, ex.Message);
                             Application.ShowAlertDialog("Erro:\n" + ex.Message);
                         }
                     }
@@ -59,7 +59,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError(purgeErrorCode, e.Message);
+                    logError(purgeLogContext, e.Message);
                 }
                 finally
                 {

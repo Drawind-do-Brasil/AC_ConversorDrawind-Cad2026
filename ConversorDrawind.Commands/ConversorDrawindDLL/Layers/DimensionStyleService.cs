@@ -29,7 +29,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 73", e.Message);
+                    Conversor.EscreverLog(LogContext.CriarEstiloDeCota, e.Message);
                 }
                 finally
                 {
@@ -60,7 +60,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 74", e.Message);
+                    Conversor.EscreverLog(LogContext.AplicarEstiloDeCota, e.Message);
                 }
                 finally
                 {

@@ -78,7 +78,7 @@ namespace ConversorDrawindDLL
             IAcadDocumentContext documentContext,
             ISystemVariableService systemVariables,
             Action<string, string> logError,
-            string errorCode)
+            string logContext)
         {
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.MyStartTransaction())
@@ -97,7 +97,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError(errorCode, e.Message);
+                    logError(logContext, e.Message);
                 }
                 finally
                 {

@@ -1,4 +1,4 @@
-﻿using Autodesk.AutoCAD.Colors;
+using Autodesk.AutoCAD.Colors;
 using Autodesk.AutoCAD.DatabaseServices;
 using System;
 using System.Collections.Generic;
@@ -57,7 +57,7 @@ namespace ConversorDrawindDLL
             }
             catch (Exception e)
             {
-                Conversor.EscreverLog("Erro 101", e.Message + "| Erro na conversão do seguinte item: " + entity.Id.ObjectClass.DxfName.ToUpper() + " " + conversor.BaseLayerName + " " + conversor.BaseColorString + " " + conversor.BaseLineTypeString);
+                Conversor.EscreverLog(LogContext.ConverterInstancia, e.Message + "| Falha ao converter o item: " + entity.Id.ObjectClass.DxfName.ToUpper() + " " + conversor.BaseLayerName + " " + conversor.BaseColorString + " " + conversor.BaseLineTypeString);
             }
         }
 

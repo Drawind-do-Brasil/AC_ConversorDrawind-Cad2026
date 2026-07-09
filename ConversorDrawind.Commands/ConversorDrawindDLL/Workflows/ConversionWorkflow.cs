@@ -24,7 +24,7 @@ namespace ConversorDrawindDLL
                         scaleWorkflow.ApplyLineTypeScale(Configuration.Config.Lines.LineTypeScale);
                     ConvertLayer.CreateAndAssignALayer();
                 },
-                "Erro 13",
+                LogContext.PrepararConversao,
                 "Não foi possível criar os novos layers.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao criar os novos layers...\n");
         }
@@ -39,7 +39,7 @@ namespace ConversorDrawindDLL
             stepRunner.Run(
                 "Criando novos estilos de textos ",
                 ConvertLayer.CreateTextSyles,
-                "Erro 13",
+                LogContext.PrepararConversao,
                 "Não foi possível criar os novos estilos de textos.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao criar os novos  estilos de textos...\n");
         }
@@ -56,7 +56,7 @@ namespace ConversorDrawindDLL
                     scaleWorkflow.ApplyDimensionScale(Configuration.Config.Dimensions.Scale);
                     new ConvertDimension().ConvertD();
                 },
-                "Erro 15",
+                LogContext.CarregarConfiguracaoTemporaria,
                 "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao convertar as dimensões...\n");
         }
@@ -69,14 +69,14 @@ namespace ConversorDrawindDLL
             stepRunner.Run(
                 "Explodindo os blocos ",
                 ConvertLayer.ExplodeObjectsInv,
-                "Erro 16",
+                LogContext.CarregarLayer,
                 "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao explodir os blocos...\n");
 
             stepRunner.Run(
                 "Convertendo as dimensões ",
                 () => new ConvertDimension().ConvertDInv(),
-                "Erro 17",
+                LogContext.CarregarLinetype,
                 "Não foi possível converter as dimensões.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao convertar as dimensões...\n");
         }
@@ -93,7 +93,7 @@ namespace ConversorDrawindDLL
             stepRunner.Run(
                 "Explodindo os blocos ",
                 ConvertLayer.ExplodeObjects,
-                "Erro 18",
+                LogContext.CriarBloco,
                 "Não foi possível explodir os blocos.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao explodir os blocos...\n");
         }
@@ -106,7 +106,7 @@ namespace ConversorDrawindDLL
             stepRunner.Run(
                 "Adicionando bloco DM ",
                 DocumentManager.AddBlockDM,
-                "Erro 508",
+                LogContext.PrepararConversao,
                 "Não foi possível adicionar o bloco DM.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao adicionar bloco DM...\n");
         }
@@ -123,7 +123,7 @@ namespace ConversorDrawindDLL
                     ConvertLayer.DeletingTekla(Configuration.Config.Layers.TeklaDrawingSheetLayer);
                     ConvertLayer.DeletingTekla();
                 },
-                "Erro 19",
+                LogContext.FinalizarConversao,
                 string.Empty,
                 "Descrição: Erro ao excluir a palavra \"Tekla structures\"...\n");
         }
@@ -136,7 +136,7 @@ namespace ConversorDrawindDLL
             stepRunner.Run(
                 "Convertendo os layers ",
                 ConvertLayer.ConvertLayersNew,
-                "Erro 20",
+                LogContext.PublicarArquivo,
                 "Não foi possível converter os layers.\nVerifique se a conversão ocorreu normalmente.",
                 "Descrição: Erro ao converter os layers...\n");
         }

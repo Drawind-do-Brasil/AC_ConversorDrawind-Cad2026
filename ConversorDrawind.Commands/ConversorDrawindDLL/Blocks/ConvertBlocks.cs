@@ -85,7 +85,7 @@ namespace ConversorDrawindDLL
                     }
                     catch (System.Exception e)
                     {
-                        Conversor.EscreverLog("Erro 87", e.Message);
+                        Conversor.EscreverLog(LogContext.VerificarBlocoRelacionado, e.Message);
                     }
                     finally
                     {
@@ -167,7 +167,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 2", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterBlocos, e.Message);
                 }
                 finally
                 {
@@ -342,7 +342,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 88", e.Message);
+                    Conversor.EscreverLog(LogContext.RemoverBlocos, e.Message);
                     found = false;
                 }
                 finally
@@ -398,7 +398,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (System.Exception e)
                 {
-                    Conversor.EscreverLog("Erro 89", e.Message);
+                    Conversor.EscreverLog(LogContext.ConverterBlocos, e.Message);
                     found = false;
                 }
                 finally

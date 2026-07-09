@@ -70,7 +70,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 65", e.Message);
+                    logError(LogContext.AtualizarPrecisaoDaCota, e.Message);
                 }
                 finally
                 {

@@ -25,7 +25,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog("Erro 55", e.Message);
+                    Conversor.EscreverLog(LogContext.CriarCamada, e.Message);
                 }
                 finally
                 {
@@ -62,7 +62,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog("Erro 56", e.Message);
+                    Conversor.EscreverLog(LogContext.RemoverCamada, e.Message);
                 }
                 finally
                 {

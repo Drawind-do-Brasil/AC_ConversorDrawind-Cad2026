@@ -52,7 +52,7 @@ namespace ConversorDrawindDLL
             }
             catch (Exception e)
             {
-                logError("Erro 4", e.Message);
+                logError(LogContext.AlterarAtributosDoBloco, e.Message);
             }
         }
 
@@ -93,7 +93,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    logError("Erro 5", e.Message);
+                    logError(LogContext.AlterarAtributosRelacionados, e.Message);
                 }
                 finally
                 {

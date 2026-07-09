@@ -116,9 +116,34 @@ public sealed class PureFunctionTests
             Conversor.LOG_Diretorio = workspace.Root;
             Conversor.LOG_FileName = logFile;
 
-            Conversor.EscreverLog("Erro X", "Detalhe");
+            Conversor.EscreverLog("Operacao de teste", "Detalhe");
 
-            Assert.Equal("Erro X : Detalhe", File.ReadAllText(logFile, Encoding.UTF8).Trim());
+            Assert.Equal("Operacao de teste : Detalhe", File.ReadAllText(logFile, Encoding.UTF8).Trim());
+        }
+        finally
+        {
+            Conversor.LOG_Diretorio = oldDirectory;
+            Conversor.LOG_FileName = oldFileName;
+        }
+    }
+
+    [Fact]
+    public void EscreverLog_ComExcecao_DeveRegistrarContextoLegivel()
+    {
+        string oldDirectory = Conversor.LOG_Diretorio;
+        string oldFileName = Conversor.LOG_FileName;
+
+        using var workspace = TestWorkspace.Create();
+        string logFile = workspace.GetFile("Conversor.log");
+
+        try
+        {
+            Conversor.LOG_Diretorio = workspace.Root;
+            Conversor.LOG_FileName = logFile;
+
+            Conversor.EscreverLog(LogContext.CapturarTextosDoFormato, new InvalidOperationException("Detalhe"));
+
+            Assert.Equal("Capturar textos do formato : Detalhe", File.ReadAllText(logFile, Encoding.UTF8).Trim());
         }
         finally
         {

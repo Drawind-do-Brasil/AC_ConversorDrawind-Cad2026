@@ -1,4 +1,4 @@
-﻿using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.DatabaseServices;
 using Autodesk.AutoCAD.EditorInput;
 using Autodesk.AutoCAD.Geometry;
 using System;
@@ -75,7 +75,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog("Erro 10", e.Message);
+                    Conversor.EscreverLog(LogContext.FixarSetaDaCota, e.Message);
                 }
                 finally
                 {
@@ -144,7 +144,7 @@ namespace ConversorDrawindDLL
             }
             catch (Exception e)
             {
-                Conversor.EscreverLog("Erro 11", e.Message);
+                Conversor.EscreverLog(LogContext.FixarSetaDaCota, e.Message);
             }
 
 

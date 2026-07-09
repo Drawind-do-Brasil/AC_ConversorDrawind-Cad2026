@@ -50,7 +50,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog("Erro 90", e.Message);
+                    Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
                 }
                 finally
                 {
@@ -92,7 +92,7 @@ namespace ConversorDrawindDLL
                 }
                 catch (Exception e)
                 {
-                    Conversor.EscreverLog("Erro 80", e.Message);
+                    Conversor.EscreverLog(LogContext.LimparCamadasTekla, e.Message);
                 }
                 finally
                 {

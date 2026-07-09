@@ -10,13 +10,13 @@ namespace ConversorDrawindDLL.Tests
             var warnings = new List<string>();
             var runner = new ConversionStepRunner(
                 messenger,
-                (code, message) => logs.Add(code + ":" + message),
+                (context, message) => logs.Add(context + ":" + message),
                 warnings.Add);
 
             runner.Run(
                 "Iniciando ",
                 () => messenger.Events.Add("action"),
-                "Erro X",
+                "Contexto de teste",
                 "Aviso",
                 "Descrição de erro\n");
 
@@ -26,25 +26,25 @@ namespace ConversorDrawindDLL.Tests
         }
 
         [Fact]
-        public void Run_WhenActionFails_LogsWarnsAndWritesCurrentErrorFormat()
+        public void Run_WhenActionFails_LogsWarnsAndWritesReadableContext()
         {
             var messenger = new FakeEditorMessenger();
             var logs = new List<string>();
             var warnings = new List<string>();
             var runner = new ConversionStepRunner(
                 messenger,
-                (code, message) => logs.Add(code + ":" + message),
+                (context, message) => logs.Add(context + ":" + message),
                 warnings.Add);
 
             runner.Run(
                 "Iniciando ",
                 () => throw new InvalidOperationException("Falhou"),
-                "Erro X",
+                "Contexto de teste",
                 "Aviso",
                 "Descrição de erro\n");
 
             Assert.Equal(new[] { "Iniciando ", "... Erro. \nDescrição de erro\n" }, messenger.Events);
-            Assert.Equal(new[] { "Erro X:Falhou" }, logs);
+            Assert.Equal(new[] { "Contexto de teste:Falhou" }, logs);
             Assert.Equal(new[] { "Aviso" }, warnings);
         }
 

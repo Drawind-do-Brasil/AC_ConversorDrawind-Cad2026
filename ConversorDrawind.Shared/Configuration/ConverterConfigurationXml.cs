@@ -69,20 +69,14 @@ namespace ConversorDrawind
         {
             Configuration configuration = new Configuration();
             LegacyConfigurationState state = new LegacyConfigurationState();
-            List<Block> teklaBlocks = new List<Block>();
-            List<Block> cadBlocks = new List<Block>();
-            List<Block> originalBlocks = new List<Block>();
 
             ConfigurationXmlDocument
                 .Load(file)
-                .ApplyTo(configuration, state, teklaBlocks, cadBlocks, originalBlocks);
+                .ApplyTo(configuration, state);
 
             return ConfigurationCompatibilityMapper.FromLegacyState(
                 configuration,
-                state,
-                teklaBlocks,
-                cadBlocks,
-                originalBlocks);
+                state);
         }
     }
 
