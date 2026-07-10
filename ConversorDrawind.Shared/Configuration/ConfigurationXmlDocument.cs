@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -10,7 +9,6 @@ using System.Xml.Serialization;
 
 namespace ConversorDrawind
 {
-#pragma warning disable CS0618
     [XmlRoot("CONVERSOR")]
     public sealed class ConfigurationXmlDocument
     {
@@ -356,7 +354,6 @@ namespace ConversorDrawind
             return new Point3DConfiguration { X = point.X, Y = point.Y, Z = point.Z };
         }
     }
-#pragma warning restore CS0618
 
     public sealed class CommentsXml
     {

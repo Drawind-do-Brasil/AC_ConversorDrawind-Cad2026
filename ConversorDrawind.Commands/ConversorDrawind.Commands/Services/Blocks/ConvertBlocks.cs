@@ -70,10 +70,10 @@ namespace ConversorDrawind.Commands
                                         int qtde = 0;
                                         int.TryParse(tag.filtro.alturaTexto.ReplaceComma().Split(',').Last(), out qtde);
 
-                        if ((tag.filtro.cor == "ALL" || LayerSetupOperations.GetColorForName(tag.filtro.cor).ColorNameForDisplay == text.Color.ColorNameForDisplay)
-                                        && (String.IsNullOrEmpty(tag.filtro.conteudoTexto) || string.Equals(text.TextString, tag.filtro.conteudoTexto, StringComparison.OrdinalIgnoreCase))
-                                        && (String.IsNullOrEmpty(tag.filtro.alturaTexto) || Math.Round(text.Height, qtde) == Convert.ToDouble(tag.filtro.alturaTexto.ReplaceComma()))
-                                            && string.Equals(tag.filtro.layerBase, text.Layer, StringComparison.OrdinalIgnoreCase))
+                                        if ((tag.filtro.cor == "ALL" || LayerSetupOperations.GetColorForName(tag.filtro.cor).ColorNameForDisplay == text.Color.ColorNameForDisplay)
+                                                        && (String.IsNullOrEmpty(tag.filtro.conteudoTexto) || string.Equals(text.TextString, tag.filtro.conteudoTexto, StringComparison.OrdinalIgnoreCase))
+                                                        && (String.IsNullOrEmpty(tag.filtro.alturaTexto) || Math.Round(text.Height, qtde) == Convert.ToDouble(tag.filtro.alturaTexto.ReplaceComma()))
+                                                            && string.Equals(tag.filtro.layerBase, text.Layer, StringComparison.OrdinalIgnoreCase))
                                         {
                                             tag.text = text.TextString;
                                             tag.verifiqued = true;
@@ -134,7 +134,7 @@ namespace ConversorDrawind.Commands
                                 foreach (ObjectId id in myIDs)
                                 {
                                     DBText text = transaction.GetObject(id, OpenMode.ForRead) as DBText;
-                        if (tag.filtro.cor == "ALL" || LayerSetupOperations.GetColorForName(tag.filtro.cor).ColorNameForDisplay == text.Color.ColorNameForDisplay)
+                                    if (tag.filtro.cor == "ALL" || LayerSetupOperations.GetColorForName(tag.filtro.cor).ColorNameForDisplay == text.Color.ColorNameForDisplay)
                                     {
                                         if (String.IsNullOrEmpty(tag.filtro.conteudoTexto) || string.Equals(text.TextString, tag.filtro.conteudoTexto, StringComparison.OrdinalIgnoreCase))
                                         {
@@ -462,23 +462,23 @@ namespace ConversorDrawind.Commands
         public static void DeleteLayerNew(List<Filter> layers)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-                    new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)
-                .DeleteLayerObjectsInBlocks(layers);
+            new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)
+        .DeleteLayerObjectsInBlocks(layers);
         }
 
         public static void DeleteLayer(List<Filter> layers)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-                    new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)
-                .DeleteLayerObjects(layers);
+            new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)
+        .DeleteLayerObjects(layers);
         }
 
 
         public static void DeleteBlocks(List<Block> blockClassi)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
-                    new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)
-                .DeleteRelatedBlocks(blockClassi);
+            new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)
+        .DeleteRelatedBlocks(blockClassi);
         }
 
 

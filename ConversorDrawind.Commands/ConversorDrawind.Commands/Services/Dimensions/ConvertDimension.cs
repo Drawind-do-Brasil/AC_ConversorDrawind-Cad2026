@@ -25,7 +25,7 @@ namespace ConversorDrawind.Commands
         private DimensionTextEntityService textEntityService;
 
 
- 
+
         public void ConvertByInventor()
         {
             StyleOperations.CreateDimstyle2();

@@ -96,7 +96,7 @@ namespace ConversorDrawind.Commands
         {
             layerRecord.Color = LayerSetupOperations.GetColorForName(layerDefinition[1]);
             layerRecord.Name = layerDefinition[0];
-                layerRecord.LinetypeObjectId = LayerSetupOperations.LoadLinetype(layerDefinition[2]);
+            layerRecord.LinetypeObjectId = LayerSetupOperations.LoadLinetype(layerDefinition[2]);
         }
     }
 }

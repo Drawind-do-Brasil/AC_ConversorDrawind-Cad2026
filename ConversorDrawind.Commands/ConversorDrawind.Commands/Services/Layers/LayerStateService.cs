@@ -32,7 +32,7 @@ namespace ConversorDrawind.Commands
             }
 
             layerRecord.Color = color;
-                layerRecord.LinetypeObjectId = LayerSetupOperations.LoadLinetype(linetypeName);
+            layerRecord.LinetypeObjectId = LayerSetupOperations.LoadLinetype(linetypeName);
             layerRecord.IsFrozen = true;
         }
     }

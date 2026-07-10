@@ -54,7 +54,7 @@ namespace ConversorDrawind
 
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }

@@ -1,7 +1,6 @@
 using ConversorDrawind.UI.Wpf.Main.ViewModels;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Threading;
 using System.Windows.Controls;

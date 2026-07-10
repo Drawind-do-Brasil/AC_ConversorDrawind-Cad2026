@@ -86,7 +86,7 @@ namespace ConversorDrawind.Commands
                             foreach (ObjectId id in objectIds)
                             {
                                 Entity entity = id.GetObject(OpenMode.ForWrite) as Entity;
-                        if (string.Equals(filter.cor, "ALL", StringComparison.OrdinalIgnoreCase) || entity.Color.ColorNameForDisplay == LayerSetupOperations.GetColorForName(filter.cor).ColorNameForDisplay)
+                                if (string.Equals(filter.cor, "ALL", StringComparison.OrdinalIgnoreCase) || entity.Color.ColorNameForDisplay == LayerSetupOperations.GetColorForName(filter.cor).ColorNameForDisplay)
                                 {
                                     if (entity.GetType() != typeof(DBText) &&
                                         (!string.Equals(entity.Id.ObjectClass.DxfName, "INSERT", StringComparison.OrdinalIgnoreCase) ||
