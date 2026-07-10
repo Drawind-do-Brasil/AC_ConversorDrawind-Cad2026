@@ -72,9 +72,9 @@ namespace ConversorDrawind.UI.Wpf.Conversion
                 ProcessTextBlock.Text = "Convertendo o desenho: " + DrawingProcess.FileOpen;
             }
 
-            StatusTextBlock.Text = "Convertendo" + new string('.', animationIndex);
+            StatusTextBlock.Text = Localization.LabelConverting + new string('.', animationIndex + 1).PadRight(3);
             animationIndex++;
-            if (animationIndex > 7)
+            if (animationIndex > 2)
             {
                 animationIndex = 0;
             }

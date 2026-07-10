@@ -7,7 +7,7 @@ namespace ConversorDrawind.UI.Wpf.Conversion
         public ConversionFinishedDialog(string conversionTime)
         {
             InitializeComponent();
-            ProcessTimeTextBlock.Text = "Tempo de ConversÃ£o: " + conversionTime;
+            ProcessTimeTextBlock.Text = "Tempo de Conversão: " + conversionTime;
         }
 
         private void OkButtonClick(object sender, RoutedEventArgs e)

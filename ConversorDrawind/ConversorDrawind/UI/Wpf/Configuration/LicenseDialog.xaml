@@ -20,14 +20,13 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0"
-                       Grid.Column="0"
-                       Grid.ColumnSpan="2"
-                       Text="{x:Static local:Localization.LabelDrawind}"
-                       HorizontalAlignment="Center"
-                       VerticalAlignment="Center"
-                       FontSize="30"
-                       FontWeight="Bold" />
+            <Image Grid.Row="0"
+                   Grid.Column="0"
+                   Grid.ColumnSpan="2"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   Width="230"
+                   Source="pack://application:,,,/Resources/DRAWIND_PEQUENA.png" />
 
             <TextBlock Grid.Row="1"
                        Grid.Column="0"

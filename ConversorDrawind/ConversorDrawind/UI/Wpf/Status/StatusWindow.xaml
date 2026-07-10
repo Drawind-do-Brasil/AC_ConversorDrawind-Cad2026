@@ -4,7 +4,7 @@
         xmlns:local="clr-namespace:ConversorDrawind"
         Title="{x:Static local:Localization.AppTitle}"
         Width="506"
-        Height="161"
+        Height="187"
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Topmost="True">
@@ -15,11 +15,10 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <TextBlock Grid.Row="0"
-                   Text="{x:Static local:Localization.AppTitle}"
-                   FontSize="22"
-                   FontWeight="SemiBold"
-                   HorizontalAlignment="Center" />
+        <Image Grid.Row="0"
+               HorizontalAlignment="Center"
+               Width="180"
+               Source="pack://application:,,,/Resources/DRAWIND_PEQUENA.png" />
 
         <TextBlock x:Name="StatusText"
                    Grid.Row="1"
