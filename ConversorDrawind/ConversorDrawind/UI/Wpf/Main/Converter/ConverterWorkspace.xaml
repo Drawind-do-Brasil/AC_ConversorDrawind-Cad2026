@@ -33,7 +33,6 @@
             <GroupBox Grid.Row="1" Header="{x:Static local:Localization.LabelConverters}" >
                 <ListBox x:Name="ConvertersListBox"
                          ItemsSource="{Binding ConverterNames}"
-                         SelectedItem="{Binding SelectedConverterName, Mode=TwoWay}"
                          SelectionChanged="ConvertersSelectionChanged" />
             </GroupBox>
         </Grid>

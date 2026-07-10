@@ -82,7 +82,7 @@ namespace ConversorDrawind.UI.Wpf.Main
 
         private void SelectConverterFromList()
         {
-            string selected = viewModel.SelectedConverterName;
+            string selected = ConverterView.ConvertersListBox.SelectedItem as string;
             if (isInitializing || isSynchronizingConverterSelection || string.IsNullOrWhiteSpace(selected))
             {
                 return;
@@ -90,12 +90,6 @@ namespace ConversorDrawind.UI.Wpf.Main
 
             if (IsLoadedConverterSelection(selected))
             {
-                return;
-            }
-
-            if (!ConfirmDiscardTemplateChanges())
-            {
-                RestoreLoadedConverterSelection();
                 return;
             }
 
@@ -144,6 +138,8 @@ namespace ConversorDrawind.UI.Wpf.Main
             {
                 viewModel.SelectedConverterName = converterName;
                 viewModel.TemplateName = converterName;
+                ConverterView.ConvertersListBox.SelectedItem = string.IsNullOrWhiteSpace(converterName) ? null : converterName;
+                EditorView.ConverterComboBoxControl.SelectedItem = string.IsNullOrWhiteSpace(converterName) ? null : converterName;
             }
             finally
             {

@@ -19,7 +19,7 @@ namespace ConversorDrawind.Commands
             ObjectsInBlock objectsInBlock = new ObjectsInBlock();
             foreach (ObjectId item in blockTableRecord)
             {
-                DBObject dBObject = (DBObject)item.GetObject(OpenMode.ForRead);
+                DBObject dBObject = item.GetObject(OpenMode.ForRead);
                 if (dBObject.GetType() == typeof(Line))
                     objectsInBlock.lineList.Add((Line)dBObject);
                 else if (dBObject.GetType() == typeof(DBText))

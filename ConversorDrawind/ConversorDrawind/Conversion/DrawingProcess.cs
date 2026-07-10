@@ -59,8 +59,8 @@ namespace ConversorDrawind
         {
             SetForegroundWindow(mwh);
             Thread.Sleep(100);
-            KeybdEvent((byte)VK_ENTER, 0, 0, UIntPtr.Zero);
-            KeybdEvent((byte)VK_ENTER, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
+            KeybdEvent(VK_ENTER, 0, 0, UIntPtr.Zero);
+            KeybdEvent(VK_ENTER, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
 
         }
 
