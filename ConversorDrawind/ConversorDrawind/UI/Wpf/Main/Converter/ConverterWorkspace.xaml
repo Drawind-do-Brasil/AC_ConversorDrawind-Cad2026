@@ -38,18 +38,19 @@
         </Grid>
         <Grid Grid.Row="0" Grid.Column="2">
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
                 <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <StackPanel Grid.Row="0"  Orientation="Horizontal" >
+          
+            <GroupBox Grid.Row="0" Header="{x:Static local:Localization.LabelDrawings}" >
+                <ListBox x:Name="DrawingsListBox" AllowDrop="True" Drop="DrawingsDrop" DragEnter="DrawingsDragEnter" />
+            </GroupBox>
+            <StackPanel Grid.Row="1"  Orientation="Horizontal" >
                 <Button Content="{x:Static local:Localization.ButtonAdd}" Width="100" Click="AddDrawingsClick" />
                 <Separator Visibility="Hidden" Margin="2.5"/>
                 <Button Content="{x:Static local:Localization.ButtonClear}" Width="100" Click="ClearDrawingsClick" />
             </StackPanel>
-            <GroupBox Grid.Row="1" Header="{x:Static local:Localization.LabelDrawings}" >
-                <ListBox x:Name="DrawingsListBox" AllowDrop="True" Drop="DrawingsDrop" DragEnter="DrawingsDragEnter" />
-            </GroupBox>
-    
+
         </Grid>
      
         <StackPanel Grid.Row="0" Grid.Column="4">

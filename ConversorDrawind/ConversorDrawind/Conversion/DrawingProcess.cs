@@ -25,6 +25,14 @@ namespace ConversorDrawind
 
         private static readonly AutoCadSession session = new AutoCadSession();
 
+        public static int Valor { get => valor; set => valor = value; }
+
+        public static int Index { get => index; set => index = value; }
+
+        public static string FileOpen { get => fileOpen; set => fileOpen = value; }
+
+        public static bool IsACADOpen { get => isACADOpen; set => isACADOpen = value; }
+
         private static ACAD.AcadApplication CreateAutoCADApplication()
         {
             string[] progIds =
@@ -330,226 +338,15 @@ namespace ConversorDrawind
 
         private static bool RunCommand(string file, bool last = false)
         {
-            if (File.Exists(file))
-            {
-                ACAD.AcadDocument drawingDocument = null;
-
-                try
-                {
-                    File.Copy(file, DrawingProcessPaths.GetBackupPath(file), true);
-                }
-                catch (Exception)
-                {
-
-                }
-
-                try
-                {
-                    drawingDocument = ComRetry.Invoke(() => session.Application.Documents.Open(file, false), 120, 100);
-                    session.CurrentDocument = drawingDocument;
-                    session.OpenedDocuments.Add(drawingDocument);
-                    ComRetry.Invoke(() => session.Application.ActiveDocument = drawingDocument);
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                    CloseFailedDrawing(drawingDocument);
-                    return false;
-                }
-
-                try
-                {
-                    SendCommand("ZOOM E\n");
-                    SendCommand("CDwi_Convert\n");
-                    if (parametros.configuration.General.ExchangeFormat)
-                    {
-                        SendCommand("CDwi_GetAttributeText\n");
-
-                        session.CurrentDocument = session.AttributeDocument;
-                        ComRetry.Invoke(() => session.Application.ActiveDocument = session.CurrentDocument);
-
-                        SendCommand("COPYBASE 0,0,0 all \n");
-
-                        session.CurrentDocument = session.OpenedDocuments.Last();
-                        ComRetry.Invoke(() => session.Application.ActiveDocument = session.CurrentDocument);
-
-                        SendCommand("ZOOM E\n");
-                        SendCommand("REGEN\n");
-                        string pasteClipPoint = GetPasteClipInsertionPoint();
-
-                        if (parametros.configuration.General.SourceMode == 1)
-                        {
-
-                            List<Block> listAnterior = GetListBlocksS();
-
-                            SendCommand("PASTECLIP " + pasteClipPoint + "\n");
-
-                            List<Block> listPosterior = GetListBlocksS();
-
-                            for (int j = 0; j < listPosterior.Count; j++)
-                            {
-                                foreach (var item in listAnterior)
-                                {
-                                    if (listPosterior[j].blockName == item.blockName)
-                                    {
-                                        listPosterior.RemoveAt(j);
-                                        j--;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (listPosterior.Count() > 0)
-                            {
-                                string comando = listPosterior.First().blockName.Replace(" ", "*******");
-                                SendCommand("CDwi_ScaleBlock\n" + comando + "\n");
-                            }
-                        }
-
-                        else
-                        {
-                            SendCommand("PASTECLIP " + pasteClipPoint + "\n");
-
-                        }
-
-                        SendCommand("CDwi_AttributeBlock\n");
-
-                        if (parametros.configuration.General.SourceMode == 1)
-                        {
-                            SendCommand("CDwi_DeleteBlocks\n");
-                        }
-                    }
-
-                    if (parametros.configuration.General.ConvertLayers)
-                    {
-                        SendCommand("CDwi_DeleteLayers\n");
-                    }
-
-                    if (parametros.configuration.General.ApplyDrawingScale)
-                    {
-                        ApplicationRuntime.ControladorT2 = false;
-                        try
-                        {
-                            SendCommand("CDwi_Scale\n");
-                        }
-                        finally
-                        {
-                            ApplicationRuntime.ControladorT2 = true;
-                        }
-                    }
-
-
-                    if (parametros.configuration.General.ExecuteLisp)
-                    {
-                        IReadOnlyList<LispCommandDefinition> lispCommands =
-                            LispCommandDefinition.ParseAll(parametros.configuration.Commands.LispCommands);
-
-                        ComRetry.Invoke(() => session.CurrentDocument.SetVariable("FILEDIA", 0));
-                        try
-                        {
-                            foreach (LispCommandDefinition command in lispCommands.Where(item => !item.ExecuteAfterConversion))
-                            {
-                                LoadFile(command.SourceFile);
-                                SendCommand(command.Command + "\n");
-                            }
-
-                            if (last)
-                                foreach (LispCommandDefinition command in lispCommands.Where(item => item.ExecuteAfterConversion))
-                                {
-                                    LoadFile(command.SourceFile);
-                                    SendCommand(command.Command + "\n");
-                                }
-                        }
-                        finally
-                        {
-                            ComRetry.Invoke(() => session.CurrentDocument.SetVariable("FILEDIA", 1));
-                        }
-                    }
-
-                    SendCommand("CDwi_Finalize\n");
-                    ComRetry.Invoke(() => session.CurrentDocument.Application.ZoomExtents());
-
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex);
-                    CloseFailedDrawing(drawingDocument);
-                    return false;
-                }
-
-
-
-                try
-                {
-                    try
-                    {
-                        if (ApplicationRuntime.ExtensaoGeral == "DWG")
-                            ComRetry.Invoke(() => session.CurrentDocument.Save());
-
-                        else
-                        {
-                            SendCommand("SaveDXF\n");
-                        }
-
-                    }
-                    catch (Exception)
-                    {
-                        ApplicationRuntime.ControladorT2 = false;
-                        try
-                        {
-                            System.Windows.MessageBox.Show(
-                                        Localization.MessageCouldNotSaveFile,
-                                        Localization.TitleWarningNoExclamation,
-                                        System.Windows.MessageBoxButton.OK,
-                                        System.Windows.MessageBoxImage.Warning);
-                        }
-                        finally
-                        {
-                            ApplicationRuntime.ControladorT2 = true;
-                        }
-
-                        CloseFailedDrawing(drawingDocument);
-                        return false;
-                    }
-
-                    if (!parametros.closedesenhos)
-                    {
-                        int cont = ComRetry.Invoke(() => session.Application.Documents.Count);
-
-                        ComRetry.Invoke(() => session.CurrentDocument.Close());
-
-                        Stopwatch waitClose = Stopwatch.StartNew();
-                        while (waitClose.ElapsedMilliseconds < 30000)
-                        {
-                            if (ComRetry.Invoke(() => session.Application.Documents.Count) < cont)
-                                break;
-
-                            Thread.Sleep(50);
-                        }
-
-                        session.OpenedDocuments.RemoveAt(session.OpenedDocuments.Count - 1);
-                    }
-                }
-                catch (Exception e)
-                {
-                    System.Windows.MessageBox.Show(
-                                     e.Message,
-                                     Localization.TitleWarningNoExclamation,
-                                     System.Windows.MessageBoxButton.OK,
-                                     System.Windows.MessageBoxImage.Warning);
-                    CloseFailedDrawing(drawingDocument);
-                    return false;
-                }
-
-                return true;
-            }
-            else
-            {
-                System.Windows.MessageBox.Show(Localization.FormatDrawingDoesNotExist(file),
-                                   Localization.TitleAttentionPlain,
-                                   System.Windows.MessageBoxButton.OK,
-                                   System.Windows.MessageBoxImage.Exclamation);
-                return false;
-            }
+            return new DrawingConversionWorkflow(
+                session,
+                parametros,
+                SendCommand,
+                LoadFile,
+                GetPasteClipInsertionPoint,
+                GetListBlocksS,
+                CloseFailedDrawing)
+                .Execute(file, last);
         }
 
         private static void CloseFailedDrawing(ACAD.AcadDocument drawingDocument)
@@ -576,29 +373,6 @@ namespace ConversorDrawind
         }
 
 
-        public static int Valor
-        {
-            get { return valor; }
-            set { valor = value; }
-        }
-
-        public static int Index
-        {
-            get { return index; }
-            set { index = value; }
-        }
-
-        public static string FileOpen
-        {
-            get { return fileOpen; }
-            set { fileOpen = value; }
-        }
-
-        public static bool IsACADOpen
-        {
-            get { return isACADOpen; }
-            set { isACADOpen = value; }
-        }
 
         public static List<Block> GetListBlocksS()
         {

@@ -25,6 +25,7 @@ A separacao em tres projetos e a criacao de workflows, adaptadores e testes de c
 | 5 - Limpeza tecnica | [x] Concluido | Removida a implementacao criptografica legada sem consumidores internos. As colecoes globais de blocos passaram a ser expostas somente para leitura. |
 | 6 - Validacao final | [x] Concluido | Solucao compilada e suites executadas com sucesso: 88 testes de Commands e 16 testes WPF. Os avisos de `WindowsBase` foram registrados como ponto de compatibilidade das referencias do AutoCAD. |
 | 7 - Contexto de configuracao em Commands | [x] Concluido | `ConversionWorkflow`, comandos de escala/atributos/finalizacao e os servicos de dimensao/escala agora capturam ou recebem a configuracao carregada como dependencia explicita. Os acessos globais restantes estao nas fronteiras de compatibilidade e em utilitarios legados. |
+| 8 - Workflow por desenho | [x] Concluido | `RunCommand` foi reduzido a uma fachada e a sequencia de abrir, converter, copiar formato, executar LISP, salvar e fechar foi movida para `DrawingConversionWorkflow`. As propriedades estaticas de progresso foram simplificadas. |
 
 ## Validacao executada
 
