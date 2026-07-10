@@ -27,7 +27,6 @@ namespace ConversorDrawind.Commands
             ISystemVariableService systemVariables = commandContext.SystemVariables;
             ScaleWorkflow scaleWorkflow = commandContext.ScaleWorkflow;
             ConversionStepRunner stepRunner = commandContext.StepRunner;
-            ConversionWorkflow workflow = new ConversionWorkflow(stepRunner, scaleWorkflow);
             ConversionExtentsWorkflow extentsWorkflow = new ConversionExtentsWorkflow(
                 extentsService.Refresh,
                 () => ConversionSession.MinPoint3d,
@@ -55,8 +54,10 @@ namespace ConversorDrawind.Commands
             string converterName = ConversionSession.ConverterName;
             commandRunner.LoadTempConfiguration(Configuration.Config, ref converterName);
             ConversionSession.ConverterName = converterName;
+            Configuration configuration = Configuration.Config;
+            ConversionWorkflow workflow = new ConversionWorkflow(stepRunner, scaleWorkflow, configuration);
 
-            double? capturedScale = new DrawingScaleDetectionService(documentContext, entitySelector).CaptureScale();
+            double? capturedScale = new DrawingScaleDetectionService(documentContext, entitySelector, configuration).CaptureScale();
             if (capturedScale.HasValue)
                 ConversionSession.CapturedScale = capturedScale.Value;
 

@@ -13,14 +13,15 @@ namespace ConversorDrawind.Commands
             Document document = documentContext.Document;
             Editor editor = documentContext.Editor;
             IEditorMessenger messenger = new AcadEditorMessenger(editor);
+            Configuration configuration = Configuration.Config;
 
             try
             {
                 messenger.WriteMessage(Localization.StartCapturingFormatTexts);
-                if (Configuration.Config.General.ConverterType == 0)
+                if (configuration.General.ConverterType == 0)
                 {
-                    ConvertBlocks.SetStartPointOverride(ConvertBlocks.GetFormatStartPoint(Configuration.Config.Layers.BlockAttributeLayer));
-                    ConvertBlocks.GeTTextNew(Configuration.Config.Layers.BlockAttributeLayer);
+                    ConvertBlocks.SetStartPointOverride(ConvertBlocks.GetFormatStartPoint(configuration.Layers.BlockAttributeLayer));
+                    ConvertBlocks.GeTTextNew(configuration.Layers.BlockAttributeLayer);
                     ConvertBlocks.GeTText();
                 }
                 else

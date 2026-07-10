@@ -18,22 +18,23 @@ namespace ConversorDrawind.Commands
                 messenger,
                 ConversionLog.Write,
                 ConversionMessages.ShowWarningIfEnabled);
+            Configuration configuration = Configuration.Config;
 
-            if (Configuration.Config.Dimensions.FixArrow)
+            if (configuration.Dimensions.FixArrow)
             {
                 stepRunner.Run(
                     Localization.StartFixingDimensionArrows,
                     () => FixArrow.ConsetaSetaSeta(
-                        Configuration.Config.Dimensions.FixArrowType,
+                        configuration.Dimensions.FixArrowType,
                         ConversionSession.AppliedScale,
-                        Configuration.Config.Dimensions.FixArrowFactor),
+                        configuration.Dimensions.FixArrowFactor),
                     LogContext.FinalizarConversao,
                     string.Empty,
                     Localization.ErrorFixingDimensionArrows + "\n",
                     Localization.MessageCompleted + "\n");
             }
 
-            if (Configuration.Config.General.Purge)
+            if (configuration.General.Purge)
             {
                 stepRunner.Run(
                     Localization.StartPurgingDrawing,

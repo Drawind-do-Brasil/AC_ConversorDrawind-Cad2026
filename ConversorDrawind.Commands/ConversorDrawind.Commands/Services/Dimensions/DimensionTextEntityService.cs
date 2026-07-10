@@ -7,11 +7,13 @@ namespace ConversorDrawind.Commands
     {
         private readonly Database database;
         private readonly Transaction transaction;
+        private readonly Configuration configuration;
 
-        internal DimensionTextEntityService(Database database, Transaction transaction)
+        internal DimensionTextEntityService(Database database, Transaction transaction, Configuration configuration)
         {
             this.database = database;
             this.transaction = transaction;
+            this.configuration = configuration;
         }
 
         internal Point3d CalculateAlignedTextPosition(DBText sourceText, Matrix3d transform, BlockTableRecord modelSpace)
@@ -74,8 +76,8 @@ namespace ConversorDrawind.Commands
             copiedText.Rotation = rotation;
             copiedText.WidthFactor = sourceText.WidthFactor;
             copiedText.TextStyleId = textStyle;
-            copiedText.Layer = Configuration.Config.Dimensions.Layer;
-            copiedText.Color = LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.TextColor);
+            copiedText.Layer = configuration.Dimensions.Layer;
+            copiedText.Color = LayerSetupOperations.GetColorForName(configuration.Dimensions.TextColor);
             copiedText.Position = sourceText.Position.TransformBy(transform);
 
             return copiedText;

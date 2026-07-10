@@ -7,43 +7,47 @@ namespace ConversorDrawind
     {
         private const string LinPackFileName = "LinPack.nfj";
         private const string LastConverterFileName = "LastConverter.nfj";
+        private const string SettingsFolderName = "ConversorDrawind";
+
+        private static readonly object SyncRoot = new object();
 
         public static string LinPackPath
         {
-            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LinPackFileName); }
+            get { return Path.Combine(SettingsDirectory, LinPackFileName); }
         }
 
         public static string LastConverterPath
         {
-            get { return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, LastConverterFileName); }
+            get { return Path.Combine(SettingsDirectory, LastConverterFileName); }
+        }
+
+        private static string SettingsDirectory
+        {
+            get
+            {
+                string localAppData = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+                return Path.Combine(localAppData, SettingsFolderName);
+            }
         }
 
         public static string EnsureAndReadProgramDbLin(string defaultPath)
         {
-            string directory = LinPackPath;
-
-            if (!File.Exists(directory))
+            lock (SyncRoot)
             {
-                StreamWriter sw = new StreamWriter(directory);
-                sw.WriteLine(defaultPath);
-                sw.Close();
-            }
+                MigrateLegacyFileIfNeeded(LinPackFileName);
 
-            StreamReader sr = new StreamReader(directory);
-            string programDbLin = sr.ReadLine();
-            sr.Close();
-            return programDbLin;
+                if (!File.Exists(LinPackPath))
+                    AtomicFile.WriteAllLines(LinPackPath, new[] { defaultPath ?? string.Empty });
+
+                using (StreamReader reader = new StreamReader(LinPackPath))
+                    return reader.ReadLine() ?? string.Empty;
+            }
         }
 
         public static void SaveProgramDbLin(string path)
         {
-            string directory = LinPackPath;
-            if (File.Exists(directory))
-                File.Delete(directory);
-
-            StreamWriter sw = new StreamWriter(directory);
-            sw.WriteLine(path);
-            sw.Close();
+            lock (SyncRoot)
+                AtomicFile.WriteAllLines(LinPackPath, new[] { path ?? string.Empty });
         }
 
         public static void SaveLastConverter(StatusConversorItem statusConversorItem, string converterName)
@@ -53,11 +57,10 @@ namespace ConversorDrawind
                 return;
             }
 
-            using (StreamWriter sw = new StreamWriter(LastConverterPath, false))
-            {
-                sw.WriteLine(statusConversorItem.Pasta ?? string.Empty);
-                sw.WriteLine(converterName);
-            }
+            lock (SyncRoot)
+                AtomicFile.WriteAllLines(
+                    LastConverterPath,
+                    new[] { statusConversorItem.Pasta ?? string.Empty, converterName });
         }
 
         public static bool TryReadLastConverter(out string statusFolder, out string converterName)
@@ -65,20 +68,34 @@ namespace ConversorDrawind
             statusFolder = string.Empty;
             converterName = string.Empty;
 
-            if (!File.Exists(LastConverterPath))
+            lock (SyncRoot)
             {
-                return false;
-            }
+                MigrateLegacyFileIfNeeded(LastConverterFileName);
 
-            string[] lines = File.ReadAllLines(LastConverterPath);
-            if (lines.Length < 2)
-            {
-                return false;
-            }
+                if (!File.Exists(LastConverterPath))
+                    return false;
 
-            statusFolder = lines[0] ?? string.Empty;
-            converterName = lines[1] ?? string.Empty;
-            return !string.IsNullOrWhiteSpace(statusFolder) && !string.IsNullOrWhiteSpace(converterName);
+                string[] lines = File.ReadAllLines(LastConverterPath);
+                if (lines.Length < 2)
+                    return false;
+
+                statusFolder = lines[0] ?? string.Empty;
+                converterName = lines[1] ?? string.Empty;
+                return !string.IsNullOrWhiteSpace(statusFolder) && !string.IsNullOrWhiteSpace(converterName);
+            }
+        }
+
+        private static void MigrateLegacyFileIfNeeded(string fileName)
+        {
+            string destination = Path.Combine(SettingsDirectory, fileName);
+            if (File.Exists(destination))
+                return;
+
+            string legacyPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, fileName);
+            if (!File.Exists(legacyPath))
+                return;
+
+            AtomicFile.WriteAllLines(destination, File.ReadAllLines(legacyPath));
         }
     }
 }

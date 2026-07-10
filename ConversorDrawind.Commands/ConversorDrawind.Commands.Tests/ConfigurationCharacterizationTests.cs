@@ -338,6 +338,38 @@ public sealed class ConfigurationCharacterizationTests
                point.Z.ToString("R", CultureInfo.InvariantCulture);
     }
 
+    [Fact]
+    public void LegacyScaleConfig_DevePreservarPontosManuais()
+    {
+        using var workspace = TestWorkspace.Create();
+        string xmlPath = workspace.GetFile("sample.txml");
+        File.WriteAllText(xmlPath, CreateXml(), Encoding.UTF8);
+
+        var document = global::ConversorDrawind.ConfigurationXmlDocument.Load(xmlPath);
+
+        Assert.True(document.ScaleConfig.ScaleMode);
+        Assert.Equal(1, document.ScaleConfig.ScaleManualP1X);
+        Assert.Equal(2, document.ScaleConfig.ScaleManualP1Y);
+        Assert.Equal(3, document.ScaleConfig.ScaleManualP1Z);
+        Assert.Equal(1, document.ScaleConfig.GetPoint1X());
+        Assert.Equal(2, document.ScaleConfig.GetPoint1Y());
+        Assert.Equal(3, document.ScaleConfig.GetPoint1Z());
+    }
+
+    [Fact]
+    public void LegacyConfigurationReader_DevePreservarPontosDaEscala()
+    {
+        using var workspace = TestWorkspace.Create();
+        string xmlPath = workspace.GetFile("sample.txml");
+        File.WriteAllText(xmlPath, CreateXml(), Encoding.UTF8);
+
+        Configuration configuration = global::ConversorDrawind.ConverterConfigurationReader.Load(xmlPath);
+
+        Assert.Equal(1, configuration.Scale.Point1.X);
+        Assert.Equal(2, configuration.Scale.Point1.Y);
+        Assert.Equal(3, configuration.Scale.Point1.Z);
+    }
+
     private static string Point(global::ConversorDrawind.Point3DConfiguration point)
     {
         return point.X.ToString("R", CultureInfo.InvariantCulture) + ";" +
@@ -345,7 +377,7 @@ public sealed class ConfigurationCharacterizationTests
                point.Z.ToString("R", CultureInfo.InvariantCulture);
     }
 
-    private static string Point(global::ConversorDrawind.PointEspecial point)
+    private static string Point(global::ConversorDrawind.Point point)
     {
         return point.X.ToString("R", CultureInfo.InvariantCulture) + ";" +
                point.Y.ToString("R", CultureInfo.InvariantCulture) + ";" +

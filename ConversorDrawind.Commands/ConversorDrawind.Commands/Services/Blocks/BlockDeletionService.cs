@@ -126,7 +126,7 @@ namespace ConversorDrawind.Commands
             }
         }
 
-        internal void DeleteRelatedBlocks(List<Block> blocks)
+        internal void DeleteRelatedBlocks(IReadOnlyList<Block> blocks)
         {
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.MyStartTransaction())

@@ -21,7 +21,7 @@ namespace ConversorDrawind.Commands
             this.logError = logError ?? throw new ArgumentNullException(nameof(logError));
         }
 
-        internal void CaptureAttributesFromBlocks(List<Block> blocks)
+        internal void CaptureAttributesFromBlocks(IReadOnlyList<Block> blocks)
         {
             Database database = documentContext.Database;
             using (Transaction transaction = database.TransactionManager.MyStartTransaction())

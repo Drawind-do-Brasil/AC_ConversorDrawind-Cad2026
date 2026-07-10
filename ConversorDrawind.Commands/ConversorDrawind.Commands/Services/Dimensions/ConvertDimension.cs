@@ -23,7 +23,12 @@ namespace ConversorDrawind.Commands
         private Transaction transaction;
         private DimensionEntityWriter entityWriter;
         private DimensionTextEntityService textEntityService;
+        private readonly Configuration configuration;
 
+        internal ConvertDimension(Configuration configuration)
+        {
+            this.configuration = configuration ?? throw new ArgumentNullException(nameof(configuration));
+        }
 
 
         public void ConvertByInventor()
@@ -43,7 +48,7 @@ namespace ConversorDrawind.Commands
                         Dimension d = myEntity as Dimension;
                         if (d != null)
                         {
-                            d.Layer = Configuration.Config.Dimensions.Layer;
+                            d.Layer = configuration.Dimensions.Layer;
                         }
 
 
@@ -72,8 +77,8 @@ namespace ConversorDrawind.Commands
 
             using (transaction = database.TransactionManager.MyStartTransaction())
             {
-                entityWriter = new DimensionEntityWriter(database, transaction);
-                textEntityService = new DimensionTextEntityService(database, transaction);
+                entityWriter = new DimensionEntityWriter(database, transaction, configuration);
+                textEntityService = new DimensionTextEntityService(database, transaction, configuration);
 
                 try
                 {
@@ -106,7 +111,7 @@ namespace ConversorDrawind.Commands
 
         private ObjectId[] FilterDimension()
         {
-            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertOnLayer(Configuration.Config.Dimensions.BaseLayer));
+            SelectionFilter selectionFilter = new SelectionFilter(LayerFilterFactory.InsertOnLayer(configuration.Dimensions.BaseLayer));
             IEntitySelector entitySelector = new AcadEntitySelector(editor);
             ObjectId[] objectIdList = entitySelector.SelectAll(selectionFilter).Value.GetObjectIds();
             return objectIdList;
@@ -467,7 +472,7 @@ namespace ConversorDrawind.Commands
                         if (objectsInBlock.arcList[j].StartPoint.DistanceTo(objectsInBlock.arcList[j].EndPoint) > distX)
                             distX = objectsInBlock.arcList[j].StartPoint.DistanceTo(objectsInBlock.arcList[j].EndPoint);
                     }
-                    if (distX < Configuration.Config.Dimensions.ArrowSize * 2)
+                    if (distX < configuration.Dimensions.ArrowSize * 2)
                     {
                         entityWriter.CreateAngularDimensionWithLargeGap(dimensionProperties,
                                               objectsInBlock.dimStyle);

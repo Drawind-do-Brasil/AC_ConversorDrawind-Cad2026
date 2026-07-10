@@ -7,11 +7,13 @@ namespace ConversorDrawind.Commands
     {
         private readonly Database database;
         private readonly Transaction transaction;
+        private readonly Configuration configuration;
 
-        internal DimensionEntityWriter(Database database, Transaction transaction)
+        internal DimensionEntityWriter(Database database, Transaction transaction, Configuration configuration)
         {
             this.database = database;
             this.transaction = transaction;
+            this.configuration = configuration;
         }
 
         internal BlockTableRecord GetModelSpaceForWrite()
@@ -32,8 +34,8 @@ namespace ConversorDrawind.Commands
             Line line = DimensionEntityFactory.CreateLine(
                 p1,
                 p2,
-                Configuration.Config.Dimensions.Layer,
-                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor));
+                configuration.Dimensions.Layer,
+                LayerSetupOperations.GetColorForName(configuration.Dimensions.LineColor));
             Append(line);
         }
 
@@ -42,8 +44,8 @@ namespace ConversorDrawind.Commands
             RotatedDimension rotatedDimension = DimensionEntityFactory.CreateRotatedDimension(
                 dimensionProperties,
                 dimStyle,
-                Configuration.Config.Dimensions.Layer,
-                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor));
+                configuration.Dimensions.Layer,
+                LayerSetupOperations.GetColorForName(configuration.Dimensions.LineColor));
             Append(rotatedDimension);
         }
 
@@ -52,8 +54,8 @@ namespace ConversorDrawind.Commands
             Point3AngularDimension dimension = DimensionEntityFactory.CreateAngularDimension(
                 dimensionProperties,
                 dimStyle,
-                Configuration.Config.Dimensions.Layer,
-                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor));
+                configuration.Dimensions.Layer,
+                LayerSetupOperations.GetColorForName(configuration.Dimensions.LineColor));
             Append(dimension);
         }
 
@@ -62,9 +64,9 @@ namespace ConversorDrawind.Commands
             Point3AngularDimension dimension = DimensionEntityFactory.CreateAngularDimensionWithLargeGap(
                 dimensionProperties,
                 dimStyle,
-                Configuration.Config.Dimensions.Layer,
-                LayerSetupOperations.GetColorForName(Configuration.Config.Dimensions.LineColor),
-                Configuration.Config.Dimensions.ArrowSize);
+                configuration.Dimensions.Layer,
+                LayerSetupOperations.GetColorForName(configuration.Dimensions.LineColor),
+                configuration.Dimensions.ArrowSize);
             Append(dimension);
         }
 

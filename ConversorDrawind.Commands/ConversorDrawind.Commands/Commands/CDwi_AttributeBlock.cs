@@ -14,11 +14,12 @@ namespace ConversorDrawind.Commands
             Database database = documentContext.Database;
             Editor editor = documentContext.Editor;
             IEditorMessenger messenger = new AcadEditorMessenger(editor);
+            Configuration configuration = Configuration.Config;
             using (Transaction acTrans = database.TransactionManager.MyStartTransaction())
             {
                 try
                 {
-                    if (Configuration.Config.General.ConverterType == 0)
+                    if (configuration.General.ConverterType == 0)
                         ConvertBlocks.SetText(RuntimeConfigurationState.TeklaBlocks);
                     else
                         ConvertBlocks.SetText2(RuntimeConfigurationState.InventorBlocks, RuntimeConfigurationState.OriginalBlocks);
@@ -30,7 +31,7 @@ namespace ConversorDrawind.Commands
                     ConversionLog.Write(LogContext.EditarNovoBloco, e.Message);
                     messenger.WriteMessage(Localization.StartEditingNewBlock + Localization.MessageFailedPrefix + " \n" +
                                     Localization.ErrorEditingNewBlock + "\n");
-                    if (Configuration.Config.General.ShowMessages)
+                    if (configuration.General.ShowMessages)
                     {
                         string nomeBlocos = "";
                         foreach (var item in RuntimeConfigurationState.TeklaBlocks)

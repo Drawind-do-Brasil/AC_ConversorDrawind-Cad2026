@@ -26,7 +26,7 @@ public sealed class PureFunctionTests
         var p2 = new Point3d(10, 10, 0);
 
         Assert.True(ConvertBlocks.CheckPoint(new Point3d(5, 5, 0), p1, p2));
-        Assert.True(BlockMatcher.CheckPoint(new Point3d(5, 5, 0), p2, p1));
+        Assert.True(ConvertBlocks.CheckPoint(new Point3d(5, 5, 0), p2, p1));
         Assert.False(ConvertBlocks.CheckPoint(new Point3d(11, 5, 0), p1, p2));
     }
 
@@ -235,8 +235,6 @@ public sealed class PureFunctionTests
     [Fact]
     public void DegreeToRadian_DeveManterResultadoAtual()
     {
-        Assert.Equal(Math.PI, ConvertDimension.DegreeToRadian(180), 12);
-        Assert.Equal(Math.PI / 2, ConvertDimension.DegreeToRadian(90), 12);
         Assert.Equal(Math.PI, DimensionGeometry.DegreeToRadian(180), 12);
         Assert.Equal(Math.PI / 2, DimensionGeometry.DegreeToRadian(90), 12);
     }
@@ -323,8 +321,8 @@ public sealed class PureFunctionTests
         string expectedBlockName,
         string expectedBlockNameString)
     {
-        Assert.Equal(expectedBlockName, ConvertLayer.GetArrowBlockName(input));
-        Assert.Equal(expectedBlockNameString, ConvertLayer.GetArrowBlockNameString(input));
+        Assert.Equal(expectedBlockName, StyleOperations.GetArrowBlockName(input));
+        Assert.Equal(expectedBlockNameString, StyleOperations.GetArrowBlockNameString(input));
     }
 
     [Fact]
@@ -370,7 +368,7 @@ public sealed class PureFunctionTests
     [Fact]
     public void TextStyleService_DeveCriarFontDescriptorComoFachadaAtual()
     {
-        var direct = ConvertLayer.UpdateTextFont("Arial", italic: true, negrito: false);
+        var direct = StyleOperations.UpdateTextFont("Arial", italic: true, negrito: false);
         var extracted = TextStyleService.CreateFontDescriptor("Arial", italic: true, bold: false);
 
         Assert.Equal(direct.TypeFace, extracted.TypeFace);

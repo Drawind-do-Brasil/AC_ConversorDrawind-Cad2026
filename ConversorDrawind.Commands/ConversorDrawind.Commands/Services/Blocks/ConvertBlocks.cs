@@ -202,23 +202,23 @@ namespace ConversorDrawind.Commands
             return list;
         }
 
-        public static void GeTTextInv(List<Block> Block)
+        public static void GeTTextInv(IReadOnlyList<Block> blocks)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             new BlockAttributeReader(documentContext, FilterBlock, ConversionLog.Write)
-                .CaptureAttributesFromBlocks(Block);
+                .CaptureAttributesFromBlocks(blocks);
         }
 
-        public static void SetText(List<Block> Block)
+        public static void SetText(IReadOnlyList<Block> blocks)
         {
-            foreach (Block block in Block)
+            foreach (Block block in blocks)
             {
                 ChangingAttibutes(FilterBlock(block.blockName), block);
             }
 
         }
 
-        public static void SetText2(List<Block> blockClassi, List<Block> blockClasso)
+        public static void SetText2(IReadOnlyList<Block> blockClassi, IReadOnlyList<Block> blockClasso)
         {
             foreach (Block block in blockClasso)
             {
@@ -486,7 +486,7 @@ namespace ConversorDrawind.Commands
         }
 
 
-        public static void DeleteBlocks(List<Block> blockClassi)
+        public static void DeleteBlocks(IReadOnlyList<Block> blockClassi)
         {
             IAcadDocumentContext documentContext = new AcadDocumentContext();
             new BlockDeletionService(documentContext, FilterBlock, LayerSelectionQueries.Filter, ConversionLog.Write)

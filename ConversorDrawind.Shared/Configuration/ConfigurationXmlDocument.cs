@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Drawing;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -61,7 +62,9 @@ namespace ConversorDrawind
 
             using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(document.ToString(SaveOptions.DisableFormatting))))
             {
-                return (ConfigurationXmlDocument)Serializer.Deserialize(stream);
+                var configurationDocument = (ConfigurationXmlDocument)Serializer.Deserialize(stream);
+                configurationDocument.ScaleConfig?.SetModernPointAttributes(document.Root?.Element("SCALE_CONFIG"));
+                return configurationDocument;
             }
         }
 
@@ -276,7 +279,11 @@ namespace ConversorDrawind
 
         private static BlockDefinition CreateTeklaBlockDefinition(BlockXml block)
         {
-            BlockDefinition result = new BlockDefinition { Name = block.Nome };
+            BlockDefinition result = new BlockDefinition
+            {
+                Name = block.Nome,
+                ColorArgb = Color.Black.ToArgb()
+            };
             foreach (string tag in block.Tags ?? new List<string>())
             {
                 TagBlock tagBlock = new TagBlock();
@@ -594,6 +601,16 @@ namespace ConversorDrawind
         public double GetPoint2X() => ScaleP2XSpecified ? ScaleP2X : GetLegacyPoint(ScaleManualP2X, ScaleAutoP2X);
         public double GetPoint2Y() => ScaleP2YSpecified ? ScaleP2Y : GetLegacyPoint(ScaleManualP2Y, ScaleAutoP2Y);
         public double GetPoint2Z() => ScaleP2ZSpecified ? ScaleP2Z : GetLegacyPoint(ScaleManualP2Z, ScaleAutoP2Z);
+
+        internal void SetModernPointAttributes(XElement scaleElement)
+        {
+            ScaleP1XSpecified = scaleElement?.Attribute("SCALE_P1_X") != null;
+            ScaleP1YSpecified = scaleElement?.Attribute("SCALE_P1_Y") != null;
+            ScaleP1ZSpecified = scaleElement?.Attribute("SCALE_P1_Z") != null;
+            ScaleP2XSpecified = scaleElement?.Attribute("SCALE_P2_X") != null;
+            ScaleP2YSpecified = scaleElement?.Attribute("SCALE_P2_Y") != null;
+            ScaleP2ZSpecified = scaleElement?.Attribute("SCALE_P2_Z") != null;
+        }
 
         private double GetLegacyPoint(double manualValue, double autoValue)
         {

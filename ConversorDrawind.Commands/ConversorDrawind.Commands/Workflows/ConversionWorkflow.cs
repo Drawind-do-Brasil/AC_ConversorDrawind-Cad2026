@@ -6,24 +6,29 @@ namespace ConversorDrawind.Commands
     {
         private readonly ConversionStepRunner stepRunner;
         private readonly ScaleWorkflow scaleWorkflow;
+        private readonly Configuration configuration;
 
-        internal ConversionWorkflow(ConversionStepRunner stepRunner, ScaleWorkflow scaleWorkflow)
+        internal ConversionWorkflow(
+            ConversionStepRunner stepRunner,
+            ScaleWorkflow scaleWorkflow,
+            Configuration configuration)
         {
             this.stepRunner = stepRunner;
             this.scaleWorkflow = scaleWorkflow;
+            this.configuration = configuration ?? throw new System.ArgumentNullException(nameof(configuration));
         }
 
         internal void CreateLayersIfEnabled()
         {
-            if (!Configuration.Config.General.ConvertLayers)
+            if (!configuration.General.ConvertLayers)
                 return;
 
             stepRunner.Run(
                 Localization.StartCreatingLayers,
                 () =>
                 {
-                    if (Configuration.Config.General.ConverterType == 0 && Configuration.Config.Lines.LineTypeScale != 0)
-                        scaleWorkflow.ApplyLineTypeScale(Configuration.Config.Lines.LineTypeScale);
+                    if (configuration.General.ConverterType == 0 && configuration.Lines.LineTypeScale != 0)
+                        scaleWorkflow.ApplyLineTypeScale(configuration.Lines.LineTypeScale);
                     LayerSetupOperations.CreateAndAssignALayer();
                 },
                 LogContext.PrepararConversao,
@@ -33,9 +38,9 @@ namespace ConversorDrawind.Commands
 
         internal void CreateTextStylesIfNeeded()
         {
-            if (!Configuration.Config.General.ConvertLayers &&
-                !Configuration.Config.General.ConvertDimensions &&
-                Configuration.Config.General.ConverterType != 1)
+            if (!configuration.General.ConvertLayers &&
+                !configuration.General.ConvertDimensions &&
+                configuration.General.ConverterType != 1)
                 return;
 
             stepRunner.Run(
@@ -48,15 +53,15 @@ namespace ConversorDrawind.Commands
 
         internal void ConvertDimensionsIfEnabled()
         {
-            if (!Configuration.Config.General.ConvertDimensions || Configuration.Config.General.ConverterType != 0)
+            if (!configuration.General.ConvertDimensions || configuration.General.ConverterType != 0)
                 return;
 
             stepRunner.Run(
                 Localization.StartConvertingDimensions,
                 () =>
                 {
-                    scaleWorkflow.ApplyDimensionScale(Configuration.Config.Dimensions.Scale);
-                    new ConvertDimension().ConvertByTekla();
+                    scaleWorkflow.ApplyDimensionScale(configuration.Dimensions.Scale);
+                    new ConvertDimension(configuration).ConvertByTekla();
                 },
                 LogContext.CarregarConfiguracaoTemporaria,
                 Localization.WarningCouldNotConvertDimensions,
@@ -65,7 +70,7 @@ namespace ConversorDrawind.Commands
 
         internal void RunTeklaInverseConversionIfNeeded()
         {
-            if (Configuration.Config.General.ConverterType != 1)
+            if (configuration.General.ConverterType != 1)
                 return;
 
             stepRunner.Run(
@@ -77,7 +82,7 @@ namespace ConversorDrawind.Commands
 
             stepRunner.Run(
                 Localization.StartConvertingDimensions,
-                () => new ConvertDimension().ConvertByInventor(),
+                () => new ConvertDimension(configuration).ConvertByInventor(),
                 LogContext.CarregarLinetype,
                 Localization.WarningCouldNotConvertDimensions,
                 Localization.ErrorConvertingDimensions + "\n");
@@ -85,11 +90,11 @@ namespace ConversorDrawind.Commands
 
         internal void ExplodeBlocksIfConfigured()
         {
-            if ((!Configuration.Config.General.DeleteTeklaStructures &&
-                 !Configuration.Config.General.ConvertLayers &&
-                 !Configuration.Config.General.ApplyDrawingScale) ||
-                !Configuration.Config.General.ExplodeBlocks ||
-                Configuration.Config.General.ConverterType != 0)
+            if ((!configuration.General.DeleteTeklaStructures &&
+                 !configuration.General.ConvertLayers &&
+                 !configuration.General.ApplyDrawingScale) ||
+                !configuration.General.ExplodeBlocks ||
+                configuration.General.ConverterType != 0)
                 return;
 
             stepRunner.Run(
@@ -102,7 +107,7 @@ namespace ConversorDrawind.Commands
 
         internal void AddDmBlockIfEnabled()
         {
-            if (!Configuration.Config.Blocks.DimensionBlockEnabled)
+            if (!configuration.Blocks.DimensionBlockEnabled)
                 return;
 
             stepRunner.Run(
@@ -119,14 +124,14 @@ namespace ConversorDrawind.Commands
 
         internal void DeleteTeklaStructuresIfEnabled()
         {
-            if (!Configuration.Config.General.DeleteTeklaStructures || Configuration.Config.General.ConverterType != 0)
+            if (!configuration.General.DeleteTeklaStructures || configuration.General.ConverterType != 0)
                 return;
 
             stepRunner.Run(
                 Localization.StartDeletingTeklaStructuresWord,
                 () =>
                 {
-                    DrawingTransformOperations.DeletingTekla(Configuration.Config.Layers.TeklaDrawingSheetLayer);
+                    DrawingTransformOperations.DeletingTekla(configuration.Layers.TeklaDrawingSheetLayer);
                     DrawingTransformOperations.DeletingTekla();
                 },
                 LogContext.FinalizarConversao,
@@ -136,7 +141,7 @@ namespace ConversorDrawind.Commands
 
         internal void ConvertLayersIfEnabled()
         {
-            if (!Configuration.Config.General.ConvertLayers)
+            if (!configuration.General.ConvertLayers)
                 return;
 
             stepRunner.Run(

@@ -5,14 +5,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
 using ACAD = Autodesk.AutoCAD.Interop;
 using ACCOMMON = Autodesk.AutoCAD.Interop.Common;
 
 namespace ConversorDrawind
 {
-    class DrawingProcess
+    partial class DrawingProcess
     {
         public static readonly string DLLPath1 = DrawingProcessPaths.DllPath;
         private static int valor;
@@ -20,101 +19,11 @@ namespace ConversorDrawind
         private static string fileOpen;
         private static bool isACADOpen = false;
         private static Param1 parametros;
-        private ACAD.AcadApplication acadApplication = null;
-        private ACAD.AcadDocument acadDocument = null;
-
         private static bool _RunCommand = false;
         private const int CommandTimeoutMs = 900000;
         private const int CommandPollMs = 50;
 
-        List<ACAD.AcadDocument> _desenhoAtual = new List<ACAD.AcadDocument>();
-        ACAD.AcadDocument _desenhoAtributado = null;
-        private static DrawingProcess myClass = new DrawingProcess();
-
-        const UInt32 WM_KEYDOWN = 0x0100;
-        const int VK_ENTER = 0x0D;
-
-        [DllImport("user32.dll")]
-        public static extern int SetForegroundWindow(IntPtr hWnd);
-
-        private const uint KEYEVENTF_KEYUP = 0x0002;
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern void KeybdEvent(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern UInt32 GetWindowThreadProcessId(Int32 hWnd, out Int32 lpdwProcessId);
-
-
-
-        private static Int32 GetWindowProcessID(Int32 hwnd)
-        {
-            Int32 pid = 1;
-            GetWindowThreadProcessId(hwnd, out pid);
-            return pid;
-
-        }
-
-        public static void PressESC(IntPtr mwh)
-        {
-            SetForegroundWindow(mwh);
-            Thread.Sleep(100);
-            KeybdEvent(VK_ENTER, 0, 0, UIntPtr.Zero);
-            KeybdEvent(VK_ENTER, 0, KEYEVENTF_KEYUP, UIntPtr.Zero);
-
-        }
-
-        private delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
-
-        [DllImport("user32", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        private extern static bool EnumThreadWindows(int threadId, EnumWindowsProc callback, IntPtr lParam);
-
-        [DllImport("user32", SetLastError = true)]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool EnumChildWindows(IntPtr hwndParent, EnumWindowsProc lpEnumFunc, IntPtr lParam);
-
-        [DllImport("user32", SetLastError = true, CharSet = CharSet.Auto)]
-        private extern static int GetWindowText(IntPtr hWnd, StringBuilder text, int maxCount);
-
-        [DllImport("user32.dll")]
-        public static extern int GetWindowThreadProcessId(IntPtr handle, out int processId);
-
-
-
-        private static IntPtr FindWindowInThread(int threadId, Func<string, bool> compareTitle)
-        {
-            IntPtr windowHandle = IntPtr.Zero;
-            EnumThreadWindows(threadId, (hWnd, lParam) =>
-            {
-                StringBuilder text = new StringBuilder(200);
-                GetWindowText(hWnd, text, 200);
-                if (compareTitle(text.ToString()))
-                {
-                    windowHandle = hWnd;
-                    return false;
-                }
-                return true;
-            }, IntPtr.Zero);
-
-            return windowHandle;
-        }
-
-        public static IntPtr FindWindowInProcess(Process process, Func<string, bool> compareTitle)
-        {
-            IntPtr windowHandle = IntPtr.Zero;
-
-            foreach (ProcessThread t in process.Threads)
-            {
-                windowHandle = FindWindowInThread(t.Id, compareTitle);
-                if (windowHandle != IntPtr.Zero)
-                {
-                    break;
-                }
-            }
-
-            return windowHandle;
-        }
+        private static readonly AutoCadSession session = new AutoCadSession();
 
         private static ACAD.AcadApplication CreateAutoCADApplication()
         {
@@ -145,9 +54,9 @@ namespace ConversorDrawind
             }
 
             if (lastComException != null)
-                throw new InvalidOperationException("N„o foi possÌvel iniciar o AutoCAD 2026 via COM. Verifique se o AutoCAD 2026 est· instalado, ativado e registrado no Windows.", lastComException);
+                throw new InvalidOperationException("N√£o foi poss√≠vel iniciar o AutoCAD 2026 via COM. Verifique se o AutoCAD 2026 est√° instalado, ativado e registrado no Windows.", lastComException);
 
-            throw new InvalidOperationException("AutoCAD 2026 n„o encontrado no registro COM do Windows.");
+            throw new InvalidOperationException("AutoCAD 2026 n√£o encontrado no registro COM do Windows.");
         }
 
 
@@ -159,29 +68,22 @@ namespace ConversorDrawind
             {
                 using (MessageFilter.ScopedRegistration())
                 {
-                    myClass._desenhoAtual = new List<ACAD.AcadDocument>();
+                    session.Reset();
+                    session.Application = ComRetry.Invoke(() => CreateAutoCADApplication(), 180, 250);
 
-                    myClass.acadApplication = ComRetry.Invoke(() => CreateAutoCADApplication(), 180, 250);
+                    AutoCadWindowActivator.CancelPendingInput(
+                        ComRetry.Invoke(() => (int)session.Application.HWND));
 
-                    Process processo = Process.GetProcessById(GetWindowProcessID(ComRetry.Invoke(() => (int)myClass.acadApplication.HWND)));
-
-                    IntPtr hWnd = FindWindowInProcess(processo, s => s.EndsWith("acad"));
-
-                    if (hWnd != IntPtr.Zero)
-                    {
-                        PressESC(hWnd);
-                    }
-
-                    myClass.acadApplication.BeginCommand += AcadApplication_BeginCommand;
-                    myClass.acadApplication.EndCommand += AcadApplication_EndCommand;
+                    session.Application.BeginCommand += AcadApplication_BeginCommand;
+                    session.Application.EndCommand += AcadApplication_EndCommand;
 
                     IsACADOpen = true;
-                    ComRetry.Invoke(() => myClass.acadApplication.WindowState = ACCOMMON.AcWindowState.acMax);
+                    ComRetry.Invoke(() => session.Application.WindowState = ACCOMMON.AcWindowState.acMax);
 
-                    myClass._desenhoAtual.Add(ComRetry.Invoke(() => myClass.acadApplication.Documents.Add("Novo Desenho 1"), 120, 100));
+                    session.OpenedDocuments.Add(ComRetry.Invoke(() => session.Application.Documents.Add("Novo Desenho 1"), 120, 100));
 
-                    myClass.acadDocument = myClass._desenhoAtual.First();
-                    ComRetry.Invoke(() => myClass.acadDocument.WindowState = ACCOMMON.AcWindowState.acMax);
+                    session.CurrentDocument = session.OpenedDocuments.First();
+                    ComRetry.Invoke(() => session.CurrentDocument.WindowState = ACCOMMON.AcWindowState.acMax);
 
                     if (parametros.configuration.General.ExchangeFormat)
                     {
@@ -189,13 +91,13 @@ namespace ConversorDrawind
                         {
                             string formatoPath = DrawingProcessPaths.GetExchangeFormatPath(parametros.configuration);
 
-                            myClass.acadDocument = ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(formatoPath, false), 120, 100);
-                            ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
-                            myClass._desenhoAtributado = myClass.acadDocument;
+                            session.CurrentDocument = ComRetry.Invoke(() => session.Application.Documents.Open(formatoPath, false), 120, 100);
+                            ComRetry.Invoke(() => session.CurrentDocument.Application.ZoomExtents());
+                            session.AttributeDocument = session.CurrentDocument;
                         }
                         catch (Exception)
                         {
-                            throw new ArgumentException("N„o foi possÌvel encontrar o formato atributado: " + parametros.configuration.Blocks.TeklaBlockPath);
+                            throw new ArgumentException("N√£o foi poss√≠vel encontrar o formato atributado: " + parametros.configuration.Blocks.TeklaBlockPath);
                         }
                     }
                 }
@@ -221,10 +123,10 @@ namespace ConversorDrawind
         {
             try
             {
-                if (myClass.acadDocument == null)
+                if (session.CurrentDocument == null)
                     return 0;
 
-                object cmdActive = ComRetry.Invoke(() => myClass.acadDocument.GetVariable("CMDACTIVE"));
+                object cmdActive = ComRetry.Invoke(() => session.CurrentDocument.GetVariable("CMDACTIVE"));
                 return Convert.ToInt32(cmdActive);
             }
             catch (Exception)
@@ -259,26 +161,26 @@ namespace ConversorDrawind
                 Thread.Sleep(CommandPollMs);
             }
 
-            throw new TimeoutException("Tempo limite aguardando execuÁ„o do comando: " + commandName);
+            throw new TimeoutException("Tempo limite aguardando execu√ß√£o do comando: " + commandName);
         }
 
-        public void LoadFile(string file)
+        private static void LoadFile(string file)
         {
             try
             {
                 using (MessageFilter.ScopedRegistration())
                 {
-                    ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
+                    ComRetry.Invoke(() => session.CurrentDocument.SetVariable("FILEDIA", 0));
                     try
                     {
                         if (!String.IsNullOrEmpty(file))
                         {
-                            myClass.SendCommand(DrawingCommandBuilder.BuildLoadFileCommand(file));
+                            SendCommand(DrawingCommandBuilder.BuildLoadFileCommand(file));
                         }
                     }
                     finally
                     {
-                        ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 1));
+                        ComRetry.Invoke(() => session.CurrentDocument.SetVariable("FILEDIA", 1));
                     }
                 }
             }
@@ -289,7 +191,7 @@ namespace ConversorDrawind
             }
         }
 
-        public void SendCommand(string CommandName)
+        private static void SendCommand(string commandName)
         {
             try
             {
@@ -297,9 +199,9 @@ namespace ConversorDrawind
                 {
                     _RunCommand = true;
 
-                    ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
-                    ComRetry.Invoke(() => myClass.acadDocument.SendCommand(CommandName));
-                    WaitCommandFinished(CommandName);
+                    ComRetry.Invoke(() => session.Application.ActiveDocument = session.CurrentDocument);
+                    ComRetry.Invoke(() => session.CurrentDocument.SendCommand(commandName));
+                    WaitCommandFinished(commandName);
 
                 }
             }
@@ -314,10 +216,10 @@ namespace ConversorDrawind
         {
             try
             {
-                if (myClass.acadApplication == null || myClass.acadDocument == null)
+                if (session.Application == null || session.CurrentDocument == null)
                     return;
 
-                myClass.SendCommand(DrawingCommandBuilder.BuildCommandLineCommand());
+                SendCommand(DrawingCommandBuilder.BuildCommandLineCommand());
             }
             catch (Exception ex)
             {
@@ -331,29 +233,29 @@ namespace ConversorDrawind
             {
                 using (MessageFilter.ScopedRegistration())
                 {
-                    if (myClass.acadApplication == null)
+                    if (session.Application == null)
                         return;
 
-                    if (parametros.configuration.General.ExchangeFormat && myClass._desenhoAtributado != null)
+                    if (parametros.configuration.General.ExchangeFormat && session.AttributeDocument != null)
                     {
-                        myClass.acadDocument = myClass._desenhoAtributado;
-                        ComRetry.Invoke(() => myClass.acadDocument.Close(false));
+                        session.CurrentDocument = session.AttributeDocument;
+                        ComRetry.Invoke(() => session.CurrentDocument.Close(false));
                     }
 
-                    if (myClass._desenhoAtual.Count > 0)
+                    if (session.OpenedDocuments.Count > 0)
                     {
-                        myClass.acadDocument = myClass._desenhoAtual.First();
-                        ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
-                        ComRetry.Invoke(() => myClass.acadDocument.Close(false));
-                        myClass._desenhoAtual.RemoveAt(0);
+                        session.CurrentDocument = session.OpenedDocuments.First();
+                        ComRetry.Invoke(() => session.Application.ActiveDocument = session.CurrentDocument);
+                        ComRetry.Invoke(() => session.CurrentDocument.Close(false));
+                        session.OpenedDocuments.RemoveAt(0);
                     }
 
                     if (!parametros.closedesenhos)
                     {
                         try
                         {
-                            if (ComRetry.Invoke(() => myClass.acadApplication.Documents.Count) == 0)
-                                ComRetry.Invoke(() => myClass.acadApplication.Quit(), 120, 100);
+                            if (ComRetry.Invoke(() => session.Application.Documents.Count) == 0)
+                                ComRetry.Invoke(() => session.Application.Quit(), 120, 100);
                         }
                         catch (Exception e)
                         {
@@ -366,16 +268,72 @@ namespace ConversorDrawind
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                ReleaseAutoCadReferences();
             }
         }
 
-        private static void RunCommand(string file, bool last = false)
+        private static void ReleaseAutoCadReferences()
+        {
+            List<object> releasedObjects = new List<object>();
+
+            try
+            {
+                if (session.Application != null)
+                {
+                    session.Application.BeginCommand -= AcadApplication_BeginCommand;
+                    session.Application.EndCommand -= AcadApplication_EndCommand;
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+            finally
+            {
+                ReleaseComObjectOnce(releasedObjects, session.CurrentDocument);
+                ReleaseComObjectOnce(releasedObjects, session.AttributeDocument);
+
+                foreach (ACAD.AcadDocument document in session.OpenedDocuments)
+                    ReleaseComObjectOnce(releasedObjects, document);
+
+                ReleaseComObjectOnce(releasedObjects, session.Application);
+
+                session.Reset();
+                IsACADOpen = false;
+                _RunCommand = false;
+            }
+        }
+
+        private static void ReleaseComObjectOnce(List<object> releasedObjects, object comObject)
+        {
+            if (comObject == null || releasedObjects.Any(item => ReferenceEquals(item, comObject)))
+                return;
+
+            releasedObjects.Add(comObject);
+
+            try
+            {
+                if (Marshal.IsComObject(comObject))
+                    Marshal.FinalReleaseComObject(comObject);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex);
+            }
+        }
+
+        private static bool RunCommand(string file, bool last = false)
         {
             if (File.Exists(file))
             {
+                ACAD.AcadDocument drawingDocument = null;
+
                 try
                 {
                     File.Copy(file, DrawingProcessPaths.GetBackupPath(file), true);
@@ -385,28 +343,38 @@ namespace ConversorDrawind
 
                 }
 
-                myClass.acadDocument = ComRetry.Invoke(() => myClass.acadApplication.Documents.Open(file, false), 120, 100);
-                myClass._desenhoAtual.Add(myClass.acadDocument);
-                ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                try
+                {
+                    drawingDocument = ComRetry.Invoke(() => session.Application.Documents.Open(file, false), 120, 100);
+                    session.CurrentDocument = drawingDocument;
+                    session.OpenedDocuments.Add(drawingDocument);
+                    ComRetry.Invoke(() => session.Application.ActiveDocument = drawingDocument);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex);
+                    CloseFailedDrawing(drawingDocument);
+                    return false;
+                }
 
                 try
                 {
-                    myClass.SendCommand("ZOOM E\n");
-                    myClass.SendCommand("CDwi_Convert\n");
+                    SendCommand("ZOOM E\n");
+                    SendCommand("CDwi_Convert\n");
                     if (parametros.configuration.General.ExchangeFormat)
                     {
-                        myClass.SendCommand("CDwi_GetAttributeText\n");
+                        SendCommand("CDwi_GetAttributeText\n");
 
-                        myClass.acadDocument = myClass._desenhoAtributado;
-                        ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                        session.CurrentDocument = session.AttributeDocument;
+                        ComRetry.Invoke(() => session.Application.ActiveDocument = session.CurrentDocument);
 
-                        myClass.SendCommand("COPYBASE 0,0,0 all \n");
+                        SendCommand("COPYBASE 0,0,0 all \n");
 
-                        myClass.acadDocument = myClass._desenhoAtual.Last();
-                        ComRetry.Invoke(() => myClass.acadApplication.ActiveDocument = myClass.acadDocument);
+                        session.CurrentDocument = session.OpenedDocuments.Last();
+                        ComRetry.Invoke(() => session.Application.ActiveDocument = session.CurrentDocument);
 
-                        myClass.SendCommand("ZOOM E\n");
-                        myClass.SendCommand("REGEN\n");
+                        SendCommand("ZOOM E\n");
+                        SendCommand("REGEN\n");
                         string pasteClipPoint = GetPasteClipInsertionPoint();
 
                         if (parametros.configuration.General.SourceMode == 1)
@@ -414,7 +382,7 @@ namespace ConversorDrawind
 
                             List<Block> listAnterior = GetListBlocksS();
 
-                            myClass.SendCommand("PASTECLIP " + pasteClipPoint + "\n");
+                            SendCommand("PASTECLIP " + pasteClipPoint + "\n");
 
                             List<Block> listPosterior = GetListBlocksS();
 
@@ -433,84 +401,79 @@ namespace ConversorDrawind
                             if (listPosterior.Count() > 0)
                             {
                                 string comando = listPosterior.First().blockName.Replace(" ", "*******");
-                                myClass.SendCommand("CDwi_ScaleBlock\n" + comando + "\n");
+                                SendCommand("CDwi_ScaleBlock\n" + comando + "\n");
                             }
                         }
 
                         else
                         {
-                            myClass.SendCommand("PASTECLIP " + pasteClipPoint + "\n");
+                            SendCommand("PASTECLIP " + pasteClipPoint + "\n");
 
                         }
 
-                        myClass.SendCommand("CDwi_AttributeBlock\n");
+                        SendCommand("CDwi_AttributeBlock\n");
 
                         if (parametros.configuration.General.SourceMode == 1)
                         {
-                            myClass.SendCommand("CDwi_DeleteBlocks\n");
+                            SendCommand("CDwi_DeleteBlocks\n");
                         }
                     }
 
                     if (parametros.configuration.General.ConvertLayers)
                     {
-                        myClass.SendCommand("CDwi_DeleteLayers\n");
+                        SendCommand("CDwi_DeleteLayers\n");
                     }
 
                     if (parametros.configuration.General.ApplyDrawingScale)
                     {
                         ApplicationRuntime.ControladorT2 = false;
-
-                        myClass.SendCommand("CDwi_Scale\n");
-
-                        ApplicationRuntime.ControladorT2 = true;
+                        try
+                        {
+                            SendCommand("CDwi_Scale\n");
+                        }
+                        finally
+                        {
+                            ApplicationRuntime.ControladorT2 = true;
+                        }
                     }
 
 
                     if (parametros.configuration.General.ExecuteLisp)
                     {
-                        ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 0));
+                        IReadOnlyList<LispCommandDefinition> lispCommands =
+                            LispCommandDefinition.ParseAll(parametros.configuration.Commands.LispCommands);
+
+                        ComRetry.Invoke(() => session.CurrentDocument.SetVariable("FILEDIA", 0));
                         try
                         {
-                            foreach (string item in parametros.configuration.Commands.LispCommands)
+                            foreach (LispCommandDefinition command in lispCommands.Where(item => !item.ExecuteAfterConversion))
                             {
-                                string[] value = item.Split('@');
-                                if (value.Count() != 3)
-                                {
-                                    myClass.LoadFile(value[1]);
-                                    myClass.SendCommand(value[0] + "\n");
-                                }
+                                LoadFile(command.SourceFile);
+                                SendCommand(command.Command + "\n");
                             }
+
                             if (last)
-                                foreach (string item in parametros.configuration.Commands.LispCommands)
+                                foreach (LispCommandDefinition command in lispCommands.Where(item => item.ExecuteAfterConversion))
                                 {
-
-                                    string[] value = item.Split('@');
-                                    if (value.Count() == 3)
-                                    {
-                                        myClass.LoadFile(value[1]);
-                                        myClass.SendCommand(value[0] + "\n");
-                                    }
-
+                                    LoadFile(command.SourceFile);
+                                    SendCommand(command.Command + "\n");
                                 }
                         }
                         finally
                         {
-                            ComRetry.Invoke(() => myClass.acadDocument.SetVariable("FILEDIA", 1));
+                            ComRetry.Invoke(() => session.CurrentDocument.SetVariable("FILEDIA", 1));
                         }
                     }
 
-                    myClass.SendCommand("CDwi_Finalize\n");
-                    ComRetry.Invoke(() => myClass.acadDocument.Application.ZoomExtents());
+                    SendCommand("CDwi_Finalize\n");
+                    ComRetry.Invoke(() => session.CurrentDocument.Application.ZoomExtents());
 
                 }
                 catch (Exception ex)
                 {
-                    Debug.WriteLine(ex.Message);
-
-                }
-                finally
-                {
-
+                    Debug.WriteLine(ex);
+                    CloseFailedDrawing(drawingDocument);
+                    return false;
                 }
 
 
@@ -520,41 +483,50 @@ namespace ConversorDrawind
                     try
                     {
                         if (ApplicationRuntime.ExtensaoGeral == "DWG")
-                            ComRetry.Invoke(() => myClass.acadDocument.Save());
+                            ComRetry.Invoke(() => session.CurrentDocument.Save());
 
                         else
                         {
-                            myClass.SendCommand("SaveDXF\n");
+                            SendCommand("SaveDXF\n");
                         }
 
                     }
                     catch (Exception)
                     {
                         ApplicationRuntime.ControladorT2 = false;
-                        System.Windows.MessageBox.Show(
-                                    Localization.MessageCouldNotSaveFile,
-                                    Localization.TitleWarningNoExclamation,
-                                    System.Windows.MessageBoxButton.OK,
-                                    System.Windows.MessageBoxImage.Warning);
-                        ApplicationRuntime.ControladorT2 = true;
+                        try
+                        {
+                            System.Windows.MessageBox.Show(
+                                        Localization.MessageCouldNotSaveFile,
+                                        Localization.TitleWarningNoExclamation,
+                                        System.Windows.MessageBoxButton.OK,
+                                        System.Windows.MessageBoxImage.Warning);
+                        }
+                        finally
+                        {
+                            ApplicationRuntime.ControladorT2 = true;
+                        }
+
+                        CloseFailedDrawing(drawingDocument);
+                        return false;
                     }
 
                     if (!parametros.closedesenhos)
                     {
-                        int cont = ComRetry.Invoke(() => myClass.acadApplication.Documents.Count);
+                        int cont = ComRetry.Invoke(() => session.Application.Documents.Count);
 
-                        ComRetry.Invoke(() => myClass.acadDocument.Close());
+                        ComRetry.Invoke(() => session.CurrentDocument.Close());
 
                         Stopwatch waitClose = Stopwatch.StartNew();
                         while (waitClose.ElapsedMilliseconds < 30000)
                         {
-                            if (ComRetry.Invoke(() => myClass.acadApplication.Documents.Count) < cont)
+                            if (ComRetry.Invoke(() => session.Application.Documents.Count) < cont)
                                 break;
 
                             Thread.Sleep(50);
                         }
 
-                        myClass._desenhoAtual.RemoveAt(myClass._desenhoAtual.Count - 1);
+                        session.OpenedDocuments.RemoveAt(session.OpenedDocuments.Count - 1);
                     }
                 }
                 catch (Exception e)
@@ -564,8 +536,11 @@ namespace ConversorDrawind
                                      Localization.TitleWarningNoExclamation,
                                      System.Windows.MessageBoxButton.OK,
                                      System.Windows.MessageBoxImage.Warning);
+                    CloseFailedDrawing(drawingDocument);
+                    return false;
                 }
 
+                return true;
             }
             else
             {
@@ -573,111 +548,33 @@ namespace ConversorDrawind
                                    Localization.TitleAttentionPlain,
                                    System.Windows.MessageBoxButton.OK,
                                    System.Windows.MessageBoxImage.Exclamation);
+                return false;
             }
         }
 
-
-        public static void GoProcess(Object p)
+        private static void CloseFailedDrawing(ACAD.AcadDocument drawingDocument)
         {
+            if (parametros == null || parametros.closedesenhos)
+                return;
+
+            ACAD.AcadDocument documentToClose = drawingDocument ?? session.CurrentDocument;
+            if (documentToClose == null)
+                return;
 
             try
             {
-                DrawingProcessPaths.EnsureConvertedLogDirectory();
-                if (File.Exists(ApplicationRuntime.LOGarqConvertidos))
-                    TryDeleteFile(ApplicationRuntime.LOGarqConvertidos);
+                ComRetry.Invoke(() => documentToClose.Close(false));
+                session.OpenedDocuments.Remove(documentToClose);
+
+                if (ReferenceEquals(session.CurrentDocument, documentToClose))
+                    session.CurrentDocument = null;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-
+                Debug.WriteLine(ex);
             }
-            parametros = p as Param1;
-            string arqtemp = DrawingProcessPaths.TempCommandFile;
-
-            if (File.Exists(arqtemp))
-                TryDeleteFile(arqtemp);
-
-            using (StreamWriter sw = new StreamWriter(arqtemp))
-            {
-                sw.WriteLine(DrawingProcessPaths.GetConverterTxmlPath(parametros));
-            }
-
-            bool converted = false;
-            bool deleteLogAfterClose = false;
-            using (FileStream logStream = new FileStream(ApplicationRuntime.LOGarqConvertidos, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-            using (StreamWriter swlog = new StreamWriter(logStream))
-            {
-                try
-                {
-                    IsACADOpen = false;
-
-                    using (MessageFilter.ScopedRegistration())
-                    {
-                        OpenACAD();
-                        myClass.LoadFile(DLLPath1);
-                    }
-
-                    int index = 1;
-                    foreach (string file in parametros.desenhosName)
-                    {
-                        if (Processo.IsCanceled)
-                            break;
-
-                        FileOpen = Path.GetFileName(file);
-                        if (index == parametros.desenhosName.Count())
-                            RunCommand(file, true);
-                        else
-                            RunCommand(file);
-                        double dProgressPercentage = ((double)index / parametros.desenhosName.Count());
-                        Valor = (int)(dProgressPercentage * 100);
-                        Index = index;
-                        index++;
-                        swlog.WriteLine(file);
-                        converted = true;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Debug.WriteLine(ex.Message);
-                }
-                finally
-                {
-                    if (!converted)
-                        deleteLogAfterClose = true;
-
-                    ShowAutoCADCommandLine();
-                    CloseACAD();
-                    Valor = 100;
-
-                }
-            }
-
-            if (deleteLogAfterClose)
-                TryDeleteFile(ApplicationRuntime.LOGarqConvertidos);
-
         }
 
-        private static void TryDeleteFile(string path)
-        {
-            for (int i = 0; i < 5; i++)
-            {
-                try
-                {
-                    if (File.Exists(path))
-                        File.Delete(path);
-
-                    return;
-                }
-                catch (IOException)
-                {
-                    Thread.Sleep(100);
-                }
-                catch (UnauthorizedAccessException)
-                {
-                    Thread.Sleep(100);
-                }
-            }
-        }
 
         public static int Valor
         {
@@ -714,7 +611,7 @@ namespace ConversorDrawind
                     Directory.CreateDirectory(arq);
                 arq += "TempImporBlocks.Temp";
 
-                myClass.SendCommand("CDwi_GetBlocks\n");
+                SendCommand("CDwi_GetBlocks\n");
 
                 if (File.Exists(arq))
                 {
@@ -790,12 +687,12 @@ namespace ConversorDrawind
             y = 0;
             z = 0;
 
-            if (myClass.acadDocument == null)
+            if (session.CurrentDocument == null)
                 return false;
 
             try
             {
-                object ptMin = ComRetry.Invoke(() => myClass.acadDocument.GetVariable("EXTMIN"));
+                object ptMin = ComRetry.Invoke(() => session.CurrentDocument.GetVariable("EXTMIN"));
                 return TryGetPointCoordinates(ptMin, out x, out y, out z);
             }
             catch (Exception)
@@ -810,14 +707,14 @@ namespace ConversorDrawind
             minY = double.MaxValue;
             minZ = double.MaxValue;
 
-            if (myClass.acadDocument == null || string.IsNullOrWhiteSpace(layerName))
+            if (session.CurrentDocument == null || string.IsNullOrWhiteSpace(layerName))
                 return false;
 
             bool found = false;
 
             try
             {
-                foreach (object item in myClass.acadDocument.ModelSpace)
+                foreach (object item in session.CurrentDocument.ModelSpace)
                 {
                     dynamic entity = item;
                     string entityLayer;

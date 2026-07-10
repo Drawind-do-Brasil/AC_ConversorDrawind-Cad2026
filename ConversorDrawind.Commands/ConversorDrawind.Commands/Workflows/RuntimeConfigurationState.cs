@@ -9,6 +9,9 @@ namespace ConversorDrawind.Commands
         private static readonly List<Block> teklaBlocks = new List<Block>();
         private static readonly List<Block> inventorBlocks = new List<Block>();
         private static readonly List<Block> originalBlocks = new List<Block>();
+        private static readonly IReadOnlyList<Block> readOnlyTeklaBlocks = teklaBlocks.AsReadOnly();
+        private static readonly IReadOnlyList<Block> readOnlyInventorBlocks = inventorBlocks.AsReadOnly();
+        private static readonly IReadOnlyList<Block> readOnlyOriginalBlocks = originalBlocks.AsReadOnly();
 
         internal static IReadOnlyList<string> NewLayerCompositions =>
             Configuration.Config.Layers.NewLayers
@@ -56,11 +59,11 @@ namespace ConversorDrawind.Commands
             }
         }
 
-        internal static List<Block> TeklaBlocks => teklaBlocks;
+        internal static IReadOnlyList<Block> TeklaBlocks => readOnlyTeklaBlocks;
 
-        internal static List<Block> InventorBlocks => inventorBlocks;
+        internal static IReadOnlyList<Block> InventorBlocks => readOnlyInventorBlocks;
 
-        internal static List<Block> OriginalBlocks => originalBlocks;
+        internal static IReadOnlyList<Block> OriginalBlocks => readOnlyOriginalBlocks;
 
         internal static void ResetWorkingStateFromConfiguration()
         {

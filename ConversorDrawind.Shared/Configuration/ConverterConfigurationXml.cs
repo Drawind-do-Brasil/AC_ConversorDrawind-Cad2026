@@ -95,10 +95,11 @@ namespace ConversorDrawind
                 Indent = true
             };
 
-            using (XmlWriter writer = XmlWriter.Create(file, settings))
+            AtomicFile.Write(file, temporaryPath =>
             {
-                document.Save(writer);
-            }
+                using (XmlWriter writer = XmlWriter.Create(temporaryPath, settings))
+                    document.Save(writer);
+            });
         }
 
         public static XDocument CreateDocument(Configuration configuration)
