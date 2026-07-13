@@ -1,0 +1,112 @@
+## Visual Studio / .NET build artifacts
+.vs/
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+[Ww][Ii][Nn]32/
+[Aa][Rr][Mm]/
+[Aa][Rr][Mm]64/
+[Oo]ut/
+[Ll]og/
+[Ll]ogs/
+artifacts/
+
+## User-specific Visual Studio files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+
+## Build outputs and compiler intermediates
+*.dll
+*.exe
+*.pdb
+*.mdb
+*.ilk
+*.obj
+*.iobj
+*.ipdb
+*.pch
+*.sbr
+*.tlb
+*.tli
+*.tlh
+*.tmp
+*.tmp_proj
+*.cache
+*.cachefile
+*.binlog
+*.log
+
+## NuGet
+*.nupkg
+*.snupkg
+*.nuget.props
+*.nuget.targets
+packages/
+!packages/build/
+project.lock.json
+project.fragment.lock.json
+
+## Test and coverage output
+[Tt]est[Rr]esult*/
+TestResults/
+TestResult.xml
+nunit-*.xml
+coverage*.json
+coverage*.xml
+coverage*.info
+*.coverage
+*.coveragexml
+BenchmarkDotNet.Artifacts/
+
+## Visual Studio profiler and caches
+*.psess
+*.vsp
+*.vspx
+*.sap
+*.opendb
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.VC.opendb
+ipch/
+
+## Local IDE/tool settings
+.vscode/
+.idea/
+.vsconfig.user
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+.localhistory/
+
+## Generated or temporary files
+Generated\ Files/
+Generated_Code/
+*_wpftmp.csproj
+mono_crash.*
+~$*
+*~
+
+## Publish/package output
+publish/
+*.pubxml
+*.publishproj
+*.azurePubxml
+PublishScripts/
+AppPackages/
+BundleArtifacts/
+_pkginfo.txt
+*.appx
+*.appxbundle
+*.appxupload
+
+## Local test/integration run output
+**/Integration/Runs/
