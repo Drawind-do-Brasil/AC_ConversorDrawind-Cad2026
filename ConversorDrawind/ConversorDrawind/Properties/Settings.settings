@@ -15,7 +15,7 @@
       <Value Profile="(Default)">DWG</Value>
     </Setting>
     <Setting Name="Versao" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Versão 2023</Value>
+      <Value Profile="(Default)">Versão 1.0.0.1</Value>
     </Setting>
     <Setting Name="OQueHaDeNovo4" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

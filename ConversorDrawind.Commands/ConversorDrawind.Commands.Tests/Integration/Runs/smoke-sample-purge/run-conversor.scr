@@ -1,0 +1,10 @@
+FILEDIA
+0
+CMDECHO
+1
+NETLOAD
+"C:\0_Programas\Converter Framework para NET\AC_ConversorDrawind\AC_ConversorDrawind-Cad2026\ConversorDrawindDLL\ConversorDrawindDLL\bin\Debug\ConversorDrawind.dll"
+DRAWINDCAD_Convert
+QSAVE
+QUIT
+

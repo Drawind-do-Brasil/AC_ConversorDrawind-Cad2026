@@ -1,0 +1,27 @@
+﻿{
+    "status":  "passed",
+    "startedAt":  "2026-07-06T09:45:14.9566323-03:00",
+    "finishedAt":  "2026-07-06T09:45:16.7465615-03:00",
+    "exitCode":  0,
+    "commands":  [
+                     "DRAWINDCAD_Convert"
+                 ],
+    "paths":  {
+                  "inputDwg":  "C:\\Users\\Public\\Documents\\Autodesk\\AutoCAD Mechanical 2026\\Acadm\\Gen\\Conv\\sample.dwg",
+                  "workingDwg":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-secureload-build-purge\\sample.dwg",
+                  "txml":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawind\\ConversorDrawind\\bin\\Debug\\TemplatesAtivos\\0_PURGE_NOS_DESENHOS.txml",
+                  "dll":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL\\bin\\Debug\\ConversorDrawind.dll",
+                  "coreConsole":  "C:\\Program Files\\Autodesk\\AutoCAD 2026\\accoreconsole.exe",
+                  "tempConfiguration":  "C:\\Users\\Micro048\\AppData\\Local\\Temp\\ConversorDrawind.Temp",
+                  "script":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-secureload-build-purge\\run-conversor.scr",
+                  "stdoutLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-secureload-build-purge\\accoreconsole.out.log",
+                  "stderrLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-secureload-build-purge\\accoreconsole.err.log"
+              },
+    "sha256":  {
+                   "inputDwg":  "21124E81BD19C28CFE4951A760C9D0B3984D7A593FFD66AB2DCFB05D65FD6791",
+                   "workingDwg":  "D1DB1EAA2CCCD3C73143F6B44CE94A19753290A19364780CA0720465A9218F6C",
+                   "txml":  "11B9FBEAA40D17A3C64A7B8EBABC1A921883B45C14F36D0F4F52387D52415A0B",
+                   "dll":  "CB4E48CCD81FF8FB92A0C9DEBE2A210F3372CAF7B7BDA4FE22B928A3A84C50F9",
+                   "script":  "26DBD664A1D40D425AF743F2071CB52F0757C1C8C9EAF4D19F514AD85B406C95"
+               }
+}

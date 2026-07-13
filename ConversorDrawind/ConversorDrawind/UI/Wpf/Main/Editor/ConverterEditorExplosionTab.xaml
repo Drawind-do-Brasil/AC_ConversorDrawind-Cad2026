@@ -1,0 +1,51 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorExplosionTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Static local:Localization.LabelAllLayers}" />
+            <ListBox  Grid.Row="1" x:Name="AllExplodeLayersListBox"
+                     VerticalAlignment="Stretch"
+                     SelectionMode="Extended"
+                     AllowDrop="True"
+                     MouseMove="ExplodeLayersMouseMove"
+                     DragOver="ExplodeLayersDragOver"
+                     Drop="ExplodeLayersDrop" />
+            <Separator Visibility="Hidden" Margin="2.5"/>
+
+        </Grid>
+        <Grid  Grid.Column="1" VerticalAlignment="Center" Margin="5">
+            <StackPanel>
+                <Button Content="{x:Static local:Localization.ButtonAdd}" Click="AddExplodeLayerClick" />
+                <Separator Visibility="Hidden" Margin="2.5"/>
+                <Button Content="{x:Static local:Localization.ButtonRemove}" Click="RemoveExplodeLayerClick" />
+            </StackPanel>
+        </Grid>
+        <Grid Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <TextBlock Text="{x:Static local:Localization.LabelExplodeOnlyLayers}" />
+            <ListBox Grid.Row="1" x:Name="SelectedExplodeLayersListBox"
+                     VerticalAlignment="Stretch"
+                     SelectionMode="Extended"
+                     AllowDrop="True"
+                     MouseMove="ExplodeLayersMouseMove"
+                     DragOver="ExplodeLayersDragOver"
+                     Drop="ExplodeLayersDrop" />
+            <Separator Visibility="Hidden" Margin="2.5"/>
+          
+        </Grid>
+    </Grid>
+</UserControl>

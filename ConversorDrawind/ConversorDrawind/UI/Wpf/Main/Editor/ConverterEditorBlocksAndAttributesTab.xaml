@@ -1,0 +1,144 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorBlocksAndAttributesTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <TabControl Margin="10">
+        <TabItem Header="{x:Static local:Localization.TabTeklaStructures}">
+            <Grid Margin="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <DockPanel Grid.Row="0" LastChildFill="True">
+                    <Button DockPanel.Dock="Left"
+                            Width="200"
+                            Height="23"
+                            Content="{x:Static local:Localization.ButtonAttributedFormat}"
+                            Click="BrowseAttributedFormatClick" />
+                    <TextBox x:Name="AttributedFormatPathTextBox"
+                             Height="23"
+                             Margin="6,0,0,0"
+                             Text="{Binding Configuration.Blocks.TeklaBlockPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </DockPanel>
+
+                <GroupBox Grid.Row="1"
+                          Margin="0,8,0,0"
+                          Header="Blocos (Block Name)">
+                    <Grid Margin="6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="260" />
+                        </Grid.ColumnDefinitions>
+
+                        <ListBox x:Name="BlocksListBox"
+                                 Grid.Column="0"
+                                 HorizontalContentAlignment="Stretch"
+                                 MouseDoubleClick="EditBlockDoubleClick" />
+
+                        <StackPanel Grid.Column="1" Margin="8,0,0,0">
+                            <Button Height="39"
+                                    Margin="0,0,0,6"
+                                    Content="{x:Static local:Localization.ButtonEdit}"
+                                    Click="EditBlockClick" />
+                            <Button Height="39"
+                                    Content="{x:Static local:Localization.ButtonRemove}"
+                                    Click="RemoveBlockClick" />
+                        </StackPanel>
+                    </Grid>
+                </GroupBox>
+            </Grid>
+        </TabItem>
+
+        <TabItem Header="{x:Static local:Localization.TabCad}">
+            <Grid Margin="6">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <Button Width="280"
+                            Height="23"
+                            Content="{x:Static local:Localization.ButtonLoadCadBlocks}"
+                            Click="LoadInventorBlocksClick" />
+                    <TextBox x:Name="CadBlocksPathTextBox"
+                             Width="700"
+                             Height="23"
+                             Margin="8,0,0,0"
+                             Text="{Binding Configuration.Blocks.CadBlockPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,6,0,0">
+                    <Button Width="280"
+                            Height="23"
+                            Content="{x:Static local:Localization.ButtonLoadOriginalBlocks}"
+                            Click="LoadOriginalBlocksClick" />
+                    <TextBox x:Name="OriginalBlocksPathTextBox"
+                             Width="700"
+                             Height="23"
+                             Margin="8,0,0,0"
+                             Text="{Binding Configuration.Blocks.CadBlockPath, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                </StackPanel>
+
+                <Grid Grid.Row="2" Margin="0,6,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="{x:Static local:Localization.LabelCad}" Margin="0,0,0,4" />
+                        <ListBox x:Name="InventorBlocksListBox"
+                                 Height="120"
+                                 HorizontalContentAlignment="Stretch"
+                                 SelectionChanged="CadBlocksSelectionChanged" />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Margin="6,0,0,0">
+                        <TextBlock Text="{x:Static local:Localization.LabelOriginalBlocks}" Margin="0,0,0,4" />
+                        <ListBox x:Name="OriginalBlocksListBox"
+                                 Height="120"
+                                 HorizontalContentAlignment="Stretch"
+                                 SelectionChanged="OriginalBlocksSelectionChanged" />
+                    </StackPanel>
+                </Grid>
+
+                <Button x:Name="RelateButton"
+                        Grid.Row="3"
+                        Width="160"
+                        Height="28"
+                        Margin="0,10,0,10"
+                        HorizontalAlignment="Left"
+                        Content="{x:Static local:Localization.ButtonRelate}"
+                        Click="RelateBlocksClick" />
+
+                <ListBox x:Name="BlockRelationsListBox"
+                         Grid.Row="3"
+                         Margin="0,46,0,0"
+                         HorizontalContentAlignment="Stretch"
+                         SelectionChanged="BlockRelationsSelectionChanged"
+                         MouseDoubleClick="BlockRelationsDoubleClick" />
+
+                <StackPanel Grid.Row="4"
+                            Orientation="Horizontal"
+                            Margin="0,8,0,0">
+                    <Button x:Name="RemoveRelationButton"
+                            Width="230"
+                            Height="23"
+                            Content="{x:Static local:Localization.ButtonRemoveRelation}"
+                            Click="RemoveBlockRelationClick" />
+                    <Button x:Name="EditRelationButton"
+                            Width="230"
+                            Height="23"
+                            Margin="6,0,0,0"
+                            Content="{x:Static local:Localization.ButtonEditRelationParameters}"
+                            Click="EditBlockRelationClick" />
+                </StackPanel>
+            </Grid>
+        </TabItem>
+    </TabControl>
+</UserControl>

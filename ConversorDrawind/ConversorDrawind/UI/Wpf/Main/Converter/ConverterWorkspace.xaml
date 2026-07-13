@@ -1,0 +1,81 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterWorkspace"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition Width="170" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+  
+      
+        <Grid Grid.Row="0" Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <TextBlock Text="{x:Static local:Localization.LabelStatus}" />
+                <ComboBox x:Name="StatusComboBox"
+                          Width="150"
+                          DisplayMemberPath="Nome"
+                          ItemsSource="{Binding StatusItems}"
+                          SelectedItem="{Binding SelectedStatus, Mode=TwoWay}"
+                          SelectionChanged="StatusComboBoxSelectionChanged" />
+            </Grid>
+            <GroupBox Grid.Row="1" Header="{x:Static local:Localization.LabelConverters}" >
+                <ListBox x:Name="ConvertersListBox"
+                         ItemsSource="{Binding ConverterNames}"
+                         SelectionChanged="ConvertersSelectionChanged" />
+            </GroupBox>
+        </Grid>
+        <Grid Grid.Row="0" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="5" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+          
+            <GroupBox Grid.Row="0" Header="{x:Static local:Localization.LabelDrawings}" >
+                <ListBox x:Name="DrawingsListBox" AllowDrop="True" Drop="DrawingsDrop" DragEnter="DrawingsDragEnter" />
+            </GroupBox>
+            <StackPanel Grid.Row="2"  Orientation="Horizontal" >
+                <Button Content="{x:Static local:Localization.ButtonAdd}" Width="100" Click="AddDrawingsClick" />
+                <Separator Visibility="Hidden" Margin="2.5"/>
+                <Button Content="{x:Static local:Localization.ButtonClear}" Width="100" Click="ClearDrawingsClick" />
+            </StackPanel>
+
+        </Grid>
+     
+        <StackPanel Grid.Row="0" Grid.Column="4">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{x:Static local:Localization.LabelExtension}"  />
+                <Separator Visibility="Hidden" Margin="5"/>
+                <ComboBox x:Name="ExtensionComboBox"
+                          Width="78"
+                          IsEditable="True"
+                          ItemsSource="{Binding ExtensionOptions}"
+                          Text="{Binding Extension, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </StackPanel>
+            <Separator Visibility="Hidden" Margin="2.5"/>
+            <CheckBox x:Name="KeepFilesOpenCheckBox" Content="{x:Static local:Localization.LabelKeepFilesOpen}" />
+            <Separator Visibility="Hidden" Margin="2.5"/>
+            <Button  Content="{x:Static local:Localization.ButtonConvert}" Height="44" VerticalAlignment="Top" Click="ConvertClick" />
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.ColumnSpan="5">
+            <TextBlock  Text="{x:Static local:Localization.LabelComments}"  />
+            <TextBox  x:Name="TemplateCommentsTextBox"
+                      Height="62"
+                      AcceptsReturn="True"
+                      TextWrapping="Wrap"
+                      Text="{Binding Comments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+        </StackPanel>
+    </Grid>
+</UserControl>

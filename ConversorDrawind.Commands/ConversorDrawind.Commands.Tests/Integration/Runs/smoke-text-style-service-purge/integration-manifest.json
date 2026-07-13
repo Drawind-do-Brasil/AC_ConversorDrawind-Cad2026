@@ -1,0 +1,39 @@
+﻿{
+    "status":  "passed",
+    "startedAt":  "2026-07-06T09:53:47.8078254-03:00",
+    "finishedAt":  "2026-07-06T09:53:49.5836147-03:00",
+    "elapsedMilliseconds":  1776,
+    "exitCode":  0,
+    "commands":  [
+                     "DRAWINDCAD_Convert"
+                 ],
+    "failureReasons":  [
+
+                       ],
+    "paths":  {
+                  "inputDwg":  "C:\\Users\\Public\\Documents\\Autodesk\\AutoCAD Mechanical 2026\\Acadm\\Gen\\Conv\\sample.dwg",
+                  "workingDwg":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-text-style-service-purge\\sample.dwg",
+                  "txml":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawind\\ConversorDrawind\\bin\\Debug\\TemplatesAtivos\\0_PURGE_NOS_DESENHOS.txml",
+                  "dll":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL\\bin\\Debug\\ConversorDrawind.dll",
+                  "coreConsole":  "C:\\Program Files\\Autodesk\\AutoCAD 2026\\accoreconsole.exe",
+                  "tempConfiguration":  "C:\\Users\\Micro048\\AppData\\Local\\Temp\\ConversorDrawind.Temp",
+                  "script":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-text-style-service-purge\\run-conversor.scr",
+                  "stdoutLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-text-style-service-purge\\accoreconsole.out.log",
+                  "stderrLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-text-style-service-purge\\accoreconsole.err.log"
+              },
+    "bytes":  {
+                  "inputDwg":  32732,
+                  "workingDwg":  23846,
+                  "txml":  2691,
+                  "dll":  506880,
+                  "stdoutLog":  7978,
+                  "stderrLog":  null
+              },
+    "sha256":  {
+                   "inputDwg":  "21124E81BD19C28CFE4951A760C9D0B3984D7A593FFD66AB2DCFB05D65FD6791",
+                   "workingDwg":  "A4E804816DA3F3C0232CFD7538245F2F09D0205CF880230C323D74276C4329E0",
+                   "txml":  "11B9FBEAA40D17A3C64A7B8EBABC1A921883B45C14F36D0F4F52387D52415A0B",
+                   "dll":  "8C402B1604674AF5F3BA4424962734EBA78F44A96B339B8A445B0D78FC53CDDC",
+                   "script":  "26DBD664A1D40D425AF743F2071CB52F0757C1C8C9EAF4D19F514AD85B406C95"
+               }
+}

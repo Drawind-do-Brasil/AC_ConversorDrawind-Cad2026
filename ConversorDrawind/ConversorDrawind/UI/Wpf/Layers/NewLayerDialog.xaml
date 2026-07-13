@@ -1,0 +1,53 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Layers.NewLayerDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleNewLayer}"
+        Width="520"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <Border Padding="16">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="92" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="116" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="{x:Static local:Localization.LabelLayer}" VerticalAlignment="Center" Margin="0,0,8,8" />
+            <ComboBox x:Name="LayerComboBox" Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,0,8" />
+
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="{x:Static local:Localization.LabelColor}" VerticalAlignment="Center" Margin="0,0,8,8" />
+            <ComboBox x:Name="ColorComboBox" Grid.Row="1" Grid.Column="1" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,8,8" />
+            <Button Grid.Row="1" Grid.Column="2" Content="{x:Static local:Localization.ButtonOtherColors}" Margin="0,0,0,8" Click="OtherColorsButtonClick" />
+
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="{x:Static local:Localization.LabelLineType}" VerticalAlignment="Center" Margin="0,0,8,8" />
+            <ComboBox x:Name="LineTypeComboBox" Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="2" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,0,8" />
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="{x:Static local:Localization.LabelHeight}" VerticalAlignment="Center" Margin="0,0,8,8" />
+            <TextBox x:Name="TextHeightTextBox" Grid.Row="3" Grid.Column="1" Width="120" HorizontalAlignment="Left" Margin="0,0,0,8" PreviewTextInput="DecimalTextBoxPreviewTextInput" />
+
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="{x:Static local:Localization.LabelWidth}" VerticalAlignment="Center" Margin="0,0,8,8" />
+            <TextBox x:Name="TextWidthTextBox" Grid.Row="4" Grid.Column="1" Width="120" HorizontalAlignment="Left" Margin="0,0,0,8" PreviewTextInput="DecimalTextBoxPreviewTextInput" />
+
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="{x:Static local:Localization.LabelTextStyle}" VerticalAlignment="Center" Margin="0,0,8,16" />
+            <ComboBox x:Name="TextStyleComboBox" Grid.Row="5" Grid.Column="1" Grid.ColumnSpan="2" IsEditable="True" IsTextSearchEnabled="True" Margin="0,0,0,16" />
+
+            <StackPanel Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="{x:Static local:Localization.ButtonContinue}" IsDefault="True" MinWidth="96" Margin="0,0,8,0" Click="ContinueButtonClick" />
+                <Button Content="{x:Static local:Localization.ButtonCancel}" IsCancel="True" MinWidth="96" Click="CancelButtonClick" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

@@ -1,0 +1,24 @@
+using Autodesk.AutoCAD.ApplicationServices;
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.Runtime;
+using System.IO;
+
+namespace ConversorDrawind.Commands
+{
+    public partial class Conversor
+    {
+        [CommandMethod("SaveDXF")]
+        public static void SaveDXF()
+        {
+            IAcadDocumentContext documentContext = new AcadDocumentContext();
+            Document document = documentContext.Document;
+            Database database = documentContext.Database;
+            string path = Path.Combine(Path.GetDirectoryName(document.Name), Path.GetFileNameWithoutExtension(document.Name) + ".dxf");
+
+            int precision = 16;
+            if (File.Exists(path))
+                File.Delete(path);
+            database.DxfOut(path, precision, DwgVersion.AC1021);
+        }
+    }
+}

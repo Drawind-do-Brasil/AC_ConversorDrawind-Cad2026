@@ -1,0 +1,39 @@
+﻿{
+    "status":  "passed",
+    "startedAt":  "2026-07-06T11:08:27.3589597-03:00",
+    "finishedAt":  "2026-07-06T11:08:29.3690226-03:00",
+    "elapsedMilliseconds":  2010,
+    "exitCode":  0,
+    "commands":  [
+                     "DRAWINDCAD_Convert"
+                 ],
+    "failureReasons":  [
+
+                       ],
+    "paths":  {
+                  "inputDwg":  "C:\\Users\\Public\\Documents\\Autodesk\\AutoCAD Mechanical 2026\\Acadm\\Gen\\Conv\\sample.dwg",
+                  "workingDwg":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-entityscaleservice-purge\\sample.dwg",
+                  "txml":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawind\\ConversorDrawind\\bin\\Debug\\TemplatesAtivos\\0_PURGE_NOS_DESENHOS.txml",
+                  "dll":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL\\bin\\Debug\\ConversorDrawind.dll",
+                  "coreConsole":  "C:\\Program Files\\Autodesk\\AutoCAD 2026\\accoreconsole.exe",
+                  "tempConfiguration":  "C:\\Users\\Micro048\\AppData\\Local\\Temp\\ConversorDrawind.Temp",
+                  "script":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-entityscaleservice-purge\\run-conversor.scr",
+                  "stdoutLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-entityscaleservice-purge\\accoreconsole.out.log",
+                  "stderrLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-entityscaleservice-purge\\accoreconsole.err.log"
+              },
+    "bytes":  {
+                  "inputDwg":  32732,
+                  "workingDwg":  23879,
+                  "txml":  2691,
+                  "dll":  510976,
+                  "stdoutLog":  7978,
+                  "stderrLog":  null
+              },
+    "sha256":  {
+                   "inputDwg":  "21124E81BD19C28CFE4951A760C9D0B3984D7A593FFD66AB2DCFB05D65FD6791",
+                   "workingDwg":  "3B0CD9666AB64BB88E482704EE1FD9762F40982E5D6D8680F035D35BCC72FCC8",
+                   "txml":  "11B9FBEAA40D17A3C64A7B8EBABC1A921883B45C14F36D0F4F52387D52415A0B",
+                   "dll":  "00834F2A5294EA81144B890D000844A57EA0DF714D8F5605D24D00174F33A3EE",
+                   "script":  "26DBD664A1D40D425AF743F2071CB52F0757C1C8C9EAF4D19F514AD85B406C95"
+               }
+}

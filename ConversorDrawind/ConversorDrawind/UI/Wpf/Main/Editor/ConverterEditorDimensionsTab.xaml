@@ -1,0 +1,346 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorDimensionsTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind">
+    <UserControl.Resources>
+        <GridLength x:Key="DimensionHeaderLeftColumnWidth">13*</GridLength>
+        <GridLength x:Key="DimensionHeaderRightColumnWidth">11*</GridLength>
+        <GridLength x:Key="DimensionHeaderLabelColumnWidth">13*</GridLength>
+        <GridLength x:Key="DimensionHeaderValueColumnWidth">19*</GridLength>
+        <GridLength x:Key="DimensionHeaderButtonColumnWidth">30*</GridLength>
+
+        <GridLength x:Key="DimensionAdvancedSectionColumnWidth">*</GridLength>
+        <GridLength x:Key="DimensionAdvancedSectionGapWidth">15</GridLength>
+        <GridLength x:Key="DimensionAdvancedLabelColumnWidth">7*</GridLength>
+        <GridLength x:Key="DimensionAdvancedValueColumnWidth">5*</GridLength>
+
+        <GridLength x:Key="DimensionConversionLabelColumnWidth">40*</GridLength>
+        <GridLength x:Key="DimensionConversionValueColumnWidth">23*</GridLength>
+
+        <Style x:Key="FieldRowGrid" TargetType="Grid">
+            <Setter Property="Height" Value="31" />
+        </Style>
+        <Style x:Key="FormLabel" TargetType="TextBlock">
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Margin" Value="0,0,8,0" />
+        </Style>
+        <Style x:Key="FormComboBox" TargetType="ComboBox" BasedOn="{StaticResource {x:Type ComboBox}}" />
+        <Style x:Key="FormTextBox" TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}" />
+        <Style x:Key="FormButton" TargetType="Button">
+            <Setter Property="Height" Value="25" />
+            <Setter Property="MinWidth" Value="86" />
+        </Style>
+    </UserControl.Resources>
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto"
+                  HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Margin="10">
+            <GroupBox Header="Dimens&#245;es" Margin="0,0,0,10">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource DimensionHeaderLeftColumnWidth}" />
+                        <ColumnDefinition Width="{StaticResource DimensionHeaderRightColumnWidth}" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Nome do (DimStyle)" Style="{StaticResource FormLabel}" />
+                            <TextBox Grid.Column="1" x:Name="DimensionStyleTextBox" Style="{StaticResource FormTextBox}" Text="{Binding Configuration.Dimensions.StyleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelLayer}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionLayerComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" ItemsSource="{Binding DataContext.DimensionLayerOptions, RelativeSource={RelativeSource AncestorType=Window}}" Text="{Binding Configuration.Dimensions.Layer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="2" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelLineColor}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionLineColorComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" ItemsSource="{Binding DataContext.DimensionColorOptions, RelativeSource={RelativeSource AncestorType=Window}}" Text="{Binding Configuration.Dimensions.LineColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="2" 
+                                    Content="Outros" 
+                                    Margin="13,0,0,0" 
+                                    Padding="10,0"
+                                    HorizontalAlignment="Left" 
+                                    Style="{StaticResource FormButton}"
+                                    Click="OtherLineColorClick" />
+                        </Grid>
+
+                        <Grid Grid.Row="3" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelTextColor}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionTextColorComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" ItemsSource="{Binding DataContext.DimensionColorOptions, RelativeSource={RelativeSource AncestorType=Window}}" Text="{Binding Configuration.Dimensions.TextColor, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="2" 
+                                    Content="Outros" 
+                                    Margin="13,0,0,0" 
+                                    Padding="10,0"
+                                    HorizontalAlignment="Left"
+                                    Style="{StaticResource FormButton}" 
+                                    Click="OtherTextColorClick" />
+                        </Grid>
+
+                        <Grid Grid.Row="4" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderButtonColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelArrowType}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionArrowTypeComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" ItemsSource="{Binding DataContext.DimensionArrowTypeOptions, RelativeSource={RelativeSource AncestorType=Window}}" Text="{Binding Configuration.Dimensions.ArrowType, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <Button Grid.Column="2"
+                                    Content="{x:Static local:Localization.LabelDimensionArrowSettingsButton}"
+                                    Margin="13,0,0,0"
+                                    HorizontalAlignment="Left"
+                                    Padding="10,0"
+                                    Style="{StaticResource FormButton}"
+                                    Click="DimensionArrowAdvancedClick" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Column="1" Margin="60,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionHeaderValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelTextStyle}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="TextStyleComboBox" Style="{StaticResource FormComboBox}" IsEditable="True" ItemsSource="{Binding DataContext.TextStyleOptions, RelativeSource={RelativeSource AncestorType=Window}}" Text="{Binding Configuration.Text.DefaultStyleName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Op&#231;&#245;es avan&#231;adas de dimens&#245;es" Margin="0,0,0,10">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="{StaticResource DimensionAdvancedSectionColumnWidth}" />
+                        <ColumnDefinition Width="{StaticResource DimensionAdvancedSectionGapWidth}" />
+                        <ColumnDefinition Width="{StaticResource DimensionAdvancedSectionColumnWidth}" />
+                        <ColumnDefinition Width="{StaticResource DimensionAdvancedSectionGapWidth}" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionScale}" Style="{StaticResource FormLabel}" />
+                            <TextBox Grid.Column="1" x:Name="DimensionScaleTextBox" Style="{StaticResource FormTextBox}" Text="{Binding Configuration.Dimensions.Scale, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionLinearPrecision}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionLinearPrecisionComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.LinearPrecisionOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.Precision, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="2" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionAngularPrecision}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionAngularPrecisionComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.AngularPrecisionOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.AngularPrecision, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="3" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionLinearUnit}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionLinearUnitComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.LinearUnitOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.Unit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Column="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionAngularUnit}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionAngularUnitComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.AngularUnitOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.AngularUnit, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionArrowSize}" Style="{StaticResource FormLabel}" />
+                            <TextBox Grid.Column="1" x:Name="DimensionArrowSizeTextBox" Style="{StaticResource FormTextBox}" Text="{Binding Configuration.Dimensions.ArrowSize, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+
+                        <Grid Grid.Row="2" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionOffset}" Style="{StaticResource FormLabel}" />
+                            <TextBox Grid.Column="1" x:Name="DimensionOffsetTextBox" Style="{StaticResource FormTextBox}" Text="{Binding Configuration.Dimensions.OffsetLineFromReferencePoint, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+
+                        <Grid Grid.Row="3" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionOutsideAlign}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionOutsideAlignComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.BooleanOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.OutsideAlign, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+                    </Grid>
+
+                    <Grid Grid.Column="4">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                            <RowDefinition Height="31" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionTextPlacementVertical}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionTextPlacementComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.TextPlacementOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.TextVerticalPosition, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="1" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionTextAlignment}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionTextAlignmentComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.BooleanOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.TextRelativeToDimensionLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="2" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionTextInside}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionTextInsideComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.BooleanOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.ForceTextInside, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="3" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionLineForced}" Style="{StaticResource FormLabel}" />
+                            <ComboBox Grid.Column="1" x:Name="DimensionLineForcedComboBox" Style="{StaticResource FormComboBox}" ItemsSource="{Binding DataContext.BooleanOptions, RelativeSource={RelativeSource AncestorType=Window}}" SelectedValue="{Binding Configuration.Dimensions.ForceDimensionLine, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </Grid>
+
+                        <Grid Grid.Row="4" Style="{StaticResource FieldRowGrid}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource DimensionAdvancedValueColumnWidth}" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="{x:Static local:Localization.LabelDimensionLineExtend}" Style="{StaticResource FormLabel}" />
+                            <TextBox Grid.Column="1" x:Name="DimensionLineExtTextBox" Style="{StaticResource FormTextBox}" Text="{Binding Configuration.Dimensions.ExtensionLineOffset, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </GroupBox>
+
+            <GroupBox Header="Op&#231;&#245;es avan&#231;adas de convers&#227;o">
+                <Grid Margin="8">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0" Style="{StaticResource FieldRowGrid}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="{StaticResource DimensionConversionLabelColumnWidth}" />
+                            <ColumnDefinition Width="{StaticResource DimensionConversionValueColumnWidth}" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="Layer dos blocos a serem convertidos para dimens&#245;es"
+                                   Style="{StaticResource FormLabel}" />
+                        <ComboBox Grid.Column="1"
+                                  x:Name="DimensionBaseLayerComboBox"
+                                  Style="{StaticResource FormComboBox}"
+                                  IsEditable="True"
+                                  ItemsSource="{Binding DataContext.DimensionBaseLayerOptions, RelativeSource={RelativeSource AncestorType=Window}}"
+                                  Text="{Binding Configuration.Dimensions.BaseLayer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                    </Grid>
+                </Grid>
+            </GroupBox>
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

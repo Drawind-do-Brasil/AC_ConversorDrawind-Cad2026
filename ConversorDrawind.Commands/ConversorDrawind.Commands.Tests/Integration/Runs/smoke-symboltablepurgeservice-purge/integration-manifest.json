@@ -1,0 +1,39 @@
+﻿{
+    "status":  "passed",
+    "startedAt":  "2026-07-06T11:17:14.2294943-03:00",
+    "finishedAt":  "2026-07-06T11:17:16.2037424-03:00",
+    "elapsedMilliseconds":  1974,
+    "exitCode":  0,
+    "commands":  [
+                     "DRAWINDCAD_Convert"
+                 ],
+    "failureReasons":  [
+
+                       ],
+    "paths":  {
+                  "inputDwg":  "C:\\Users\\Public\\Documents\\Autodesk\\AutoCAD Mechanical 2026\\Acadm\\Gen\\Conv\\sample.dwg",
+                  "workingDwg":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-symboltablepurgeservice-purge\\sample.dwg",
+                  "txml":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawind\\ConversorDrawind\\bin\\Debug\\TemplatesAtivos\\0_PURGE_NOS_DESENHOS.txml",
+                  "dll":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL\\bin\\Debug\\ConversorDrawind.dll",
+                  "coreConsole":  "C:\\Program Files\\Autodesk\\AutoCAD 2026\\accoreconsole.exe",
+                  "tempConfiguration":  "C:\\Users\\Micro048\\AppData\\Local\\Temp\\ConversorDrawind.Temp",
+                  "script":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-symboltablepurgeservice-purge\\run-conversor.scr",
+                  "stdoutLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-symboltablepurgeservice-purge\\accoreconsole.out.log",
+                  "stderrLog":  "C:\\0_Programas\\Converter Framework para NET\\AC_ConversorDrawind\\AC_ConversorDrawind-Cad2026\\ConversorDrawindDLL\\ConversorDrawindDLL.Tests\\Integration\\Runs\\smoke-symboltablepurgeservice-purge\\accoreconsole.err.log"
+              },
+    "bytes":  {
+                  "inputDwg":  32732,
+                  "workingDwg":  23846,
+                  "txml":  2691,
+                  "dll":  512512,
+                  "stdoutLog":  7974,
+                  "stderrLog":  null
+              },
+    "sha256":  {
+                   "inputDwg":  "21124E81BD19C28CFE4951A760C9D0B3984D7A593FFD66AB2DCFB05D65FD6791",
+                   "workingDwg":  "17F3F470593FB371A1122154BEADA22B8302EE84C2FDA86AFE2F3A7592F454F1",
+                   "txml":  "11B9FBEAA40D17A3C64A7B8EBABC1A921883B45C14F36D0F4F52387D52415A0B",
+                   "dll":  "09D925D02ED41A80F90EF4CD7261C02D1F7A2E7A111C28F428DF9CA443DA6F38",
+                   "script":  "26DBD664A1D40D425AF743F2071CB52F0757C1C8C9EAF4D19F514AD85B406C95"
+               }
+}

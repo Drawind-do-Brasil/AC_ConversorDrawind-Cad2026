@@ -1,0 +1,14 @@
+FILEDIA
+0
+CMDECHO
+1
+SECURELOAD
+0
+TRUSTEDPATHS
+"C:\Temp\ConversorDrawindSmoke\plugin"
+NETLOAD
+"C:\Temp\ConversorDrawindSmoke\plugin\ConversorDrawind.dll"
+DRAWINDCAD_Convert
+QSAVE
+QUIT
+

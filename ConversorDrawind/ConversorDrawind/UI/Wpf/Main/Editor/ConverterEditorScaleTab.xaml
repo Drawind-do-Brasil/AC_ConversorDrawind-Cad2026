@@ -1,0 +1,145 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorScaleTab"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind"
+             xmlns:viewModels="clr-namespace:ConversorDrawind.UI.Wpf.Main.ViewModels">
+    <UserControl.Resources>
+        <GridLength x:Key="ScaleLabelColumnWidth">90</GridLength>
+        <GridLength x:Key="ScaleValueColumnWidth">140</GridLength>
+        <viewModels:InverseBooleanConverter x:Key="InverseBooleanConverter" />
+    </UserControl.Resources>
+    <StackPanel Margin="10">
+        <RadioButton x:Name="ManualScaleRadio" Content="{x:Static local:Localization.LabelManualScale}" IsChecked="{Binding Configuration.Scale.Manual, Mode=TwoWay}" Checked="ScaleModeChanged" />
+        <RadioButton x:Name="AutoScaleRadio" Content="{x:Static local:Localization.LabelAutomaticScale}" IsChecked="{Binding Configuration.Scale.Manual, Mode=TwoWay, Converter={StaticResource InverseBooleanConverter}}" Checked="ScaleModeChanged" />
+        <GroupBox Header="Pontos" Margin="0,10,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <StackPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP1X}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P1XTextBox" Text="{Binding Configuration.Scale.Point1.X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+                        <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP1Y}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P1YTextBox" Text="{Binding Configuration.Scale.Point1.Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+                        <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP1Z}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P1ZTextBox" Text="{Binding Configuration.Scale.Point1.Z, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+                    </Grid>
+                    <Separator Visibility="Hidden" Margin="0,2.5" />
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP2X}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P2XTextBox" Text="{Binding Configuration.Scale.Point2.X, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+                        <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP2Y}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P2YTextBox" Text="{Binding Configuration.Scale.Point2.Y, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+                        <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
+
+                        <Grid Grid.Column="4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="{StaticResource ScaleLabelColumnWidth}" />
+                                <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Text="{x:Static local:Localization.LabelP2Z}" VerticalAlignment="Center" Margin="0,0,8,0" HorizontalAlignment="Right" />
+                            <TextBox Grid.Column="1" x:Name="P2ZTextBox" Text="{Binding Configuration.Scale.Point2.Z, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+                        </Grid>
+
+                    </Grid>
+
+                </StackPanel>
+
+
+                <Button Grid.Column="3" Content="{x:Static local:Localization.ButtonSelectInDrawing}"
+                      Width="160"
+                      HorizontalAlignment="Left"
+                      Click="SelectScalePointsClick" />
+            </Grid>
+        </GroupBox>
+        <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Static local:Localization.LabelTextLayer}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <ComboBox Grid.Column="1" x:Name="ZoomLayerFilterComboBox" IsEditable="True" ItemsSource="{Binding ScaleLayerOptions}" Text="{Binding Configuration.Scale.Layer, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+            </Grid>
+            <Separator Grid.Column="1" Visibility="Hidden" Margin="2.5,0" />
+
+            <Grid Grid.Column="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="{StaticResource ScaleValueColumnWidth}" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Text="{x:Static local:Localization.LabelTextSize}" VerticalAlignment="Center" Margin="0,0,8,0" />
+                <TextBox Grid.Column="1" x:Name="ZoomTextSizeTextBox" Text="{Binding Configuration.Scale.TextSize, Mode=TwoWay, UpdateSourceTrigger=LostFocus}" />
+            </Grid>
+            <Separator Grid.Column="3" Visibility="Hidden" Margin="2.5,0" />
+            <Grid Grid.Column="4" Width="230" />
+        </Grid>
+    </StackPanel>
+</UserControl>

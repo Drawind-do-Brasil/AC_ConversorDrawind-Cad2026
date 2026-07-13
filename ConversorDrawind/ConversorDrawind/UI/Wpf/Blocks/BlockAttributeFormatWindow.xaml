@@ -1,0 +1,54 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Blocks.BlockAttributeFormatWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleConfiguration}"
+        Width="950"
+        Height="585"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+    <DockPanel Margin="12">
+        <Button DockPanel.Dock="Bottom"
+                Content="{x:Static local:Localization.ButtonSave}"
+                Width="75"
+                Height="24"
+                Margin="0,6,0,0"
+                HorizontalAlignment="Right"
+                IsDefault="True"
+                Click="SaveClick" />
+
+        <DataGrid x:Name="TagsGrid"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  CanUserDeleteRows="False"
+                  CanUserSortColumns="False"
+                  GridLinesVisibility="All"
+                  HeadersVisibility="Column"
+                  IsReadOnly="True"
+                  ItemsSource="{Binding Rows}"
+                  SelectionMode="Extended"
+                  SelectionUnit="FullRow"
+                  MouseDoubleClick="TagsGridMouseDoubleClick"
+                  MouseRightButtonUp="TagsGridMouseRightButtonUp"
+                  PreviewMouseLeftButtonUp="TagsGridPreviewMouseLeftButtonUp">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelTag}"
+                                    Binding="{Binding Tag}"
+                                    Width="200" />
+                <DataGridCheckBoxColumn Header="{x:Static local:Localization.LabelModify}"
+                                        Binding="{Binding Modify}"
+                                        Width="70" />
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelXyz}"
+                                    Binding="{Binding Xyz}"
+                                    Width="200" />
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelFilter}"
+                                    Binding="{Binding Filter}"
+                                    Width="300" />
+                <DataGridTextColumn Header="{x:Static local:Localization.LabelWidthFactor}"
+                                    Binding="{Binding WidthFactor}"
+                                    Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </DockPanel>
+</Window>

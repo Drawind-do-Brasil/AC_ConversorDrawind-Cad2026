@@ -1,0 +1,53 @@
+using Autodesk.AutoCAD.DatabaseServices;
+using Autodesk.AutoCAD.EditorInput;
+using System;
+
+namespace ConversorDrawind.Commands
+{
+    internal sealed class LayerSelectionService
+    {
+        private readonly IEntitySelector entitySelector;
+        private readonly Action<string, string> logError;
+
+        internal LayerSelectionService(IEntitySelector entitySelector, Action<string, string> logError)
+        {
+            this.entitySelector = entitySelector ?? throw new ArgumentNullException(nameof(entitySelector));
+            this.logError = logError ?? throw new ArgumentNullException(nameof(logError));
+        }
+
+        internal ObjectId[] Filter(string layerName, string start, string colorName, string linetypeName)
+        {
+            try
+            {
+                return SelectAll(new SelectionFilter(LayerFilterFactory.LayerProperties(layerName, start, linetypeName)));
+            }
+            catch (Exception e)
+            {
+                logError(LogContext.SelecionarEntidadesPorLayer, e.Message);
+                return null;
+            }
+        }
+
+        internal ObjectId[] FilterLayers(params string[] layers)
+        {
+            try
+            {
+                return SelectAll(new SelectionFilter(LayerFilterFactory.Layers(layers)));
+            }
+            catch (Exception e)
+            {
+                logError(LogContext.SelecionarLayers, e.Message);
+                return null;
+            }
+        }
+
+        private ObjectId[] SelectAll(SelectionFilter selectionFilter)
+        {
+            PromptSelectionResult promptSelectionResult = entitySelector.SelectAll(selectionFilter);
+            if (promptSelectionResult.Status.ToString() == "OK")
+                return promptSelectionResult.Value.GetObjectIds();
+
+            return null;
+        }
+    }
+}

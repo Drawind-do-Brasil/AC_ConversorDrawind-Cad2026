@@ -1,0 +1,35 @@
+<Window x:Class="ConversorDrawind.UI.Wpf.Common.ChangeFormatDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ConversorDrawind"
+        Title="{x:Static local:Localization.TitleChangeFormat}"
+        Width="440"
+        SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Topmost="True"
+        ShowInTaskbar="False">
+    <Border Padding="12">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <TextBlock x:Name="MessageTextBlock"
+                       Grid.Row="0"
+                       Margin="20,18,20,28"
+                       TextWrapping="Wrap" />
+
+            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+                <Button Content="{x:Static local:Localization.ButtonChangePathOnly}"
+                        Width="206"
+                        Margin="0,0,6,0"
+                        Click="ChangePathButtonClick" />
+                <Button Content="{x:Static local:Localization.ButtonUpdateBlocks}"
+                        Width="196"
+                        Click="UpdateBlocksButtonClick" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</Window>

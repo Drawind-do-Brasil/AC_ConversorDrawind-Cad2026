@@ -1,0 +1,9 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ConversorDrawind.Commands.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="BlocoDM" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">D:\Trabalho\2_Programas 2018\DocumentManager\Quadro_DrawindDM.dwg</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

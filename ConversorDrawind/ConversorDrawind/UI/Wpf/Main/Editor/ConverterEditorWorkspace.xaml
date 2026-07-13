@@ -1,0 +1,56 @@
+<UserControl x:Class="ConversorDrawind.UI.Wpf.Main.ConverterEditorWorkspace"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:ConversorDrawind"
+             xmlns:layers="clr-namespace:ConversorDrawind.UI.Wpf.Layers"
+             xmlns:main="clr-namespace:ConversorDrawind.UI.Wpf.Main"
+             xmlns:textStyles="clr-namespace:ConversorDrawind.UI.Wpf.TextStyles">
+    <DockPanel Margin="10">
+        <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,8">
+            <Button Content="{x:Static local:Localization.ButtonNew}" Width="90" Click="NewConverterClick" />
+            <Button Content="{x:Static local:Localization.ButtonSave}" Width="90" Margin="6,0,0,0" Click="SaveConverterClick" />
+            <Button Content="{x:Static local:Localization.ButtonImport}" Width="90" Margin="6,0,0,0" Click="ImportConverterClick" />
+            <TextBlock Text="{x:Static local:Localization.LabelTemplate}" Margin="18,4,4,0" />
+            <ComboBox x:Name="ConverterComboBox"
+                      Width="220"
+                      ItemsSource="{Binding ConverterNames}"
+                      SelectedItem="{Binding SelectedConverterName, Mode=TwoWay}"
+                      SelectionChanged="ConverterComboBoxSelectionChanged" />
+            <TextBlock Text="{x:Static local:Localization.LabelName}" Margin="18,4,4,0" />
+            <TextBox x:Name="ConverterNameTextBox" Width="260" Text="{Binding TemplateName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+       
+        </StackPanel>
+        <TabControl x:Name="ConfigurationTabs" SelectionChanged="ConfigurationTabsSelectionChanged">
+            <TabItem Header="{x:Static local:Localization.TabMain}">
+                <main:ConverterEditorMainTab x:Name="MainTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabClientLayers}">
+                <layers:NewLayersConfigurationControl x:Name="ClientLayersTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabClientTextStyles}">
+                <textStyles:TextStyleConfigurationControl x:Name="ClientTextStylesTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabConverters}">
+                <main:ConverterEditorConvertersTab x:Name="ConvertersTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabDimensions}">
+                <main:ConverterEditorDimensionsTab x:Name="DimensionsTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabScale}">
+                <main:ConverterEditorScaleTab x:Name="ScaleTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabRemoveLayers}">
+                <main:ConverterEditorRemoveLayersTab x:Name="RemoveLayersTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabBlocksAndAttributes}">
+                <main:ConverterEditorBlocksAndAttributesTab x:Name="BlocksAndAttributesTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabConfigurationLispDll}">
+                <main:ConverterEditorLispDllTab x:Name="LispDllTab" />
+            </TabItem>
+            <TabItem Header="{x:Static local:Localization.TabExplosionOfBlocks}">
+                <main:ConverterEditorExplosionTab x:Name="ExplosionTab" />
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</UserControl>
